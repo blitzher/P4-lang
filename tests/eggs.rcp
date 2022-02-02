@@ -1,0 +1,18 @@
+title: Boiled Eggs
+subtitle: Eggs boiled to perfection, every time
+for: 2
+ingredients: (1000ml) water, 2 eggs
+
+procedure:
+
+with(all(water):
+	Boil the water on a ~stove until it reaches (100degC).
+
+#timer
+with(all(eggs)):
+	Put the eggs in the water, and set a timer for 6 minutes.
+
+after(timer):
+	Remove the eggs and let them cool in cold water for a few minutes
+	#done
+
