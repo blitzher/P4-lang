@@ -1,5 +1,3 @@
-from locale import currency
-
 
 TOKEN = [
 	"title:",
@@ -21,7 +19,8 @@ class Lexer:
 		for line in file_data:
 			self.LexLine(line)
 
-
+	def __add__(self, other):
+		pass
 
 	def LexLine(self, line: str):
 		

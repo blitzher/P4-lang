@@ -1,6 +1,9 @@
+import { Ingredient } from "./Ingredient";
 import { Lexer, TOKEN } from "./Lexer";
+import { Procedure } from "./Procedure";
+import { Recipe } from "./Recipe";
 
-class Parser {
+export class Parser {
   /**
    * Parse the lexed recipe to its proper objects
    */
@@ -25,15 +28,34 @@ class Parser {
     }
 
     recipe.procedure = this.ParseProcedure(
-      lexer_fields[TOKEN["procedure:"]].join(" ")
+      lexer_fields[TOKEN["procedure:"]],
+      recipe
     );
 
     return recipe;
   }
 
   /* TODO */
-  ParseProcedure(procedure: string) {
+  ParseProcedure(procedure: string[], recipe: Recipe) {
     const procedureArray = [];
+
+    let procedureIndex = 0;
+    let current_line = procedure[procedureIndex];
+    let get_next = () => {
+      current_line = procedure[++procedureIndex];
+      return current_line;
+    };
+
+    while (procedureIndex < procedure.length) {
+      /* Give each procedure the ability to get the next line */
+
+      /* It can (for the time being) be assumed that each
+       * procedure is constructed on a 'with(...)' statement,
+       * and takes all following lines appropriately */
+      procedureArray.push(
+        new Procedure(current_line, recipe.ingredients, get_next)
+      );
+    }
 
     return procedureArray;
   }

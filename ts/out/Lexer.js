@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Lexer = void 0;
+exports.Lexer = exports.TOKEN = void 0;
 var fs = require("fs");
 var TOKEN;
 (function (TOKEN) {
@@ -9,7 +9,7 @@ var TOKEN;
     TOKEN[TOKEN["for:"] = 2] = "for:";
     TOKEN[TOKEN["ingredients:"] = 3] = "ingredients:";
     TOKEN[TOKEN["procedure:"] = 4] = "procedure:";
-})(TOKEN || (TOKEN = {}));
+})(TOKEN = exports.TOKEN || (exports.TOKEN = {}));
 var Lexer = /** @class */ (function () {
     function Lexer(filename) {
         this.current_token = "unfielded";
@@ -21,15 +21,21 @@ var Lexer = /** @class */ (function () {
         }
     }
     Lexer.prototype.LexLine = function (line) {
-        var line_split = line.split(" ");
+        var line_split = line.trim().split(" ");
+        if (line[0] == "" && line.length == 1) {
+            return;
+        }
         if (line_split[0] in TOKEN) {
             this.current_token = line_split[0];
             line_split = line_split.splice(1); /* Remove the first element */
         }
-        if (!this.fields[this.current_token]) {
-            this.fields[this.current_token] = [];
+        if (this.fields[TOKEN[this.current_token]] == undefined) {
+            this.fields[TOKEN[this.current_token]] = [];
         }
-        this.fields[this.current_token].push(line_split.join(" "));
+        var joined = line_split.join(" ");
+        if (joined.length > 0) {
+            this.fields[TOKEN[this.current_token]].push(joined);
+        }
     };
     return Lexer;
 }());

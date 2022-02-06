@@ -1,12 +1,14 @@
 title: Boiled Eggs
 subtitle: Eggs boiled to perfection, every time
 for: 2
-ingredients: (1000ml) water, 2 eggs
+ingredients: 
+	(1000ml) water
+	2 eggs
 
 procedure:
 
-with(all(water):
-	Boil the water on a ~stove until it reaches (100degC).
+with(all(water), 1(egg)):
+	Boil the water on a ~stove until it reaches temp(100degC).
 
 #timer
 with(all(eggs)):

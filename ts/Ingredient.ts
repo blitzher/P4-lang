@@ -1,4 +1,6 @@
-class Ingredient {
+import { Quantity } from "./Quantity";
+
+export class Ingredient {
   amount: Quantity; // The amount of the ingredient
   type: string; // The type of the ingredient, by its name
 

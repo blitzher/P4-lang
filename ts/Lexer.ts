@@ -21,7 +21,7 @@ export class Lexer {
   }
 
   LexLine(line: string) {
-    let line_split = line.split(" ");
+    let line_split = line.trim().split(" ");
 
     if (line[0] == "" && line.length == 1) {
       return;
@@ -32,9 +32,14 @@ export class Lexer {
       line_split = line_split.splice(1); /* Remove the first element */
     }
 
-    if (!this.fields[this.current_token]) {
-      this.fields[this.current_token] = [];
+    if (this.fields[TOKEN[this.current_token]] == undefined) {
+      this.fields[TOKEN[this.current_token]] = [];
     }
-    this.fields[this.current_token].push(line_split.join(" "));
+
+    const joined = line_split.join(" ");
+
+    if (joined.length > 0) {
+      this.fields[TOKEN[this.current_token]].push(joined);
+    }
   }
 }

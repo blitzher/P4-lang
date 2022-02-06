@@ -21,7 +21,7 @@ module Lexer
 				raise "No filename for lexer!"
 			end
 			
-			file = File.open("../tests/eggs.rcp")
+			file = File.open "../tests/eggs.rcp"
 			file_data = file.read
 			file.close
 
