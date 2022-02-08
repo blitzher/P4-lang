@@ -1,16 +1,29 @@
 title: Boiled Eggs
 subtitle: Eggs boiled to perfection, every time
 for: 2
-ingredients: (1000ml) water, 2 eggs
+ingredients:
+	(1000ml) water
+	2 eggs{vegan=[tofu]}
+	salt
+	pepper
+	[pizza]
+	1 chicken
+environments:
+	cutting board
+	pot
 
 procedure:
 
-with(all(water):
-	Boil the water on a ~stove until it reaches (100degC).
+with(all(water), 1(egg)):
+	heat(water)
+	Boil the water on a ~stove until it reaches temp(100degC).
 
 #timer
-with(all(eggs)):
+with(all(eggs), salt, pepper):
 	Put the eggs in the water, and set a timer for 6 minutes.
+
+with(1(chicken)):
+	slurp slurp
 
 after(timer):
 	Remove the eggs and let them cool in cold water for a few minutes
