@@ -1,0 +1,76 @@
+title: Spaghetti carbonara
+description: Carbonara is nice
+amount: 4 person
+cook time: 15 min
+
+ingredients:
+    bacon(400 g)
+    butter (1 tsp)
+    onion (1)
+    cream (1 dl)
+    egg (2)
+    parmesan (50 g)
+    *spaghetti
+    salt
+    pepper
+    extra parmesan?
+
+kitchenware:
+    pan
+
+procedure:
+
+    with(bacon,butter(half)) using(pan):
+        Melt the [butter] in the pan on the stove on medium-high heat.
+        Add [bacon] to the pan and cook it until it is crisp and delicious.
+        Then put it on a plate with a paper towel
+
+        yield:
+            cooked bacon
+            bacon fat
+    
+    with(butter, onion, bacon fat) using(pan):
+        Put [butter] on the pan with [bacon fat] and sauté the [onions:onion] until soft and clear.
+
+        yield:
+            cooked onions
+
+    with(cooked bacon,cream,cooked onions) using(pan):
+        add the [cooked bacon] and [cream] to the [pan:cooked onions].
+
+        yield:
+            onion bacon mix
+    
+    with(onion bacon mix, egg, spaghetti, parmesan, salt, pepper) using(pan):
+        Remove the [pan:onion bacon mix] from the heat and stir in the [eggs:egg] and the cooked spaghetti, 
+        and mix the dish well with the freshly grated [cheese:parmesan].
+        Season with [salt] and freshly ground [pepper].
+
+        yield:
+            spaghetti carbonara
+
+    with(extra parmesan,spaghetti carbonara):
+        sprinkle the [parmesan:extra parmesan] (if using) on the [spaghetti carbonara]
+
+    done(spaghetti carbonara)
+
+
+
+
+        
+
+
+
+
+        
+
+
+    
+
+    
+
+
+
+
+
+
