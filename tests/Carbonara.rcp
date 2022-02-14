@@ -2,18 +2,19 @@ title: Spaghetti carbonara
 description: Carbonara is nice
 amount: 4 person
 cook time: 15 min
+tags: pasta, easy to make, under 30 min, pork
 
-ingredients:
-    bacon(400 g)
-    butter (1 tsp)
+ingredients:    
+    bacon (400 g)     
+    butter (1 tsp)     
     onion (1)
-    cream (1 dl)
-    egg (2)
-    parmesan (50 g)
-    *spaghetti
+    cream (1 dl)      
+    egg (2)         
+    parmesan (50 g)      
+    spaghetti*               
     salt
     pepper
-    extra parmesan?
+    extra parmesan? 
 
 kitchenware:
     pan
@@ -26,8 +27,8 @@ procedure:
         Then put it on a plate with a paper towel
 
         yield:
-            cooked bacon
-            bacon fat
+            cooked bacon    
+            bacon fat       
     
     with(butter, onion, bacon fat) using(pan):
         Put [butter] on the pan with [bacon fat] and sauté the [onions:onion] until soft and clear.
@@ -52,7 +53,8 @@ procedure:
     with(extra parmesan,spaghetti carbonara):
         sprinkle the [parmesan:extra parmesan] (if using) on the [spaghetti carbonara]
 
-    done(spaghetti carbonara)
+    done:
+        spaghetti carbonara
 
 
 
