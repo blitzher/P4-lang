@@ -1,0 +1,47 @@
+Pizza[subtitle="a neat little pizza", for=1, unit="pieces",available_options="vegan,glutenfree"]
+ingredients = {
+    *pizza dough[vegan="vegan pizza dough",glutenfree="glutenfree pizza dough"],
+    400 ost [unit="g",vegan="vegan cheese"],
+    300 tomato sauce[unit="ml"],
+    pizza topping = options[3]{20 pepperoni, 20 ham, 15 bacon, 30 kebab, 15 chicken}
+                        [vegan={20 feta, 15 mushrooms, 2 olives, 17 parmesan, 20 peppers, 17 onions}]        
+}
+
+utility={
+    200 oven[unit="c"]
+    1 bowl[unit="l"]
+}
+
+procedure={
+    {
+        [pizza dough]
+        Knead the pizza dough
+        [Kneaded pizza dough]
+    }
+    {
+       [Kneaded pizza dough, half(ost),200(tomato sauce)]
+       sprinkle half of the cheese on the pizza and then pour out all of the tomato sauce 
+       spread it gently.  
+       [prepared pizza dough]          
+    }
+    
+    {
+        [prepared pizza dough,2(pizza topping),ost]
+        place 2 kinds of the pizza toppings evenly on the pizza, sprinkle the remaining cheese on as well
+        [almost finished pizza dough]
+    }
+    {
+        [tomato sauce,1(pizza topping)][bowl]
+        mix the remaining tomato sauce with the last chosen pizza topping in a bowl.
+        [bowl of mixed something]
+    }
+    {
+        [almost finished pizza dough, bowl of mixed something]
+        pour the container of the bowl on the pizza and spread it evenly
+        [oven-ready pizza]
+    }
+    {
+        [oven-ready pizza][oven]
+        bake(oven-ready pizza,oven,15,"minutes")
+    }
+}

@@ -1,0 +1,52 @@
+title = "Rye bread";
+
+amount = 
+{
+    1, "Bread"
+};
+
+ingredients
+{
+    50, gram, sourdough starter;
+    0.4, kg, rye flour;
+    40, gram, wheat flour;
+    15, g, salt;
+    200, g, sunflower seeds;
+    500, ml, water;
+    [sesame seeds];
+    [poppy seeds];
+}
+
+utinsils
+{
+    standmixer
+    flat beater
+    bowl
+    form
+    wire rack
+}
+
+procedure
+    {
+    with{bowl, standmixer, flat beater}(sourdough starter, rye flour, wheat flour, salt, sunflower seeds, water){
+        "Mix $[sourdough starter], $[rye flour], $[wheat flour], $[salt], $[sunflower seeds], and $[water]\n
+        in the $[bowl] of the $[standmixer] with the $[flat beater] attachment. Kneed the dough on medium speed for about 10-15 minutes.";
+    }
+                
+    yield{dough}
+
+    with{form}(dough, sesame seeds, poppy seeds){
+        "After knedding transfer the $[dough] to a form, and sprinke the dough with $[sesame seeds] and $[poppy seeds].\n
+        Cover the form with plastic wrap and let rise for a minimum of 12 hours.";
+    
+        "Set the form in a cold oven, and set the oven at 200 degress celsius.\n
+        Let the bread bake for 1 hour and 15 minutes";
+    }
+
+    yield{bread}
+    
+    with{"wire rack"}("bread"){
+        "Remove the $[bread] from the form and let cool on [wire rack]";
+    }
+    done("Rye bread);
+}
