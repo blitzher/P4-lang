@@ -1,60 +1,60 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <fstream>
+
+
+#include "./epicr.h"
 
 using namespace std;
 
 namespace epicr
 {
+    
+#pragma region Lexer class implementation
 
-    class Lexer
-    {
-    private:
-        /* data */
-    public:
-        Lexer(string filename);
-        ~Lexer();
-        string next_token();
-    };
+    Lexer::Lexer() :istream((ifstream*)nullptr)
+    {}
 
-    Lexer::Lexer(string filename)
+    Lexer::Lexer(ifstream& file) : istream(file)
     {
         std::cout << "Lexer says hi!" << std::endl;
 
         // try to open the file
-        ifstream istream{filename};
-
-        char ch;
-        int chcount = 0;
-
-        if (istream.is_open())
-        {
-            while (istream.get(ch))
-            {
-                cout << ch;
-                chcount++;
-            }
-            istream.close();
-            cout << endl;
-        }
-        else
-        {
-            cout << "Unable to open " << filename << endl;
-        }
-
-        cout << "Read " << chcount << " characters" << endl;
+        ready = istream.is_open();
     }
 
     string Lexer::next_token()
     {
-        vector<char> token;
+        if (token_backlog.size() > 0) {
+            string stoken = token_backlog.front();
+            token_backlog.pop();
+            return stoken;
+        }
 
-        return "Yo";
+        vector<char> vtoken;
+
+        char ch;        
+
+        /* Read characters */
+        while (istream.get(ch)) {
+            vtoken.push_back(ch);
+
+        }
+
+        string stoken(vtoken.begin(), vtoken.end());
+        return stoken;
     }
 
+    string Lexer::peek()
+    {
+        if (token_backlog.size() > 0) {
+
+        }
+        return "";
+    }
+
+    /* Destructure, close the input stream */
     Lexer::~Lexer()
     {
+        istream.close();
     }
+#pragma endregion
 
 }

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "epicr.h"
 
 using namespace std;
@@ -12,7 +11,8 @@ int main(int argc, char **argv)
 	{
 		cout << i << ": " << argv[i] << endl;
 	}
-	epicr::Lexer myLexer = epicr::Lexer(argv[1]);
+	ifstream file{argv[1]};
+	epicr::Lexer myLexer = epicr::Lexer(file);
 	cout << "Hello!" << std::endl;
 
 	return 0;
