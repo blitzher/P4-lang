@@ -5,7 +5,13 @@
     "string": "cpp",
     "istream": "cpp",
     "fstream": "cpp",
-    "iosfwd": "cpp"
+    "iosfwd": "cpp",
+    "array": "cpp",
+    "string_view": "cpp",
+    "initializer_list": "cpp",
+    "utility": "cpp",
+    "deque": "cpp",
+    "vector": "cpp"
   },
   "editor.tabSize": 4,
   "editor.formatOnSave": true
