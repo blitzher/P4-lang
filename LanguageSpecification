@@ -21,7 +21,7 @@ ingredients:
 - must be used in at least one with() statement
 - may have a specified amount
 	- this is annotated by ()
-	- an amount consists of a number followed by a measuring unit
+	- an amount consists of a number, optionally followed by a measuring unit
 		- these are seperated by whitespace
 - if no amount is specified, the amount will simply be 1
 - ingredients are seperated by other ingredients by a newline
@@ -176,10 +176,12 @@ note:
 - should users be able to write e.g. 2-3 hours under cooking time
 - it should be possible to write units without use of abbreviation (e.g. kg or kilo or kilogram)
 - if you simply write "degrees", what measuring system is it then?
-- can you include units from different systems in the same recipe (e.g. C and F)
-- syntax highlighter must recognize -
+- can you include units from different systems in the same recipe (e.g. both C and F)
+    - what if you wanna write "180 C (xxx F)"
+- syntax highlighter must recognize - and /
 - can you have an empty with?
 - can an alias be empty ([:some ingredient])
+- why is calories a keyword, but not e.g. "tips" or "nutrional content" or "durability"
 
 operators:
 - +
@@ -187,5 +189,6 @@ operators:
 - *
 - ()
 - []
+- {}
 - ,
 - . 
