@@ -1,0 +1,70 @@
+This is not done >.> still writing
+
+title: Butter chicken
+description: Butter Chicken is creamy and easy to make right at home in one pan with simple ingredients! Full of incredible flavours, it rivals any Indian restaurant! Aromatic golden chicken pieces in an incredible creamy curry sauce, this Butter Chicken recipe is one of the best you will try!
+amount: 6 people
+preb time: 15 min 
+cook time: 30 min
+total time: 45 min
+calories: 580 
+
+ingredients:    
+    boneless chicken (28 oz)  
+    plain yogurt (0.5 cup)    
+    minced garlic (0.5 tbsp)  
+    garam masala (2 tsp)
+    turmeric (1 tsp)
+    ground cumin (1 tsp)
+    red chili powder (1 tsp)
+    salt (1 tsp)
+
+    oilve oil (2 tbsp)
+    ghee (2 tbsp)
+    chopped onion (1)
+    minced garlic (0.5 tbsp)
+    minced ginger (1 tbsp)
+    ground cumin (0.5 tsp)
+    garam masala (0.5 tsp)
+    ground coriander (1 tsp)
+    crushed tomatoes (14 oz)
+    red chili powder (1 tsp)
+    salt (0.25 tsp)  \\\ (1/4 tsp)
+    heavy cream (1 cup)
+    sugar (1 tbsp)
+    kasoori methi (0.5 tsp)
+
+kitchenware:
+    bowl
+    skillet
+procedure:
+
+    with(boneless chicken, plain yogurt, minced garlic(0.5 cup), garam masala(2 tsp), turmeric(1 tsp), ground cumin(1 tsp), red chili powder(1 tsp), salt(1 tsp)) using(bowl):
+        On the night before combine the chicken pieces in a [bowl] with all of the ingredients for the chiken marinade: 0.5 cup of [minced garlic], 2 tsp [garam masala], 1 tsp [turmeric], 1 tsp [ground cumin],1 tsp [red chili powder] and 1 tsp [salt].
+
+        yield: marrinated chicken
+
+    with(olive oil) using(skillet):
+        Heat the [olive oil] in a large [skillet] When sizzling add the [marrinated chicken] in batches of 2 or 3 to aboid overcrowding the pan.
+        Fry 
+
+        yield: cooked chciken
+
+    with(pasty dough, egg) using(whisk, pot):
+        Add one [egg] at a time into the [pot] and [whisk] the [pasty dough].
+
+        update:
+            pasty dough     
+
+    with(pasty dough) using(piping bag):
+        Transfer the [pasty dough] into the [piping bag] and onto the baking tray in any shape or form that you desire. Beware that the [pasty dough] will enlarge to twice its size under baking.
+        yield:
+            choux uncooked
+
+    with(choux uncooked) using(oven):
+        Bake the [choux uncooked] in the [oven] for 30 min or until it have a nice golden color.
+        yield:
+            choux
+
+    done(Butter chicken)
+
+source https://cafedelites.com/butter-chicken/

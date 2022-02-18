@@ -1,0 +1,48 @@
+title: choux
+description: Freshly baked choux that have just come out of the oven, and they keeps their the shape.
+amount: 20 personer
+preb time: 15 min
+cook time: 30 min
+total time: 45 min
+ingredients:    
+    water (2.5 dl)  
+    butter (125 g)     
+    flour (125 g)
+    egg (3)      
+
+kitchenware:
+    oven
+    pot
+    whisk
+    piping bag
+procedure:
+
+    with(water, butter, flour) using(pot, whisk):
+        Add the [water] and [butter] to the [pot]. 
+        When it boils add the [flour] and mix well using the [whisker:whisk]. 
+        Put it aside for 15 min.
+
+        yield: pasty dough
+
+    using(oven):
+        Preheat your [oven] to {200 C}
+
+    with(pasty dough, egg) using(whisk, pot):
+        Add one [egg] at a time into the [pot] and [whisk] the [pasty dough].
+
+        update:
+            pasty dough     
+
+    with(pasty dough) using(piping bag):
+        Transfer the [pasty dough] into the [piping bag] and onto the baking tray in any shape or form that you desire. Beware that the [pasty dough] will enlarge to twice its size under baking.
+        yield:
+            choux uncooked
+
+    with(choux uncooked) using(oven):
+        Bake the [choux uncooked] in the [oven] for 30 min or until it have a nice golden color.
+        yield:
+            choux
+
+    done(choux)
+
+source https://madensverden.dk/vandbakkelser/
