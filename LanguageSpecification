@@ -137,6 +137,8 @@ time:
 - cook time should specify how much of the time in the recipe is used for cooking
 - total time = prep time + cook time
 - if only prep time, cook time or total time is specified, it will appear on the recipe card as total time
+- if total time and cook time is specified, prep will be calculated automatically and vice versa
+- prep time + cook time must be equal to total time
 
 calories:
 - optional statement
@@ -166,6 +168,18 @@ encapsulation:
 - once a keyword has been recognized, the compiler reads until it recognizes another keyword
 	- the only exception is when it reads done, which makes it produce the recipe card and terminate the program 
 - depending on the keyword, the compiler will look for different syntax in between the keywords
+
+note:
+- should users be able to specify amount as a fraction? (e.g. 2/3)
+- specification of how white space and such is trimmed
+- units should include time units 
+- should users be able to write e.g. 2-3 hours under cooking time
+- it should be possible to write units without use of abbreviation (e.g. kg or kilo or kilogram)
+- if you simply write "degrees", what measuring system is it then?
+- can you include units from different systems in the same recipe (e.g. C and F)
+- syntax highlighter must recognize -
+- can you have an empty with?
+- can an alias be empty ([:some ingredient])
 
 operators:
 - +
