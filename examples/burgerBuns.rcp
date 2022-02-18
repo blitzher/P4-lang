@@ -21,34 +21,34 @@ kitchenware:
 procedure:
     with(water, fresh yeast):
         Put the [water] in the bowl of the standmixer and disovle the [fresh yeast: yeast] herein.
-    yield:
-        yestWater
+        yield:
+            yestWater
 
     with(yestWater, wheat flour, sugar, salt) using(standmixer):
-        Add [wheat flour: flour], [salt], and [sugar] og kneed in the [standmixer] until the dough comes together.
+        Add [wheat flour: flour], [salt], and [sugar]. Kneed in the [standmixer] until the dough comes together.
         It often takes about 5 minutes.
-    yield:
-        dough
+        yield:
+            dough
 
     with(soften butter) using(standmixer):
         Now add the [soften butter] and knead the dough until it is smooth, pliable and releases the bowl of the [standmixer]
-    update: 
-        dough
+        update: 
+            dough
 
     with(dough):
         Cover the bowl with plastic wrap and then a tea towel and let the [dough] rise for 1 hour at room temperature.
-    update:
-        dough
+        update:
+            dough
     
     with(dough, extra wheat flour):
         Turn the dough out onto a floured work surface. Divide the dough into 10 pieces.
-    yield:
-        dough piece
+        yield:
+            dough piece
     
     with(dough piece):
         Shape each [dough piece] into a bun by folding the sides over each other all the way around.
-    yield:
-        burger buns
+        yield:
+            burger buns
     
     with(burger buns):
         Place the [burger buns] with the folds facing down on a baking sheet lined with parchment paper.
@@ -57,22 +57,22 @@ procedure:
     
     with(burger buns):
         Let the [burger buns] rise for 15 minutes. Press the buns flat with the palm of your hand to the desired size.
-    update:
-        burger buns
+        update:
+            burger buns
     
     with(burger buns):
         Let the buns rise for another 45-60 minutes.
-    update:
-        burger buns
+        update:
+            burger buns
     
     with(egg, sesame seeds, burger buns):
         Whisk an [egg] together and brush the [burger buns], and sprinkle with sesame seeds.
-    update: 
-        burger buns
+        update: 
+            burger buns
 
     with(burger buns):
         Bake the [burger buns] at {200 C} over/under heat for approx. 15 minutes.
-    update: 
-        buger buns
+        update: 
+            burger buns
 
     done(burger buns)
