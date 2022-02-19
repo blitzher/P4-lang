@@ -1,0 +1,61 @@
+title: Spaghetti carbonara
+description: Carbonara is nice
+amount: 4 people
+cook time: 15 min
+tags: pasta, easy to make, under 30 min, pork
+calories: 3000 
+calories pr. serving: 750
+
+ingredients:    
+    bacon (400 g)     
+    butter (1 tsp)     
+    onion (1)
+    cream (1 dl)      
+    egg (2)         
+    parmesan (50 g)      
+    spaghetti* (300 g)
+    salt+
+    pepper+
+    extra parmesan?+ 
+
+kitchenware:
+    airfryer
+
+procedure:
+
+    using(airfryer):
+        Preheat your [airfryer] to {200 C}
+
+    with(bacon) using(airfryer):
+        fry the [bacon] using the [airfryer]
+
+        update:
+            bacon     
+
+    with(butter, onion, bacon fat):
+        Put [butter] on the [pan] with [bacon fat] and sauté the [onions:onion] until soft and clear.
+
+        yield:
+            cooked onions
+
+    with(cooked bacon, cream, cooked onions):
+        add the [cooked bacon] and [cream] to the [pan:cooked onions].
+
+        yield:
+            onion bacon mix
+
+    with(onion bacon mix, egg, spaghetti, parmesan, salt, pepper):
+        Remove the [pan:onion bacon mix] from the heat and stir in the [eggs:egg] and the cooked spaghetti, 
+        and mix the dish well with the freshly grated [cheese:parmesan].
+        Season with [salt] and freshly ground [pepper]. 
+
+        yield:
+            spaghetti carbonara
+
+    with(extra parmesan, spaghetti carbonara):
+        Sprinkle the [parmesan:extra parmesan] (e.g. {20 g}) on the [spaghetti carbonara]. 
+    
+        update:
+            spaghetti carbonara
+
+    done(spaghetti carbonara)

@@ -1,0 +1,74 @@
+title: Ice cream
+
+prep time: 20 min
+total time: 4 hours
+
+description: This silky, luscious and very classic custard can be used as the base 
+for any ice cream flavor you can dream up. These particular proportions of milk and 
+cream to egg yolk will give you a thick but not sticky ice cream that feels decadent 
+but not heavy. 
+
+For something a little lighter, use more milk and less cream, as long 
+as the dairy adds up to 3 cups. You can also cut down on egg yolks for a thinner base, 
+but don’t go below three.
+
+Tip: 
+This recipe for ice cream base may be churned on its own, but it is meant to have 
+flavors added. See the chart here for flavor options and directions for incorporating 
+them into the base recipe.
+
+ingredients:
+    heavy cream (2 cups)
+    whole milk (1 cup)
+    sugar (2/3 cup)
+    fine sea salt (1/8 teaspoon)
+    large egg yolks (6)
+    Your choice of flavoring
+
+kitchenware:
+    bowl
+    pot
+    whish
+    fine-mesh seal
+    instant-read thermometer
+    ice cream machine
+
+procedure:
+    with(heavy cream, milk, sugar, salt) using(pot):
+        In a small [pot], simmer [heavy cream], [milk], [sugar] and [salt] until 
+        [sugar] completely dissolves, about 5 minutes. Remove [pot] from heat. 
+
+        yield:
+            hot cream
+    
+    with(large egg yolks, hot cream (1/3)) using (bowl):
+        In a separate [bowl], [whisk] [yolks: large egg yolks]. Whisking constantly, 
+        slowly whisk about a third of the [hot cream] into the [yolks: large egg yolks]
+
+        yield:
+            yolk mixture
+
+    with(yolk mixture, hot cream) using (whisk, pot, instant-read thermometer):
+        [Whisk] the [yolk mixture] back into the [pot] with the [cream: hot cream]. 
+        Return [pot] to medium-low heat and gently cook until mixture is thick enough 
+        to coat the back of a spoon (about {170 degrees} on an [instant-read thermometer]).
+
+        yield: 
+            ice cream mixture
+
+    with(mixture) using(fine-mesh sieve, bowl):
+        Strain through a [fine-mesh sieve] into a [bowl]. Cool [mixture] to room 
+        temperature. Cover and chill at least 4 hours or overnight. 
+
+        update:
+            ice cream mixture
+
+    with(ice cream mixture) using(ice cream machine):
+        Churn [:ice cream mixture] in an [ice cream machine] according to manufacturers’ 
+        instructions. Serve directly from the machine for soft serve, or store in freezer 
+        until needed.
+
+            yield:
+                ice cream
+    
+    done(ice cream)
