@@ -1,0 +1,25 @@
+{
+    "name": "rcp",
+    "displayName": "epicr-language",
+    "description": "Language support for the Epicr language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.64.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "epicr",
+            "aliases": ["Epicr", "epicr"],
+            "extensions": [".rcp"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "epicr",
+            "scopeName": "source.rcp",
+            "path": "./syntaxes/epicr.tmLanguage.json"
+        }]
+    }
+}

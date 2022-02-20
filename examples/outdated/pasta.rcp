@@ -1,0 +1,93 @@
+#title: Creamy Zucchini Pasta
+#servings: 4
+#prep: 10 min
+#cook: 10 min
+
+#description:
+{
+    This bright orange pasta sauce will be your new go to because it's full of hidden veggies,
+     super creamy with half the calories and no cream, and ready in under 30 minutes!
+}
+
+#ingredients: 
+{
+    penne pasta [450 g],
+    olive oil [2 Tbsp],
+    zucchini [2],
+    garlic cloves [2],
+    canned tomatoes [120 g],
+    cocunut milk [220 g],
+    smoked paprika [tsp],
+    fresh basil leaves [6],
+    optional extra fresh basil leaves [3],
+    salt [2 tsp],
+    pepper [1 tsp],
+    optional nutritional yeast [handful] or parmesan cheese [handful]
+}
+
+#tools:
+{
+    food processor or high powered blender
+}
+
+#instructions:
+{
+    with(penne pasta [all], salt, olive oil [1 Tbsp])
+    {
+        Boil water for your {penne pasta} and cook according to package instructions.
+        Add some {salt} and {olive oil} to your water while it cooks.
+    }
+    yield(cooked pasta);
+
+    with(zucchini [all], olive oil [rest])
+    {
+        Slice up your {zucchini} and pan fry them until tender.
+        The sautéed flavor from the {olive oil} will also give you a nice roasted flavor 
+         when we blend it up later.
+    }
+    yield(fried zucchini);
+
+    with(fried zucchini, garlic cloves [all], canned tomatoes [all])
+    {
+        Add minced {garlic cloves} to the {fried zucchini} and fry the garlic until browned.
+        Then add in {canned tomatoes} and simmer until bubbling.
+    }
+    yield(fried veggies);
+
+    with(fried veggies, coconut milk, fresh basil, smoked paprika, salt, nutritional yeast, parmesan cheese) and {food processor, high powered blender}
+    {
+        Add the {fried veggies} from the pan to a {food processor} or {high powered blender}
+         along with {coconut milk}, {fresh basil}, {smoked paprika}, and salt and pepper.
+        Blend on high for 2 minutes until smooth.
+        Add more {salt} and {smoked paprika} to desired taste.
+        Optionally, sprinkle a handful of {nutritional yeast} into this recipe, 
+         or if you have {parmesan cheese} that would go great with this sauce as well.
+    }
+    yield(pasta sauce);
+
+    with(cooked pasta, pasta sauce, extra fresh basil)
+    {
+        Pour the {pasta sauce} over the {cooked pasta} and enjoy!
+        Garnish with {extra fresh basil leaves} and enjoy with a glass of red wine :)
+    }
+    yield(creamy zucchini pasta);
+
+    done(creamy zucchini pasta);
+}
+
+
+/*
+    - Alt under #description og i with() bliver læst som strenge.
+        - De eneste specialtegn der læses her er {}, der bruges til at erklære ingredienser eller tools.
+    - Hvis en angiven ingrediens i en with() ikke bruges i den pågældende with() får man fejl.
+    - Hvis en ingrediens er angivet i en with(), kan den bruges fra 1 til uendeligt mange gange i den with().
+    - Alle with() skal have et yield(), dette kan angives som tomt hvis ikke der er noget yield.
+        - Dette kunne f.eks. være hvis der var et step som "læg x i fryseren".
+    - Hvis man ikke angiver nogen mængde for en given ingrediens i en with() svarer til at man implicit skriver [all]
+    - Optional er keyword som angiver at en ingrediens ikke er nødvendig.
+        - Optional ingredienser opfører sig som alle andre ingredienser, men det fremgår af indkøbslisten at de ikke er nødvendige.
+    - Keywordet or bruges til at angive at man kan bruge et ingredient/tool, eller et andet ingredient/tool.
+        - Dette har kun betydning for indkøbslisten. 
+    - Ønsker man at inkludere tools i sin with() gøres det med keywordet and, for tydeligt at skelne mellem ingredienser og tools.
+    - Brugeren vælger selv hvilke tools er relevante, men som udgangspunkt skriver man kun ting her, som man ikke kan forvente at alle har. 
+*/

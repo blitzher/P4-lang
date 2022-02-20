@@ -1,0 +1,53 @@
+Ret: Burger {
+Potion: 4
+meassurementv: Metric
+
+Ingredients{ 
+	tag-b��fingredients{
+		600g hakket oksek��d
+		3 spsk tomater finthakket
+		1 tsk worcestershire sauce
+		1 aeg
+		150g ost
+		4 stk stegt bacon
+		}
+    
+	tag-tilbehor {125g salat
+	2 tomater i skiver
+	0.5 agurk i skiver
+	1 rodlogv
+	2spsk mayonnaise
+	2 spsk ketchup
+	4[burgerbolle]
+	}
+	}	
+
+	
+
+Procedure{          
+
+	MixAll(hakket oksekod, tomater finthakket, bacon fint hakket....) { .... }
+
+	Mix(@bofingredients to bowl){
+		"Mix, Ingredient A, B, C, ... into bowl"
+		yield(boffas)
+		}
+	Chop/shape(boffas to cuttingboard) {
+		Shape: flat, height = 5cm
+		"Del fassen i 4 og form dem til boffer paa et skaerrebraet"
+		yeild(bof-raw) 
+	}
+
+	Fry(bof-raw to pan) {
+		style:`
+		Heat=Medium
+		Time=5;5   %% flip
+		yield(bof)
+	}
+
+	Final(bof, burgerbolle, %ingredients to plate) {
+		burgerbolle(bof(ingredients))  %%% Maybe eee kunne resultere i "I burgerbollen tilfojes bof med ingredienser"
+		yeild(Burger)
+
+     }
+}
