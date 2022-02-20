@@ -56,7 +56,7 @@ namespace epicr
         while (istream.get(ch))
         {
             /* we don't want long runs of blanks */
-            while (vtoken.size() == 0 && (ch == ' ' || ch == '\n'))
+            while (!istream.eof() && vtoken.size() == 0 && (ch == ' ' || ch == '\n'))
             {
                 istream.get(ch);
             }

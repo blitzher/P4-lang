@@ -48,4 +48,4 @@ remove: clean
 	@echo "Executable removed!"
 
 run: $(BINDIR)/$(TARGET)
-	@./$< tests/Carbonara.rcp
+	@./$< examples/Carbonara.rcp

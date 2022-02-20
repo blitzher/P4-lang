@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -7,6 +9,21 @@
 
 namespace epicr
 {
+
+    enum epicr_token_type
+    {
+        WORD,
+        BRACKET_OPEN,
+        BRACKET_CLOSE,
+        NUMBER,
+
+    };
+
+    typedef struct epicr_token_s
+    {
+        std::string s;
+
+    } epicr_token;
 
     class Lexer
     {
