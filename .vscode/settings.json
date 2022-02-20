@@ -1,6 +1,17 @@
 {
   "files.associations": {
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "*.tcc": "cpp",
+    "string": "cpp",
+    "istream": "cpp",
+    "fstream": "cpp",
+    "iosfwd": "cpp",
+    "array": "cpp",
+    "string_view": "cpp",
+    "initializer_list": "cpp",
+    "utility": "cpp",
+    "deque": "cpp",
+    "vector": "cpp"
   },
   "editor.tabSize": 4,
   "editor.formatOnSave": true

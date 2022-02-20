@@ -3,15 +3,15 @@ Potion: 4
 meassurementv: Metric
 
 Ingredients{ 
-	tag-bï¿½ï¿½fingredients{
-		600g hakket oksekï¿½ï¿½d
+	tag-b©ªfingredients{
+		600g hakket oksek©ªd
 		3 spsk tomater finthakket
 		1 tsk worcestershire sauce
 		1 aeg
 		150g ost
 		4 stk stegt bacon
 		}
-    
+
 	tag-tilbehor {125g salat
 	2 tomater i skiver
 	0.5 agurk i skiver
