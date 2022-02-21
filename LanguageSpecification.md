@@ -1,40 +1,25 @@
 overall:
-<<<<<<< HEAD
 
 - the language is case-insensitive
+- the language kinda ignores white-space
 
 output:
 
-=======
-- the language is case-insensitive
-- the files use the file extension .rcp
-
-structure:
-- a recipe must include:
-    - a title
-    - a portion size
-    - at least one ingredient
-    - a procedure with at least one with()
-    - a done statement
-- these may be placed in any order, the only exception is that "procedure" must be placed last
-
-output:
->>>>>>> d2247874da7c25353b94d71444bd1ac91f27a314
 - compiling a program produces a recipe card in a text format (html/txt)
 - if recipes are included as ingredients, recipe cards for these will be produced for these as well
 
 ingredients:
-<<<<<<< HEAD
 
-- must not include , \* ? [] () :
+- must not include , \ \* ? [] {} () :
 - must be used in at least one with() statement
 - may have a specified amount
   - this is annotated by ()
   - an amount consists of a number followed by a measuring unit
     - these are seperated by whitespace
+  - a number may be a fraction (e.g. 2/3)
 - if no amount is specified, the ingredient will be uncountable
   - uncountable ingredients can never be used up
-- ingredients are seperated by other ingredients by a newline
+- ingredients are comma-seperated
 - ingredients can be specified as optional by suffixing them with a ?
   - optional ingredients behave just like other ingredients
   - the only difference is that they are clearly stated as optional on the recipe card
@@ -51,13 +36,14 @@ ingredient arithmetic:
 
 kitchenware:
 
-- must not include , \* ? [] () :
+- must not include , \ \* ? [] {} () :
 - must be used in at least one using() statement
+- are comma-seperated
 
 procedure:
 
 - each step of the procedure is described using a with() statements
-- a procedure must end with a done() statement
+- The procedure must end with a done() statement
 
 with():
 
@@ -74,7 +60,7 @@ with():
 - all ingredients included as parameters must be included in the body
   - these are annotated by []
   - these may have an alternative name, following the format [alternative name : actual name]
-- may end with a yield statement
+- may end with a yield statement or an update statement, but not both
 
 using():
 
@@ -84,6 +70,16 @@ using():
 - the included parameters does not have to be included in the body of the with() statement
   - however, if they are, they should be annotated by []
 
+update:
+
+- an optional statement to end a with() statement
+- specifies zero to many output parameters
+  - only the input parameters passed to the with() can be specified as output
+- updating an ingredient corresponds to not consuming it
+  - therefore, updated ingredients must still be consumed later
+  - multiple updated ingredients are comma-seperated
+- yielded ingredients can be suffixed with +, but not \* or ?
+
 yield:
 
 - an optional statement to end a with() statement
@@ -91,13 +87,37 @@ yield:
 - all specified parameters are considered new ingredients
   - these must be used in a later with() statement or in the done statement
   - the ingredients must not have the same name as already existing ingredients
+  - multiple ingredients are comma-seperated
 
 done:
 
 - the final statement of the program
-- specifies zero to many output parameters
-  - these must be ingredients previously yielded
-  - when using a recipe as an ingredient, these parameters specify what ingredients the recipe yields
+- specifies zero to one output parameter
+  - this ingredient must be an ingredient not yet consumed
+    - it must be the exact same name as the title of the recipe
+- when using a recipe as an ingredient, this statement specifies what that recipe gives you
+- if no parameter is given, the title of the recipe will automatically be parsed
+  - it still must have been yielded previously
+- the program terminates once the last parenthesis of the done has been read
+
+units:
+
+- users may use any name for measuring units, however, these do not convert
+- standard measurement units are defined by the language
+  - these include
+    - weight: g, kg, oz
+    - volume: ml, dl, l, fl oz, cup, tsp, tbsp, qt, gal
+    - temperature: C, F
+    - length: mm, cm, in, ft
+- within a with() or using() statement, units should be annotated by {}
+  - this will make the units convertable between the metric system and the US imperial system
+    - the amount must be specified on the form {number unit}
+- all units are named using their standard abbreviation without periods
+- no warning will be given if units from different systems are used in the same recipe
+
+compilation flags:
+
+- a recipe may be compiled with the flag -metric or -imperial
 
 tags:
 
@@ -105,10 +125,20 @@ tags:
 
 time:
 
+- optional statement
 - prep time should specify how much of the time in the recipe is used for preperation
 - cook time should specify how much of the time in the recipe is used for cooking
 - total time = prep time + cook time
-- if only prep time or cook time is specified, it will appear on the recipe card as total time
+- if only prep time, cook time or total time is specified, it will appear on the recipe card as total time
+- if total time and cook time is specified, prep will be calculated automatically and vice versa
+- prep time + cook time must be equal to total time
+- time may be specified as a range by use of a dash (e.g. 2-3 hours)
+  - when used in a calculation, the average will be used (e.g. prep time: 20-30 min, cook time: 15 min, equals total time: 40 min)
+
+calories:
+
+- optional statement
+- user may specify total amount or amount pr. serving
 
 encapsulation:
 
@@ -129,192 +159,43 @@ encapsulation:
   - (half)
   - (quarter)
   - (rest)
-- it also recognizes these functions
   - with()
   - using()
-- functions must be either on the form
+- subprocedure headers must be on one of these forms:
   - with():
-    or
+  - using():
   - with() using():
 - procedure must be the last part of the program
 - once a keyword has been recognized, the compiler reads until it recognizes another keyword
   - the only exception is when it reads done, which makes it produce the recipe card and terminate the program
 - depending on the keyword, the compiler will look for different syntax in between the keywords
-=======
-- the name of the ingredient must not include , * ? [] () : + {} 
-- two ingredients cannot have the same name, or the same name as a piece of kitchenware 
-- must be used in at least one with() statement
-- may have a specified amount
-	- this is annotated by ()
-	- an amount consists of a number, optionally followed by a measuring unit
-		- these are seperated by whitespace
-- if no amount is specified, the amount will simply be 1
-- ingredients are seperated by other ingredients by a newline
-- ingredients can be specified as optional by suffixing them with a ?
-	- optional ingredients behave just like other ingredients
-	- the only difference is that they are clearly stated as optional on the recipe card
-- ingredients can be specified as self contained recipes by suffixing them with a *
-	- if an ingredient is specified as a recipe, a recipe with that title must exist in the users recipe list
-		- otherwise, the program will not be able to compile
-	- when amount is specified for recipent ingredients, the unit must be the same as what was specified in the recipes yield
-- ingredients can be specified as uncountable by suffixing them with +
-	- uncountable ingredients can never be used up
 
-ingredient arithmetic:
-- if ingredients are specified by an amount, the following is true:
-	- when an ingredient is parsed as a parameter to with(), it will be "used"
-		- thereby the amount will be subtracted from the overall amount
-	- it is impossible to use more of the ingredient than specified
-	- the entire amount must be used during the procedure
-	- if no amount is specified in a with() statement, it is the same as implicitely writing rest
+notes:
 
-kitchenware:
-- kitchenware should specify tools which it cannot be assumed that everyone has in their kitchen
-- the name of the kitchenware must not include , * ? [] () : + {}
-- two pieces of kitchenware cannot have the same name, or the same name as an ingredient
-- must be used in at least one using() statement
-- kitchenware can be specified as optional by suffixing them with a ?
-	- optional kitchenware behave just like other ingredients
-	- the only difference is that they are clearly stated as optional on the recipe car
-
-procedure:
-- each step of the procedure is described using a with() statement
-- a procedure must end with a done() statement
-
-with():
-- takes zero to many input parameters
-- all input parameters must be ingredients
-- the input parameters may have a specified amount
-	- this is written in the form: ingredient (amount)
-	- the units must match with what was specified in the ingredient list (e.g. kg to g is legal, g to ml is not)
-	- if no unit is specified, it is assumed that the unit is the same as was specified in the ingredient list
-	- the specified amount may use the keywords: all, half, quarter, rest
-		- these keywords operate on the initially specified amount, with the exception of rest
-- input parameters are seperated by comma
-- the body should specify the procedure 
-- all ingredients included as parameters must be included in the body
-	- these should be annotated by []
-	- these may have an alternative name, following the format [alternative name : actual name]
-- may end with a yield statement or an update statement, but not both
-
-amount specification:
-- the amount specified for an ingredient in a with() will be automatically written 
-  in parenthesis in the place where the ingredient was mentioned in the body
-- if the entire amount is used, the amount will not be specified
-- if the amount was specified using half or quarter, the amount will be converted to 
-  the actual amount, so that the user knows how much to use
-
-units:
-- users may use any name for measuring units, however, these do not convert
-- standard measurement units are defined by the language
-	- these include
-		- weight: g, kg, oz
-		- volume: ml, dl, l, fl oz, cup, tsp, Tbsp, qt, gal
-		- temperature: C, F
-		- length: mm, cm, in, ft
-- within a with() or using{} statement, units should be annotated by {}
-	- this will make the units convertable between the metric system and the US imperial system
-    - the amount must be specified on the form {number unit}
-
-using():
-- an optional statement serving as an extention of the with() statement
-    - or working as a standalone statement
-- takes zero to many input parameters
-- all input parameters must be kitchenware
-- the included parameters does not have to be included in the body of the with() statement
-	- however, if they are, they should be annotated by []
-- if a piece of kitchenware is included in a using, it must be included in the body of the with/using
-
-yield:
-- an optional statement to end a with() statement
-- specifies zero to many output parameters
-- all specified parameters are considered new ingredients
-	- these must be used in a later with() statement or in the done statement
-	- the ingredients must not have the same name as already existing ingredients
-- yielded ingredients can be suffixed with +, but not * or ?
-
-update:
-- an optional statement to end a with() statement
-- specifies zero to many output parameters
-    - only the input parameters passed to the with() can be specified as output
-- updating an ingredient corresponds to not consuming it
-    - therefore, updated ingredients must still be consumed later
-
-done:
-- the final statement of the program
-- specifies zero to one output parameter
-	- this ingredient must be an ingredient not yet consumed
-    - it must be the exact same name as the title of the recipe
-- when using a recipe as an ingredient, this statement specifies what that recipe gives you
-- if no parameter is given, the title of the recipe will automatically be parsed
-    - it still must have been yielded previously
-- the program terminates once the last parenthesis of the done has been read
-
-description:
-- optional text for descripting the recipe
-
-tags:
-- optional descriptors of the recipe
-
-time:
-- optional statement
-- prep time should specify how much of the time in the recipe is used for preperation
-- cook time should specify how much of the time in the recipe is used for cooking
-- total time = prep time + cook time
-- if only prep time, cook time or total time is specified, it will appear on the recipe card as total time
-- if total time and cook time is specified, prep will be calculated automatically and vice versa
-- prep time + cook time must be equal to total time
-
-calories:
-- optional statement
-- user may specify total amount or amount pr. serving
-
-encapsulation:
-- to differentiate between different parts of the program, the compiler identifies specific keywords
-	- title:
-	- description:
-	- amount:
-	- cook time:
-	- prep time:
-	- total time:
-	- tags:
-	- ingredients:
-	- kitchenware:
-	- procedure:
-	- yield:
-	- done:
-	- (all)
-	- (half)
-	- (quarter)
-	- (rest)
-	- with():
-	- using():
-- procedure must be the last part of the program
-- once a keyword has been recognized, the compiler reads until it recognizes another keyword
-	- the only exception is when it reads done, which makes it produce the recipe card and terminate the program 
-- depending on the keyword, the compiler will look for different syntax in between the keywords
-
-note:
-- should users be able to specify amount as a fraction? (e.g. 2/3)
-- specification of how white space and such is trimmed
-- units should include time units 
-- should users be able to write e.g. 2-3 hours under cooking time
-- it should be possible to write units without use of abbreviation (e.g. kg or kilo or kilogram)
-- if you simply write "degrees", what measuring system is it then?
-- can you include units from different systems in the same recipe (e.g. both C and F)
-    - what if you wanna write "180 C (xxx F)"
-- syntax highlighter must recognize - and /
+- syntax highlighter must recognize - % and /
 - can you have an empty with?
 - can an alias be empty ([:some ingredient])
 - why is calories a keyword, but not e.g. "tips" or "nutrional content" or "durability"
 
-operators:
-- +
-- ?
-- *
-- ()
-- []
-- {}
-- ,
-- . 
->>>>>>> d2247874da7c25353b94d71444bd1ac91f27a314
+extra notes:
+procedure:
+
+- each step of the procedure is described using a with() statements /// wrong
+- The procedure must end with a done() statement
+
+with():
+
+- takes zero to many input parameters /// one to many?
+
+using():
+
+- an optional statement serving as an extention of the with() statement
+- takes zero to many input parameters
+
+update & yield:
+
+- an optional statement to end a with() statement
+- specifies zero to many output parameters
+
+encapsulation:
+-subprocedure

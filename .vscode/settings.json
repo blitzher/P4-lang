@@ -46,6 +46,5 @@
     "streambuf": "cpp",
     "typeinfo": "cpp"
   },
-  "editor.tabSize": 4,
-  "editor.formatOnSave": true
+  "editor.tabSize": 4
 }

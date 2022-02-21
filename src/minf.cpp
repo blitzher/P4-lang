@@ -3,9 +3,9 @@
 using namespace std;
 
 /*
-	Store some known data and their sizes in memory,
-	and omit the headers, such as "title:",
-	since all recipes will contain these.
+Store some known data and their sizes in memory,
+and omit the headers, such as "title:",
+since all recipes will contain these.
  */
 typedef struct min_rcp_format_s
 {
@@ -20,12 +20,8 @@ typedef struct min_rcp_format_s
 
 } min_rcp_format;
 
-void compress(string filepath)
-{
-	/* Perform compression with huffman */
-}
+// void compress(string filepath) { /* Perform compression with huffman */
+// }
 
-void decompress(string filepath)
-{
-	/* Decompress with huffman */
-}
+// void decompress(string filepath) { /* Decompress with huffman */
+// }
