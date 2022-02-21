@@ -9,7 +9,7 @@
 TARGET     = main
 
 CXX        = clang++
-CXXFLAGS   = -std=c++17 \
+CXXFLAGS   = -std=c++20 \
              -Wall -Wextra -Werror -Wpointer-arith -Wcast-qual \
              -Wno-missing-braces -Wempty-body -Wno-error=uninitialized \
              -Wno-error=deprecated-declarations \

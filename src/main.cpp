@@ -2,6 +2,9 @@
 
 using namespace std;
 
+/* Remove or outcomment when not debugging */
+#define DEBUG 1
+
 int main(int argc, char **argv)
 {
 
@@ -11,7 +14,9 @@ int main(int argc, char **argv)
 	{
 		cout << i << ": " << argv[i] << endl;
 	}
+
 	ifstream file = epicr::open_file(argv[1]);
+
 	if (file.is_open())
 	{
 		epicr::Lexer myLexer = epicr::Lexer(file);
@@ -19,18 +24,11 @@ int main(int argc, char **argv)
 		int token_count = 0;
 		while (myLexer.is_ready())
 		{
-			string token = myLexer.next_token();
+			epicr::epicr_token token = myLexer.next_token();
+			string type = epicr::token_to_string(token.type);
 
-			cout << token_count << ": " << token << endl;
-
-			if (token_count == 334)
-			{
-				for (size_t i = 0; i < token.size(); i++)
-				{
-					printf("%i", token[i]);
-				}
-				cout << endl;
-			}
+			if (DEBUG)
+				printf("%3i %-18s: %s\n", token_count, type.c_str(), token.word.c_str());
 
 			token_count++;
 		}

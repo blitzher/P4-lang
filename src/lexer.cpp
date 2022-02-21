@@ -32,21 +32,21 @@ namespace epicr
         ready = istream.is_open();
     }
 
-    string Lexer::next_token()
+    epicr_token Lexer::next_token()
     {
         /* Handle peeking */
         if (token_peeklog.size() > 0)
         {
             string stoken = token_peeklog.front();
             token_peeklog.pop();
-            return stoken;
+            return {stoken, token_type(stoken)};
         }
 
         /* Check if the file stream is ended */
         if (istream.eof())
         {
             ready = false;
-            return "EOF";
+            return {"EOF", ETT_EOF};
         }
 
         vector<char> vtoken;
@@ -82,20 +82,42 @@ namespace epicr
             return next_token();
         }
 
-        return stoken;
+        return {stoken, token_type(stoken)};
+    }
+
+    epicr_token_type Lexer::token_type(string stoken)
+    {
+
+        if (stoken == "(" || stoken == "[" || stoken == "{")
+
+            return ETT_BRACKET_OPEN;
+
+        else if (stoken == ")" || stoken == "]" || stoken == "}")
+            return ETT_BRACKET_CLOSE;
+
+        bool is_numeric = true;
+        char ch;
+        for (size_t i = 0; i < stoken.size(); i++)
+        {
+            ch = stoken[i];
+            if (i == 0 && ch == '.')
+            {
+                is_numeric = false;
+                break;
+            }
+            /* If the word is not 0-9 and not '.', it isn't a number */
+            if ((ch < 48 || ch > 57) && ch != '.')
+            {
+                is_numeric = false;
+                break;
+            }
+        }
+        return (is_numeric) ? ETT_NUMBER : ETT_WORD;
     }
 
     bool Lexer::is_ready()
     {
         return ready;
-    }
-
-    string Lexer::peek()
-    {
-        if (token_peeklog.size() > 0)
-        {
-        }
-        return "";
     }
 
     /* Destructure, close the input stream */
@@ -105,21 +127,5 @@ namespace epicr
     }
 
 #pragma endregion
-
-    ifstream open_file(string filename)
-    {
-        ifstream file{filename};
-
-        if (!file.is_open())
-        {
-            cout << "File " << filename << " could not be opened!" << endl;
-        }
-        else
-        {
-            cout << "Opened file " << filename << endl;
-        }
-
-        return file;
-    }
 
 }
