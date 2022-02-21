@@ -64,5 +64,8 @@ namespace epicr
         epicr_token peek();
     };
 
+    void compress(std::string filepath);
+    void decompress(std::string filepath);
+
     std::ifstream open_file(std::string filename);
 }
