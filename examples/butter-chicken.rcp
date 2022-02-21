@@ -1,5 +1,3 @@
-This is not done >.> still writing
-
 title: Butter chicken
 description: Butter Chicken is creamy and easy to make right at home in one pan with simple ingredients! Full of incredible flavours, it rivals any Indian restaurant! Aromatic golden chicken pieces in an incredible creamy curry sauce, this Butter Chicken recipe is one of the best you will try!
 amount: 6 people
@@ -36,34 +34,49 @@ ingredients:
 kitchenware:
     bowl
     skillet
+    blender
 procedure:
 
-    with(boneless chicken, plain yogurt, minced garlic(0.5 cup), garam masala(2 tsp), turmeric(1 tsp), ground cumin(1 tsp), red chili powder(1 tsp), salt(1 tsp)) using(bowl):
+    with(boneless chicken, plain yogurt, minced garlic(0.5 cup), garam masala(2 tsp), turmeric(1 tsp), ground cumin(1 tsp), red chili powder(half), salt(1 tsp)) using(bowl):
         On the night before combine the chicken pieces in a [bowl] with all of the ingredients for the chiken marinade: 0.5 cup of [minced garlic], 2 tsp [garam masala], 1 tsp [turmeric], 1 tsp [ground cumin],1 tsp [red chili powder] and 1 tsp [salt].
 
         yield: marrinated chicken
 
-    with(olive oil) using(skillet):
+    with(olive oil, marrinated chicken) using(skillet):
         Heat the [olive oil] in a large [skillet] When sizzling add the [marrinated chicken] in batches of 2 or 3 to aboid overcrowding the pan.
-        Fry 
+        Fry until browned with 3 minutes on each side. Take it off the [skillet] and put it aside for now.
 
-        yield: cooked chciken
+        yield: fried chicken
 
-    with(pasty dough, egg) using(whisk, pot):
-        Add one [egg] at a time into the [pot] and [whisk] the [pasty dough].
+    with(ghee, chopped onion) using(skillet):
+        Heat [ghee] in the same [skillet:olive oil]. Fry the [chopped onions:chopped onion] for about 6 minutes, scrape off any browned bits stuck on the bottom of the pan. 
+
+        yield:
+            buttered onions   
+
+    with(buttered onions,minced garlic(0.5 tbsp), minced ginger, ground coriander, garam masala (0.5 tsp)) using(skillet):
+        Add 0.5 tbsp [minced garlic] and 1 tbsp of [minced ginger] to [skillet:] and saute for 1 minute, then add the ground coriander and 0.5 tsp of garam masala.
+        Cook for about 20 seconds until fragrant, while stirring occasionally.
+        yield:
+            sauce mix
+
+    with(sauce mix, crushed tomatoes, red chili powder(half), salt(0.25 tbsp)) using(skillet):
+        Add {crushed tomatoes}, 1 tsp of [red chili powder] and 0.25 tbsp of [salt]. Let simmer for about 10-15 minutes, stirring occasionally until sauce thickens and becomes a deep brown red colour.
+        update:
+            sauce mix
+
+    with(sauce mix) using(blender):
+        remove [skillet:sauce mix] from the heat, scoop mixture into a [blender] and blend until smooth.
 
         update:
-            pasty dough     
+            sauce mix
+   
+    with(sauce mix, heavy cream, sugar, kasoori methi, fried chicken) using(skillet):
+        Pour the puréed [sauce mix] back into the [skillet]. Stir the [heavy cream], [sugar] and crushed [kasoori methi] through the [sauce mix]. 
+        Add the [fried chicken] with juices back into the [skillet:sauce mix] and cook for an additional 8-10 minutes until [fried chicken] is cooked through and the [sauce mix] is thick and bubbling.
 
-    with(pasty dough) using(piping bag):
-        Transfer the [pasty dough] into the [piping bag] and onto the baking tray in any shape or form that you desire. Beware that the [pasty dough] will enlarge to twice its size under baking.
         yield:
-            choux uncooked
-
-    with(choux uncooked) using(oven):
-        Bake the [choux uncooked] in the [oven] for 30 min or until it have a nice golden color.
-        yield:
-            choux
+            Butter chicken
 
     done(Butter chicken)
 
