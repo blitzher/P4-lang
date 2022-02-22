@@ -53,34 +53,41 @@ namespace epicr
 
         char ch;
         /* Read characters and break into tokens */
-        while (istream.get(ch))
+        while (istream.get(ch) && !istream.eof())
         {
-            /* we don't want long runs of blanks */
-            while (!istream.eof() && vtoken.size() == 0 && (ch == ' ' || ch == '\n'))
+
+            /* group runs of white space into blanks */
+            if (ch == ' ' || ch == '\n')
             {
-                istream.get(ch);
+                vector<char> blank_run;
+                do {
+                    blank_run.push_back(ch);
+                    istream.get(ch);
+                }
+                while (!istream.eof() && ch == blank_run[0]);
+
+                /* since we encountered a non-blank, step back once */
+                if (!istream.eof()) /* can't seek when at EOF */
+                    istream.seekg(-1, ios_base::cur);
+                string blank(blank_run.begin(), blank_run.end());
+                token_peeklog.push(blank);
+                break;
             }
 
             if (CH_V_CONTAINS(token_breakers, ch))
             {
-                if (ch != ' ' && ch != '\n')
-                {
-                    string breaker_token;
-                    breaker_token.push_back(ch);
-                    token_peeklog.push(breaker_token);
-                }
+                string breaker_token;
+                breaker_token.push_back(ch);
+                token_peeklog.push(breaker_token);
                 break;
             }
 
-            if (ch != '\n' && ch != 0)
-                vtoken.push_back(ch);
+            vtoken.push_back(ch);
         }
 
         string stoken(vtoken.begin(), vtoken.end());
         if (stoken.size() == 0)
-        {
             return next_token();
-        }
 
         return {stoken, token_type(stoken)};
     }
@@ -95,6 +102,24 @@ namespace epicr
         else if (stoken == ")" || stoken == "]" || stoken == "}")
             return ETT_BRACKET_CLOSE;
 
+        /* Check if the word is a blank */
+        bool is_blank = true;
+        bool is_newline = true;
+        for (size_t i = 0; i < stoken.size(); i++) {
+            if (is_newline && stoken[i] != '\n')
+                is_newline = false;
+            if (is_blank && stoken[i] != ' ') {
+                is_blank = false;
+            }
+            if (!is_blank && !is_newline)
+                break;
+        }
+        if (is_blank)
+            return ETT_BLANK;
+        if (is_newline)
+            return ETT_NEWLINE;
+
+        /* Check if the word is a numeric */
         bool is_numeric = true;
         char ch;
         for (size_t i = 0; i < stoken.size(); i++)

@@ -30,6 +30,8 @@ namespace epicr
         ETT_NUMBER,
         ETT_BRACKET_OPEN,
         ETT_BRACKET_CLOSE,
+        ETT_BLANK,
+        ETT_NEWLINE,
         ETT_EOF,
     };
 

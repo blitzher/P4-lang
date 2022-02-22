@@ -29,6 +29,10 @@ namespace epicr
 			return "ETT_BRACKET_CLOSE";
 		case ETT_NUMBER:
 			return "ETT_NUMBER";
+		case ETT_BLANK:
+			return "ETT_BLANK";
+		case ETT_NEWLINE:
+			return "ETT_NEWLINE";
 		case ETT_EOF:
 			return "ETT_EOF";
 		default:

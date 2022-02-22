@@ -24,8 +24,14 @@ int main(int argc, char **argv) {
       epicr::epicr_token token = myLexer.next_token();
       string type = epicr::token_to_string(token.type);
 
-      if (DEBUG)
-        printf("%3i %-18s: %s\n", token_count, type.c_str(), token.word.c_str());
+      if (DEBUG) {
+        if (token.type != epicr::ETT_BLANK && token.type != epicr::ETT_NEWLINE)
+          printf("%3i %-18s: %s\n", token_count, type.c_str(), token.word.c_str());
+        else 
+          printf("%3i %s Num %i\n", token_count, type.c_str(), (int)token.word.size());
+        
+
+      }
 
       token_count++;
     }
