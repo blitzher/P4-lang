@@ -47,23 +47,37 @@ namespace epicr
     class Lexer
     {
     private:
-        std::ifstream &istream;
+        std::istream &istream;
         std::queue<std::string> token_peeklog;
         bool ready;
 
     public:
         Lexer();
         Lexer(std::ifstream &file);
-        ~Lexer();
+        Lexer(std::istream &file);
 
         /* Return whether or not the Lexer is ready to yield tokens */
         bool is_ready();
 
         /* Return the next token, and moving the reader */
         epicr_token next_token();
+        /* Return the next non blank, non new line token */
+        epicr_token next_non_blank_token();
         epicr_token_type token_type(std::string stoken);
         /* Return the next token, without dropping it */
         epicr_token peek();
+    };
+
+    class Parser
+    {
+    private:
+        Lexer *lexer;
+
+    public:
+        bool error;
+        std::string error_message;
+        Parser(Lexer *lexer_r);
+        ~Parser();
     };
 
     void compress(std::string filepath);

@@ -26,10 +26,11 @@ namespace epicr
 
     Lexer::Lexer(ifstream &file) : istream(file)
     {
-        cout << "Lexer says hi!" << endl;
-
-        // try to open the file
-        ready = istream.is_open();
+        ready = file.is_open();
+    }
+    Lexer::Lexer(std::istream &stream) : istream(stream)
+    {
+        ready = !stream.eof();
     }
 
     epicr_token Lexer::next_token()
@@ -60,11 +61,11 @@ namespace epicr
             if (ch == ' ' || ch == '\n')
             {
                 vector<char> blank_run;
-                do {
+                do
+                {
                     blank_run.push_back(ch);
                     istream.get(ch);
-                }
-                while (!istream.eof() && ch == blank_run[0]);
+                } while (!istream.eof() && ch == blank_run[0]);
 
                 /* since we encountered a non-blank, step back once */
                 if (!istream.eof()) /* can't seek when at EOF */
@@ -92,6 +93,16 @@ namespace epicr
         return {stoken, token_type(stoken)};
     }
 
+    epicr_token Lexer::next_non_blank_token()
+    {
+        epicr_token next;
+        do
+        {
+            next = next_token();
+        } while (next.type == ETT_BLANK || next.type == ETT_NEWLINE);
+        return next;
+    }
+
     epicr_token_type Lexer::token_type(string stoken)
     {
 
@@ -105,10 +116,12 @@ namespace epicr
         /* Check if the word is a blank */
         bool is_blank = true;
         bool is_newline = true;
-        for (size_t i = 0; i < stoken.size(); i++) {
+        for (size_t i = 0; i < stoken.size(); i++)
+        {
             if (is_newline && stoken[i] != '\n')
                 is_newline = false;
-            if (is_blank && stoken[i] != ' ') {
+            if (is_blank && stoken[i] != ' ')
+            {
                 is_blank = false;
             }
             if (!is_blank && !is_newline)
@@ -143,12 +156,6 @@ namespace epicr
     bool Lexer::is_ready()
     {
         return ready;
-    }
-
-    /* Destructure, close the input stream */
-    Lexer::~Lexer()
-    {
-        istream.close();
     }
 
 #pragma endregion
