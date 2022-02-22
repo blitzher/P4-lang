@@ -1,8 +1,8 @@
 <Program>       	        --> <recipe> 
 
-<recipe>                    --> <title> [<descriptor>] <ingredients> <procedure> 
+<recipe>                    --> <title> [<descriptor>] <ingredients> [<kitchenware>] <procedure>
 
-<descriptor>              	--> (<description>? | <amount>? | <time>? | <calories>?) {<descriptor>} 
+<descriptor>              	--> <description>? | <amount>? | <time>? | <nutrients>? | <tags>? {<descriptor>} 
  
 <title>                     --> title: <text>
 
@@ -30,17 +30,13 @@
 
 <description>               --> description: \n <text>
 
-<prep time>                 --> prep time: <number>
-
-<cook time>                 --> cook time: <number>
-
-<total time>                --> total time: <number>
-
 <time>                      --> <timeprefix>: <number> {time}
 
 <timeprefix>                --> ((prep time)? | (cook time)? | (total time)?)
 
-<calories>                  --> calories: <number>
+<nutrients>                 --> nutrients: <singleNutrient> {nutrients}
+
+<nutrient>					-->	<calories|protein|carbs|fat> <amount>
 
 <defineIngredients>         --> <name>[<ingredientOperator>] [<defineAmount>] {\n ingredients} 
 
@@ -50,7 +46,7 @@
 
 <ingredientOperator>        --> (+? | *? | \??) {operator} 
 
-<amount>                    --> <number> <text>
+<amount>                    --> <number> [<text>]
 
 <text>                      --> [a-zA-Z_ ]+
 
