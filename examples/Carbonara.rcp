@@ -3,19 +3,23 @@ description: Carbonara is nice
 amount: 4 people
 cook time: 15 min
 tags: pasta, easy to make, under 30 min, pork
-calories: 3000 
-calories pr. serving: 750
+
+nutrients:
+    calories (3000),
+    protein (100 g),
+    fat (100 g),
+    carbs (150 g)
 
 ingredients:    
-    bacon (400 g)     
-    butter (1 tsp)     
-    onion (1)
-    cream (1 dl)      
-    egg (2)         
-    parmesan (50 g)      
-    spaghetti* (300 g)
-    salt+
-    pepper+
+    bacon (400 g),     
+    butter (1 tsp),     
+    onion (1),
+    cream (1 dl),      
+    egg (2),         
+    parmesan (50 g),      
+    spaghetti* (300 g),
+    salt+,
+    pepper+,
     extra parmesan?+ 
 
 kitchenware:
@@ -57,5 +61,3 @@ procedure:
     
         update:
             spaghetti carbonara
-
-    done(spaghetti carbonara)

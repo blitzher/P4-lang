@@ -1,0 +1,59 @@
+<Program>       	        --> <recipe> 
+
+<recipe>                    --> <title> [<descriptor>] [<defineKitchenware>] <defineIngredients> <procedure>
+
+<title>                     --> title: text
+
+<descriptor>              	--> (<description> | <amount> | <time> | <nutrients> | <tags>) {<descriptor>} 
+
+<defineKitchenware>         --> name[?] {, <defineKitchenware>} 
+
+<defineIngredients>         --> name[<ingredientOperator>] [(<defineAmount>)] {, ingredients} 
+
+<procedure>                 --> procedure: <subprocedure> {, <subprocedure>}
+
+<subprocedure>              --> <subprocedureHeader> [<procedureText>] [<yield> | <update>] 
+
+<procedureText>             --> [<itemReference> | \{<amount>\} | text] {procedureText}
+
+<itemReference> 			--> \[<name> | text:name\]
+
+<subprocedureHeader>     	--> (with(<withIngredients>) | using(<usingKitchenware>) | with(<withIngredients>) using(<usingKitchenware>)):
+
+<withIngredients>           --> name [<amount> | <relativeAmount>] {, withIngredients} 
+
+<amount>                    --> number [text]
+
+<relativeAmount>            --> rest | all | half | quarter 
+
+<usingKitchenware>          --> name {, <usingKitchenware>} 
+
+<yield>                     --> yield: <yieldIngredients> 
+
+<update>                    --> update: <yieldIngredients>
+
+<description>               --> description: text
+
+<time>                      --> <timeprefix>: number {time}
+
+<timeprefix>                --> ((prep time) | (cook time) | (total time))
+
+<nutrientsHeader>           --> nutrients: <nutrients> 
+
+<nutrients>					-->	(calories | protein | carbs | fat) (<amount>) {, nutrients}
+
+<yieldIngredients>          --> name[+ | <amount>] {, yieldIngredients} 
+
+<ingredientOperator>        --> (+ | * | ?) {operator} 
+
+
+
+
+
+
+// Regular expressions for contextual analysis 
+text                      --> [a-zA-Z_ ]+
+
+name                      --> [\w ]+
+
+number                	--> [0-9]+(\.[0-9]+)? | [0-9]\/[0-9]
