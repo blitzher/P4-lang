@@ -3,7 +3,7 @@
 using namespace std;
 
 /* Remove or outcomment when not debugging */
-#define DEBUG 1
+#define DEBUG 0
 
 int main(int argc, char **argv)
 {

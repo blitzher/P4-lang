@@ -22,28 +22,28 @@ LDFLAGS    = -Wall -pedantic
 SRCDIR     = src
 OBJDIR     = obj
 BINDIR     = bin
-TESTDIR    = testing
+TESTDIR    := $(SRCDIR)/testing
 
 SOURCES   := $(wildcard $(SRCDIR)/*.cpp)
 INCLUDES  := $(wildcard $(SRCDIR)/*.h)
 OBJECTS   := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
-T_SOURCES   := $(wildcard $(SRCDIR)/$(TESTDIR)/*.cpp)
-T_INCLUDES  := $(wildcard $(SRCDIR)/$(TESTDIR)/*.h)
-T_OBJECTS   := $(SOURCES:$(T_SRCDIR)/$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
+T_TARGET_SOURCES := $(wildcard $(TESTDIR)/*.test.cpp)
+T_SOURCES   := $(wildcard $(TESTDIR)/*.cpp)
+T_INCLUDES  := $(wildcard $(TESTDIR)/*.h)
+T_OBJECTS   := $(T_SOURCES:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
+T_LIBOBJS	:= $(filter-out %.test.o, $(T_OBJECTS))
 
 RM         = rm -f
 
-T_TARGETS = $(wildcard $(TESTDIR)/*.test.cpp)
+T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
 TARGET       = main
 
-$(BINDIR)/$(T_TARGETS): $(OBJECTS)
-	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
-	@echo "Linking complete!"
+$(T_TARGETS):: $(T_OBJECTS)
+	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(subst $(BINDIR),$(OBJDIR),$@).o
 
-$(T_OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
+$(T_OBJECTS): $(OBJDIR)/%.o : $(TESTDIR)/%.cpp
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
@@ -55,16 +55,35 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 
 .PHONY: clean
 clean:
-	@$(RM) $(OBJECTS)
+	@$(RM) $(OBJECTS) $(T_OBJECTS)
 	@echo "Cleanup complete!"
 
 .PHONY: remove
 remove: clean
 	@$(RM) $(BINDIR)/$(TARGET)
+	@$(RM) $(T_TARGETS)
 	@echo "Executable removed!"
 
-test: $(BINDIR)/$(T_TARGETS)
-	@echo $<
+$(T_TARGETS)::
+	@echo "Testing $@"
+	@./$@
+
+
+test: $(T_TARGETS)
+	@echo "Done test rule"
 
 run: $(BINDIR)/$(TARGET)
-	@./$< examples/Carbonara.rcp
+	./$< examples/Carbonara.rcp
+
+dummy:
+	@echo "T_SOURCES"
+	@echo $(T_SOURCES)
+	@echo "T_INCLUDES"
+	@echo $(T_INCLUDES)
+	@echo "T_OBJECTS"
+	@echo $(T_OBJECTS)
+	@echo "T_LIBOBJS"
+	@echo $(T_LIBOBJS)
+	@echo "T_TARGETS"
+	@echo $(T_TARGETS)
+	
