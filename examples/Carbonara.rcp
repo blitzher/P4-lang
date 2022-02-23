@@ -47,8 +47,8 @@ procedure:
 
         yield:
             onion bacon mix
-
-    with(onion bacon mix, egg(500 g), spaghetti, parmesan, salt, pepper):
+    
+    with(onion bacon mix, egg(2), spaghetti, parmesan, salt, pepper):
         Remove the [pan:onion bacon mix] from the heat and stir in the [eggs:egg] and the cooked spaghetti, 
         and mix the dish well with the freshly grated [cheese:parmesan].
         Season with [salt] and freshly ground [pepper]. 
