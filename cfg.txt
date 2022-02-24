@@ -1,14 +1,18 @@
 <Program>       	        --> <recipe> 
 
-<recipe>                    --> <title> [<descriptor>] [<defineKitchenware>] <defineIngredients> <procedure>
+<recipe>                    --> <title> [<descriptor>] [<kitchenwareHeader>] <ingredientHeader> <procedure>
 
 <title>                     --> title: text
 
-<descriptor>              	--> (<description> | <amount> | <time> | <nutrients> | <tags>) {<descriptor>} 
+<descriptor>              	--> (<description> | <amount> | <time> | <nutrientsHeader> | <tags>) {<descriptor>} 
+
+<kitchenwareHeader>         --> kitchenware: <defineKitchenware>
 
 <defineKitchenware>         --> name[?] {, <defineKitchenware>} 
 
-<defineIngredients>         --> name[<ingredientOperator>] [(<defineAmount>)] {, ingredients} 
+<ingredientHeader>          --> ingredients: <defineIngredients>
+
+<defineIngredients>         --> name[<ingredientOperator>] [(<defineAmount>)] {, defineIngredients} 
 
 <procedure>                 --> procedure: <subprocedure> {, <subprocedure>}
 
@@ -22,7 +26,7 @@
 
 <withIngredients>           --> name [<amount> | <relativeAmount>] {, withIngredients} 
 
-<amount>                    --> number [text]
+<amount>                    --> amount: number [unit]
 
 <relativeAmount>            --> rest | all | half | quarter 
 
@@ -34,7 +38,7 @@
 
 <description>               --> description: text
 
-<time>                      --> <timeprefix>: number {time}
+<time>                      --> <timeprefix>: (number | range) timeUnit {time}
 
 <timeprefix>                --> ((prep time) | (cook time) | (total time))
 
@@ -42,9 +46,11 @@
 
 <nutrients>					-->	(calories | protein | carbs | fat) (<amount>) {, nutrients}
 
+<tags>                      --> tags: tagsText {, tagsText}
+
 <yieldIngredients>          --> name[+ | <amount>] {, yieldIngredients} 
 
-<ingredientOperator>        --> (+ | * | ?) {operator} 
+<ingredientOperator>        --> (+ | * | ?) {ingredientOperator} 
 
 
 
@@ -52,8 +58,18 @@
 
 
 // Regular expressions for contextual analysis 
-text                      --> [a-zA-Z_ ]+
+unit                        --> [a-zA-Z ]+
 
-name                      --> [\w ]+
+text                        --> [tagsText,]+
 
-number                	--> [0-9]+(\.[0-9]+)? | [0-9]\/[0-9]
+tagsText                    --> [\w.';:"-&#%!?$€()/*+=^ ]+
+
+name                        --> [a-zA-Z0-9 ]+
+
+number                      --> decimal | fraction
+
+decimal                     --> [0-9]+(\.[0-9]+)? 
+
+fraction                    --> [1-9][0-9]*\/[1-9][0-9]*
+
+range                       --> number \- number

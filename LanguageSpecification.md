@@ -11,7 +11,7 @@
 - all specified ingredients must be used in at least one with() statement
 - ingredients may have a specified amount
   - this is annotated by ()
-  - an amount consists of a number followed by a measuring unit
+  - an amount consists of a number, and optionally a measuring unit
   - if no amount is specified, this is the same as explicitly writing (1)
 - ingredients are comma-seperated
 - ingredients may be suffixed with zero to many ingredient operators
@@ -67,6 +67,8 @@
   - these are annotated by []
   - these may have an alternative name (an alias), following the format [alternative name : actual name]
     - an alias may be the empty string (e.g.  [: actual name])
+  - when mentioned in the body, the actual amount will be stated in parenthesis after, so that the one using the recipe knows how much to use
+    - e.g. writing [ingredient] will result in "ingredient (200 g)" if it was specified in the with() as with(ingredient (200g))  
 - may end with a yield statement or an update statement, but not both
 
 # using():
