@@ -27,6 +27,7 @@ namespace epicr
     enum epicr_token_type
     {
         ETT_WORD,
+        ETT_COLON,
         ETT_NUMBER,
         ETT_BRACKET_OPEN,
         ETT_BRACKET_CLOSE,

@@ -7,6 +7,8 @@
 #include <vector>
 #include <unordered_map>
 
+typedef unsigned int uint;
+
 namespace test_lib
 {
 #define REGISTER register_test(__FUNCTION__)
