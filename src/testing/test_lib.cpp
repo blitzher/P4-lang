@@ -140,9 +140,9 @@ namespace test_lib
 			const test_lib::test_data test = keyval_pair.second;
 
 			if (test.accepted)
-				std::cout << "\u001b[32m\u2714\u001b[0m ";
+				std::cout << "\x1B[32m\u2714\x1B[0m ";
 			else
-				std::cout << "\u001b[31m\u2716\u001b[0m ";
+				std::cout << "\x1B[31m\u2716\x1B[0m ";
 			printf("%s: %s\n", test.name.c_str(), test.err_message.c_str());
 		}
 	}

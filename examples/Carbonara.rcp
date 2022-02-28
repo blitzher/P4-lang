@@ -5,19 +5,18 @@ cook time: 15 min
 tags: pasta, easy to make, under 30 min, pork
 
 nutrients:
-    calories (3000),
-    protein (100 g),
-    fat (100 g),
-    carbs (150 g)
+    calories {300},
+    protein {10 g},
+    fat {10 g},
+    carbs {10 g}
 
 ingredients:    
-    bacon (400 g),     
-    butter (1 tsp),     
-    onion (1),
-    cream (1 dl),      
-    egg (2),         
-    parmesan (50 g),      
-    spaghetti* (300 g),
+    butter {1tsp},     
+    onion {1,
+    cream {1dl},      
+    egg {2,         
+    parmesan {5 g},      
+    spaghetti* {30 g},
     salt+,
     pepper+,
     extra parmesan?+ 
@@ -44,14 +43,15 @@ procedure:
 
     with(cooked bacon, cream, cooked onions):
         add the [cooked bacon] and [cream] to the [pan:cooked onions].
+        Tomatoes, potatoes, sweet corn (if using), {500g}
 
         yield:
             onion bacon mix
     
     with(onion bacon mix, egg(2), spaghetti, parmesan, salt, pepper):
         Remove the [pan:onion bacon mix] from the heat and stir in the [eggs:egg] and the cooked spaghetti, 
-        and mix the dish well with the freshly grated [cheese:parmesan].
-        Season with [salt] and freshly ground [pepper]. 
+        and mix the dish well with the freshly grated cheese:=parmesan.
+        Season with [salt] and freshly ground :=pepper.
 
         yield:
             spaghetti carbonara

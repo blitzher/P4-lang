@@ -74,16 +74,3 @@ test: $(T_TARGETS)
 
 run: $(BINDIR)/$(TARGET)
 	./$< examples/Carbonara.rcp
-
-dummy:
-	@echo "T_SOURCES"
-	@echo $(T_SOURCES)
-	@echo "T_INCLUDES"
-	@echo $(T_INCLUDES)
-	@echo "T_OBJECTS"
-	@echo $(T_OBJECTS)
-	@echo "T_LIBOBJS"
-	@echo $(T_LIBOBJS)
-	@echo "T_TARGETS"
-	@echo $(T_TARGETS)
-	
