@@ -24,6 +24,38 @@
 namespace epicr
 {
 
+#pragma region Recipe Data
+    typedef struct ingredient_s
+    {
+        std::string name;
+        double amount;
+        std::string unit;
+    } ingredient;
+
+    typedef struct procedure_word_s
+    {
+
+    } procedure_word;
+
+    typedef struct procedure_s
+    {
+        std::vector<ingredient> ingredients;
+        std::vector<std::string> kitchenware;
+        std::vector<ingredient> yields;
+        std::vector<procedure_word> body;
+    } procedure;
+
+    typedef struct recipe_s
+    {
+        std::string title;
+        std::string description;
+        std::vector<std::string> tags;
+        std::vector<ingredient> ingredients;
+        std::vector<procedure> procedures;
+
+    } recipe;
+#pragma endregion
+
     enum epicr_token_type
     {
         ETT_WORD,
@@ -42,6 +74,8 @@ namespace epicr
     {
         std::string word;
         epicr_token_type type;
+        // uint uid;  /* TODO */
+        // uint line; /* TODO */
 
     } epicr_token;
 
@@ -65,24 +99,44 @@ namespace epicr
         /* Return the next non blank, non new line token */
         epicr_token next_non_blank_token();
         epicr_token_type token_type(std::string stoken);
-        /* Return the next token, without dropping it */
-        epicr_token peek();
+        /* Peek the next token */
+        epicr_token peek_token();
+        /* Peek the `n` 'th token. Undefined for `n=0` */
+        epicr_token peek_token(int n);
+        /* Peek the next non-blank token */
+        epicr_token peek_non_blank_token();
+        /* Peek the `n` 'th non-blank token. Undefined for `n=0`*/
+        epicr_token peek_non_blank_token(int n);
     };
 
     class Parser
     {
     private:
         Lexer *lexer;
+        void ParseTitle(recipe *);
+        void ParseDescription(recipe *);
+        void ParseAmount(recipe *);
+        void ParseNutrients(recipe *);
+        void ParseIngredients(recipe *);
+        void ParseKitchenware(recipe *);
+        void ParseTags(recipe *);
+        void ParseTime(recipe *);
+        void ParseProcedure(recipe *);
 
     public:
         bool error;
         std::string error_message;
+        epicr_token error_token;
+        recipe Parse();
         Parser(Lexer *lexer_r);
         ~Parser();
     };
 
     void compress(std::string filepath);
     void decompress(std::string filepath);
+
+    /* Print the contents of a token to stdout */
+    void print_token(epicr_token);
 
     std::ifstream open_file(std::string filename);
 }

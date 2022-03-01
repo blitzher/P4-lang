@@ -41,4 +41,15 @@ namespace epicr
 			return "ETT_UNKOWN";
 		}
 	}
+
+	void print_token(epicr_token token)
+	{
+		string type = token_to_string(token.type);
+
+		if (token.type != epicr::ETT_BLANK && token.type != epicr::ETT_NEWLINE)
+			printf("%-18s: %s\n", type.c_str(), token.word.c_str());
+		else
+			printf("%s %i\n", type.c_str(), (int)token.word.size());
+	}
+
 }

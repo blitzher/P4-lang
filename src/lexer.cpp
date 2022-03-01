@@ -168,6 +168,49 @@ namespace epicr
         return (is_numeric) ? ETT_NUMBER : ETT_WORD;
     }
 
+    epicr_token Lexer::peek_token(int amnt)
+    {
+        size_t offset = 0;
+        epicr_token token;
+        for (int i = 0; i < amnt; i++)
+        {
+            token = next_token();
+            offset += token.word.size();
+        }
+        /* retract the header by the width of the read tokens */
+        if (!istream.eof())
+            istream.seekg(-offset, ios_base::cur);
+        return token;
+    }
+
+    epicr_token Lexer::peek_token()
+    {
+        return peek_token(1);
+    }
+
+    epicr_token Lexer::peek_non_blank_token(int amnt)
+    {
+        int non_blank_count = 0;
+        epicr_token token;
+        size_t offset = 0;
+        while (non_blank_count < amnt)
+        {
+            token = next_token();
+            offset += token.word.size();
+            if (token.type != ETT_BLANK && token.type != ETT_BLANK)
+                non_blank_count++;
+        }
+        if (!istream.eof())
+            istream.seekg(-offset, ios_base::cur);
+
+        return token;
+    }
+
+    epicr_token Lexer::peek_non_blank_token()
+    {
+        return peek_non_blank_token(1);
+    }
+
     bool Lexer::is_ready()
     {
         return ready;
