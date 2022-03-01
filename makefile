@@ -10,7 +10,7 @@
 
 CXX        = clang++
 CXXFLAGS   = -std=c++20 \
-             -Wall -Wextra -Werror -Wpointer-arith -Wcast-qual \
+             -Wall -Wextra -Wpointer-arith -Wcast-qual \
              -Wno-missing-braces -Wempty-body -Wno-error=uninitialized \
              -Wno-error=deprecated-declarations \
              -pedantic \

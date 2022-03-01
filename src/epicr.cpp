@@ -52,4 +52,22 @@ namespace epicr
 			printf("%s %i\n", type.c_str(), (int)token.word.size());
 	}
 
+	/* Rented from https://stackoverflow.com/questions/313970/how-to-convert-an-instance-of-stdstring-to-lower-case */
+	char char_to_lower(char ch)
+	{
+		if (ch <= 'Z' && ch >= 'A')
+			return ch - ('Z' - 'z');
+		return ch;
+	}
+
+	string to_lower(std::string str)
+	{
+		string lowered;
+		size_t str_size = str.size();
+		for (size_t i = 0; i < str_size; i++)
+			lowered.push_back(char_to_lower(str[i]));
+
+		return lowered;
+	}
+
 }

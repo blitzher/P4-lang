@@ -22,7 +22,7 @@ struct compare
 namespace epicr
 {
     vector<char> brackets = {'(', ')', '[', ']', '{', '}'};
-    vector<char> token_breakers = {' ', ',', ':', '(', ')', '[', ']', '{', '}'};
+    vector<char> token_breakers = {' ', '\n', ',', ':', '(', ')', '[', ']', '{', '}'};
 
 #pragma region Lexer implementation
 
@@ -37,13 +37,6 @@ namespace epicr
 
     epicr_token Lexer::next_token()
     {
-        /* Handle peeking */
-        if (token_peeklog.size() > 0)
-        {
-            string stoken = token_peeklog.front();
-            token_peeklog.pop();
-            return {stoken, token_type(stoken)};
-        }
 
         /* Check if the file stream is ended */
         if (istream.eof() || !ready)
@@ -60,32 +53,59 @@ namespace epicr
         while (istream.get(ch) && !istream.eof())
         {
 
-            /* group runs of white space into blanks */
-            if (ch == ' ' || ch == '\n')
+            if (CH_V_CONTAINS(token_breakers, ch))
             {
-                vector<char> blank_run;
-                do
+                if ((ch == ' ' || ch == '\n') && vtoken.size() == 0)
                 {
-                    blank_run.push_back(ch);
-                    istream.get(ch);
-                } while (!istream.eof() && ch == blank_run[0]);
+                    do
+                    {
+                        vtoken.push_back(ch);
+                        istream.get(ch);
+                    } while (!istream.eof() && ch == vtoken[0]);
 
-                /* since we encountered a non-blank, step back once */
-                if (!istream.eof()) /* can't seek when at EOF */
-                    istream.seekg(-1, ios_base::cur);
-                string blank(blank_run.begin(), blank_run.end());
-                token_peeklog.push(blank);
+                    /* since we encountered a non-blank, step back once */
+                    if (!istream.eof()) /* can't seek when at EOF */
+                        istream.seekg(-1, ios_base::cur);
+                    break;
+                }
+                else if (vtoken.size() == 0)
+                {
+                    vtoken.push_back(ch);
+                    break;
+                }
+                istream.seekg(-1, ios_base::cur);
                 break;
             }
+
+            /* group runs of white space into blanks */
+            // if ((ch == ' ' || ch == '\n') && vtoken.size() == 0)
+            // {
+            //     istream.seekg(-1, ios_base::cur);
+            //     break;
+            // }
+
+            // if ((vtoken[0] == ' ' || vtoken[0] == '\n') && vtoken.size() == 1)
+            // {
+            //     vector<char> blank_run;
+            //     do
+            //     {
+            //         blank_run.push_back(ch);
+            //         istream.get(ch);
+            //     } while (!istream.eof() && ch == blank_run[0]);
+
+            //     /* since we encountered a non-blank, step back once */
+            //     if (!istream.eof()) /* can't seek when at EOF */
+            //         istream.seekg(-1, ios_base::cur);
+            //     string blank(blank_run.begin(), blank_run.end());
+
+            //     break;
+            // }
 
             if (CH_V_CONTAINS(token_breakers, ch))
             {
-                string breaker_token;
-                breaker_token.push_back(ch);
-                token_peeklog.push(breaker_token);
+                istream.seekg(-1, ios_base::cur);
                 break;
             }
-
             if (is_numeric && !CH_IS_NUM(ch))
             {
                 if (!istream.eof()) /* can't seek when at EOF */
@@ -197,7 +217,7 @@ namespace epicr
         {
             token = next_token();
             offset += token.word.size();
-            if (token.type != ETT_BLANK && token.type != ETT_BLANK)
+            if (token.type != ETT_BLANK && token.type != ETT_NEWLINE)
                 non_blank_count++;
         }
         if (!istream.eof())

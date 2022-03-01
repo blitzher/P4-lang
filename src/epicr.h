@@ -34,7 +34,14 @@ namespace epicr
 
     typedef struct procedure_word_s
     {
+        std::string word;
+        bool is_amount;
+        double amount;
+        std::string unit;
 
+        bool is_ingredient_ref;
+        bool has_alias;
+        std::string alias;
     } procedure_word;
 
     typedef struct procedure_s
@@ -52,7 +59,6 @@ namespace epicr
         std::vector<std::string> tags;
         std::vector<ingredient> ingredients;
         std::vector<procedure> procedures;
-
     } recipe;
 #pragma endregion
 
@@ -83,7 +89,7 @@ namespace epicr
     {
     private:
         std::istream &istream;
-        std::queue<std::string> token_peeklog;
+
         bool ready;
 
     public:
@@ -123,6 +129,9 @@ namespace epicr
         void ParseTime(recipe *);
         void ParseProcedure(recipe *);
 
+        epicr_token ctoken;
+        epicr_token utoken;
+
     public:
         bool error;
         std::string error_message;
@@ -134,6 +143,8 @@ namespace epicr
 
     void compress(std::string filepath);
     void decompress(std::string filepath);
+
+    std::string to_lower(std::string);
 
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
