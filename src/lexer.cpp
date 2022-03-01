@@ -14,6 +14,8 @@ struct compare
     }
 };
 
+#define CH_IS_NUM(ch) ((ch >= '0' && ch <= '9') || ch == '.')
+
 #define CH_V_CONTAINS(ARR, VALUE) \
     (any_of(ARR.begin(), ARR.end(), compare(VALUE)))
 
@@ -44,7 +46,7 @@ namespace epicr
         }
 
         /* Check if the file stream is ended */
-        if (istream.eof())
+        if (istream.eof() || !ready)
         {
             ready = false;
             return {"EOF", ETT_EOF};
@@ -53,6 +55,7 @@ namespace epicr
         vector<char> vtoken;
 
         char ch;
+        bool is_numeric = false;
         /* Read characters and break into tokens */
         while (istream.get(ch) && !istream.eof())
         {
@@ -81,6 +84,17 @@ namespace epicr
                 breaker_token.push_back(ch);
                 token_peeklog.push(breaker_token);
                 break;
+            }
+
+            if (is_numeric && !CH_IS_NUM(ch))
+            {
+                if (!istream.eof()) /* can't seek when at EOF */
+                    istream.seekg(-1, ios_base::cur);
+                break;
+            }
+            if (CH_IS_NUM(ch) && vtoken.size() == 0)
+            {
+                is_numeric = true;
             }
 
             vtoken.push_back(ch);

@@ -2,6 +2,7 @@
 
 using namespace std;
 
+#define CH_IS_NUM(ch) ((ch >= '0' && ch <= '9') || ch == '.')
 /* Remove or outcomment when not debugging */
 #define DEBUG 1
 
@@ -21,9 +22,15 @@ int main(int argc, char **argv)
     epicr::Lexer myLexer = epicr::Lexer(file);
 
     int token_count = 0;
+
+    /* for (char i = 40; i < 100; i++)
+    {
+      cout << i << ": CH_IS_NUM: " << CH_IS_NUM(i) << endl;
+    } */
+
     while (myLexer.is_ready())
     {
-      epicr::epicr_token token = myLexer.next_token();
+      epicr::epicr_token token = myLexer.next_non_blank_token();
       string type = epicr::token_to_string(token.type);
 
       if (DEBUG)
