@@ -11,11 +11,11 @@ nutrients:
     carbs {10 g}
 
 ingredients:    
-    butter {1tsp},     
+    butter {1 tsp},     
     onion {1,
-    cream {1dl},      
-    egg {2,         
-    parmesan {5 g},      
+    cream {1 dl},      
+    egg {2},         
+    parmesan {5g},      
     spaghetti* {30 g},
     salt+,
     pepper+,
@@ -25,12 +25,11 @@ kitchenware:
     airfryer
 
 procedure:
-
     using(airfryer):
         Preheat your [airfryer] to {200 C}
 
     with(bacon) using(airfryer):
-        fry the [bacon] using the [airfryer]
+        Fry the [bacon] using the [airfryer]
 
         update:
             bacon     
@@ -42,8 +41,7 @@ procedure:
             cooked onions
 
     with(cooked bacon, cream, cooked onions):
-        add the [cooked bacon] and [cream] to the [pan:cooked onions].
-        Tomatoes, potatoes, sweet corn (if using), {500g}
+        Add the [cooked bacon] and [cream] to the [pan:cooked onions].
 
         yield:
             onion bacon mix
@@ -51,7 +49,7 @@ procedure:
     with(onion bacon mix, egg(2), spaghetti, parmesan, salt, pepper):
         Remove the [pan:onion bacon mix] from the heat and stir in the [eggs:egg] and the cooked spaghetti, 
         and mix the dish well with the freshly grated cheese:=parmesan.
-        Season with [salt] and freshly ground :=pepper.
+        Season with [salt] and freshly ground [pepper].
 
         yield:
             spaghetti carbonara
