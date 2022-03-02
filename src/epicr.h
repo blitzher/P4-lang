@@ -32,7 +32,7 @@ namespace epicr
         std::string unit;
     } ingredient;
 
-    typedef struct procedure_word_s
+    typedef struct instruction_word_s
     {
         std::string word;
         bool is_amount;
@@ -42,23 +42,32 @@ namespace epicr
         bool is_ingredient_ref;
         bool has_alias;
         std::string alias;
-    } procedure_word;
+    } instruction_word;
 
-    typedef struct procedure_s
+    typedef struct instruction_s
     {
         std::vector<ingredient> ingredients;
         std::vector<std::string> kitchenware;
         std::vector<ingredient> yields;
-        std::vector<procedure_word> body;
-    } procedure;
+        std::vector<instruction_word> body;
+    } instruction;
+
+    typedef struct amount_s {
+        int count;
+        std::string descriptor;
+    } amount_s;
 
     typedef struct recipe_s
     {
         std::string title;
         std::string description;
+        amount_s amount;
+        std::string time;
+        std::vector<std::string> kitchenware;
+        std::vector<ingredient> nutrients;
         std::vector<std::string> tags;
         std::vector<ingredient> ingredients;
-        std::vector<procedure> procedures;
+        std::vector<instruction> instructions;
     } recipe;
 #pragma endregion
 
@@ -66,6 +75,7 @@ namespace epicr
     {
         ETT_WORD,
         ETT_COLON,
+        ETT_COMMA,
         ETT_NUMBER,
         ETT_BRACKET_OPEN,
         ETT_BRACKET_CLOSE,

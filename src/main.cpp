@@ -1,6 +1,11 @@
 #define DEBUG 1
 #include "epicr.h"
 
+#define PRINT_VEC(vec) { \
+	for (auto val : vec) \
+		cout << val << " "; \
+} \
+
 using namespace std;
 
 /* Remove or outcomment when not debugging */
@@ -30,6 +35,12 @@ int main(int argc, char **argv)
 	cout << myRecipe.title << endl;
 
 	cout << myRecipe.description << endl;
+
+	PRINT_VEC(myRecipe.tags);
+	cout << endl;
+
+	PRINT_VEC(myRecipe.kitchenware);
+	cout << endl;
 
 	return 0;
 }

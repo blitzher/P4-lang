@@ -25,6 +25,8 @@ namespace epicr
 			return "ETT_WORD";
 		case ETT_COLON:
 			return "ETT_COLON";
+		case ETT_COMMA:
+			return "ETT_COMMA";
 		case ETT_BRACKET_OPEN:
 			return "ETT_BRACKET_OPEN";
 		case ETT_BRACKET_CLOSE:

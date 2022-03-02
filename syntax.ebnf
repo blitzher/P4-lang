@@ -9,10 +9,10 @@ Description = "description:" {SpecialCharWord | ',' | '?' | Blanks}
 Amount = "amount:" Blanks Number Words
 Nutrients = "nutrients:" Blanks Nutrient {',' Blanks Nutrient}
 Nutrient = ('calories' | 'protein' | 'carbs' | 'fat') Blanks NutrientUnit {, Nutrient}
-Ingredients = "ingredients:" Blanks IngredientDeclaration {',' [Blanks] IngredientDeclaration} Blanks
-Kitchenware = "kitchenware:" Blanks {SingleKitchenware}
+Ingredients = "ingredients:" Blanks IngredientDeclaration {',' Blanks IngredientDeclaration} Blanks
+Kitchenware = "kitchenware:" Blanks SingleKitchenware {',' Blanks SingleKitchenware} Blanks
 Tags = "tags:" Words {',' Words}
-Time = ("cook time" | "prep time" | "total time") ':' Blanks (Number | Number '-' Number) TimeUnit
+Time = ("cook-time" | "prep-time" | "total-time") ':' Blanks (Number | Number '-' Number) TimeUnit
 
 (* Ingredient Definitions *)
 IngredientName = SpecialCharWord {SpecialCharWord} Blanks

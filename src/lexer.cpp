@@ -139,8 +139,12 @@ namespace epicr
 
     epicr_token_type Lexer::token_type(string stoken)
     {
+        if (stoken == ",")
+            return ETT_COMMA;
+            
         if (stoken == ":")
             return ETT_COLON;
+            
         if (stoken == "(" || stoken == "[" || stoken == "{")
 
             return ETT_BRACKET_OPEN;
