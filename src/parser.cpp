@@ -84,6 +84,7 @@ namespace epicr
 				ADV(1);
 			}
 		}
+		ParseIngredients(rcp);
 
 		return *rcp;
 	}
@@ -141,6 +142,7 @@ namespace epicr
 			ADV(1);
 		}
 	}
+
 	void Parser::ParseNutrients(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
@@ -201,6 +203,7 @@ namespace epicr
 
 		rcp->nutrients = nutrients;
 	}
+
 	void Parser::ParseKitchenware(recipe *rcp)
 	{
 
@@ -220,6 +223,7 @@ namespace epicr
 			ADV_NON_BLANK(1);
 		}
 	}
+
 	void Parser::ParseTags(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
@@ -240,6 +244,7 @@ namespace epicr
 			ADV_NON_BLANK(1);
 		}
 	}
+
 	void Parser::ParseTime(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
@@ -255,25 +260,79 @@ namespace epicr
 			ADV(1);
 		}
 	}
+
 	void Parser::ParseIngredients(recipe *rcp)
 	{
-		/*
+		/*  Ingredients should, almost work 
+			but it doesnt consider 
+			IsOptional = '?'
+			IsUncountable = '+'
+			IsRecipe = '*'
+			cause i couldnt see/remember 
+			how the lexer handled it and 
+			i got tried and didnt want to 
+			ask skovborg sry :D will do
+			tomorrow unless he deletes this
+			;(   \n
+
+		bool OpeningBracketFound = false;
+		bool ClosingBracketFound = false;
 		ADV_NON_BLANK(2);
-		
+
+		if (ctoken.type != ETT_WORD || utoken.type == ETT_EOF) //sry i stole this
+		{
+			ERR("No ingredients was found! x(", ctoken);
+		}
+
 		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
 		{
+			std::cout << "Reading ingreditents x)" << std::endl;
+			ingredient ingredient; //x)
 
-			if (ctoken.type == ETT_EOF)
+			if (ctoken.type == ETT_EOF)  
 			{
-				ERR("@Ingredients, End of file reached:", ctoken);
+				ERR("@Ingredients, End of file reached x(( :", ctoken);
 			}
 			else if (ctoken.type == ETT_COMMA)
 			{
 				ADV_NON_BLANK(1);
+				OpeningBracketFound = false;
+				ClosingBracketFound = false;
 			}
-			
-		}*/
+
+			//gets word
+			if (ctoken.type == ETT_WORD) {
+				ingredient.name = ctoken.word;
+				ADV_NON_BLANK(1);
+
+				//finds bracket & amount
+				if(ctoken.type == ETT_BRACKET_OPEN && utoken.type == ETT_NUMBER && OpeningBracketFound == false && ClosingBracketFound ==false) {    // i hate this
+					ADV_NON_BLANK(1);
+					ingredient.amount =ctoken.uid;
+					OpeningBracketFound = true;
+					ADV_NON_BLANK(1);
+
+					if(ctoken.type != ETT_WORD || ctoken.type != ETT_BRACKET_CLOSE) {
+						ERR("no. incorrect specification of ingredient ig", ctoken);
+					}
+					//checks for closing bracket, and unit
+					// kinda unit, 'no unit', the self unit.
+					if (ctoken.type == ETT_WORD && utoken.type == ETT_BRACKET_CLOSE && OpeningBracketFound == true && ClosingBracketFound == false) { 
+						ingredient.unit =ctoken.word;
+						ClosingBracketFound = true;
+						rcp->ingredients.push_back(ingredient);
+					}
+					else if(ctoken.type == ETT_BRACKET_CLOSE && utoken.type == ETT_COMMA && OpeningBracketFound == true && ClosingBracketFound == false) {
+						ClosingBracketFound = true;
+						rcp->ingredients.push_back(ingredient);
+						
+					}
+					ADV_NON_BLANK(1) 
+				}
+			}
+		} */
 	}
+
 	void Parser::ParseProcedure(recipe *rcp) {}
 
 	Parser::~Parser()

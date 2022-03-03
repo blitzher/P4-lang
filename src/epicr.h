@@ -23,7 +23,7 @@
 
 namespace epicr
 {
-
+typedef unsigned int uint;
 #pragma region Recipe Data
     typedef struct ingredient_s
     {
@@ -67,7 +67,7 @@ namespace epicr
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
         std::vector<std::string> tags;
-        std::vector<ingredient> ingredients; /* missing implementation */
+        std::vector<ingredient> ingredients; /* missing SOME implementation */
         std::vector<instruction> instructions; /* missing implementation */
     } recipe;
 #pragma endregion
