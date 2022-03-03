@@ -63,12 +63,12 @@ namespace epicr
         std::string title;
         std::string description;
         amount_s amount;
-        std::string time;
+        std::string time; /* expand implementation */
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
         std::vector<std::string> tags;
-        std::vector<ingredient> ingredients;
-        std::vector<instruction> instructions;
+        std::vector<ingredient> ingredients; /* missing implementation */
+        std::vector<instruction> instructions; /* missing implementation */
     } recipe;
 #pragma endregion
 

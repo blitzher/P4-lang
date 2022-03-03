@@ -76,7 +76,7 @@ namespace epicr
 				ParseKitchenware(rcp);
 			else if (to_lower(ctoken.word) == "tags")
 				ParseTags(rcp);
-			else if (to_lower(ctoken.word) == "time")
+			else if (to_lower(ctoken.word) == "cook-time")
 				ParseTime(rcp);
 			else
 			{
@@ -187,6 +187,8 @@ namespace epicr
 			ADV_NON_BLANK(1);
 			if (ctoken.type != ETT_BRACKET_CLOSE && ctoken.word != "}")
 				ERR("Unclosed amount", ctoken);
+
+				
 
 			nutrients.push_back(nutrient);
 
