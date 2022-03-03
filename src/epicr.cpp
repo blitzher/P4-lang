@@ -49,9 +49,9 @@ namespace epicr
 		string type = token_to_string(token.type);
 
 		if (token.type != epicr::ETT_BLANK && token.type != epicr::ETT_NEWLINE)
-			printf("%-18s: %s\n", type.c_str(), token.word.c_str());
+			printf("%-18s: %-10s uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.uid, token.line);
 		else
-			printf("%s %i\n", type.c_str(), (int)token.word.size());
+			printf("%-18s  %-10i uid:%i line:%i\n", type.c_str(), (int)token.word.size(), token.uid, token.line);
 	}
 
 	/* Rented from https://stackoverflow.com/questions/313970/how-to-convert-an-instance-of-stdstring-to-lower-case */

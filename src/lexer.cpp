@@ -28,10 +28,14 @@ namespace epicr
 
     Lexer::Lexer(ifstream &file) : istream(file)
     {
+        line_num = 1;
+        token_count = 0;
         ready = file.is_open();
     }
     Lexer::Lexer(std::istream &stream) : istream(stream)
     {
+        line_num = 1;
+        token_count = 0;
         ready = !stream.eof();
     }
 
@@ -42,7 +46,7 @@ namespace epicr
         if (istream.eof() || !ready)
         {
             ready = false;
-            return {"EOF", ETT_EOF};
+            return {"EOF", ETT_EOF, token_count, line_num};
         }
 
         vector<char> vtoken;
@@ -63,6 +67,9 @@ namespace epicr
                         istream.get(ch);
                     } while (!istream.eof() && ch == vtoken[0]);
 
+                    if (vtoken[0] == '\n')
+                        line_num += vtoken.size();
+
                     /* since we encountered a non-blank, step back once */
                     if (!istream.eof()) /* can't seek when at EOF */
                         istream.seekg(-1, ios_base::cur);
@@ -76,30 +83,6 @@ namespace epicr
                 istream.seekg(-1, ios_base::cur);
                 break;
             }
-
-            /* group runs of white space into blanks */
-            // if ((ch == ' ' || ch == '\n') && vtoken.size() == 0)
-            // {
-            //     istream.seekg(-1, ios_base::cur);
-            //     break;
-            // }
-
-            // if ((vtoken[0] == ' ' || vtoken[0] == '\n') && vtoken.size() == 1)
-            // {
-            //     vector<char> blank_run;
-            //     do
-            //     {
-            //         blank_run.push_back(ch);
-            //         istream.get(ch);
-            //     } while (!istream.eof() && ch == blank_run[0]);
-
-            //     /* since we encountered a non-blank, step back once */
-            //     if (!istream.eof()) /* can't seek when at EOF */
-            //         istream.seekg(-1, ios_base::cur);
-            //     string blank(blank_run.begin(), blank_run.end());
-
-            //     break;
-            // }
 
             if (CH_V_CONTAINS(token_breakers, ch))
             {
@@ -124,7 +107,7 @@ namespace epicr
         if (stoken.size() == 0)
             return next_token();
 
-        return {stoken, token_type(stoken)};
+        return {stoken, token_type(stoken), token_count++, line_num};
     }
 
     epicr_token Lexer::next_non_blank_token()
@@ -141,10 +124,10 @@ namespace epicr
     {
         if (stoken == ",")
             return ETT_COMMA;
-            
+
         if (stoken == ":")
             return ETT_COLON;
-            
+
         if (stoken == "(" || stoken == "[" || stoken == "{")
 
             return ETT_BRACKET_OPEN;
@@ -195,12 +178,17 @@ namespace epicr
     epicr_token Lexer::peek_token(int amnt)
     {
         size_t offset = 0;
+        uint line_offset = 0;
         epicr_token token;
         for (int i = 0; i < amnt; i++)
         {
             token = next_token();
             offset += token.word.size();
+            if (token.type == ETT_NEWLINE)
+                line_offset += token.word.size();
         }
+        token_count -= amnt;
+        line_num -= line_offset;
         /* retract the header by the width of the read tokens */
         if (!istream.eof())
             istream.seekg(-offset, ios_base::cur);
@@ -217,6 +205,7 @@ namespace epicr
         int non_blank_count = 0;
         epicr_token token;
         size_t offset = 0;
+
         while (non_blank_count < amnt)
         {
             token = next_token();
@@ -224,6 +213,7 @@ namespace epicr
             if (token.type != ETT_BLANK && token.type != ETT_NEWLINE)
                 non_blank_count++;
         }
+        token_count -= amnt;
         if (!istream.eof())
             istream.seekg(-offset, ios_base::cur);
 

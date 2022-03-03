@@ -1,10 +1,11 @@
 #define DEBUG 1
 #include "epicr.h"
 
-#define PRINT_VEC(vec) { \
-	for (auto val : vec) \
-		cout << val << " "; \
-} \
+#define PRINT_VEC(vec)          \
+	{                           \
+		for (auto val : vec)    \
+			cout << val << " "; \
+	}
 
 using namespace std;
 
@@ -23,11 +24,11 @@ int main(int argc, char **argv)
 	ifstream file = epicr::open_file(argv[1]);
 	epicr::Lexer myLexer = epicr::Lexer(file);
 
-	// print_lexer_tokens(myLexer);
-
+	print_lexer_tokens(myLexer);
+	/*
 	epicr::Parser myParser = epicr::Parser(&myLexer);
 
-	epicr::recipe myRecipe = myParser.Parse();
+ 	epicr::recipe myRecipe = myParser.Parse();
 
 	cout << myParser.error << ": " << myParser.error_message << endl;
 	;
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
 	cout << endl;
 
 	PRINT_VEC(myRecipe.kitchenware);
-	cout << endl;
+	cout << endl; */
 
 	return 0;
 }
@@ -52,9 +53,9 @@ void print_lexer_tokens(epicr::Lexer lexer)
 
 	while (lexer.is_ready())
 	{
-		epicr::epicr_token token = lexer.next_non_blank_token();
-		epicr::epicr_token peek = lexer.peek_non_blank_token(3);
-		if (token_count < 50)
+		epicr::epicr_token token = lexer.next_token();
+		epicr::epicr_token peek = lexer.peek_token(3);
+		if (token_count < 100)
 		{
 			printf("%3i c:", token_count);
 			epicr::print_token(token);

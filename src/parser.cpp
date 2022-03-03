@@ -1,13 +1,14 @@
 #include "./epicr.h"
 
-#define ERR(msg, token)      \
-	{                        \
-		error = true;        \
-		error_message = msg; \
-		error_token = token; \
+#pragma region Helper macros
+#define ERR(msg, token)                                         \
+	{                                                           \
+		error = true;                                           \
+		error_message = msg;                                    \
+		error_token = token;                                    \
 		std::cout << "ERROR ON LINE " << __LINE__ << std::endl; \
-		print_token(token); \
-		return;              \
+		print_token(token);                                     \
+		return;                                                 \
 	}
 #define ADV_NON_BLANK(count)                        \
 	{                                               \
@@ -25,6 +26,7 @@
 		}                                     \
 		utoken = lexer->peek_token();         \
 	}
+#pragma endregion
 
 std::vector<std::string> optional_fields = {
 
@@ -54,9 +56,15 @@ namespace epicr
 		utoken = lexer->peek_non_blank_token();
 
 		ParseTitle(rcp);
+		if (error)
+			return *rcp;
 		/* Parse all optional fields */
 		while (to_lower(ctoken.word) != "ingredients" && ctoken.type != ETT_EOF)
 		{
+			/* If an error occured during parsing,
+			 * return what was parsed so far */
+			if (error)
+				return *rcp;
 			/* TODO: refactor x */
 			if (to_lower(ctoken.word) == "description")
 				ParseDescription(rcp);
@@ -70,11 +78,13 @@ namespace epicr
 				ParseTags(rcp);
 			else if (to_lower(ctoken.word) == "time")
 				ParseTime(rcp);
-			else {
+			else
+			{
 				print_token(ctoken);
 				ADV(1);
 			}
 		}
+
 		return *rcp;
 	}
 
@@ -147,7 +157,8 @@ namespace epicr
 
 			/* Find open bracket for unit */
 			ADV_NON_BLANK(1);
-			if (ctoken.type != ETT_BRACKET_OPEN || ctoken.word != "{") {
+			if (ctoken.type != ETT_BRACKET_OPEN || ctoken.word != "{")
+			{
 				ERR("Nutrient must be followed by an amount!", ctoken)
 			}
 
@@ -174,18 +185,18 @@ namespace epicr
 			/* 		 I vores sprog bliver hver bracket,*/
 			/* 		 kun brugt til et formaal x) saa*/
 			ADV_NON_BLANK(1);
-			if (ctoken.type != ETT_BRACKET_CLOSE && ctoken.word != "}" )
+			if (ctoken.type != ETT_BRACKET_CLOSE && ctoken.word != "}")
 				ERR("Unclosed amount", ctoken);
-				
+
 			nutrients.push_back(nutrient);
 
 			ADV_NON_BLANK(1);
-			if (ctoken.type == ETT_COMMA) {
+			if (ctoken.type == ETT_COMMA)
+			{
 				ADV_NON_BLANK(1);
 			}
-
 		}
-		
+
 		rcp->nutrients = nutrients;
 	}
 	void Parser::ParseKitchenware(recipe *rcp)
@@ -219,7 +230,8 @@ namespace epicr
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
 			std::cout << "Reading tags" << std::endl;
-			if(ctoken.type == ETT_COMMA){
+			if (ctoken.type == ETT_COMMA)
+			{
 				ADV_NON_BLANK(1);
 			}
 			rcp->tags.push_back(ctoken.word);
@@ -229,7 +241,7 @@ namespace epicr
 	void Parser::ParseTime(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
-		
+
 		if (ctoken.type != ETT_NUMBER || utoken.type == ETT_EOF)
 		{
 			ERR("No amount was found!", ctoken);
@@ -241,7 +253,8 @@ namespace epicr
 			ADV(1);
 		}
 	}
-	void Parser::ParseIngredients(recipe *rcp) {
+	void Parser::ParseIngredients(recipe *rcp)
+	{
 		/*
 		ADV_NON_BLANK(2);
 		

@@ -52,7 +52,8 @@ namespace epicr
         std::vector<instruction_word> body;
     } instruction;
 
-    typedef struct amount_s {
+    typedef struct amount_s
+    {
         int count;
         std::string descriptor;
     } amount_s;
@@ -90,8 +91,8 @@ namespace epicr
     {
         std::string word;
         epicr_token_type type;
-        // uint uid;  /* TODO */
-        // uint line; /* TODO */
+        uint uid;
+        uint line;
 
     } epicr_token;
 
@@ -99,7 +100,8 @@ namespace epicr
     {
     private:
         std::istream &istream;
-
+        uint token_count;
+        uint line_num;
         bool ready;
 
     public:
