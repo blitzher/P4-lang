@@ -28,4 +28,6 @@ namespace test_lib
 	void expect_equal_i(const int expected, const int actual);
 	void print_recap();
 	// ---^^^---vvvv---:>~
+
+	int was_success();
 }
