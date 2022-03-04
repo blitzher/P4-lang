@@ -40,17 +40,17 @@ RM         = rm -rf
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
 TARGET       = main
 
-$(T_TARGETS):: $(T_OBJECTS) dirs
+$(T_TARGETS):: $(T_OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(subst $(BINDIR),$(OBJDIR),$@).o
 
-$(T_OBJECTS): $(OBJDIR)/%.o : $(TESTDIR)/%.cpp
+$(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp dirs
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/$(TARGET): dirs $(OBJECTS)
+$(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
+$(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp dirs
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
