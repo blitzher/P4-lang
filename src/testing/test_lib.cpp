@@ -20,6 +20,9 @@ size_t c_str_size(char *c_str)
 	return i;
 }
 
+/* by default 0, set to 1 if any tests fail */
+int success;
+
 namespace test_lib
 {
 	void register_test(std::string func_name)
@@ -41,6 +44,7 @@ namespace test_lib
 		CHECK_TESTS_NON_EMPTY()
 		most_recent_test->accepted = false;
 		most_recent_test->err_message = err_message;
+		success = 1; /* fail */
 	}
 
 	void expect_equal_s(const std::string expected, const std::string actual)
@@ -145,5 +149,9 @@ namespace test_lib
 				std::cout << "\x1B[31m\u2716\x1B[0m ";
 			printf("%s: %s\n", test.name.c_str(), test.err_message.c_str());
 		}
+	}
+
+	int was_success() {
+		return success;
 	}
 }
