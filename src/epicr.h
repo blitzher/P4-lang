@@ -164,4 +164,7 @@ typedef unsigned int uint;
     void print_token(epicr_token);
 
     std::ifstream open_file(std::string filename);
+
+    
+    bool generate_html(recipe, std::string filename);
 }
