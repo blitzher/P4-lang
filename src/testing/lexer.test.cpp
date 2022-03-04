@@ -31,8 +31,8 @@ void str_cmp_valid_test()
 int main(void)
 {
 	acceptance_test();
-	denial_test();
-	str_cmp_invalid_test();
+	// denial_test();
+	// str_cmp_invalid_test();
 	str_cmp_valid_test();
 	test_lib::print_recap();
 	return test_lib::was_success();
