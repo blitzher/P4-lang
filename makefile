@@ -22,6 +22,7 @@ LDFLAGS    = -Wall -pedantic
 SRCDIR     = src
 OBJDIR     = obj
 BINDIR     = bin
+DISDIR 	   = dist
 TESTDIR    := $(SRCDIR)/testing
 
 SOURCES   := $(wildcard $(SRCDIR)/*.cpp)
@@ -34,18 +35,18 @@ T_INCLUDES  := $(wildcard $(TESTDIR)/*.h)
 T_OBJECTS   := $(T_SOURCES:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 T_LIBOBJS	:= $(filter-out %.test.o, $(T_OBJECTS))
 
-RM         = rm -f
+RM         = rm -rf
 
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
 TARGET       = main
 
-$(T_TARGETS):: $(T_OBJECTS)
+$(T_TARGETS):: $(T_OBJECTS) dirs
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(subst $(BINDIR),$(OBJDIR),$@).o
 
 $(T_OBJECTS): $(OBJDIR)/%.o : $(TESTDIR)/%.cpp
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/$(TARGET): $(OBJECTS)
+$(BINDIR)/$(TARGET): dirs $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
@@ -53,25 +54,35 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
-.PHONY: clean
+# Named rules, ignore files if such exist
+.PHONY: clean remove dirs test run
 clean:
-	@$(RM) $(OBJECTS) $(T_OBJECTS)
+	@$(RM) $(OBJDIR) $(DISDIR)
 	@echo "Cleanup complete!"
 
-.PHONY: remove
 remove: clean
-	@$(RM) $(BINDIR)/$(TARGET)
-	@$(RM) $(T_TARGETS)
+	@$(RM) $(BINDIR)
 	@echo "Executable removed!"
 
 $(T_TARGETS)::
 	@echo "Testing $@"
 	@./$@
 
+<<<<<<< Updated upstream
 test: $(T_TARGETS)
 	@mkdir -p bin obj
 	@echo "Done test rule"
 
 run: $(BINDIR)/$(TARGET) 
 	@mkdir -p bin obj
+=======
+dirs:
+	@mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
+
+# runnable targets 
+test: $(T_TARGETS)
+	@echo "Done test rule"
+
+run: $(BINDIR)/$(TARGET)
+>>>>>>> Stashed changes
 	./$< examples/Carbonara.rcp
