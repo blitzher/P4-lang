@@ -23,10 +23,60 @@
 
 namespace epicr
 {
+typedef unsigned int uint;
+#pragma region Recipe Data
+    typedef struct ingredient_s
+    {
+        std::string name;
+        double amount;
+        std::string unit;
+    } ingredient;
+
+    typedef struct instruction_word_s
+    {
+        std::string word;
+        bool is_amount;
+        double amount;
+        std::string unit;
+
+        bool is_ingredient_ref;
+        bool has_alias;
+        std::string alias;
+    } instruction_word;
+
+    typedef struct instruction_s
+    {
+        std::vector<ingredient> ingredients;
+        std::vector<std::string> kitchenware;
+        std::vector<ingredient> yields;
+        std::vector<instruction_word> body;
+    } instruction;
+
+    typedef struct amount_s
+    {
+        int count;
+        std::string descriptor;
+    } amount_s;
+
+    typedef struct recipe_s
+    {
+        std::string title;
+        std::string description;
+        amount_s amount;
+        std::string time; /* expand implementation */
+        std::vector<std::string> kitchenware;
+        std::vector<ingredient> nutrients;
+        std::vector<std::string> tags;
+        std::vector<ingredient> ingredients; /* missing SOME implementation */
+        std::vector<instruction> instructions; /* missing implementation */
+    } recipe;
+#pragma endregion
 
     enum epicr_token_type
     {
         ETT_WORD,
+        ETT_COLON,
+        ETT_COMMA,
         ETT_NUMBER,
         ETT_BRACKET_OPEN,
         ETT_BRACKET_CLOSE,
@@ -41,6 +91,8 @@ namespace epicr
     {
         std::string word;
         epicr_token_type type;
+        uint uid;
+        uint line;
 
     } epicr_token;
 
@@ -48,7 +100,8 @@ namespace epicr
     {
     private:
         std::istream &istream;
-        std::queue<std::string> token_peeklog;
+        uint token_count;
+        uint line_num;
         bool ready;
 
     public:
@@ -64,24 +117,49 @@ namespace epicr
         /* Return the next non blank, non new line token */
         epicr_token next_non_blank_token();
         epicr_token_type token_type(std::string stoken);
-        /* Return the next token, without dropping it */
-        epicr_token peek();
+        /* Peek the next token */
+        epicr_token peek_token();
+        /* Peek the `n` 'th token. Undefined for `n=0` */
+        epicr_token peek_token(int n);
+        /* Peek the next non-blank token */
+        epicr_token peek_non_blank_token();
+        /* Peek the `n` 'th non-blank token. Undefined for `n=0`*/
+        epicr_token peek_non_blank_token(int n);
     };
 
     class Parser
     {
     private:
         Lexer *lexer;
+        void ParseTitle(recipe *);
+        void ParseDescription(recipe *);
+        void ParseAmount(recipe *);
+        void ParseNutrients(recipe *);
+        void ParseIngredients(recipe *);
+        void ParseKitchenware(recipe *);
+        void ParseTags(recipe *);
+        void ParseTime(recipe *);
+        void ParseProcedure(recipe *);
+
+        epicr_token ctoken;
+        epicr_token utoken;
 
     public:
         bool error;
         std::string error_message;
+        epicr_token error_token;
+        recipe Parse();
         Parser(Lexer *lexer_r);
         ~Parser();
     };
 
     void compress(std::string filepath);
     void decompress(std::string filepath);
+
+    std::string to_lower(std::string);
+
+    /* Print the contents of a token to stdout */
+    void print_token(epicr_token);
 
     std::ifstream open_file(std::string filename);
 }

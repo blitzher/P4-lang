@@ -1,0 +1,47 @@
+(* Entry *)
+Program = Title {Fields} Ingredients Procedure
+
+(* Fields *)
+Fields = (Description | Amount | Nutrients | Tags | Kitchenware | Time) Blanks {Fields}
+
+Title = "title:" SpecialCharWord {SpecialCharWord} Blanks
+Description = "description:" {SpecialCharWord | ',' | '?' | Blanks}
+Amount = "amount:" Blanks Number Words
+Nutrients = "nutrients:" Blanks Nutrient {',' Blanks Nutrient}
+Nutrient = ('calories' | 'protein' | 'carbs' | 'fat') Blanks NutrientUnit {, Nutrient}
+Ingredients = "ingredients:" Blanks IngredientDeclaration {',' Blanks IngredientDeclaration} Blanks
+Kitchenware = "kitchenware:" Blanks SingleKitchenware {',' Blanks SingleKitchenware} Blanks
+Tags = "tags:" Words {',' Words}
+Time = ("cook-time" | "prep-time" | "total-time") ':' Blanks (Number | Number '-' Number) TimeUnit
+
+(* Ingredient Definitions *)
+IngredientName = SpecialCharWord {SpecialCharWord} Blanks
+Ingredient = IngredientName [Unit]
+IngredientDeclaration = IngredientName {Unit | IsUncountable | IsRecipe | IsOptional}
+IngredientRelativeOrRegular = IngredientName [Unit|RelativeAmount]
+SingleKitchenware = (Word|Number) Blanks {Word|Number} [IsOptional]
+IsOptional = '?'
+IsUncountable = '+'
+IsRecipe = '*'
+
+(* Procedure *) 
+Procedure = "procedure:" Blanks Subprocedure {Subprocedure}
+Subprocedure = (WithHeader | UsingHeader | WithHeader Blanks UsingHeader) ':' Blanks SubprocedureBody Blanks [YieldStatement]
+WithHeader = 'with(' IngredientRelativeOrRegular {',' IngredientRelativeOrRegular} ')'
+UsingHeader = 'using(' Words {',' Words} ')'
+SubprocedureBody = [' '] (SpecialCharWord | IngredientRef | ',' | '?' | Unit) {SubprocedureBody}
+IngredientRef = '[' (NonEmptyWords | Words ':' NonEmptyWords) ']'
+YieldStatement = 'yield:' Ingredient {',' Blanks Ingredient}
+
+(* RegEx Patterns & Types *)
+Blanks 			 = #'\s*'
+Number 			 = #'[1-9][0-9]*(\.[0-9]+)?'
+Unit 			 = '{' Number {Words} '}' (* (500 table spoons) *)
+NutrientUnit 	 = '{' Number Blanks ('g' | 'kcal' | 'cal')'}'
+Word 			 = #'[\w\-]+'
+Words	 		 = {Blanks Word} Blanks
+NonEmptyWords	 = Word {Words}
+SpecialChar 	 = #'[\.\';\"-&#%!$€()]'
+SpecialCharWord  = Blanks (Word | SpecialChar)
+RelativeAmount 	 = '{' ('rest' | 'all' | 'half' | 'quarter') '}'
+TimeUnit		 = Blanks ('second' | 'minute' | 'hour') ['s']

@@ -1,42 +1,74 @@
+#define DEBUG 1
 #include "epicr.h"
+
+#define PRINT_VEC(vec)          \
+	{                           \
+		for (auto val : vec)    \
+			cout << val << " "; \
+	}
 
 using namespace std;
 
 /* Remove or outcomment when not debugging */
-#define DEBUG 0
-
+void print_lexer_tokens(epicr::Lexer lexer);
 int main(int argc, char **argv)
 {
 
-  cout << "Command line arguments:" << endl;
+	cout << "Command line arguments:" << endl;
 
-  for (int i = 0; i < argc; i++)
-  {
-    cout << i << ": " << argv[i] << endl;
-  }
+	for (int i = 0; i < argc; i++)
+	{
+		cout << i << ": " << argv[i] << endl;
+	}
 
-  ifstream file = epicr::open_file(argv[1]);
+	ifstream file = epicr::open_file(argv[1]);
+	epicr::Lexer myLexer = epicr::Lexer(file);
 
-  {
-    epicr::Lexer myLexer = epicr::Lexer(file);
+	epicr::Parser myParser = epicr::Parser(&myLexer);
 
-    int token_count = 0;
-    while (myLexer.is_ready())
-    {
-      epicr::epicr_token token = myLexer.next_token();
-      string type = epicr::token_to_string(token.type);
+ 	epicr::recipe myRecipe = myParser.Parse();
+	
+	cout << myParser.error << ": " << myParser.error_message << endl;
+	
+	cout << myRecipe.title << endl;
 
-      if (DEBUG)
-      {
-        if (token.type != epicr::ETT_BLANK && token.type != epicr::ETT_NEWLINE)
-          printf("%3i %-18s: %s\n", token_count, type.c_str(), token.word.c_str());
-        else
-          printf("%3i %s %i\n", token_count, type.c_str(), (int)token.word.size());
-      }
+	cout << myRecipe.time << endl;
 
-      token_count++;
-    }
-  }
+	cout << myRecipe.description << endl;
 
-  return 0;
+	PRINT_VEC(myRecipe.tags);
+	cout << endl;
+
+	PRINT_VEC(myRecipe.kitchenware);
+	cout << endl;
+
+	for (auto ingr : myRecipe.ingredients) {
+		cout << ingr.name << endl;
+		cout << ingr.amount << endl;
+		cout << ingr.unit << endl;
+	}
+
+	return 0;
+}
+
+void print_lexer_tokens(epicr::Lexer lexer)
+{
+
+	int token_count = 0;
+
+	while (lexer.is_ready())
+	{
+		epicr::epicr_token token = lexer.next_non_blank_token();
+		epicr::epicr_token peek = lexer.peek_non_blank_token(1);
+		if (token_count < 100)
+		{
+			printf("%3i c:", token_count);
+			epicr::print_token(token);
+			//printf("%3i p:", token_count + 1);
+			//epicr::print_token(peek);
+			cout << endl;
+		}
+
+		token_count++;
+	}
 }

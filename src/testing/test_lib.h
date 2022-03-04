@@ -1,9 +1,13 @@
 #pragma once
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include <unordered_map>
+
+typedef unsigned int uint;
 
 namespace test_lib
 {
