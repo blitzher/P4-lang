@@ -340,24 +340,28 @@ namespace epicr
 		int i = 0;
 		while (utoken.type != ETT_EOF)
 		{
-			if (ctoken.word == "with"/* || ctoken.word == "using"*/) //casing stuff here
+			if (ctoken.word != "with" || ctoken.word != "using")
 			{
-				ADV_NON_BLANK(1)
-				ParseInstruction(rcp,i);
-				i++;
+				ERR("expected instruction header",ctoken);
 			}
-		}
-		
-		
-	}
-	void Parser::ParseInstruction(recipe *rcp, int counter)
-	{
-		instruction currentInstruction = rcp->instructions[counter];
-		//reads header
-		ParseInstructionHeader(rcp,currentInstruction);
-	}
-	
-	void Parser::ParseInstructionHeader(recipe *rcp, instruction currentInstruction)
+			ADV_NON_BLANK(1)
+			instruction currentInstruction = rcp->instructions[i];
+			if (ctoken.word == "with") //casing stuff here
+			{
+				ParseInstructionHeaderWith(rcp,currentInstruction);
+			}
+			if (ctoken.word == "using")
+			{
+				ParseInstructionHeaderUsing(rcp,currentInstruction);
+			}
+			/*
+			body
+			yield
+			*/
+			i++;
+		}	
+	}	
+	void Parser::ParseInstructionHeaderWith(recipe *rcp, instruction currentInstruction)
 	{
 		if (ctoken.type != ETT_BRACKET_OPEN)
 		{
@@ -398,8 +402,15 @@ namespace epicr
 			}
 			i++;
 		}
+		if (ctoken.type != ETT_BRACKET_CLOSE)
+		{
+			ERR("with statement has no closing bracket",ctoken)
+		}
 	}
-
+	void Parser::ParseInstructionHeaderUsing(recipe *rcp, instruction currentInstruction)
+	{
+		
+	}
 	Parser::~Parser()
 	{
 	}
