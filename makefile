@@ -68,9 +68,12 @@ $(T_TARGETS)::
 	@echo "Testing $@"
 	@./$@
 
+dirs :
+	@mkdir -p bin
+	@mkdir -p obj
 
-test: $(T_TARGETS)
+test: dirs $(T_TARGETS)
 	@echo "Done test rule"
 
-run: $(BINDIR)/$(TARGET)
+run: dirs $(BINDIR)/$(TARGET) 
 	./$< examples/Carbonara.rcp

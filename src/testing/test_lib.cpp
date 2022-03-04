@@ -27,8 +27,7 @@ namespace test_lib
 {
 	void register_test(std::string func_name)
 	{
-		tests[func_name] = {.name = func_name,
-							.accepted = false};
+		tests[func_name] = {func_name, false, "\0"};
 		most_recent_test = &tests[func_name];
 	}
 
