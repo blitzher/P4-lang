@@ -29,24 +29,8 @@ int main(int argc, char **argv)
  	epicr::recipe myRecipe = myParser.Parse();
 	
 	cout << myParser.error << ": " << myParser.error_message << endl;
-	
-	cout << myRecipe.title << endl;
 
-	cout << myRecipe.time << endl;
-
-	cout << myRecipe.description << endl;
-
-	PRINT_VEC(myRecipe.tags);
-	cout << endl;
-
-	PRINT_VEC(myRecipe.kitchenware);
-	cout << endl;
-
-	for (auto ingr : myRecipe.ingredients) {
-		cout << ingr.name << endl;
-		cout << ingr.amount << endl;
-		cout << ingr.unit << endl;
-	}
+	generate_html(myRecipe, "dist/recipe.html");
 
 	return 0;
 }

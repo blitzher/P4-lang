@@ -68,14 +68,6 @@ $(T_TARGETS)::
 	@echo "Testing $@"
 	@./$@
 
-<<<<<<< Updated upstream
-test: $(T_TARGETS)
-	@mkdir -p bin obj
-	@echo "Done test rule"
-
-run: $(BINDIR)/$(TARGET) 
-	@mkdir -p bin obj
-=======
 dirs:
 	@mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 
@@ -84,5 +76,4 @@ test: $(T_TARGETS)
 	@echo "Done test rule"
 
 run: $(BINDIR)/$(TARGET)
->>>>>>> Stashed changes
 	./$< examples/Carbonara.rcp
