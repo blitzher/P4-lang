@@ -86,6 +86,12 @@ namespace epicr
 			}
 		}
 		ParseIngredients(rcp);
+		while (ctoken.word != "instructions" && ctoken.type != ETT_EOF) //for testing
+		{
+			ADV_NON_BLANK(1);
+		}
+		ParseInstructions(rcp);
+		
 
 		return *rcp;
 	}
