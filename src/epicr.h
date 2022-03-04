@@ -139,7 +139,9 @@ typedef unsigned int uint;
         void ParseKitchenware(recipe *);
         void ParseTags(recipe *);
         void ParseTime(recipe *);
-        void ParseProcedure(recipe *);
+        void ParseInstructions(recipe *);
+        void Parser::ParseInstruction(recipe *,int);
+        void Parser::ParseInstructionHeader(recipe *,instruction currentInstruction);
 
         epicr_token ctoken;
         epicr_token utoken;

@@ -1,4 +1,5 @@
 #include "./epicr.h"
+#include <string>
 
 #pragma region Helper macros
 #define ERR(msg, token)                                         \
@@ -333,7 +334,71 @@ namespace epicr
 		} */
 	}
 
-	void Parser::ParseProcedure(recipe *rcp) {}
+	void Parser::ParseInstructions(recipe *rcp) 
+	{
+		ADV_NON_BLANK(2);
+		int i = 0;
+		while (utoken.type != ETT_EOF)
+		{
+			if (ctoken.word == "with"/* || ctoken.word == "using"*/) //casing stuff here
+			{
+				ADV_NON_BLANK(1)
+				ParseInstruction(rcp,i);
+				i++;
+			}
+		}
+		
+		
+	}
+	void Parser::ParseInstruction(recipe *rcp, int counter)
+	{
+		instruction currentInstruction = rcp->instructions[counter];
+		//reads header
+		ParseInstructionHeader(rcp,currentInstruction);
+	}
+	
+	void Parser::ParseInstructionHeader(recipe *rcp, instruction currentInstruction)
+	{
+		if (ctoken.type != ETT_BRACKET_OPEN)
+		{
+			ERR("expected open bracket",ctoken)
+		}	
+		ADV_NON_BLANK(1)
+		int i = 0;
+		while (utoken.type != ETT_COLON)
+		{
+			if (ctoken.type == ETT_WORD && ctoken.type == ETT_BLANK)
+			{
+				currentInstruction.ingredients[i].name += ctoken.word;
+				ADV(1)
+			}
+			if (ctoken.type == ETT_BRACKET_OPEN)
+			{
+				ADV_NON_BLANK(1)
+				if (ctoken.type != ETT_NUMBER) //amount
+				{
+					ERR("expected amount",ctoken)
+				}
+				currentInstruction.ingredients[i].amount = std::stod(ctoken.word);
+				ADV_NON_BLANK(1)
+				while (ctoken.type != ETT_BRACKET_CLOSE)
+				{
+					while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) //unit
+					{
+						currentInstruction.ingredients[i].unit += ctoken.word;
+						ADV(1) 
+					}
+				}
+				ADV_NON_BLANK(1);
+				if (ctoken.type != ETT_COMMA)
+				{
+					ERR("expected seperator between ingredients",ctoken)
+				}
+				ADV_NON_BLANK(1);
+			}
+			i++;
+		}
+	}
 
 	Parser::~Parser()
 	{
