@@ -1,0 +1,183 @@
+<html>
+<header>
+	<style>
+		html {
+			margin: 0 20%;
+
+		}
+
+		.instruction {
+			border: 3px solid black;
+			border-radius: 15px;
+			padding: 5px 15px;
+			min-height: 10px;
+			border-top-left-radius: 0px;
+			
+		}
+
+		h5 {
+			font-weight: normal;
+
+			margin: 0 0 0 0;
+			padding: 0 0 0 0;
+		}
+
+		h3,
+		h4,
+		h5 {
+			margin: 10px 0 0 0;
+			padding: 0 0 0 0;
+		}
+
+		a {
+			font-style: normal
+		}
+
+		.colltext {
+			display: block;
+			color: darkslategray;
+			margin: 5px 10px;
+			font-style: italic;
+			cursor: context-menu;
+		}
+
+		.step-header {
+			border: 3px solid black;
+			width: fit-content;
+			border-radius: 15px;
+			padding: 0px 10px;
+			border-bottom-width: 0px;
+			border-bottom-left-radius: 0px;
+			border-bottom-right-radius: 0px;
+			z-index: 1;
+			background-color: white;
+		}
+	</style>
+</header>
+<h1>
+	Spaghet
+</h1>
+
+
+<h3>
+	Description
+</h3>
+<span class="description collapsible">
+	<p>
+		I must inform you, that somebody has touched my spaghet.
+		<br>
+		And therefore, you must create a new.
+	</p>
+</span class="ingredients">
+<h3>
+	Ingredients
+</h3>
+<ul>
+	<li>
+		Spaghetti, 400 grams
+	</li>
+	<li>
+		Cheese, 200 grams
+	</li>
+	<li>
+		2 Eggs
+	</li>
+	<li>
+		Bacon, 100 grams
+	</li>
+</ul>
+<span>
+
+	<span class="kitchenware">
+		<h3>Kitchenware</h3>
+		<ul>
+			<li>Pan</li>
+			<li>Airfryer</li>
+
+		</ul>
+	</span>
+
+	<div>
+		<h4 class="step-header">
+			Step 1
+		</h4>
+		<div class="instruction step collapsible">
+			<h5>
+				Take 200 grams of <a href="#ingredients">cheese</a>, 2 <a href="ingredients">eggs</a> and 400 grams of
+				<a href="#ingredients">spaghetti</a>.
+			</h5>
+			<p>
+				Mix the eggs and cheese in the pan, and mix with potatoes and ham
+			</p>
+		</div>
+
+	</div>
+
+	<div>
+		<h4 class="step-header">
+			Step 2
+		</h4>
+		<div class="instruction step collapsible">
+			<h5>
+				Take 200 grams of <a href="#ingredients">cheese</a>, 2 <a href="ingredients">eggs</a> and 400 grams of
+				<a href="#ingredients">spaghetti</a>.
+			</h5>
+			<p>
+				Mix the eggs and cheese in the pan, and mix with
+			</p>
+		</div>
+	</div>
+
+	<div>
+		<h4 class="step-header">
+			Step 3
+		</h4>
+		<div class="instruction step collapsible">
+			<h5>
+				Take 200 grams of <a href="#ingredients">cheese</a>, 2 <a href="ingredients">eggs</a> and 400 grams of
+				<a href="#ingredients">spaghetti</a>.
+			</h5>
+			<p>
+				Mix the eggs and cheese in the pan, and mix with
+			</p>
+		</div>
+
+	</div>
+
+
+	<script>
+		const allColls = document.getElementsByClassName("collapsible");
+
+		function set_display_after(el, val, timeout) {
+			setTimeout(() => {
+				el.style.display = val;
+			}, timeout);
+		}
+		for (i = 0; i < allColls.length; i++) {
+			const coll = allColls[i];
+			let chil = coll.children;
+			let e = document.createElement("p");
+			e.innerText = "Right click to collapse";
+			e.classList.add("colltext")
+			coll.appendChild(e);
+			console.log(chil);
+			coll.addEventListener("click", (event, el) => {
+				for (let j = 0; j < chil.length; j++) {
+					chil[j].style.display = "block";
+					e.innerText = "Right click to collapse";
+				}
+			});
+			coll.addEventListener("contextmenu", (ev) => {
+				ev.preventDefault();
+				ev.stopPropagation();
+				for (let j = chil.length - 2; j >= 0; j--) {
+					chil[j].style.display = "none";
+				}
+				e.innerText = "Click to expand";
+			});
+			coll.dispatchEvent(new Event('contextmenu'));
+		}
+
+	</script>
+
+</html>
