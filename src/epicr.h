@@ -29,6 +29,7 @@ typedef unsigned int uint;
     {
         std::string name;
         double amount;
+        std::string relativeAmount;
         std::string unit;
     } ingredient;
 
@@ -147,8 +148,8 @@ typedef unsigned int uint;
         void ParseTags(recipe *);
         void ParseTime(recipe *);
         void ParseInstructions(recipe *);
-        void ParseInstructionHeaderWith(recipe *,int i);
-        void ParseInstructionHeaderUsing(recipe *,int i);
+        void ParseInstructionHeaderWith(instruction *inst);
+        void ParseInstructionHeaderUsing(instruction *inst);
 
         epicr_token ctoken;
         epicr_token utoken;

@@ -442,32 +442,33 @@ namespace epicr
 	{
 		ADV_NON_BLANK(2);
 		int currentInstructionIndex = 0;
+		std::vector<instruction> instructions;
 		while (utoken.type != ETT_EOF)
 		{
-			bool a = ctoken.word == "using";
 			if (to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using")
 			{
 				ERR("expected instruction header, either 'with' or 'using'",ctoken);
 			}
-			ADV_NON_BLANK(1);
+			instruction inst;
 			if (ctoken.word == "with") //casing stuff here
 			{
-				ADV_NON_BLANK(1)
-				ParseInstructionHeaderWith(rcp,currentInstructionIndex);
+				std::cout << 1 << "\n";
+				ParseInstructionHeaderWith(&inst);
 			}
 			if (ctoken.word == "using")
 			{
 				ADV_NON_BLANK(1)
-				ParseInstructionHeaderUsing(rcp,currentInstructionIndex);
+				ParseInstructionHeaderUsing(&inst);
 			}
 			/*
 			body
 			yield
 			*/
+			instructions.push_back(inst);
 			currentInstructionIndex++;
 		}	
 	}	
-	void Parser::ParseInstructionHeaderWith(recipe *rcp, int i)
+	void Parser::ParseInstructionHeaderWith(instruction *inst)
 	{
 		if (ctoken.type != ETT_RBRACKET_OPEN)
 		{
@@ -477,35 +478,51 @@ namespace epicr
 		int j = 0;
 		while (utoken.type != ETT_COLON)
 		{
-			if (ctoken.type == ETT_WORD && ctoken.type == ETT_BLANK) //ingredient name
+			if (ctoken.type != ETT_WORD)
 			{
-				rcp->instructions[i].ingredients[j].name += ctoken.word;
+				ERR("expected ingredient name",ctoken);
+			}
+			ingredient currentIngredient;
+			while (ctoken.type == ETT_WORD && ctoken.type == ETT_BLANK) //ingredient name
+			{
+				currentIngredient.name += ctoken.word;
 				ADV(1);
 			}
 			if (ctoken.type == ETT_CBRACKET_OPEN) //if amount is specified - ie if it is not uncountable
 			{
 				//while non-closing bracket måske
 				ADV_NON_BLANK(1)
-				if (ctoken.type == ETT_WORD) //relative amount
+				if (ctoken.word == "half" || ctoken.word == "quarter" || ctoken.word == "rest" || ctoken.word == "all") //relative amount
+				//lidt hardcoded - burde måske være constants - not sure where to define
 				{
-					
+					currentIngredient.relativeAmount = ctoken.word;
+					ADV_NON_BLANK(1);
 				}
 				
 				else if (ctoken.type == ETT_NUMBER) //amount as number
 				{
-					rcp->instructions[i].ingredients[j].amount = std::stod(ctoken.word);
+					currentIngredient.amount = std::stod(ctoken.word);
 					ADV_NON_BLANK(1)
 					while (ctoken.type != ETT_RBRACKET_CLOSE)
 					{
+						if (ctoken.type != ETT_WORD || ctoken.type != ETT_BLANK)
+						{
+							ERR("Expected a corresponding unit with the ingredient.",ctoken);
+						}
 						while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) //unit
 						{
-							rcp->instructions[i].ingredients[i].unit += ctoken.word;
+							currentIngredient.unit += ctoken.word;
 							ADV(1) 
 						}
 					}	
+				}
+				else
+				{
+					ERR("expected an amount - either relative with keywords or with an amoun and unit",ctoken);
 				}	
 			}
 			ADV_NON_BLANK(1);
+			inst->ingredients.push_back(currentIngredient);
 			if (ctoken.type != ETT_COMMA)
 			{
 				ERR("expected seperator between ingredients",ctoken);
@@ -518,37 +535,40 @@ namespace epicr
 			ERR("with statement has no closing bracket",ctoken);
 		}
 	}
-	void Parser::ParseInstructionHeaderUsing(recipe *rcp, int i)
+	void Parser::ParseInstructionHeaderUsing(instruction *inst)
 	{
 		if (ctoken.type != ETT_RBRACKET_OPEN)
 		{
 			ERR("expected open bracket with 'using' ",ctoken);
 		}	
 		ADV_NON_BLANK(1);
-		int j = 0;
 		while (utoken.type != ETT_COLON)
 		{
 			if (ctoken.type != ETT_WORD)
 			{
 				ERR("expected a kitchenware",ctoken);
 			}
-			rcp->instructions[i].kitchenware[j] += ctoken.word;
+			inst->kitchenware.push_back(ctoken.word);
 			ADV(1)
 			while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK)
 			{
-				rcp->instructions[i].kitchenware[j] += ctoken.word;
+				inst->kitchenware.push_back(ctoken.word);
 				ADV(1);
 			}
-			if (ctoken.type != ETT_COMMA)
+			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE)
 			{
-				ERR("expected separator between kitchenwares. Please insert a ','",ctoken);
+				ERR("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'",ctoken);
 			}
-			j++;	
+			if (ctoken.type == ETT_COMMA)
+			{
+				ADV_NON_BLANK(1);	
+			}
 		}
 		if (ctoken.type != ETT_RBRACKET_CLOSE)
 		{
 			ERR("using statement has no closing bracket",ctoken)
 		}
+		ADV_NON_BLANK(2);
 		
 		
 	}
