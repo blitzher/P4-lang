@@ -473,12 +473,12 @@ namespace epicr
 				ERR("expected instruction header, either 'with' or 'using'", ctoken);
 			}
 			instruction singleInstruction;
-			if (ctoken.word == "with") // casing stuff here
+			if (to_lower(ctoken.word) == "with")
 			{
 				ADV_NON_BLANK(1)
 				ParseInstructionHeaderWith(&singleInstruction);
 			}
-			if (ctoken.word == "using")
+			if (to_lower(ctoken.word) == "using")
 			{
 				ADV_NON_BLANK(1)
 				ParseInstructionHeaderUsing(&singleInstruction);
@@ -520,17 +520,17 @@ namespace epicr
 				while (ctoken.type != ETT_CBRACKET_CLOSE)
 				{
 					ADV_NON_BLANK(1)
-					if (ctoken.word == "half" || ctoken.word == "quarter" || ctoken.word == "rest" || ctoken.word == "all") // relative amount
-					// lidt hardcoded - burde måske være constants - not sure where to define
+					if (to_lower(ctoken.word) == "half" || to_lower(ctoken.word) == "quarter" || to_lower(ctoken.word) == "rest" || to_lower(ctoken.word) == "all") // relative amount
+					// lidt hardcoded - burde måske være constants eller tokens
 					{
-						currentIngredient.relativeAmount = ctoken.word;
+						currentIngredient.relativeAmount = to_lower(ctoken.word);
 						ADV_NON_BLANK(1);
 					}
 					else if (ctoken.type == ETT_NUMBER) // amount as number
 					{
-						currentIngredient.amount = std::stod(ctoken.word);
+						currentIngredient.amount = std::stod(to_lower(ctoken.word));
 						ADV_NON_BLANK(1);
-						if (ctoken.type == ETT_CBRACKET_CLOSE)
+						if (ctoken.type == ETT_CBRACKET_CLOSE) //if it doesn't have a unit
 						{
 							break;
 						}
@@ -540,7 +540,7 @@ namespace epicr
 						}
 						while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) // unit
 						{
-							currentIngredient.unit += ctoken.word;
+							currentIngredient.unit += to_lower(ctoken.word);
 							ADV(1);
 						}
 					}
