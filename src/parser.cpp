@@ -465,7 +465,6 @@ namespace epicr
 				ERR("missing ':' after instruction header",ctoken);
 			}
 			ADV_NON_BLANK(1)
-			
 			/*
 			body
 			yield

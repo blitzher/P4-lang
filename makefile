@@ -43,14 +43,16 @@ TARGET       = main
 $(T_TARGETS):: $(T_OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(subst $(BINDIR),$(OBJDIR),$@).o
 
-$(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp dirs
+$(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp
+	@mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
-$(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp dirs
+$(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
