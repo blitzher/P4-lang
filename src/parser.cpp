@@ -1,4 +1,5 @@
 #include "./epicr.h"
+#include <string>
 
 #pragma region Helper macros
 #define ERR(msg, token)                                         \
