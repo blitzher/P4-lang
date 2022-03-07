@@ -86,23 +86,21 @@ namespace epicr
 			}
 		}
 		ParseIngredients(rcp);
-		while (ctoken.word != "instructions" && ctoken.type != ETT_EOF) //for testing
+		while (ctoken.word != "instructions" && ctoken.type != ETT_EOF) // for testing
 		{
 			ADV_NON_BLANK(1);
 		}
 		ParseInstructions(rcp);
-		
-		
+
 		return *rcp;
 	}
 
 	void Parser::ParseTitle(recipe *rcp)
 	{
 		if (to_lower(ctoken.word) != "title" || utoken.type != ETT_COLON)
-		 {
-			ERR("No 'title:' found at the start of the file!", ctoken); 
-		 }
-			
+		{
+			ERR("No 'title:' found at the start of the file!", ctoken);
+		}
 
 		ADV_NON_BLANK(2);
 
@@ -138,7 +136,7 @@ namespace epicr
 		 * Advance 1 so it goes to the next word,
 		 * which is probably not a blank.
 		 * In fact, it is certainly not a blank,
-		 * since `ADV_NON_BLANK` never leaves the 
+		 * since `ADV_NON_BLANK` never leaves the
 		 * current token on a blank, and rather
 		 * skips over them until it reaches a non
 		 * blank token.
@@ -199,8 +197,6 @@ namespace epicr
 			ADV_NON_BLANK(1);
 			if (ctoken.type != ETT_CBRACKET_CLOSE && ctoken.word != "}")
 				ERR("Unclosed amount", ctoken);
-
-				
 
 			nutrients.push_back(nutrient);
 
@@ -286,7 +282,7 @@ namespace epicr
 			std::cout << "Reading ingreditents x)" << std::endl;
 			ingredient ingredient;
 
-			if (ctoken.type == ETT_EOF)  
+			if (ctoken.type == ETT_EOF)
 			{
 				ERR("@Ingredients, End of file reached x(( :", ctoken);
 			}
@@ -295,71 +291,84 @@ namespace epicr
 				ADV_NON_BLANK(1);
 			}
 
-			//gets word
-			if (ctoken.type == ETT_WORD) {
+			// gets word
+			if (ctoken.type == ETT_WORD)
+			{
 				ingredient.name = ctoken.word;
 				ADV_NON_BLANK(1);
-				
 
-					/*if a specialoperator (+?*) 
-					is involved it handles the 
-					parsing. Should be its own 
-					function later to save space */
-				if(ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_A || ctoken.type == ETT_SPECIAL_OPR_Q) {
+				/*if a specialoperator (+?*)
+				is involved it handles the
+				parsing. Should be its own
+				function later to save space */
+				if (ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_A || ctoken.type == ETT_SPECIAL_OPR_Q)
+				{
 
 					// +
-					if(ctoken.type == ETT_SPECIAL_OPR_P) {
+					if (ctoken.type == ETT_SPECIAL_OPR_P)
+					{
 						ingredient.name = ctoken.word;
 						ADV_NON_BLANK(1);
-						if(ctoken.type == ETT_SPECIAL_OPR_A || utoken.type == ETT_SPECIAL_OPR_A) {
+						if (ctoken.type == ETT_SPECIAL_OPR_A || utoken.type == ETT_SPECIAL_OPR_A)
+						{
 							ERR("An ingredient with an uncountable operator(+), cannot be a recipe", ctoken)
-							/*Ig above token er ikke helt korrekt, da 
+							/*Ig above token er ikke helt korrekt, da
 							det kan vaere i utoken at fejlen sker but w/e */
-						}	
-					
-						if(ctoken.type == ETT_SPECIAL_OPR_Q){
+						}
+
+						if (ctoken.type == ETT_SPECIAL_OPR_Q)
+						{
 							ingredient.name = ctoken.word;
 							ADV_NON_BLANK(1);
 						}
 
-						if(ctoken.type != ETT_COMMA) {
+						if (ctoken.type != ETT_COMMA)
+						{
 							ERR("Invalid input. Uncountable ingredients can not specify amount and unit", ctoken);
-						}	
-					rcp->ingredients.push_back(ingredient);
+						}
+						rcp->ingredients.push_back(ingredient);
 					}
 
 					// *
-					if(ctoken.type == ETT_SPECIAL_OPR_A) {
-					ingredient.name = ctoken.word;
-					ADV_NON_BLANK(1);
+					if (ctoken.type == ETT_SPECIAL_OPR_A)
+					{
+						ingredient.name = ctoken.word;
+						ADV_NON_BLANK(1);
 
-						if(ctoken.type == ETT_SPECIAL_OPR_P || utoken.type == ETT_SPECIAL_OPR_P) {
+						if (ctoken.type == ETT_SPECIAL_OPR_P || utoken.type == ETT_SPECIAL_OPR_P)
+						{
 							ERR("an ingredient cant be uncountable and a recipe", ctoken);
 						}
-						if(ctoken.type == ETT_SPECIAL_OPR_Q) {
+						if (ctoken.type == ETT_SPECIAL_OPR_Q)
+						{
 							ingredient.name = ctoken.word;
 							ADV_NON_BLANK(1);
 						}
 
-						if(ctoken.type == ETT_SPECIAL_OPR_A || ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_Q) {
+						if (ctoken.type == ETT_SPECIAL_OPR_A || ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_Q)
+						{
 							ERR("Maximun number of specifiers reached", ctoken);
 						}
-						if(ctoken.type != ETT_CBRACKET_OPEN && utoken.type != ETT_NUMBER) {
-							ERR("amount must be encapsulated within curly brackets {  }",ctoken)
+						if (ctoken.type != ETT_CBRACKET_OPEN && utoken.type != ETT_NUMBER)
+						{
+							ERR("amount must be encapsulated within curly brackets {  }", ctoken)
 						}
 
 						ingredient.amount = utoken.uid;
 						ADV_NON_BLANK(2);
-						
-						if(ctoken.type == ETT_WORD) {
+
+						if (ctoken.type == ETT_WORD)
+						{
 							ingredient.unit = utoken.word;
 							ADV_NON_BLANK(1);
-							while (ctoken.type == ETT_WORD) {
+							while (ctoken.type == ETT_WORD)
+							{
 								ingredient.unit = ctoken.word;
 								ADV_NON_BLANK(1);
 							}
 						}
-						if(ctoken.type != ETT_CBRACKET_CLOSE) {
+						if (ctoken.type != ETT_CBRACKET_CLOSE)
+						{
 							ERR("closing bracket for ingredient not found", ctoken)
 						}
 						rcp->ingredients.push_back(ingredient);
@@ -367,78 +376,92 @@ namespace epicr
 					}
 
 					// ?
-					if(ctoken.type == ETT_SPECIAL_OPR_Q) { 
+					if (ctoken.type == ETT_SPECIAL_OPR_Q)
+					{
 						ingredient.name = ctoken.word;
 						ADV_NON_BLANK(1);
 
-						if(ctoken.type == ETT_SPECIAL_OPR_P) {
+						if (ctoken.type == ETT_SPECIAL_OPR_P)
+						{
 							ingredient.name = ctoken.word;
-							if(utoken.type != ETT_COMMA){
+							if (utoken.type != ETT_COMMA)
+							{
 								ERR("Invalid input. Uncountable ingredients can not specify amount and unit", utoken);
 							}
-							else {
+							else
+							{
 								rcp->ingredients.push_back(ingredient);
 								ADV_NON_BLANK(1);
 							}
 						}
 
-						if(ctoken.type == ETT_SPECIAL_OPR_A) {
-							
-							if(ctoken.type != ETT_CBRACKET_OPEN && utoken.type != ETT_NUMBER) {
-								ERR("amount must be encapsulated within curly brackets {  }",ctoken)
+						if (ctoken.type == ETT_SPECIAL_OPR_A)
+						{
+
+							if (ctoken.type != ETT_CBRACKET_OPEN && utoken.type != ETT_NUMBER)
+							{
+								ERR("amount must be encapsulated within curly brackets {  }", ctoken)
 							}
 
 							ingredient.amount = utoken.uid;
 							ADV_NON_BLANK(2);
 
-							if(ctoken.type == ETT_WORD) {
+							if (ctoken.type == ETT_WORD)
+							{
 								ingredient.unit = utoken.word;
 								ADV_NON_BLANK(1);
-							while (ctoken.type == ETT_WORD) {
-								ingredient.unit = ctoken.word;
-								ADV_NON_BLANK(1);
+								while (ctoken.type == ETT_WORD)
+								{
+									ingredient.unit = ctoken.word;
+									ADV_NON_BLANK(1);
+								}
 							}
-						}
 
-						if(ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_Q || ctoken.type == ETT_SPECIAL_OPR_A) {
-							ERR("invalid tokenoperator", ctoken)
-						}
+							if (ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_Q || ctoken.type == ETT_SPECIAL_OPR_A)
+							{
+								ERR("invalid tokenoperator", ctoken)
+							}
 
-						if(ctoken.type != ETT_CBRACKET_CLOSE) {
-							ERR("closing bracket for ingredient not found", ctoken)
-						}
-						rcp->ingredients.push_back(ingredient);
-						ADV_NON_BLANK(1);
+							if (ctoken.type != ETT_CBRACKET_CLOSE)
+							{
+								ERR("closing bracket for ingredient not found", ctoken)
+							}
+							rcp->ingredients.push_back(ingredient);
+							ADV_NON_BLANK(1);
 						}
 					}
 				}
 
-				//finds bracket & amount
-				if(ctoken.type == ETT_CBRACKET_OPEN && utoken.type == ETT_NUMBER) { 
+				// finds bracket & amount
+				if (ctoken.type == ETT_CBRACKET_OPEN && utoken.type == ETT_NUMBER)
+				{
 					ADV_NON_BLANK(1);
-					ingredient.amount =ctoken.uid;
+					ingredient.amount = ctoken.uid;
 					ADV_NON_BLANK(1);
 
-						if(ctoken.type == ETT_WORD) {
-							ingredient.unit = utoken.word;
+					if (ctoken.type == ETT_WORD)
+					{
+						ingredient.unit = utoken.word;
+						ADV_NON_BLANK(1);
+						while (ctoken.type == ETT_WORD)
+						{
+							ingredient.unit = ctoken.word;
 							ADV_NON_BLANK(1);
-							while (ctoken.type == ETT_WORD) {
-								ingredient.unit = ctoken.word;
-								ADV_NON_BLANK(1);
-							}
 						}
+					}
 
-						if(ctoken.type != ETT_CBRACKET_CLOSE) {
-							ERR("closing bracket for ingredient not found", ctoken)
-						}
+					if (ctoken.type != ETT_CBRACKET_CLOSE)
+					{
+						ERR("closing bracket for ingredient not found", ctoken)
+					}
 					rcp->ingredients.push_back(ingredient);
 					ADV_NON_BLANK(1);
 				}
 			}
-		} 
+		}
 	}
 
-	void Parser::ParseInstructions(recipe *rcp) 
+	void Parser::ParseInstructions(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
 		std::vector<instruction> instructions;
@@ -447,10 +470,10 @@ namespace epicr
 			std::cout << "Reading instruction" << std::endl;
 			if (to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using")
 			{
-				ERR("expected instruction header, either 'with' or 'using'",ctoken);
+				ERR("expected instruction header, either 'with' or 'using'", ctoken);
 			}
 			instruction singleInstruction;
-			if (ctoken.word == "with") //casing stuff here
+			if (ctoken.word == "with") // casing stuff here
 			{
 				ADV_NON_BLANK(1)
 				ParseInstructionHeaderWith(&singleInstruction);
@@ -462,7 +485,7 @@ namespace epicr
 			}
 			if (ctoken.type != ETT_COLON)
 			{
-				ERR("missing ':' after instruction header",ctoken);
+				ERR("missing ':' after instruction header", ctoken);
 			}
 			ADV_NON_BLANK(1)
 			/*
@@ -471,67 +494,70 @@ namespace epicr
 			*/
 			instructions.push_back(singleInstruction);
 		}
-		rcp->instructions = instructions;	
-	}	
+		rcp->instructions = instructions;
+	}
 	void Parser::ParseInstructionHeaderWith(instruction *singleInstruction)
 	{
 		if (ctoken.type != ETT_RBRACKET_OPEN)
 		{
-			ERR("expected open bracket with 'with' ",ctoken);
-		}	
+			ERR("expected open bracket with 'with' ", ctoken);
+		}
 		ADV_NON_BLANK(1)
 		while (ctoken.type != ETT_RBRACKET_CLOSE)
 		{
 			if (ctoken.type != ETT_WORD)
 			{
-				ERR("expected ingredient name",ctoken);
+				ERR("expected ingredient name", ctoken);
 			}
 			ingredient currentIngredient;
-			while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) //ingredient name
+			while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) // ingredient name
 			{
 				currentIngredient.name += ctoken.word;
 				ADV(1);
 			}
-			if (ctoken.type == ETT_CBRACKET_OPEN) //if amount is specified - ie if it is not uncountable
+			if (ctoken.type == ETT_CBRACKET_OPEN) // if amount is specified - ie if it is not uncountable
 			{
-				//while non-closing bracket måske
-				ADV_NON_BLANK(1)
-				if (ctoken.word == "half" || ctoken.word == "quarter" || ctoken.word == "rest" || ctoken.word == "all") //relative amount
-				//lidt hardcoded - burde måske være constants - not sure where to define
+				while (ctoken.type != ETT_CBRACKET_CLOSE)
 				{
-					currentIngredient.relativeAmount = ctoken.word;
-					ADV_NON_BLANK(1);
-				}
-				
-				else if (ctoken.type == ETT_NUMBER) //amount as number
-				{
-					currentIngredient.amount = std::stod(ctoken.word);
 					ADV_NON_BLANK(1)
-					while (ctoken.type != ETT_RBRACKET_CLOSE)
+					if (ctoken.word == "half" || ctoken.word == "quarter" || ctoken.word == "rest" || ctoken.word == "all") // relative amount
+					// lidt hardcoded - burde måske være constants - not sure where to define
 					{
-						if (ctoken.type != ETT_WORD && ctoken.type != ETT_BLANK)
+						currentIngredient.relativeAmount = ctoken.word;
+						ADV_NON_BLANK(1);
+					}
+					else if (ctoken.type == ETT_NUMBER) // amount as number
+					{
+						currentIngredient.amount = std::stod(ctoken.word);
+						ADV_NON_BLANK(1);
+						if (ctoken.type == ETT_CBRACKET_CLOSE)
 						{
-							ERR("Expected a corresponding unit with the ingredient.",ctoken);
+							break;
 						}
-						while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) //unit
+						if (ctoken.type != ETT_WORD)
+						{
+							ERR("Expected a corresponding unit with the ingredient.", ctoken);
+						}
+						while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) // unit
 						{
 							currentIngredient.unit += ctoken.word;
-							ADV(1) 
+							ADV(1);
 						}
-					}	
+					}
+					else
+					{
+						ERR("expected an amount - either relative with keywords or with an amount and unit", ctoken);
+					}
 				}
-				else
-				{
-					ERR("expected an amount - either relative with keywords or with an amoun and unit",ctoken);
-				}	
+				ADV_NON_BLANK(1);
 			}
-			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE) 
+			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE)
 			{
-				ERR("Expected a ',' as seperator between ingredient or a closing bracket for the 'with'",ctoken);
+				ERR("Expected a ',' as seperator between ingredient or a closing bracket for the 'with'", ctoken);
 			}
 			if (ctoken.type == ETT_COMMA)
 			{
-				ADV_NON_BLANK(1);	
+				ADV_NON_BLANK(1);
 			}
 			singleInstruction->ingredients.push_back(currentIngredient);
 		}
@@ -541,14 +567,14 @@ namespace epicr
 	{
 		if (ctoken.type != ETT_RBRACKET_OPEN)
 		{
-			ERR("expected open bracket with 'using' ",ctoken);
-		}	
+			ERR("expected open bracket with 'using' ", ctoken);
+		}
 		ADV_NON_BLANK(1);
 		while (ctoken.type != ETT_RBRACKET_CLOSE)
 		{
 			if (ctoken.type != ETT_WORD)
 			{
-				ERR("expected a kitchenware",ctoken);
+				ERR("expected a kitchenware", ctoken);
 			}
 			singleInstruction->kitchenware.push_back(ctoken.word);
 			ADV(1)
@@ -559,16 +585,14 @@ namespace epicr
 			}
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE)
 			{
-				ERR("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'",ctoken);
+				ERR("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'", ctoken);
 			}
 			if (ctoken.type == ETT_COMMA)
 			{
-				ADV_NON_BLANK(1);	
+				ADV_NON_BLANK(1);
 			}
 		}
 		ADV_NON_BLANK(1);
-		
-		
 	}
 	Parser::~Parser()
 	{
