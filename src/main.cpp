@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	
 	cout << myParser.error << ": " << myParser.error_message << endl;
 
-	generate_html(myRecipe, "dist/recipe.html");
+	//generate_html(myRecipe, "dist/recipe.html");
 
 	return 0;
 }

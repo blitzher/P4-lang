@@ -46,7 +46,23 @@
     "streambuf": "cpp",
     "typeinfo": "cpp",
     "map": "cpp",
-    "sstream": "cpp"
+    "sstream": "cpp",
+    "xstring": "cpp",
+    "cstring": "cpp",
+    "ctime": "cpp",
+    "ios": "cpp",
+    "list": "cpp",
+    "queue": "cpp",
+    "xfacet": "cpp",
+    "xhash": "cpp",
+    "xiosbase": "cpp",
+    "xlocale": "cpp",
+    "xlocinfo": "cpp",
+    "xlocnum": "cpp",
+    "xmemory": "cpp",
+    "xstddef": "cpp",
+    "xtr1common": "cpp",
+    "xutility": "cpp"
   },
-  "editor.tabSize": 4
+  "editor.tabSize": 4,
 }
