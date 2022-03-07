@@ -1,0 +1,142 @@
+<!-- 7 string interpolations
+0. title
+1. description
+2. time
+3. tags
+4. ingredients
+5. kitchenware
+6. procedure
+
+
+-->
+
+<html>
+<header>
+	<style>
+		html {
+			margin: 0 20%;
+
+		}
+
+		.instruction {
+			border: 3px solid black;
+			border-radius: 15px;
+			padding: 5px 15px;
+			min-height: 10px;
+			border-top-left-radius: 0px;
+			
+		}
+
+		h5 {
+			font-weight: normal;
+
+			margin: 0 0 0 0;
+			padding: 0 0 0 0;
+		}
+
+		h3,
+		h4,
+		h5 {
+			margin: 10px 0 0 0;
+			padding: 0 0 0 0;
+		}
+
+		a {
+			font-style: normal
+		}
+
+		.colltext {
+			display: block;
+			color: darkslategray;
+			margin: 5px 10px;
+			font-style: italic;
+			cursor: context-menu;
+		}
+
+		.step-header {
+			border: 3px solid black;
+			width: fit-content;
+			border-radius: 15px;
+			padding: 0px 10px;
+			border-bottom-width: 0px;
+			border-bottom-left-radius: 0px;
+			border-bottom-right-radius: 0px;
+			z-index: 1;
+			background-color: white;
+		}
+	</style>
+</header>
+<h1>
+	%s
+</h1>
+
+<h3>
+	Description
+</h3>
+<span class="description collapsible">
+	%s
+</span>
+
+<h5>
+%s
+</h5>
+
+<h5>
+%s
+</h5>
+
+<h3>
+	Ingredients
+</h3>
+<ul>
+	%s
+</ul>
+<span>
+
+<span class="kitchenware">
+	<h3>Kitchenware</h3>
+	<ul>
+		%s
+	</ul>
+</span>
+
+
+	<!-- steps -->
+	%s
+
+	<script>
+		const allColls = document.getElementsByClassName("collapsible");
+
+		function set_display_after(el, val, timeout) {
+			setTimeout(() => {
+				el.style.display = val;
+			}, timeout);
+		}
+		for (i = 0; i < allColls.length; i++) {
+			const coll = allColls[i];
+			let chil = coll.children;
+			let e = document.createElement("p");
+			e.innerText = "Right click to collapse";
+			e.classList.add("colltext")
+			coll.appendChild(e);
+			console.log(chil);
+			coll.addEventListener("click", (event, el) => {
+				for (let j = 0; j < chil.length; j++) {
+					chil[j].style.display = "block";
+					e.innerText = "Right click to collapse";
+				}
+			});
+			coll.addEventListener("contextmenu", (ev) => {
+				ev.preventDefault();
+				ev.stopPropagation();
+				for (let j = chil.length - 2; j >= 0; j--) {
+					chil[j].style.display = "none";
+				}
+				e.innerText = "Click to expand";
+			});
+			coll.dispatchEvent(new Event('contextmenu'));
+		}
+
+	</script>
+
+</html>
