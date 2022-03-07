@@ -125,27 +125,27 @@ namespace epicr
         if(stoken.size() == 1) {
             char charr = stoken[0];
             switch(charr) {
-                if (stoken == ",")
+                case ',':
                     return ETT_COMMA;
-                if (stoken == ":")
+                case  ':':
                     return ETT_COLON;
-                if(stoken == "(")
+                case '(':
                     return ETT_RBRACKET_OPEN;
-                if(stoken == ")")
+                case ')':
                     return ETT_RBRACKET_CLOSE;
-                if(stoken == "[")
+                case '[':
                     return ETT_SBRACKET_OPEN;
-                if(stoken == "]")
+                case ']':
                     return ETT_SBRACKET_CLOSE;
-                if(stoken == "{")
+                case '{':
                     return ETT_CBRACKET_OPEN;
-                if(stoken == "}")
+                case '}':
                     return ETT_CBRACKET_CLOSE;
-                if(stoken == "+")
+                case '+':
                     return ETT_SPECIAL_OPR_P;
-                if(stoken == "*")
+                case '*':
                     return ETT_SPECIAL_OPR_A;
-                if(stoken == "?")
+                case '?':
                     return ETT_SPECIAL_OPR_Q;
             }
         }
