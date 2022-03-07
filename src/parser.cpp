@@ -346,7 +346,7 @@ namespace epicr
 		int i = 0;
 		while (utoken.type != ETT_EOF)
 		{
-			if (ctoken.word != "with" || ctoken.word != "using")
+			if (ctoken.word != "with" && ctoken.word != "using")
 			{
 				ERR("expected instruction header",ctoken);
 			}
