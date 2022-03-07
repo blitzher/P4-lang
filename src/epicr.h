@@ -148,8 +148,8 @@ typedef unsigned int uint;
         void ParseTags(recipe *);
         void ParseTime(recipe *);
         void ParseInstructions(recipe *);
-        void ParseInstructionHeaderWith(instruction *inst);
-        void ParseInstructionHeaderUsing(instruction *inst);
+        void ParseInstructionHeaderWith(instruction *singleInstruction);
+        void ParseInstructionHeaderUsing(instruction *singleInstruction);
 
         epicr_token ctoken;
         epicr_token utoken;

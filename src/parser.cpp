@@ -441,49 +441,54 @@ namespace epicr
 	void Parser::ParseInstructions(recipe *rcp) 
 	{
 		ADV_NON_BLANK(2);
-		int currentInstructionIndex = 0;
 		std::vector<instruction> instructions;
 		while (utoken.type != ETT_EOF)
 		{
+			std::cout << "Reading instruction" << std::endl;
 			if (to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using")
 			{
 				ERR("expected instruction header, either 'with' or 'using'",ctoken);
 			}
-			instruction inst;
+			instruction singleInstruction;
 			if (ctoken.word == "with") //casing stuff here
 			{
-				std::cout << 1 << "\n";
-				ParseInstructionHeaderWith(&inst);
+				ADV_NON_BLANK(1)
+				ParseInstructionHeaderWith(&singleInstruction);
 			}
 			if (ctoken.word == "using")
 			{
 				ADV_NON_BLANK(1)
-				ParseInstructionHeaderUsing(&inst);
+				ParseInstructionHeaderUsing(&singleInstruction);
 			}
+			if (ctoken.type != ETT_COLON)
+			{
+				ERR("missing ':' after instruction header",ctoken);
+			}
+			ADV_NON_BLANK(1)
+			
 			/*
 			body
 			yield
 			*/
-			instructions.push_back(inst);
-			currentInstructionIndex++;
-		}	
+			instructions.push_back(singleInstruction);
+		}
+		rcp->instructions = instructions;	
 	}	
-	void Parser::ParseInstructionHeaderWith(instruction *inst)
+	void Parser::ParseInstructionHeaderWith(instruction *singleInstruction)
 	{
 		if (ctoken.type != ETT_RBRACKET_OPEN)
 		{
 			ERR("expected open bracket with 'with' ",ctoken);
 		}	
 		ADV_NON_BLANK(1)
-		int j = 0;
-		while (utoken.type != ETT_COLON)
+		while (ctoken.type != ETT_RBRACKET_CLOSE)
 		{
 			if (ctoken.type != ETT_WORD)
 			{
 				ERR("expected ingredient name",ctoken);
 			}
 			ingredient currentIngredient;
-			while (ctoken.type == ETT_WORD && ctoken.type == ETT_BLANK) //ingredient name
+			while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) //ingredient name
 			{
 				currentIngredient.name += ctoken.word;
 				ADV(1);
@@ -505,7 +510,7 @@ namespace epicr
 					ADV_NON_BLANK(1)
 					while (ctoken.type != ETT_RBRACKET_CLOSE)
 					{
-						if (ctoken.type != ETT_WORD || ctoken.type != ETT_BLANK)
+						if (ctoken.type != ETT_WORD && ctoken.type != ETT_BLANK)
 						{
 							ERR("Expected a corresponding unit with the ingredient.",ctoken);
 						}
@@ -521,38 +526,36 @@ namespace epicr
 					ERR("expected an amount - either relative with keywords or with an amoun and unit",ctoken);
 				}	
 			}
-			ADV_NON_BLANK(1);
-			inst->ingredients.push_back(currentIngredient);
-			if (ctoken.type != ETT_COMMA)
+			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE) 
 			{
-				ERR("expected seperator between ingredients",ctoken);
+				ERR("Expected a ',' as seperator between ingredient or a closing bracket for the 'with'",ctoken);
 			}
-			ADV_NON_BLANK(1);
-			j++;
+			if (ctoken.type == ETT_COMMA)
+			{
+				ADV_NON_BLANK(1);	
+			}
+			singleInstruction->ingredients.push_back(currentIngredient);
 		}
-		if (ctoken.type != ETT_RBRACKET_CLOSE)
-		{
-			ERR("with statement has no closing bracket",ctoken);
-		}
+		ADV_NON_BLANK(1);
 	}
-	void Parser::ParseInstructionHeaderUsing(instruction *inst)
+	void Parser::ParseInstructionHeaderUsing(instruction *singleInstruction)
 	{
 		if (ctoken.type != ETT_RBRACKET_OPEN)
 		{
 			ERR("expected open bracket with 'using' ",ctoken);
 		}	
 		ADV_NON_BLANK(1);
-		while (utoken.type != ETT_COLON)
+		while (ctoken.type != ETT_RBRACKET_CLOSE)
 		{
 			if (ctoken.type != ETT_WORD)
 			{
 				ERR("expected a kitchenware",ctoken);
 			}
-			inst->kitchenware.push_back(ctoken.word);
+			singleInstruction->kitchenware.push_back(ctoken.word);
 			ADV(1)
 			while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK)
 			{
-				inst->kitchenware.push_back(ctoken.word);
+				singleInstruction->kitchenware.push_back(ctoken.word);
 				ADV(1);
 			}
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE)
@@ -564,11 +567,7 @@ namespace epicr
 				ADV_NON_BLANK(1);	
 			}
 		}
-		if (ctoken.type != ETT_RBRACKET_CLOSE)
-		{
-			ERR("using statement has no closing bracket",ctoken)
-		}
-		ADV_NON_BLANK(2);
+		ADV_NON_BLANK(1);
 		
 		
 	}

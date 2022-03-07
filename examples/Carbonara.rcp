@@ -27,7 +27,7 @@ ingredients:
 
 
 instructions:
-    using(airfryer):
+    with(butter, onion, bacon fat)  using(pan, a, a, a123, ab):
         Preheat your [airfryer] to {200 C}
 
     with(bacon) using(airfryer):
