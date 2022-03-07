@@ -22,6 +22,7 @@ LDFLAGS    = -Wall -pedantic
 SRCDIR     = src
 OBJDIR     = obj
 BINDIR     = bin
+DISDIR 	   = dist
 TESTDIR    := $(SRCDIR)/testing
 
 SOURCES   := $(wildcard $(SRCDIR)/*.cpp)
@@ -34,7 +35,7 @@ T_INCLUDES  := $(wildcard $(TESTDIR)/*.h)
 T_OBJECTS   := $(T_SOURCES:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 T_LIBOBJS	:= $(filter-out %.test.o, $(T_OBJECTS))
 
-RM         = rm -f
+RM         = rm -rf
 
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
 TARGET       = main
@@ -42,33 +43,35 @@ TARGET       = main
 $(T_TARGETS):: $(T_OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(subst $(BINDIR),$(OBJDIR),$@).o
 
-$(T_OBJECTS): $(OBJDIR)/%.o : $(TESTDIR)/%.cpp
+$(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp dirs
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
+$(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp dirs
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
-.PHONY: clean
+# Named rules, ignore files if such exist
+.PHONY: clean remove dirs test run
 clean:
-	@$(RM) $(OBJECTS) $(T_OBJECTS)
+	@$(RM) $(OBJDIR) $(DISDIR)
 	@echo "Cleanup complete!"
 
-.PHONY: remove
 remove: clean
-	@$(RM) $(BINDIR)/$(TARGET)
-	@$(RM) $(T_TARGETS)
+	@$(RM) $(BINDIR)
 	@echo "Executable removed!"
 
 $(T_TARGETS)::
 	@echo "Testing $@"
 	@./$@
 
+dirs:
+	@mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 
+# runnable targets 
 test: $(T_TARGETS)
 	@echo "Done test rule"
 
