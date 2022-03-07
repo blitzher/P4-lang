@@ -385,27 +385,34 @@ namespace epicr
 			if (ctoken.type == ETT_BRACKET_OPEN)
 			{
 				ADV_NON_BLANK(1)
-				if (ctoken.type != ETT_NUMBER) //amount
+				if (ctoken.type == ETT_WORD) //relative amount
 				{
-					ERR("expected amount",ctoken)
+					
 				}
-				currentInstruction.ingredients[i].amount = std::stod(ctoken.word);
-				ADV_NON_BLANK(1)
-				while (ctoken.type != ETT_BRACKET_CLOSE)
+				
+				else if (ctoken.type == ETT_NUMBER) //amount as number
 				{
-					while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) //unit
+					currentInstruction.ingredients[i].amount = std::stod(ctoken.word);
+					ADV_NON_BLANK(1)
+					while (ctoken.type != ETT_BRACKET_CLOSE)
 					{
-						currentInstruction.ingredients[i].unit += ctoken.word;
-						ADV(1) 
-					}
+						while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) //unit
+						{
+							currentInstruction.ingredients[i].unit += ctoken.word;
+							ADV(1) 
+						}
+					}	
 				}
-				ADV_NON_BLANK(1);
-				if (ctoken.type != ETT_COMMA)
-				{
-					ERR("expected seperator between ingredients",ctoken)
-				}
-				ADV_NON_BLANK(1);
+				
+				
+				
 			}
+			ADV_NON_BLANK(1);
+			if (ctoken.type != ETT_COMMA)
+			{
+				ERR("expected seperator between ingredients",ctoken)
+			}
+			ADV_NON_BLANK(1);
 			i++;
 		}
 		if (ctoken.type != ETT_BRACKET_CLOSE)
