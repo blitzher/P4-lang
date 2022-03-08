@@ -36,21 +36,24 @@ T_OBJECTS   := $(T_SOURCES:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 T_LIBOBJS	:= $(filter-out %.test.o, $(T_OBJECTS))
 
 RM         = rm -rf
+MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
 TARGET       = main
 
-$(T_TARGETS):: $(T_OBJECTS)
-	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(subst $(BINDIR),$(OBJDIR),$@).o
+$(T_TARGETS):: $(T_OBJECTS) $(OBJECTS)
+	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
 
-$(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp dirs
+$(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp
+	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
-$(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp dirs
+$(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
@@ -67,9 +70,6 @@ remove: clean
 $(T_TARGETS)::
 	@echo "Testing $@"
 	@./$@
-
-dirs:
-	@mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 
 # runnable targets 
 test: $(T_TARGETS)

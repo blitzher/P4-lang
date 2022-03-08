@@ -21,8 +21,7 @@ struct compare
 
 namespace epicr
 {
-    vector<char> brackets = {'(', ')', '[', ']', '{', '}'};
-    vector<char> token_breakers = {' ', '\n', ',', ':', '(', ')', '[', ']', '{', '}'};
+    vector<char> token_breakers = {' ', '\n', ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*'};
 
 #pragma region Lexer implementation
 
@@ -110,6 +109,18 @@ namespace epicr
         return {stoken, token_type(stoken), token_count++, line_num};
     }
 
+    epicr_token *Lexer::next_token(int n)
+    {
+        epicr_token *tokens = (epicr_token *)malloc(sizeof(epicr_token) * n);
+        epicr_token single;
+        for (int i = 0; i < n; i++)
+        {
+            single = next_token();
+            tokens[i] = single;
+        }
+        return tokens;
+    }
+
     epicr_token Lexer::next_non_blank_token()
     {
         epicr_token next;
@@ -122,31 +133,33 @@ namespace epicr
 
     epicr_token_type Lexer::token_type(string stoken)
     {
-        if(stoken.size() == 1) {
+        if (stoken.size() == 1)
+        {
             char charr = stoken[0];
-            switch(charr) {
-                if (stoken == ",")
-                    return ETT_COMMA;
-                if (stoken == ":")
-                    return ETT_COLON;
-                if(stoken == "(")
-                    return ETT_RBRACKET_OPEN;
-                if(stoken == ")")
-                    return ETT_RBRACKET_CLOSE;
-                if(stoken == "[")
-                    return ETT_SBRACKET_OPEN;
-                if(stoken == "]")
-                    return ETT_SBRACKET_CLOSE;
-                if(stoken == "{")
-                    return ETT_CBRACKET_OPEN;
-                if(stoken == "}")
-                    return ETT_CBRACKET_CLOSE;
-                if(stoken == "+")
-                    return ETT_SPECIAL_OPR_P;
-                if(stoken == "*")
-                    return ETT_SPECIAL_OPR_A;
-                if(stoken == "?")
-                    return ETT_SPECIAL_OPR_Q;
+            switch (charr)
+            {
+            case ',':
+                return ETT_COMMA;
+            case ':':
+                return ETT_COLON;
+            case '(':
+                return ETT_RBRACKET_OPEN;
+            case ')':
+                return ETT_RBRACKET_CLOSE;
+            case '[':
+                return ETT_SBRACKET_OPEN;
+            case ']':
+                return ETT_SBRACKET_CLOSE;
+            case '{':
+                return ETT_CBRACKET_OPEN;
+            case '}':
+                return ETT_CBRACKET_CLOSE;
+            case '+':
+                return ETT_SPECIAL_OPR_P;
+            case '*':
+                return ETT_SPECIAL_OPR_A;
+            case '?':
+                return ETT_SPECIAL_OPR_Q;
             }
         }
 
@@ -220,15 +233,22 @@ namespace epicr
         int non_blank_count = 0;
         epicr_token token;
         size_t offset = 0;
+        size_t line_offset = 0;
 
         while (non_blank_count < amnt)
         {
             token = next_token();
             offset += token.word.size();
+
+            if (token.type == ETT_NEWLINE)
+                line_offset += token.word.size();
+
             if (token.type != ETT_BLANK && token.type != ETT_NEWLINE)
                 non_blank_count++;
         }
+
         token_count -= amnt;
+        line_num -= line_offset;
         if (!istream.eof())
             istream.seekg(-offset, ios_base::cur);
 
