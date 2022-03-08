@@ -122,18 +122,33 @@ namespace epicr
 
     epicr_token_type Lexer::token_type(string stoken)
     {
-        if (stoken == ",")
-            return ETT_COMMA;
-
-        if (stoken == ":")
-            return ETT_COLON;
-
-        if (stoken == "(" || stoken == "[" || stoken == "{")
-
-            return ETT_BRACKET_OPEN;
-
-        else if (stoken == ")" || stoken == "]" || stoken == "}")
-            return ETT_BRACKET_CLOSE;
+        if(stoken.size() == 1) {
+            char charr = stoken[0];
+            switch(charr) {
+                if (stoken == ",")
+                    return ETT_COMMA;
+                if (stoken == ":")
+                    return ETT_COLON;
+                if(stoken == "(")
+                    return ETT_RBRACKET_OPEN;
+                if(stoken == ")")
+                    return ETT_RBRACKET_CLOSE;
+                if(stoken == "[")
+                    return ETT_SBRACKET_OPEN;
+                if(stoken == "]")
+                    return ETT_SBRACKET_CLOSE;
+                if(stoken == "{")
+                    return ETT_CBRACKET_OPEN;
+                if(stoken == "}")
+                    return ETT_CBRACKET_CLOSE;
+                if(stoken == "+")
+                    return ETT_SPECIAL_OPR_P;
+                if(stoken == "*")
+                    return ETT_SPECIAL_OPR_A;
+                if(stoken == "?")
+                    return ETT_SPECIAL_OPR_Q;
+            }
+        }
 
         /* Check if the word is a blank */
         bool is_blank = true;

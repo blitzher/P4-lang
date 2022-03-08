@@ -45,7 +45,8 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "typeinfo": "cpp",
-    "map": "cpp"
+    "map": "cpp",
+    "sstream": "cpp"
   },
   "editor.tabSize": 4
 }

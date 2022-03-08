@@ -14,7 +14,7 @@
 
 <defineIngredients>         --> name[<ingredientOperator>] [(<defineAmount>)] {, defineIngredients} 
 
-<procedure>                 --> procedure: <subprocedure> {, <subprocedure>}
+<procedure>                 --> instructions: <subprocedure> { <subprocedure>}
 
 <subprocedure>              --> <subprocedureHeader> [<procedureText>] [<yield> | <update>] 
 
