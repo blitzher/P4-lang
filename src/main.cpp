@@ -26,8 +26,8 @@ int main(int argc, char **argv)
 
 	epicr::Parser myParser = epicr::Parser(&myLexer);
 
- 	epicr::recipe myRecipe = myParser.Parse();
-	
+	epicr::recipe myRecipe = myParser.Parse();
+
 	cout << myParser.error << ": " << myParser.error_message << endl;
 
 	generate_html(myRecipe, "dist/recipe.html");
@@ -48,8 +48,8 @@ void print_lexer_tokens(epicr::Lexer lexer)
 		{
 			printf("%3i c:", token_count);
 			epicr::print_token(token);
-			//printf("%3i p:", token_count + 1);
-			//epicr::print_token(peek);
+			// printf("%3i p:", token_count + 1);
+			// epicr::print_token(peek);
 			cout << endl;
 		}
 

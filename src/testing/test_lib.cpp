@@ -21,32 +21,35 @@ size_t c_str_size(char *c_str)
 }
 
 /* by default 0, set to 1 if any tests fail */
-int success;
+int failed;
 
 namespace test_lib
 {
 	void register_test(std::string func_name)
 	{
-		tests[func_name] = {func_name, false, "\0"};
+		tests[func_name] = {func_name, UNEVALUATED, "Unevaluated\nCall `accept` or `deny` to evaluate"};
 		most_recent_test = &tests[func_name];
 	}
 
 	void accept()
 	{
 		CHECK_TESTS_NON_EMPTY()
-		most_recent_test->accepted = true;
-		most_recent_test->err_message = "Passed";
+		if (most_recent_test->test_state == UNEVALUATED)
+		{
+			most_recent_test->test_state = ACCEPT;
+			most_recent_test->err_message = "Passed";
+		}
 	}
 
 	void deny(std::string err_message)
 	{
 		CHECK_TESTS_NON_EMPTY()
-		most_recent_test->accepted = false;
+		most_recent_test->test_state = FAIL;
 		most_recent_test->err_message = err_message;
-		success = 1; /* fail */
+		failed = 1; /* fail */
 	}
 
-	void expect_equal_s(const std::string expected, const std::string actual)
+	void expect_equal_s(const std::string actual, const std::string expected)
 	{
 		CHECK_TESTS_NON_EMPTY()
 		if (expected == actual)
@@ -119,7 +122,7 @@ namespace test_lib
 		free(exp_message);
 	}
 
-	void expect_equal_i(const int expected, const int actual)
+	void expect_equal_i(const int actual, const int expected)
 	{
 		CHECK_TESTS_NON_EMPTY()
 
@@ -134,6 +137,7 @@ namespace test_lib
 			deny(err_message);
 		}
 	}
+
 	void print_recap()
 	{
 		CHECK_TESTS_NON_EMPTY()
@@ -142,15 +146,27 @@ namespace test_lib
 		{
 			const test_lib::test_data test = keyval_pair.second;
 
-			if (test.accepted)
+			switch (test.test_state)
+			{
+			case UNEVALUATED:
+				std::cout << "\x1b[33m\u2B55\x1b[0m ";
+				break;
+			case ACCEPT:
 				std::cout << "\x1B[32m\u2714\x1B[0m ";
-			else
+				break;
+			case FAIL:
 				std::cout << "\x1B[31m\u2716\x1B[0m ";
+				break;
+			default:
+				break;
+			}
+
 			printf("%s: %s\n", test.name.c_str(), test.err_message.c_str());
 		}
 	}
 
-	int was_success() {
-		return success;
+	int was_success()
+	{
+		return failed;
 	}
 }
