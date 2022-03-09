@@ -122,7 +122,7 @@ namespace epicr
         /* Return the next token, and moving the reader */
         epicr_token next_token();
         /* Return the next `n` tokens as an array */
-        epicr_token *next_token(int n);
+        std::vector<epicr_token> next_token(int n);
         /* Return the next non blank, non new line token */
         epicr_token next_non_blank_token();
         epicr_token_type token_type(std::string stoken);

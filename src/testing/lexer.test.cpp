@@ -26,7 +26,7 @@ void special_characters()
 	/* should split them up into 'hello' and a bunch of single length tokens */
 	std::istringstream test_string("hello:?+*lg");
 	epicr::Lexer lexer(test_string);
-	epicr::epicr_token *tokens = lexer.next_token(7);
+	std::vector<epicr::epicr_token> tokens = lexer.next_token(7);
 
 	expect_token_type(tokens[0], epicr::ETT_WORD);
 	expect_token_type(tokens[1], epicr::ETT_COLON);
@@ -37,7 +37,6 @@ void special_characters()
 
 	expect_token_type(tokens[5], epicr::ETT_WORD);
 	expect_token_type(tokens[6], epicr::ETT_EOF);
-	free(tokens); /* no leaky leaky 🥑 */
 }
 
 void blank_runs()
@@ -47,7 +46,7 @@ void blank_runs()
 	/* should split them up into 'hello' and a bunch of single length tokens */
 	std::istringstream test_string("  \n\nhello!\n\n\n");
 	epicr::Lexer lexer(test_string);
-	epicr::epicr_token *tokens = lexer.next_token(5);
+	std::vector<epicr::epicr_token> tokens = lexer.next_token(5);
 	expect_token_type(tokens[0], epicr::ETT_BLANK);
 	expect_token_type(tokens[1], epicr::ETT_NEWLINE);
 	expect_token_type(tokens[2], epicr::ETT_WORD);

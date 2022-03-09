@@ -2,7 +2,6 @@
 #include <filesystem>
 
 using std::string;
-namespace fs = std::filesystem;
 
 #define MAX_S_LENGTH 4096
 #define MAX_B_Lenght 65536 /* 4096 * 16 */
@@ -14,9 +13,7 @@ namespace epicr
 		string file_content;
 		string dir = "src";
 		string file_name = template_name + ".html";
-		fs::path fpath = dir;
-		fpath /= "output-templates";
-		fpath /= file_name;
+		string fpath = dir;
 		std::ifstream fstream;
 		fstream.open(fpath, std::istream::in);
 

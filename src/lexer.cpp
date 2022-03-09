@@ -109,14 +109,12 @@ namespace epicr
         return {stoken, token_type(stoken), token_count++, line_num};
     }
 
-    epicr_token *Lexer::next_token(int n)
+    std::vector<epicr_token> Lexer::next_token(int n)
     {
-        epicr_token *tokens = (epicr_token *)malloc(sizeof(epicr_token) * n);
-        epicr_token single;
+        vector<epicr_token> tokens;
         for (int i = 0; i < n; i++)
         {
-            single = next_token();
-            tokens[i] = single;
+            tokens.push_back(next_token());
         }
         return tokens;
     }
