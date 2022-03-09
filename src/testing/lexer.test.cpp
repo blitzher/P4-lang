@@ -31,9 +31,9 @@ void special_characters()
 	expect_token_type(tokens[0], epicr::ETT_WORD);
 	expect_token_type(tokens[1], epicr::ETT_COLON);
 
-	expect_token_type(tokens[2], epicr::ETT_SPECIAL_OPR_Q);
-	expect_token_type(tokens[3], epicr::ETT_SPECIAL_OPR_P);
-	expect_token_type(tokens[4], epicr::ETT_SPECIAL_OPR_A);
+	expect_token_type(tokens[2], epicr::ETT_QUESTION_MARK);
+	expect_token_type(tokens[3], epicr::ETT_PLUS);
+	expect_token_type(tokens[4], epicr::ETT_ASTERIX);
 
 	expect_token_type(tokens[5], epicr::ETT_WORD);
 	expect_token_type(tokens[6], epicr::ETT_EOF);

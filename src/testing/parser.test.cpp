@@ -9,7 +9,11 @@ void parsed_title()
 	epicr::Lexer lexer(pasta);
 	epicr::Parser parser(&lexer);
 	epicr::recipe rcp = parser.Parse();
-	test_lib::expect_equal_s(rcp.title, "Pasta\n");
+	// test_lib::expect_equal_s(rcp.title, "Pasta\n");
+	if (rcp.title == "Pasta\n")
+		test_lib::accept();
+	else
+		test_lib::deny("Unexpected title");
 }
 
 int main(void)

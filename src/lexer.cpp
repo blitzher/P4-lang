@@ -134,29 +134,30 @@ namespace epicr
         if (stoken.size() == 1)
         {
             char charr = stoken[0];
-            switch(charr) {
-                case ',':
-                    return ETT_COMMA;
-                case  ':':
-                    return ETT_COLON;
-                case '(':
-                    return ETT_RBRACKET_OPEN;
-                case ')':
-                    return ETT_RBRACKET_CLOSE;
-                case '[':
-                    return ETT_SBRACKET_OPEN;
-                case ']':
-                    return ETT_SBRACKET_CLOSE;
-                case '{':
-                    return ETT_CBRACKET_OPEN;
-                case '}':
-                    return ETT_CBRACKET_CLOSE;
-                case '+':
-                    return ETT_SPECIAL_OPR_P;
-                case '*':
-                    return ETT_SPECIAL_OPR_A;
-                case '?':
-                    return ETT_SPECIAL_OPR_Q;
+            switch (charr)
+            {
+            case ',':
+                return ETT_COMMA;
+            case ':':
+                return ETT_COLON;
+            case '(':
+                return ETT_PARENS_OPEN;
+            case ')':
+                return ETT_PARENS_CLOSE;
+            case '[':
+                return ETT_BRACKET_OPEN;
+            case ']':
+                return ETT_BRACKET_CLOSE;
+            case '{':
+                return ETT_CURLY_OPEN;
+            case '}':
+                return ETT_CURLY_CLOSE;
+            case '+':
+                return ETT_PLUS;
+            case '*':
+                return ETT_ASTERIX;
+            case '?':
+                return ETT_QUESTION_MARK;
             }
         }
 

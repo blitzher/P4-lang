@@ -79,15 +79,15 @@ namespace epicr
         ETT_COLON,
         ETT_COMMA,
         ETT_NUMBER,
-        ETT_RBRACKET_OPEN,
-        ETT_RBRACKET_CLOSE,
-        ETT_SBRACKET_OPEN,
-        ETT_SBRACKET_CLOSE,
-        ETT_CBRACKET_OPEN,
-        ETT_CBRACKET_CLOSE,
-        ETT_SPECIAL_OPR_P,
-        ETT_SPECIAL_OPR_A,
-        ETT_SPECIAL_OPR_Q,
+        ETT_PARENS_OPEN,   /* ( */
+        ETT_PARENS_CLOSE,  /* ) */
+        ETT_BRACKET_OPEN,  /* [ */
+        ETT_BRACKET_CLOSE, /* ] */
+        ETT_CURLY_OPEN,    /* { */
+        ETT_CURLY_CLOSE,   /* } */
+        ETT_PLUS,          /* + */
+        ETT_ASTERIX,       /* * */
+        ETT_QUESTION_MARK, /* ? */
         ETT_BLANK,
         ETT_NEWLINE,
         ETT_EOF,
