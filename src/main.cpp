@@ -30,8 +30,22 @@ int main(int argc, char **argv)
 
 	cout << myParser.error << ": " << myParser.error_message << endl;
 
+	epicr::instruction mis;
+	epicr::instruction_word word;
+	word.word = "Hello";
+	mis.body.push_back(word);
+	epicr::instruction_word word2;
+	word2.word = "World!";
+	mis.body.push_back(word2);
+
+	epicr::ingredient min;
+	min.name = "potato";
+	mis.ingredients.push_back(min);
+	myRecipe.instructions.push_back(mis);
+
 	generate_html(myRecipe, "dist/recipe.html");
 
+	cout << "Main return" << endl;
 	return 0;
 }
 
