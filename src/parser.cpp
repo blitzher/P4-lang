@@ -52,7 +52,7 @@ namespace epicr
 	{
 		error = 0;
 		error_message = "No error";
-		recipe *rcp = (recipe *)calloc(1, sizeof(recipe));
+		recipe *rcp = new recipe;
 		ctoken = lexer->next_non_blank_token();
 		utoken = lexer->peek_non_blank_token();
 

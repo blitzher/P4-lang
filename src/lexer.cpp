@@ -21,8 +21,7 @@ struct compare
 
 namespace epicr
 {
-    vector<char> brackets = {'(', ')', '[', ']', '{', '}'};
-    vector<char> token_breakers = {' ', '\n', ',', ':', '(', ')', '[', ']', '{', '}'};
+    vector<char> token_breakers = {' ', '\n', ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*'};
 
 #pragma region Lexer implementation
 
@@ -110,6 +109,16 @@ namespace epicr
         return {stoken, token_type(stoken), token_count++, line_num};
     }
 
+    std::vector<epicr_token> Lexer::next_token(int n)
+    {
+        vector<epicr_token> tokens;
+        for (int i = 0; i < n; i++)
+        {
+            tokens.push_back(next_token());
+        }
+        return tokens;
+    }
+
     epicr_token Lexer::next_non_blank_token()
     {
         epicr_token next;
@@ -122,7 +131,8 @@ namespace epicr
 
     epicr_token_type Lexer::token_type(string stoken)
     {
-        if(stoken.size() == 1) {
+        if (stoken.size() == 1)
+        {
             char charr = stoken[0];
             switch(charr) {
                 case ',':
@@ -220,15 +230,22 @@ namespace epicr
         int non_blank_count = 0;
         epicr_token token;
         size_t offset = 0;
+        size_t line_offset = 0;
 
         while (non_blank_count < amnt)
         {
             token = next_token();
             offset += token.word.size();
+
+            if (token.type == ETT_NEWLINE)
+                line_offset += token.word.size();
+
             if (token.type != ETT_BLANK && token.type != ETT_NEWLINE)
                 non_blank_count++;
         }
+
         token_count -= amnt;
+        line_num -= line_offset;
         if (!istream.eof())
             istream.seekg(-offset, ios_base::cur);
 

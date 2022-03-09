@@ -23,7 +23,7 @@
 
 namespace epicr
 {
-typedef unsigned int uint;
+    typedef unsigned int uint;
 #pragma region Recipe Data
     typedef struct ingredient_s
     {
@@ -68,7 +68,7 @@ typedef unsigned int uint;
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
         std::vector<std::string> tags;
-        std::vector<ingredient> ingredients; /* missing SOME implementation */
+        std::vector<ingredient> ingredients;   /* missing SOME implementation */
         std::vector<instruction> instructions; /* missing implementation */
     } recipe;
 #pragma endregion
@@ -122,6 +122,8 @@ typedef unsigned int uint;
 
         /* Return the next token, and moving the reader */
         epicr_token next_token();
+        /* Return the next `n` tokens as an array */
+        std::vector<epicr_token> next_token(int n);
         /* Return the next non blank, non new line token */
         epicr_token next_non_blank_token();
         epicr_token_type token_type(std::string stoken);
@@ -173,6 +175,5 @@ typedef unsigned int uint;
 
     std::ifstream open_file(std::string filename);
 
-    
     bool generate_html(recipe, std::string filename);
 }
