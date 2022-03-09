@@ -199,13 +199,8 @@ namespace epicr
 			/* 		 I vores sprog bliver hver bracket,*/
 			/* 		 kun brugt til et formaal x) saa*/
 			ADV_NON_BLANK(1);
-<<<<<<< HEAD
-			if (ctoken.type != ETT_CBRACKET_CLOSE && ctoken.word != "}")
-				ERR_VOID("Unclosed amount", ctoken);
-=======
 			if (ctoken.type != ETT_CURLY_CLOSE)
 				ERR("Unclosed amount", ctoken);
->>>>>>> d396028e0a3f6276dd81c50357f3c888336f082d
 
 			nutrients.push_back(nutrient);
 
@@ -510,12 +505,12 @@ namespace epicr
 	}
 	void Parser::ParseInstructionHeaderWith(instruction *singleInstruction)
 	{
-		if (ctoken.type != ETT_RBRACKET_OPEN)
+		if (ctoken.type != ETT_PARENS_OPEN)
 		{
 			ERR_VOID("expected open bracket with 'with' ", ctoken);
 		}
 		ADV_NON_BLANK(1)
-		while (ctoken.type != ETT_RBRACKET_CLOSE)
+		while (ctoken.type != ETT_PARENS_CLOSE)
 		{
 			if (ctoken.type != ETT_WORD)
 			{
@@ -527,9 +522,9 @@ namespace epicr
 				currentIngredient.name += ctoken.word;
 				ADV(1);
 			}
-			if (ctoken.type == ETT_CBRACKET_OPEN) // if amount is specified - ie if it is not uncountable
+			if (ctoken.type == ETT_CURLY_OPEN) // if amount is specified - ie if it is not uncountable
 			{
-				while (ctoken.type != ETT_CBRACKET_CLOSE)
+				while (ctoken.type != ETT_CURLY_CLOSE)
 				{
 					ADV_NON_BLANK(1)
 					if (to_lower(ctoken.word) == "half" || to_lower(ctoken.word) == "quarter" || to_lower(ctoken.word) == "rest" || to_lower(ctoken.word) == "all") // relative amount
@@ -542,7 +537,7 @@ namespace epicr
 					{
 						currentIngredient.amount = std::stod(to_lower(ctoken.word));
 						ADV_NON_BLANK(1);
-						if (ctoken.type == ETT_CBRACKET_CLOSE) // if it doesn't have a unit
+						if (ctoken.type == ETT_CURLY_CLOSE) // if it doesn't have a unit
 						{
 							break;
 						}
@@ -563,7 +558,7 @@ namespace epicr
 				}
 				ADV_NON_BLANK(1);
 			}
-			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE)
+			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between ingredient or a closing bracket for the 'with'", ctoken);
 			}
@@ -577,12 +572,12 @@ namespace epicr
 	}
 	void Parser::ParseInstructionHeaderUsing(instruction *singleInstruction)
 	{
-		if (ctoken.type != ETT_RBRACKET_OPEN)
+		if (ctoken.type != ETT_PARENS_OPEN)
 		{
 			ERR_VOID("expected open bracket with 'using' ", ctoken);
 		}
 		ADV_NON_BLANK(1);
-		while (ctoken.type != ETT_RBRACKET_CLOSE)
+		while (ctoken.type != ETT_PARENS_CLOSE)
 		{
 			if (ctoken.type != ETT_WORD)
 			{
@@ -594,7 +589,7 @@ namespace epicr
 				currentKitchenware += ctoken.word;
 				ADV(1);
 			}
-			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE)
+			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'", ctoken);
 			}
