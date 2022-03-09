@@ -495,6 +495,7 @@ namespace epicr
 			instructions.push_back(singleInstruction);
 		}
 		rcp->instructions = instructions;
+		
 	}
 	void Parser::ParseInstructionHeaderWith(instruction *singleInstruction)
 	{
@@ -576,17 +577,17 @@ namespace epicr
 			{
 				ERR("expected a kitchenware", ctoken);
 			}
-			singleInstruction->kitchenware.push_back(ctoken.word);
-			ADV(1)
+			std::string currentKitchenware;
 			while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK)
 			{
-				singleInstruction->kitchenware.push_back(ctoken.word);
+				currentKitchenware += ctoken.word;
 				ADV(1);
 			}
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_RBRACKET_CLOSE)
 			{
 				ERR("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'", ctoken);
 			}
+			singleInstruction->kitchenware.push_back(currentKitchenware);
 			if (ctoken.type == ETT_COMMA)
 			{
 				ADV_NON_BLANK(1);
