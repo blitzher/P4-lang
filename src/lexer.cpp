@@ -141,23 +141,23 @@ namespace epicr
             case ':':
                 return ETT_COLON;
             case '(':
-                return ETT_RBRACKET_OPEN;
+                return ETT_PARENS_OPEN;
             case ')':
-                return ETT_RBRACKET_CLOSE;
+                return ETT_PARENS_CLOSE;
             case '[':
-                return ETT_SBRACKET_OPEN;
+                return ETT_BRACKET_OPEN;
             case ']':
-                return ETT_SBRACKET_CLOSE;
+                return ETT_BRACKET_CLOSE;
             case '{':
-                return ETT_CBRACKET_OPEN;
+                return ETT_CURLY_OPEN;
             case '}':
-                return ETT_CBRACKET_CLOSE;
+                return ETT_CURLY_CLOSE;
             case '+':
-                return ETT_SPECIAL_OPR_P;
+                return ETT_PLUS;
             case '*':
-                return ETT_SPECIAL_OPR_A;
+                return ETT_ASTERIX;
             case '?':
-                return ETT_SPECIAL_OPR_Q;
+                return ETT_QUESTION_MARK;
             }
         }
 

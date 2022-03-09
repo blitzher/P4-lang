@@ -160,7 +160,7 @@ namespace epicr
 
 			/* Find open bracket for unit */
 			ADV_NON_BLANK(1);
-			if (ctoken.type != ETT_CBRACKET_OPEN || ctoken.word != "{")
+			if (ctoken.type != ETT_CURLY_OPEN || ctoken.word != "{")
 			{
 				ERR("Nutrient must be followed by an amount!", ctoken)
 			}
@@ -188,7 +188,7 @@ namespace epicr
 			/* 		 I vores sprog bliver hver bracket,*/
 			/* 		 kun brugt til et formaal x) saa*/
 			ADV_NON_BLANK(1);
-			if (ctoken.type != ETT_CBRACKET_CLOSE && ctoken.word != "}")
+			if (ctoken.type != ETT_CURLY_CLOSE)
 				ERR("Unclosed amount", ctoken);
 
 			nutrients.push_back(nutrient);
@@ -294,22 +294,22 @@ namespace epicr
 				is involved it handles the
 				parsing. Should be its own
 				function later to save space */
-				if (ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_A || ctoken.type == ETT_SPECIAL_OPR_Q)
+				if (ctoken.type == ETT_PLUS || ctoken.type == ETT_ASTERIX || ctoken.type == ETT_QUESTION_MARK)
 				{
 
 					// +
-					if (ctoken.type == ETT_SPECIAL_OPR_P)
+					if (ctoken.type == ETT_PLUS)
 					{
 						ingredient.name = ctoken.word;
 						ADV_NON_BLANK(1);
-						if (ctoken.type == ETT_SPECIAL_OPR_A || utoken.type == ETT_SPECIAL_OPR_A)
+						if (ctoken.type == ETT_ASTERIX || utoken.type == ETT_ASTERIX)
 						{
 							ERR("An ingredient with an uncountable operator(+), cannot be a recipe", ctoken)
 							/*Ig above token er ikke helt korrekt, da
 							det kan vaere i utoken at fejlen sker but w/e */
 						}
 
-						if (ctoken.type == ETT_SPECIAL_OPR_Q)
+						if (ctoken.type == ETT_QUESTION_MARK)
 						{
 							ingredient.name = ctoken.word;
 							ADV_NON_BLANK(1);
@@ -323,26 +323,26 @@ namespace epicr
 					}
 
 					// *
-					if (ctoken.type == ETT_SPECIAL_OPR_A)
+					if (ctoken.type == ETT_ASTERIX)
 					{
 						ingredient.name = ctoken.word;
 						ADV_NON_BLANK(1);
 
-						if (ctoken.type == ETT_SPECIAL_OPR_P || utoken.type == ETT_SPECIAL_OPR_P)
+						if (ctoken.type == ETT_PLUS || utoken.type == ETT_PLUS)
 						{
 							ERR("an ingredient cant be uncountable and a recipe", ctoken);
 						}
-						if (ctoken.type == ETT_SPECIAL_OPR_Q)
+						if (ctoken.type == ETT_QUESTION_MARK)
 						{
 							ingredient.name = ctoken.word;
 							ADV_NON_BLANK(1);
 						}
 
-						if (ctoken.type == ETT_SPECIAL_OPR_A || ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_Q)
+						if (ctoken.type == ETT_ASTERIX || ctoken.type == ETT_PLUS || ctoken.type == ETT_QUESTION_MARK)
 						{
 							ERR("Maximun number of specifiers reached", ctoken);
 						}
-						if (ctoken.type != ETT_CBRACKET_OPEN && utoken.type != ETT_NUMBER)
+						if (ctoken.type != ETT_CURLY_OPEN && utoken.type != ETT_NUMBER)
 						{
 							ERR("amount must be encapsulated within curly brackets {  }", ctoken)
 						}
@@ -360,7 +360,7 @@ namespace epicr
 								ADV_NON_BLANK(1);
 							}
 						}
-						if (ctoken.type != ETT_CBRACKET_CLOSE)
+						if (ctoken.type != ETT_CURLY_CLOSE)
 						{
 							ERR("closing bracket for ingredient not found", ctoken)
 						}
@@ -369,12 +369,12 @@ namespace epicr
 					}
 
 					// ?
-					if (ctoken.type == ETT_SPECIAL_OPR_Q)
+					if (ctoken.type == ETT_QUESTION_MARK)
 					{
 						ingredient.name = ctoken.word;
 						ADV_NON_BLANK(1);
 
-						if (ctoken.type == ETT_SPECIAL_OPR_P)
+						if (ctoken.type == ETT_PLUS)
 						{
 							ingredient.name = ctoken.word;
 							if (utoken.type != ETT_COMMA)
@@ -388,10 +388,10 @@ namespace epicr
 							}
 						}
 
-						if (ctoken.type == ETT_SPECIAL_OPR_A)
+						if (ctoken.type == ETT_ASTERIX)
 						{
 
-							if (ctoken.type != ETT_CBRACKET_OPEN && utoken.type != ETT_NUMBER)
+							if (ctoken.type != ETT_CURLY_OPEN && utoken.type != ETT_NUMBER)
 							{
 								ERR("amount must be encapsulated within curly brackets {  }", ctoken)
 							}
@@ -410,12 +410,12 @@ namespace epicr
 								}
 							}
 
-							if (ctoken.type == ETT_SPECIAL_OPR_P || ctoken.type == ETT_SPECIAL_OPR_Q || ctoken.type == ETT_SPECIAL_OPR_A)
+							if (ctoken.type == ETT_PLUS || ctoken.type == ETT_QUESTION_MARK || ctoken.type == ETT_ASTERIX)
 							{
 								ERR("invalid tokenoperator", ctoken)
 							}
 
-							if (ctoken.type != ETT_CBRACKET_CLOSE)
+							if (ctoken.type != ETT_CURLY_CLOSE)
 							{
 								ERR("closing bracket for ingredient not found", ctoken)
 							}
@@ -426,7 +426,7 @@ namespace epicr
 				}
 
 				// finds bracket & amount
-				if (ctoken.type == ETT_CBRACKET_OPEN && utoken.type == ETT_NUMBER)
+				if (ctoken.type == ETT_CURLY_OPEN && utoken.type == ETT_NUMBER)
 				{
 					ADV_NON_BLANK(1);
 					ingredient.amount = ctoken.uid;
@@ -443,7 +443,7 @@ namespace epicr
 						}
 					}
 
-					if (ctoken.type != ETT_CBRACKET_CLOSE)
+					if (ctoken.type != ETT_CURLY_CLOSE)
 					{
 						ERR("closing bracket for ingredient not found", ctoken)
 					}
