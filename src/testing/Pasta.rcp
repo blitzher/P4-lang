@@ -5,10 +5,10 @@ cook time: 50 min
 tags: pasta, easy to make
 
 ingredients:
-    wheatflour (300g)
-    egg (3)
-    salt+
-    water?+
+    wheatflour {300},
+    egg {3},
+    salt+,
+    water?+,
     extra wheatflour+
 
 
