@@ -89,7 +89,12 @@ namespace epicr
 				ADV(1);
 			}
 		}
-		ParseIngredients(rcp);
+		//ParseIngredients(rcp);
+		//for testing - until we get out of the infinite loop in reading ingredient:
+		while (ctoken.word != "instructions" && ctoken.type != ETT_EOF)
+		{
+			ADV_NON_BLANK(1)
+		}
 		if (to_lower(ctoken.word) != "instructions")
 		{
 			ERR("expected instructions",ctoken);
@@ -171,7 +176,7 @@ namespace epicr
 
 			/* Find open bracket for unit */
 			ADV_NON_BLANK(1);
-			if (ctoken.type != ETT_CURLY_OPEN || ctoken.word != "{")
+			if (ctoken.type != ETT_BRACKET_OPEN)
 			{
 				ERR_VOID("Nutrient must be followed by an amount!", ctoken)
 			}
@@ -199,7 +204,7 @@ namespace epicr
 			/* 		 I vores sprog bliver hver bracket,*/
 			/* 		 kun brugt til et formaal x) saa*/
 			ADV_NON_BLANK(1);
-			if (ctoken.type != ETT_CURLY_CLOSE)
+			if (ctoken.type != ETT_BRACKET_CLOSE)
 				ERR("Unclosed amount", ctoken);
 
 			nutrients.push_back(nutrient);
@@ -307,10 +312,11 @@ namespace epicr
 				function later to save space */
 				if (ctoken.type == ETT_PLUS || ctoken.type == ETT_ASTERIX || ctoken.type == ETT_QUESTION_MARK)
 				{
-
 					// +
 					if (ctoken.type == ETT_PLUS)
 					{
+						std::cout << ctoken.word << "\n";
+						std::cout << utoken.word << "\n";
 						ingredient.name = ctoken.word;
 						ADV_NON_BLANK(1);
 						if (ctoken.type == ETT_ASTERIX || utoken.type == ETT_ASTERIX)
@@ -353,9 +359,9 @@ namespace epicr
 						{
 							ERR_VOID("Maximun number of specifiers reached", ctoken);
 						}
-						if (ctoken.type != ETT_CURLY_OPEN && utoken.type != ETT_NUMBER)
+						if (ctoken.type != ETT_BRACKET_OPEN && utoken.type != ETT_NUMBER)
 						{
-							ERR_VOID("amount must be encapsulated within curly brackets {  }", ctoken)
+							ERR_VOID("amount must be encapsulated within brackets [  ]", ctoken)
 						}
 
 						ingredient.amount = utoken.uid;
@@ -371,9 +377,9 @@ namespace epicr
 								ADV_NON_BLANK(1);
 							}
 						}
-						if (ctoken.type != ETT_CURLY_CLOSE)
+						if (ctoken.type != ETT_BRACKET_CLOSE)
 						{
-							ERR_VOID("closing bracket for ingredient not found", ctoken)
+							ERR_VOID("closing bracket for ingredient amount not found", ctoken)
 						}
 						rcp->ingredients.push_back(ingredient);
 						ADV_NON_BLANK(1);
@@ -402,9 +408,9 @@ namespace epicr
 						if (ctoken.type == ETT_ASTERIX)
 						{
 
-							if (ctoken.type != ETT_CURLY_OPEN && utoken.type != ETT_NUMBER)
+							if (ctoken.type != ETT_BRACKET_OPEN && utoken.type != ETT_NUMBER)
 							{
-								ERR_VOID("amount must be encapsulated within curly brackets {  }", ctoken)
+								ERR_VOID("amount must be encapsulated within brackets [ ]", ctoken)
 							}
 
 							ingredient.amount = utoken.uid;
@@ -426,9 +432,9 @@ namespace epicr
 								ERR_VOID("invalid tokenoperator", ctoken)
 							}
 
-							if (ctoken.type != ETT_CURLY_CLOSE)
+							if (ctoken.type != ETT_BRACKET_CLOSE)
 							{
-								ERR_VOID("closing bracket for ingredient not found", ctoken)
+								ERR_VOID("closing bracket for ingredient amount not found", ctoken)
 							}
 							rcp->ingredients.push_back(ingredient);
 							ADV_NON_BLANK(1);
@@ -437,7 +443,7 @@ namespace epicr
 				}
 
 				// finds bracket & amount
-				if (ctoken.type == ETT_CURLY_OPEN && utoken.type == ETT_NUMBER)
+				if (ctoken.type == ETT_BRACKET_OPEN && utoken.type == ETT_NUMBER)
 				{
 					ADV_NON_BLANK(1);
 					ingredient.amount = ctoken.uid;
@@ -454,9 +460,9 @@ namespace epicr
 						}
 					}
 
-					if (ctoken.type != ETT_CURLY_CLOSE)
+					if (ctoken.type != ETT_BRACKET_CLOSE)
 					{
-						ERR_VOID("closing bracket for ingredient not found", ctoken)
+						ERR_VOID("closing bracket for ingredient amount not found", ctoken)
 					}
 					rcp->ingredients.push_back(ingredient);
 					ADV_NON_BLANK(1);
@@ -522,9 +528,9 @@ namespace epicr
 				currentIngredient.name += ctoken.word;
 				ADV(1);
 			}
-			if (ctoken.type == ETT_CURLY_OPEN) // if amount is specified - ie if it is not uncountable
+			if (ctoken.type == ETT_BRACKET_OPEN) // if amount is specified - ie if it is not uncountable
 			{
-				while (ctoken.type != ETT_CURLY_CLOSE)
+				while (ctoken.type != ETT_BRACKET_CLOSE)
 				{
 					ADV_NON_BLANK(1)
 					if (to_lower(ctoken.word) == "half" || to_lower(ctoken.word) == "quarter" || to_lower(ctoken.word) == "rest" || to_lower(ctoken.word) == "all") // relative amount
@@ -537,7 +543,7 @@ namespace epicr
 					{
 						currentIngredient.amount = std::stod(to_lower(ctoken.word));
 						ADV_NON_BLANK(1);
-						if (ctoken.type == ETT_CURLY_CLOSE) // if it doesn't have a unit
+						if (ctoken.type == ETT_BRACKET_CLOSE) // if it doesn't have a unit
 						{
 							break;
 						}
