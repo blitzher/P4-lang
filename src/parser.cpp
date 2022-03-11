@@ -469,9 +469,6 @@ namespace epicr
 				}
 			}
 		}
-		
-		
-		
 	}
 
 	void Parser::ParseInstructions(recipe *rcp)
@@ -599,11 +596,11 @@ namespace epicr
 			{
 				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'", ctoken);
 			}
-			singleInstruction->kitchenware.push_back(currentKitchenware);
 			if (ctoken.type == ETT_COMMA)
 			{
 				ADV_NON_BLANK(1);
 			}
+			singleInstruction->kitchenware.push_back(currentKitchenware);
 		}
 		ADV_NON_BLANK(1);
 	}
