@@ -205,7 +205,7 @@ namespace epicr
 			/* 		 kun brugt til et formaal x) saa*/
 			ADV_NON_BLANK(1);
 			if (ctoken.type != ETT_BRACKET_CLOSE)
-				ERR("Unclosed amount", ctoken);
+				ERR_VOID("Unclosed amount", ctoken);
 
 			nutrients.push_back(nutrient);
 
@@ -500,9 +500,26 @@ namespace epicr
 			ADV_NON_BLANK(1)
 			/*
 			body
-			yield
 			*/
-			instructions.push_back(singleInstruction);
+			ADV_NON_BLANK(1)//efter body
+			while (to_lower(ctoken.word) != "yield" && to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using" && ctoken.type != ETT_EOF)
+			{ //indtil vi ikke har body i parseren
+				ADV_NON_BLANK(1)
+			}
+			if (to_lower(ctoken.word) == "yield" && utoken.type == ETT_COLON)
+			{
+				ADV_NON_BLANK(2);
+				ParseInstructionYield(&singleInstruction);
+			}
+			// std::cout<< singleInstruction.yields.size() << "\n";
+			// for (size_t i = 0; i < singleInstruction.yields.size(); i++)
+			// {
+			// 	std::cout<< singleInstruction.yields[0].name << "\n";
+			// }
+			
+			
+			
+			instructions.push_back(singleInstruction); //something doesnt work here
 		}
 		rcp->instructions = instructions;
 	}
@@ -520,44 +537,21 @@ namespace epicr
 				ERR_VOID("expected ingredient name", ctoken);
 			}
 			ingredient currentIngredient;
-			while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) // ingredient name
-			{
-				currentIngredient.name += ctoken.word;
-				ADV(1);
-			}
+			currentIngredient.name = ReadWords();
 			if (ctoken.type == ETT_BRACKET_OPEN) // if amount is specified - ie if it is not uncountable
 			{
-				while (ctoken.type != ETT_BRACKET_CLOSE)
+				ADV_NON_BLANK(1);
+				if (ctoken.type == ETT_WORD)
 				{
-					ADV_NON_BLANK(1)
-					if (to_lower(ctoken.word) == "half" || to_lower(ctoken.word) == "quarter" || to_lower(ctoken.word) == "rest" || to_lower(ctoken.word) == "all") // relative amount
-					// lidt hardcoded - burde måske være constants eller tokens
-					{
-						currentIngredient.relativeAmount = to_lower(ctoken.word);
-						ADV_NON_BLANK(1);
-					}
-					else if (ctoken.type == ETT_NUMBER) // amount as number
-					{
-						currentIngredient.amount = std::stod(to_lower(ctoken.word));
-						ADV_NON_BLANK(1);
-						if (ctoken.type == ETT_BRACKET_CLOSE) // if it doesn't have a unit
-						{
-							break;
-						}
-						if (ctoken.type != ETT_WORD)
-						{
-							ERR_VOID("Expected a corresponding unit with the ingredient.", ctoken);
-						}
-						while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK) // unit
-						{
-							currentIngredient.unit += to_lower(ctoken.word);
-							ADV(1);
-						}
-					}
-					else
-					{
-						ERR_VOID("expected an amount - either relative with keywords or with an amount and unit", ctoken);
-					}
+					ReadRelativeAmount(&currentIngredient);
+				}
+				else if (ctoken.type == ETT_NUMBER)
+				{
+					ReadAmount(&currentIngredient);
+				}
+				else
+				{
+					ERR_VOID("expected an amount - either relative with keywords or with an amount and unit", ctoken);
 				}
 				ADV_NON_BLANK(1);
 			}
@@ -587,11 +581,7 @@ namespace epicr
 				ERR_VOID("expected a kitchenware", ctoken);
 			}
 			std::string currentKitchenware;
-			while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK)
-			{
-				currentKitchenware += ctoken.word;
-				ADV(1);
-			}
+			currentKitchenware = ReadWords();
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'", ctoken);
@@ -603,6 +593,96 @@ namespace epicr
 			singleInstruction->kitchenware.push_back(currentKitchenware);
 		}
 		ADV_NON_BLANK(1);
+	}
+	void Parser::ParseInstructionYield(instruction *singleInstruction)
+	{
+		while (to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using" && ctoken.type != ETT_EOF)
+		{
+			ingredient currentYield;
+			if (ctoken.type != ETT_WORD)
+			{
+				ERR_VOID("expected an ingredient", ctoken);
+			}
+			currentYield.name = ReadWords();
+			if (ctoken.type == ETT_BRACKET_OPEN)
+			{
+				ADV_NON_BLANK(1)
+				if (ctoken.type == ETT_NUMBER)
+				{
+					ReadAmount(&currentYield);
+				}
+				else
+				{
+					ERR_VOID("expected an amount with unit", ctoken);
+				}
+				ADV_NON_BLANK(1);
+			}
+			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_EOF && ctoken.type != ETT_BLANK && ctoken.type != ETT_NEWLINE)
+			{
+				ERR_VOID("Expected a ',' as seperator between ingredients in the yield", ctoken);
+			}
+			singleInstruction->yields.push_back(currentYield);
+			ADV_NON_BLANK(1)
+		}
+	}
+	std::string Parser::ReadWords()
+	{
+		std::string finalWord = "";
+		while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK)
+			{
+				std::cout << "--------------\n";
+				std::cout << "current: " << token_to_string(ctoken.type)<< ":" << ctoken.word<<"\n";
+				std::cout << "upcoming: " << token_to_string(utoken.type)<< ":" << utoken.word<<"\n";
+				std::cout << "--------------\n";
+				finalWord += ctoken.word;
+				std::cout << "--------------\n";
+				std::cout << finalWord <<"\n";
+				if (ctoken.type != ETT_BLANK)
+				{
+					
+				}
+				ADV(1);
+				
+			}	
+		//std::cout<<finalWord<<"\n";
+		return finalWord;
+	}
+	void Parser::ReadRelativeAmount(ingredient *currentIngredient)
+	{
+		if (to_lower(ctoken.word) == "half" || to_lower(ctoken.word) == "quarter" || to_lower(ctoken.word) == "rest" || to_lower(ctoken.word) == "all") // relative amount
+		// lidt hardcoded - burde måske være constants eller tokens
+		{
+			currentIngredient->relativeAmount = to_lower(ctoken.word);
+			ADV_NON_BLANK(1);
+		}
+		else
+		{
+			ERR_VOID("expected a relative amount",ctoken);
+		}
+		if (ctoken.type != ETT_BRACKET_CLOSE)
+		{
+			ERR_VOID("expected closing bracket for relative amount",ctoken);
+		}
+	}
+	void Parser::ReadAmount(ingredient *currentIngredient)
+	{
+		while (ctoken.type != ETT_BRACKET_CLOSE)
+		{
+			if (ctoken.type == ETT_NUMBER) // amount as number
+			{
+				currentIngredient->amount = std::stod(to_lower(ctoken.word));
+				ADV_NON_BLANK(1);
+				if (ctoken.type == ETT_BRACKET_CLOSE) // if it doesn't have a unit
+				{
+					break;
+				}
+				if (ctoken.type != ETT_WORD)
+				{
+					ERR_VOID("Expected a corresponding unit with the ingredient.", ctoken);
+				}
+				currentIngredient->unit = ReadWords();
+			}
+		}
 	}
 	Parser::~Parser()
 	{

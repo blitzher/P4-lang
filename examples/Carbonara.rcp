@@ -27,14 +27,18 @@ ingredients:
 
 
 instructions:
-    with (bacon[100 g])using(airfryer):
+    using(airfryer):
         Preheat your airfryer to [200 C]
-
+        yield:
+            bacon,
+            big juicy bacon fat
+            
+    
     with(bacon) using(airfryer):
         Fry the bacon using the airfryer
 
         yield:
-            bacon
+            bacon,
             bacon fat 
 
     with(butter, onion, bacon fat) using(pan):
@@ -47,7 +51,7 @@ instructions:
         Add the bacon and cream to the pan.
 
         yield:
-            onion bacon mix 
+            onion bacon mix+
     
     with(onion bacon mix, egg[2], spaghetti, parmesan, salt, pepper):
         Remove the onion bacon mix from the heat and stir in the eggs and the cooked spaghetti, 

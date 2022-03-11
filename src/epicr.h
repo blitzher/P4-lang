@@ -31,6 +31,9 @@ namespace epicr
         double amount;
         std::string relativeAmount;
         std::string unit;
+        bool isUncountable;
+        bool isIngredientRef;
+        bool isOptional;
     } ingredient;
 
     typedef struct instruction_word_s
@@ -41,8 +44,6 @@ namespace epicr
         std::string unit;
 
         bool is_ingredient_ref;
-        bool has_alias;
-        std::string alias;
     } instruction_word;
 
     typedef struct instruction_s
@@ -152,6 +153,10 @@ namespace epicr
         void ParseInstructions(recipe *);
         void ParseInstructionHeaderWith(instruction *singleInstruction);
         void ParseInstructionHeaderUsing(instruction *singleInstruction);
+        void ParseInstructionYield(instruction *singleInstruction);
+        std::string ReadWords();
+        void ReadRelativeAmount(ingredient *currentIngredient);
+        void ReadAmount(ingredient *currentIngredient);
 
         epicr_token ctoken;
         epicr_token utoken;
