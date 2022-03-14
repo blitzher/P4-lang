@@ -147,9 +147,9 @@ typedef unsigned int uint;
         void ParseTags(recipe *);
         void ParseTime(recipe *);
         void ParseInstructions(recipe *);
-        void Parser::ParseInstructionHeaderWith(recipe *,instruction currentInstruction);
-        void Parser::ParseInstructionHeaderUsing(recipe *,instruction currentInstruction);
-
+        void ParseInstructionHeaderWith(recipe *,instruction currentInstruction);
+        void ParseInstructionHeaderUsing(recipe *,instruction currentInstruction);
+        void ParseInstructionBody(recipe *rcp,instruction *currentInstruction);
         epicr_token ctoken;
         epicr_token utoken;
 
