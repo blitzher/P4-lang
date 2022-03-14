@@ -305,6 +305,7 @@ namespace epicr
 			{
 				ingredient.name = ctoken.word;
 				ADV_NON_BLANK(1);
+				
 
 				/*if a specialoperator (+?*)
 				is involved it handles the
@@ -658,6 +659,86 @@ namespace epicr
 				}
 				currentIngredient->unit = ReadWords();
 			}
+		}
+	}
+
+	void Parser::ParseInstructionBody(recipe *rcp,instruction *currentInstruction) {
+		// assumes body starts from ':' (ctoken)
+		ingredient ingredientInBody;
+		instruction_word Body;
+		ADV_NON_BLANK(1);
+		bool insturctionFinished = false;
+
+		while(insturctionFinished == false) {
+			std::cout << "Rewdung prowcewdure BODY" << std::endl;
+
+			if(ctoken.type == ETT_EOF || utoken.type == ETT_EOF) {
+				ERR("no data found after bodydeclartion ", ctoken);
+			}
+
+			//Body.word += ctoken.word;
+			if(ctoken.type == ETT_WORD || ctoken.type == ETT_COMMA || ctoken.type == ETT_NUMBER) {
+				Body.word += ctoken.word;
+				currentInstruction->body.push_back(Body);
+				ADV(1);
+			}
+			/*
+			if(ctoken.word == ingredientInBody.name) {
+				//ingredientInBody
+			}*/
+			if(ctoken.type == ETT_BRACKET_OPEN ) {
+				Body.word += ctoken.word;
+				ADV(1);
+
+				
+				if(ctoken.type != ETT_WORD) {
+				 ERR("not an ingredient", ctoken);
+				}
+				if(ctoken.type == ETT_WORD) {
+				ingredientInBody.name += ctoken.word;
+				Body.word += ctoken.word;
+				ADV(1);
+				while(ctoken.type != ETT_CURLY_CLOSE || ctoken.type == ETT_EOF) {
+
+
+				if(ctoken.type == ETT_NUMBER){
+					ingredientInBody.amount += ctoken.uid;
+					Body.word += ctoken.word;
+				}
+				if(ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK){
+					ingredientInBody.name += ctoken.word;
+					Body.word += ctoken.word;
+				}
+				ADV(1);
+				}
+
+				if(ctoken.type != ETT_CURLY_CLOSE) {
+					ERR("uh oh no c bracket closing", ctoken);
+				}
+				Body.word += ctoken.word;
+				rcp->ingredients.push_back(ingredientInBody);
+				ADV(1);
+				}
+			}
+
+			//has yield or update
+			if(ctoken.word == "update" || ctoken.word == "yield" && utoken.type == ETT_COLON) {
+				insturctionFinished = true;
+				//yield call
+			}
+			ADV_NON_BLANK(1);
+			//has not yield or update
+			if(ctoken.word == "with" || ctoken.word == "using" && utoken.type == ETT_PARENS_OPEN) {
+				insturctionFinished = true;
+				//yield call
+			}
+			if(ctoken.word == "with" && ctoken.word == "using" && utoken.type == ETT_PARENS_OPEN) {
+				
+				insturctionFinished = true;
+				//yield call
+			}
+			currentInstruction->body.push_back(Body);
+			ADV_NON_BLANK(1);
 		}
 	}
 	Parser::~Parser()

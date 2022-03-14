@@ -151,13 +151,14 @@ namespace epicr
         void ParseTags(recipe *);
         void ParseTime(recipe *);
         void ParseInstructions(recipe *);
+        
         void ParseInstructionHeaderWith(instruction *singleInstruction);
         void ParseInstructionHeaderUsing(instruction *singleInstruction);
+        void ParseInstructionBody(recipe *rcp,instruction *currentInstruction);
         void ParseInstructionYield(instruction *singleInstruction);
         std::string ReadWords();
         void ReadRelativeAmount(ingredient *currentIngredient);
         void ReadAmount(ingredient *currentIngredient);
-
         epicr_token ctoken;
         epicr_token utoken;
 
