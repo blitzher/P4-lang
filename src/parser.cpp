@@ -630,21 +630,9 @@ namespace epicr
 		std::string finalWord = "";
 		while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK)
 			{
-				std::cout << "--------------\n";
-				std::cout << "current: " << token_to_string(ctoken.type)<< ":" << ctoken.word<<"\n";
-				std::cout << "upcoming: " << token_to_string(utoken.type)<< ":" << utoken.word<<"\n";
-				std::cout << "--------------\n";
 				finalWord += ctoken.word;
-				std::cout << "--------------\n";
-				std::cout << finalWord <<"\n";
-				if (ctoken.type != ETT_BLANK)
-				{
-					
-				}
 				ADV(1);
-				
 			}	
-		//std::cout<<finalWord<<"\n";
 		return finalWord;
 	}
 	void Parser::ReadRelativeAmount(ingredient *currentIngredient)

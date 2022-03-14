@@ -31,12 +31,14 @@ instructions:
         Preheat your airfryer to [200 C]
         yield:
             bacon,
-            big juicy bacon fat
+            big juicy bacon fat 
             
-    
+            
+            
+            
     with(bacon) using(airfryer):
         Fry the bacon using the airfryer
-
+        
         yield:
             bacon,
             bacon fat 
