@@ -151,7 +151,6 @@ namespace epicr
         void ParseTags(recipe *);
         void ParseTime(recipe *);
         void ParseInstructions(recipe *);
-        
         void ParseInstructionHeaderWith(instruction *singleInstruction);
         void ParseInstructionHeaderUsing(instruction *singleInstruction);
         void ParseInstructionBody(recipe *rcp,instruction *currentInstruction);

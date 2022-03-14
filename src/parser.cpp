@@ -499,9 +499,7 @@ namespace epicr
 				ERR_VOID("missing ':' after instruction header", ctoken);
 			}
 			ADV_NON_BLANK(1)
-			/*
-			body
-			*/
+			ParseInstructionBody()
 			if (to_lower(ctoken.word) == "yield" && utoken.type == ETT_COLON)
 			{
 				ADV_NON_BLANK(2);
@@ -722,17 +720,17 @@ namespace epicr
 			}
 
 			//has yield or update
-			if(ctoken.word == "update" || ctoken.word == "yield" && utoken.type == ETT_COLON) {
+			if((ctoken.word == "update" || ctoken.word == "yield") && utoken.type == ETT_COLON) {
 				insturctionFinished = true;
 				//yield call
 			}
 			ADV_NON_BLANK(1);
 			//has not yield or update
-			if(ctoken.word == "with" || ctoken.word == "using" && utoken.type == ETT_PARENS_OPEN) {
+			if((ctoken.word == "with" || ctoken.word == "using") && utoken.type == ETT_PARENS_OPEN) {
 				insturctionFinished = true;
 				//yield call
 			}
-			if(ctoken.word == "with" && ctoken.word == "using" && utoken.type == ETT_PARENS_OPEN) {
+			if((ctoken.word == "with" && ctoken.word == "using") && utoken.type == ETT_PARENS_OPEN) {
 				
 				insturctionFinished = true;
 				//yield call
