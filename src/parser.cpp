@@ -498,8 +498,8 @@ namespace epicr
 			{
 				ERR_VOID("missing ':' after instruction header", ctoken);
 			}
-			ADV_NON_BLANK(1)
-			ParseInstructionBody()
+			ADV_NON_BLANK(1);
+			//ParseInstructionBody();
 			if (to_lower(ctoken.word) == "yield" && utoken.type == ETT_COLON)
 			{
 				ADV_NON_BLANK(2);
