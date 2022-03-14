@@ -636,7 +636,7 @@ namespace epicr
 		{
 			ERR_VOID("expected a relative amount",ctoken);
 		}
-		if (ctoken.type != ETT_SBRACKET_CLOSE)
+		if (ctoken.type != ETT_BRACKET_CLOSE)
 		{
 			ERR_VOID("expected closing bracket for relative amount",ctoken);
 		}
@@ -686,7 +686,7 @@ namespace epicr
 			if(ctoken.word == ingredientInBody.name) {
 				//ingredientInBody
 			}*/
-			if(ctoken.type == ETT_SBRACKET_OPEN ) {
+			if(ctoken.type == ETT_BRACKET_OPEN ) {
 				Body.word += ctoken.word;
 				ADV(1);
 
@@ -698,7 +698,7 @@ namespace epicr
 				ingredientInBody.name += ctoken.word;
 				Body.word += ctoken.word;
 				ADV(1);
-				while(ctoken.type != ETT_CBRACKET_CLOSE || ctoken.type == ETT_EOF) {
+				while(ctoken.type != ETT_CURLY_CLOSE || ctoken.type == ETT_EOF) {
 
 
 				if(ctoken.type == ETT_NUMBER){
@@ -712,7 +712,7 @@ namespace epicr
 				ADV(1);
 				}
 
-				if(ctoken.type != ETT_CBRACKET_CLOSE) {
+				if(ctoken.type != ETT_CURLY_CLOSE) {
 					ERR("uh oh no c bracket closing", ctoken);
 				}
 				Body.word += ctoken.word;
@@ -728,11 +728,11 @@ namespace epicr
 			}
 			ADV_NON_BLANK(1);
 			//has not yield or update
-			if(ctoken.word == "with" || ctoken.word == "using" && utoken.type == ETT_RBRACKET_OPEN) {
+			if(ctoken.word == "with" || ctoken.word == "using" && utoken.type == ETT_PARENS_OPEN) {
 				insturctionFinished = true;
 				//yield call
 			}
-			if(ctoken.word == "with" && ctoken.word == "using" && utoken.type == ETT_RBRACKET_OPEN) {
+			if(ctoken.word == "with" && ctoken.word == "using" && utoken.type == ETT_PARENS_OPEN) {
 				
 				insturctionFinished = true;
 				//yield call
