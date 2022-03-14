@@ -501,23 +501,11 @@ namespace epicr
 			/*
 			body
 			*/
-			ADV_NON_BLANK(1)//efter body
-			while (to_lower(ctoken.word) != "yield" && to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using" && ctoken.type != ETT_EOF)
-			{ //indtil vi ikke har body i parseren
-				ADV_NON_BLANK(1)
-			}
 			if (to_lower(ctoken.word) == "yield" && utoken.type == ETT_COLON)
 			{
 				ADV_NON_BLANK(2);
 				ParseInstructionYield(&singleInstruction);
 			}
-			// std::cout<< singleInstruction.yields.size() << "\n";
-			// for (size_t i = 0; i < singleInstruction.yields.size(); i++)
-			// {
-			// 	std::cout<< singleInstruction.yields[0].name << "\n";
-			// }
-			
-			
 			
 			instructions.push_back(singleInstruction); //something doesnt work here
 		}
