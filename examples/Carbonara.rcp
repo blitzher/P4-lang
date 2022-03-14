@@ -1,26 +1,26 @@
-title: Spaghetti     carbonara
+title: Spaghetti carbonara
 description: Carbonara is nice
 amount: 4 people
 cook-time: 15 min
 tags: pasta, easy to make, under 30 min, pork
 
 nutrients:
-    calories {300 cal},
-    protein {10 g},
-    fat {10 g},
-    carbs {10 g}
+    calories [300 cal],
+    protein [10 g],
+    fat [10 g],
+    carbs [10 g]
 kitchenware:
     airfryer,
     pan
 
 ingredients:
-    bacon {100 g},
-    butter {1 tsp},     
-    onion {1},
-    cream {1 dl},      
-    egg {2},         
-    parmesan {5g},      
-    spaghetti* {30 g},
+    bacon [100 g],
+    butter [1 tsp],     
+    onion [1],
+    cream [1 dl],      
+    egg [2],         
+    parmesan [5g],      
+    spaghetti* [30 g],
     salt+,
     pepper+,
     extra parmesan?+ 
@@ -28,37 +28,38 @@ ingredients:
 
 instructions:
     using(airfryer):
-        Preheat your [airfryer] to {200 C}
-
+        Preheat your airfryer to [200 C]
+            
+    
     with(bacon) using(airfryer):
-        Fry the [bacon] using the [airfryer]
+        Fry the bacon using the airfryer
 
         yield:
-            bacon
+            bacon,
             bacon fat 
 
     with(butter, onion, bacon fat) using(pan):
-        Put [butter] on the [pan] with [bacon fat] and sauté the [onions:onion] until soft and clear.
+        Put butter on the pan with bacon fat and sauté the onions until soft and clear.
 
         yield:
             cooked onions
 
     with(bacon, cream, cooked onions):
-        Add the [bacon] and [cream] to the [pan:cooked onions].
+        Add the bacon and cream to the pan.
 
         yield:
-            onion bacon mix 
+            onion bacon mix+
     
-    with(onion bacon mix, egg{2}, spaghetti, parmesan, salt, pepper):
+    with(onion bacon mix, egg[2], spaghetti, parmesan, salt, pepper):
         Remove the onion bacon mix from the heat and stir in the eggs and the cooked spaghetti, 
         and mix the dish well with the freshly grated parmesan.
-        Season with [salt] and freshly ground [pepper].
+        Season with salt and freshly ground pepper.
 
         yield:
             spaghetti carbonara
 
     with(extra parmesan, spaghetti carbonara):
-        Sprinkle the [parmesan:extra parmesan] (e.g. {20 g}) on the [spaghetti carbonara].
+        Sprinkle the parmesan:extra parmesan (e.g. [20 g]) on the spaghetti carbonara.
     
         yield:
             spaghetti carbonara

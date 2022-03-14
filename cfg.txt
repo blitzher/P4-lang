@@ -14,7 +14,7 @@
 
 <defineIngredients>         --> name[<ingredientOperator>] [(<defineAmount>)] {, defineIngredients} 
 
-<procedure>                 --> procedure: <subprocedure> {, <subprocedure>}
+<procedure>                 --> instructions: <subprocedure> { <subprocedure>}
 
 <subprocedure>              --> <subprocedureHeader> [<procedureText>] [<yield> | <update>] 
 
@@ -24,7 +24,7 @@
 
 <subprocedureHeader>     	--> (with(<withIngredients>) | using(<usingKitchenware>) | with(<withIngredients>) using(<usingKitchenware>)):
 
-<withIngredients>           --> name [<amount> | <relativeAmount>] {, withIngredients} 
+<withIngredients>           --> name [\{<amount> | <relativeAmount>\}] {, withIngredients} 
 
 <amount>                    --> amount: number [unit]
 

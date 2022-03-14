@@ -27,24 +27,24 @@ namespace epicr
 			return "ETT_COLON";
 		case ETT_COMMA:
 			return "ETT_COMMA";
-		case ETT_RBRACKET_OPEN:
-			return "ETT_RBRACKET_OPEN";    // ()
-		case ETT_RBRACKET_CLOSE:	
-			return "ETT_RBRACKET_CLOSE";	
-		case ETT_SBRACKET_OPEN:
-			return "ETT_SBRACKET_OPEN";	   // []
-		case ETT_SBRACKET_CLOSE:
-			return "ETT_SBRACKET_CLOSE";
-		case ETT_CBRACKET_OPEN:
-			return "ETT_CBRACKET_OPEN";	 	// {}
-		case ETT_CBRACKET_CLOSE:
-			return "ETT_CBRACKET_CLOSE";
-		case ETT_SPECIAL_OPR_P:
-			return "ETT_SPECIAL_OPR_P";  //ingredients  +
-		case ETT_SPECIAL_OPR_A:
-			return "ETT_SPECIAL_OPR_A";  //ingredients  * 
-		case ETT_SPECIAL_OPR_Q:
-			return "ETT_SPECIAL_OPR_Q";  //ingredients ?
+		case ETT_PARENS_OPEN:
+			return "ETT_PARENS_OPEN"; /* () */
+		case ETT_PARENS_CLOSE:
+			return "ETT_PARENS_CLOSE";
+		case ETT_BRACKET_OPEN:
+			return "ETT_BRACKET_OPEN"; /* [] */
+		case ETT_BRACKET_CLOSE:
+			return "ETT_BRACKET_CLOSE";
+		case ETT_CURLY_OPEN:
+			return "ETT_CURLY_OPEN"; /* {} */
+		case ETT_CURLY_CLOSE:
+			return "ETT_CURLY_CLOSE";
+		case ETT_PLUS:
+			return "ETT_PLUS"; /* ingredients  + */
+		case ETT_ASTERIX:
+			return "ETT_ASTERIX"; /* ingredients  * */
+		case ETT_QUESTION_MARK:
+			return "ETT_QUESTION_MARK"; /* ingredients ? */
 		case ETT_NUMBER:
 			return "ETT_NUMBER";
 		case ETT_BLANK:

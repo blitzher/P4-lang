@@ -23,13 +23,17 @@
 
 namespace epicr
 {
-typedef unsigned int uint;
+    typedef unsigned int uint;
 #pragma region Recipe Data
     typedef struct ingredient_s
     {
         std::string name;
         double amount;
+        std::string relativeAmount;
         std::string unit;
+        bool isUncountable;
+        bool isIngredientRef;
+        bool isOptional;
     } ingredient;
 
     typedef struct instruction_word_s
@@ -40,8 +44,6 @@ typedef unsigned int uint;
         std::string unit;
 
         bool is_ingredient_ref;
-        bool has_alias;
-        std::string alias;
     } instruction_word;
 
     typedef struct instruction_s
@@ -67,7 +69,7 @@ typedef unsigned int uint;
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
         std::vector<std::string> tags;
-        std::vector<ingredient> ingredients; /* missing SOME implementation */
+        std::vector<ingredient> ingredients;   /* missing SOME implementation */
         std::vector<instruction> instructions; /* missing implementation */
     } recipe;
 #pragma endregion
@@ -78,15 +80,15 @@ typedef unsigned int uint;
         ETT_COLON,
         ETT_COMMA,
         ETT_NUMBER,
-        ETT_RBRACKET_OPEN,
-        ETT_RBRACKET_CLOSE,
-        ETT_SBRACKET_OPEN,
-        ETT_SBRACKET_CLOSE,
-        ETT_CBRACKET_OPEN,
-        ETT_CBRACKET_CLOSE,
-        ETT_SPECIAL_OPR_P,
-        ETT_SPECIAL_OPR_A,
-        ETT_SPECIAL_OPR_Q,
+        ETT_PARENS_OPEN,   /* ( */
+        ETT_PARENS_CLOSE,  /* ) */
+        ETT_BRACKET_OPEN,  /* [ */
+        ETT_BRACKET_CLOSE, /* ] */
+        ETT_CURLY_OPEN,    /* { */
+        ETT_CURLY_CLOSE,   /* } */
+        ETT_PLUS,          /* + */
+        ETT_ASTERIX,       /* * */
+        ETT_QUESTION_MARK, /* ? */
         ETT_BLANK,
         ETT_NEWLINE,
         ETT_EOF,
@@ -121,6 +123,8 @@ typedef unsigned int uint;
 
         /* Return the next token, and moving the reader */
         epicr_token next_token();
+        /* Return the next `n` tokens as an array */
+        std::vector<epicr_token> next_token(int n);
         /* Return the next non blank, non new line token */
         epicr_token next_non_blank_token();
         epicr_token_type token_type(std::string stoken);
@@ -147,9 +151,14 @@ typedef unsigned int uint;
         void ParseTags(recipe *);
         void ParseTime(recipe *);
         void ParseInstructions(recipe *);
-        void ParseInstructionHeaderWith(recipe *,instruction currentInstruction);
-        void ParseInstructionHeaderUsing(recipe *,instruction currentInstruction);
+        
+        void ParseInstructionHeaderWith(instruction *singleInstruction);
+        void ParseInstructionHeaderUsing(instruction *singleInstruction);
         void ParseInstructionBody(recipe *rcp,instruction *currentInstruction);
+        void ParseInstructionYield(instruction *singleInstruction);
+        std::string ReadWords();
+        void ReadRelativeAmount(ingredient *currentIngredient);
+        void ReadAmount(ingredient *currentIngredient);
         epicr_token ctoken;
         epicr_token utoken;
 
@@ -172,6 +181,5 @@ typedef unsigned int uint;
 
     std::ifstream open_file(std::string filename);
 
-    
     bool generate_html(recipe, std::string filename);
 }
