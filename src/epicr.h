@@ -153,7 +153,7 @@ namespace epicr
         void ParseInstructions(recipe *);
         void ParseInstructionHeaderWith(instruction *singleInstruction);
         void ParseInstructionHeaderUsing(instruction *singleInstruction);
-        void ParseInstructionBody(recipe *rcp,instruction *currentInstruction);
+        void ParseInstructionBody(instruction *currentInstruction);
         void ParseInstructionYield(instruction *singleInstruction);
         std::string ReadWords();
         void ReadRelativeAmount(ingredient *currentIngredient);

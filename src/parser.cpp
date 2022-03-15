@@ -487,11 +487,13 @@ namespace epicr
 			if (to_lower(ctoken.word) == "with")
 			{
 				ADV_NON_BLANK(1)
+				std::cout << "with call" << std::endl;
 				ParseInstructionHeaderWith(&singleInstruction);
 			}
 			if (to_lower(ctoken.word) == "using")
 			{
 				ADV_NON_BLANK(1)
+				std::cout << "using call" << std::endl;
 				ParseInstructionHeaderUsing(&singleInstruction);
 			}
 			if (ctoken.type != ETT_COLON)
@@ -499,10 +501,11 @@ namespace epicr
 				ERR_VOID("missing ':' after instruction header", ctoken);
 			}
 			ADV_NON_BLANK(1);
-			//ParseInstructionBody();
+			ParseInstructionBody(&singleInstruction);
 			if (to_lower(ctoken.word) == "yield" && utoken.type == ETT_COLON)
 			{
 				ADV_NON_BLANK(2);
+				std::cout << "yeild call" << std::endl;
 				ParseInstructionYield(&singleInstruction);
 			}
 			
@@ -660,85 +663,93 @@ namespace epicr
 		}
 	}
 
-	void Parser::ParseInstructionBody(recipe *rcp,instruction *currentInstruction) {
+	void Parser::ParseInstructionBody(instruction *currentInstruction) {
 		// assumes body starts from ':' (ctoken)
-		ingredient ingredientInBody;
+		//ingredient ingredientInBody;
 		instruction_word Body;
 		ADV_NON_BLANK(1);
 		bool insturctionFinished = false;
 
 		while(insturctionFinished == false) {
 			std::cout << "Rewdung prowcewdure BODY" << std::endl;
-
+			
 			if(ctoken.type == ETT_EOF || utoken.type == ETT_EOF) {
-				ERR("no data found after bodydeclartion ", ctoken);
+				ERR_VOID("no data found after bodydeclartion ", ctoken);
 			}
 
-			//Body.word += ctoken.word;
-			if(ctoken.type == ETT_WORD || ctoken.type == ETT_COMMA || ctoken.type == ETT_NUMBER) {
-				Body.word += ctoken.word;
-				currentInstruction->body.push_back(Body);
-				ADV(1);
-			}
-			/*
-			if(ctoken.word == ingredientInBody.name) {
-				//ingredientInBody
-			}*/
-			if(ctoken.type == ETT_BRACKET_OPEN ) {
-				Body.word += ctoken.word;
-				ADV(1);
-
+			////Body.word += ctoken.word;
+			while(ctoken.type == ETT_WORD || ctoken.type == ETT_COMMA || ctoken.type == ETT_NUMBER || ctoken.type == ETT_BLANK) {
+				//std::cout << "1" << std::endl;
 				
-				if(ctoken.type != ETT_WORD) {
-				 ERR("not an ingredient", ctoken);
+				if(ctoken.type == ETT_NUMBER){
+					Body.amount += ctoken.uid;
+
 				}
-				if(ctoken.type == ETT_WORD) {
-				ingredientInBody.name += ctoken.word;
+				else{
+					Body.word += ctoken.word;
+				}
+				//currentInstruction->body.push_back(Body); :(
+				ADV(1);
+			}
+
+			if(ctoken.type == ETT_BRACKET_OPEN ) {
+				//std::cout << "2" << std::endl;
 				Body.word += ctoken.word;
 				ADV(1);
-				while(ctoken.type != ETT_CURLY_CLOSE || ctoken.type == ETT_EOF) {
-
 
 				if(ctoken.type == ETT_NUMBER){
-					ingredientInBody.amount += ctoken.uid;
+					Body.amount += ctoken.uid;
+				}
+				else if (ctoken.type != ETT_EOF){
 					Body.word += ctoken.word;
 				}
-				if(ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK){
-					ingredientInBody.name += ctoken.word;
-					Body.word += ctoken.word;
-				}
-				ADV(1);
+				
+
+				while(ctoken.type != ETT_BRACKET_CLOSE || ctoken.type == ETT_EOF) {
+					ADV(1);
+					if(ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK || ctoken.type == ETT_NUMBER){
+						if(ctoken.type == ETT_NUMBER){
+							Body.amount += ctoken.uid;
+						}
+						else if (ctoken.type != ETT_EOF){
+						Body.word += ctoken.word;
+						}
+					}
 				}
 
-				if(ctoken.type != ETT_CURLY_CLOSE) {
-					ERR("uh oh no c bracket closing", ctoken);
+				if(ctoken.type != ETT_BRACKET_CLOSE) {
+					ERR_VOID("uh oh no B bracket closing", ctoken);
 				}
+				//std::cout << "3" << std::endl;
 				Body.word += ctoken.word;
-				rcp->ingredients.push_back(ingredientInBody);
-				ADV(1);
-				}
+				//rcp->ingredients.push_back(ingredientInBody); :((
+				//ADV(1);
 			}
-
+			ADV_NON_BLANK(1);
 			//has yield or update
 			if((ctoken.word == "update" || ctoken.word == "yield") && utoken.type == ETT_COLON) {
 				insturctionFinished = true;
+				//std::cout << "y || u" << std::endl;
 				//yield call
 			}
-			ADV_NON_BLANK(1);
 			//has not yield or update
 			if((ctoken.word == "with" || ctoken.word == "using") && utoken.type == ETT_PARENS_OPEN) {
 				insturctionFinished = true;
+				//std::cout << "u ! y" << std::endl;
 				//yield call
 			}
+			//yield and update
 			if((ctoken.word == "with" && ctoken.word == "using") && utoken.type == ETT_PARENS_OPEN) {
-				
+				//std::cout << "y & u" << std::endl;
 				insturctionFinished = true;
 				//yield call
 			}
-			currentInstruction->body.push_back(Body);
-			ADV_NON_BLANK(1);
 		}
+		//std::cout << "end" << std::endl;
+		currentInstruction->body.push_back(Body);
+		//insturctionFinished = true;
 	}
+
 	Parser::~Parser()
 	{
 	}
