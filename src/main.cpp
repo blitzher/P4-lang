@@ -28,6 +28,8 @@ int main(int argc, char **argv)
 
 	epicr::recipe myRecipe = myParser.Parse();
 
+	epicr::generate_html(myRecipe, "dist/carbonara.html");
+
 	cout << myParser.error << ": " << myParser.error_message << endl;
 
 	return 0;

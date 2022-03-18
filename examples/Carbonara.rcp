@@ -5,10 +5,11 @@ cook-time: 15 min
 tags: pasta, easy to make, under 30 min, pork
 
 nutrients:
-    calories [300 cal],
+    calories [100 cal],
     protein [10 g],
     fat [10 g],
     carbs [10 g]
+    
 kitchenware:
     airfryer,
     pan
@@ -20,8 +21,8 @@ ingredients:
     cream [1 dl],      
     egg [2],         
     parmesan [5g],      
-    spaghetti* [30 g],
-    salt+,
+    spaghetti [30 g],
+    salt,
     pepper+,
     extra parmesan?+ 
 

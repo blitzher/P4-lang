@@ -19,30 +19,51 @@
 //... etc
 #endif
 
+#define HAS_PLUS 1    // 0b001
+#define HAS_ASTERIX 2 // 0b010
+#define HAS_QMARK 4   // 0b100
+
+/*
+
+    100 =>
+    bool has_qmark = (arg & HAS_QMARK) >> 2;
+    100 >> 2 001
+
+    100 =>
+    100 & 001 = 000
+
+ */
+
 #pragma endregion
 
 namespace epicr
 {
+    typedef char ingredient_arg;
     typedef unsigned int uint;
 #pragma region Recipe Data
-    typedef struct ingredient_s
+
+    typedef struct amount_s
     {
-        std::string name;
         double amount;
+        bool isRelativeAmount;
         std::string relativeAmount;
         std::string unit;
         bool isUncountable;
+    } amount;
+
+    typedef struct ingredient_s
+    {
+        std::string name;
+        amount amount;
         bool isIngredientRef;
         bool isOptional;
     } ingredient;
 
     typedef struct instruction_word_s
     {
-        std::string word;
+        std::string spelling;
         bool is_amount;
-        double amount;
-        std::string unit;
-
+        amount value;
         bool is_ingredient_ref;
     } instruction_word;
 
@@ -54,17 +75,17 @@ namespace epicr
         std::vector<instruction_word> body;
     } instruction;
 
-    typedef struct amount_s
+    typedef struct for_amount_s
     {
         int count;
         std::string descriptor;
-    } amount_s;
+    } for_amount;
 
     typedef struct recipe_s
     {
         std::string title;
         std::string description;
-        amount_s amount;
+        for_amount amount;
         std::string time; /* expand implementation */
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
@@ -155,9 +176,13 @@ namespace epicr
         void ParseInstructionHeaderUsing(instruction *singleInstruction);
         void ParseInstructionBody(instruction *currentInstruction);
         void ParseInstructionYield(instruction *singleInstruction);
+
+        /* Read an ingredient from the current position */
+        ingredient ReadIngredient(ingredient_arg);
+        /* Read an amount from the current position */
+        amount ReadAmount(ingredient_arg);
         std::string ReadWords();
-        void ReadRelativeAmount(ingredient *currentIngredient);
-        void ReadAmount(ingredient *currentIngredient);
+
         epicr_token ctoken;
         epicr_token utoken;
 

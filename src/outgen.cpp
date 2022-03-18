@@ -4,7 +4,7 @@
 using std::string;
 
 #define MAX_S_LENGTH 4096
-#define MAX_B_Lenght 65536 /* 4096 * 16 */
+#define MAX_B_LENGTH 65536 /* 4096 * 16 */
 namespace epicr
 {
 
@@ -41,12 +41,18 @@ namespace epicr
 
 		for (auto instr : rcp.instructions)
 		{
+
+			std::string body = "";
+			for (auto s : instr.body)
+			{
+				body += s.spelling;
+			}
 			std::cout << "instr found!" << std::endl;
 		}
 
 		string instructions_section = "";
 		char *instr_s = (char *)malloc(MAX_S_LENGTH);
-		char *base_s = (char *)malloc(MAX_B_Lenght);
+		char *base_s = (char *)malloc(MAX_B_LENGTH);
 		int indx = 1;
 		for (auto inst : rcp.instructions)
 		{
@@ -56,7 +62,7 @@ namespace epicr
 
 			string body = "";
 			for (auto word : inst.body)
-				body += word.word + " ";
+				body += word.spelling + " ";
 
 			string step_text = "Step " + std::to_string(indx);
 			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), body.c_str());
