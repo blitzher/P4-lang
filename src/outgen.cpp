@@ -13,7 +13,7 @@ namespace epicr
 		string file_content;
 		string dir = "src";
 		string file_name = template_name + ".html";
-		string fpath = dir;
+		string fpath = dir + "/output-templates/" + file_name;
 		std::ifstream fstream;
 		fstream.open(fpath, std::istream::in);
 
@@ -47,15 +47,15 @@ namespace epicr
 			{
 				body += s.spelling;
 			}
-			std::cout << "instr found!" << std::endl;
 		}
 
 		string instructions_section = "";
 		char *instr_s = (char *)malloc(MAX_S_LENGTH);
 		char *base_s = (char *)malloc(MAX_B_LENGTH);
-		int indx = 1;
+		int indx = 0;
 		for (auto inst : rcp.instructions)
 		{
+			indx++;
 			string ingredients = "";
 			for (auto ingr : inst.ingredients)
 				ingredients += ingr.name + " ";
