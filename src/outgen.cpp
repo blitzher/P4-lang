@@ -7,7 +7,6 @@ using std::string;
 #define MAX_B_LENGTH 65536 /* 4096 * 16 */
 namespace epicr
 {
-
 	string load_template(string template_name)
 	{
 		string file_content;
@@ -29,7 +28,6 @@ namespace epicr
 
 	bool generate_html(recipe rcp, string filename)
 	{
-
 		string base_template_s = load_template("base");
 		const char *base_template = base_template_s.c_str();
 		string step_template_s = load_template("step");
@@ -41,7 +39,6 @@ namespace epicr
 
 		for (auto instr : rcp.instructions)
 		{
-
 			std::string body = "";
 			for (auto s : instr.body)
 			{

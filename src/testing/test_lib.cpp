@@ -114,7 +114,7 @@ namespace test_lib
 
 		dif_message[line_index + 14] = '^';
 
-		char *err_message = (char *)malloc(300);
+		char *err_message = (char *)malloc(512);
 		sprintf(err_message, "\n%s\n%s\n%s", exp_message, act_message, dif_message);
 		deny(err_message);
 
@@ -149,7 +149,7 @@ namespace test_lib
 			switch (test.test_state)
 			{
 			case UNEVALUATED:
-				std::cout << "\x1b[33m\u2B55\x1b[0m ";
+				std::cout << "\x1b[33m\u229A\x1b[0m ";
 				break;
 			case ACCEPT:
 				std::cout << "\x1B[32m\u2714\x1B[0m ";

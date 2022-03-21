@@ -11,8 +11,6 @@ namespace epicr
 
 		if (!file.is_open())
 			cout << "File " << filename << " could not be opened!" << endl;
-		else
-			cout << "Opened file " << filename << endl;
 
 		return file;
 	}
@@ -84,6 +82,16 @@ namespace epicr
 			lowered.push_back(char_to_lower(str[i]));
 
 		return lowered;
+	}
+
+	epicr::recipe parse_recipe(std::string filename)
+	{
+		std::ifstream pasta = epicr::open_file(filename);
+		epicr::Lexer lexer(pasta);
+		epicr::Parser parser(&lexer);
+		epicr::recipe rcp = parser.Parse();
+
+		return rcp;
 	}
 
 }

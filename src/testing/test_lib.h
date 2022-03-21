@@ -30,12 +30,16 @@ namespace test_lib
 
 	} test_data;
 
-	/* Signal to the testing lib */
+	/* Signals to the testing lib */
 	void register_test(const std::string test_name);
 	void accept();
 	void deny(std::string err_message);
+
+	/* Helper functions for asserting values */
 	void expect_equal_s(const std::string actual, const std::string expected);
 	void expect_equal_i(const int actual, const int expected);
+
+	/* Final call in main, after tests have been run */
 	void print_recap();
 	// ---^^^---vvvv---:>~
 

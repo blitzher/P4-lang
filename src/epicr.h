@@ -206,4 +206,6 @@ namespace epicr
     std::ifstream open_file(std::string filename);
 
     bool generate_html(recipe, std::string filename);
+
+    recipe parse_recipe(std::string filename);
 }
