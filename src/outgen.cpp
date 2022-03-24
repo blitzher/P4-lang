@@ -36,15 +36,6 @@ namespace epicr
 		if (!file.is_open())
 			return false;
 
-		for (auto instr : rcp.instructions)
-		{
-			std::string body = "";
-			for (auto s : instr.body)
-			{
-				body += s.spelling;
-			}
-		}
-
 		string instructions_section = "";
 		char* instr_s = (char*)malloc(MAX_S_LENGTH);
 		char* base_s = (char*)malloc(MAX_B_LENGTH);
@@ -58,7 +49,7 @@ namespace epicr
 
 			string body = "";
 			for (auto word : inst.body)
-				body += word.spelling + " ";
+				body += word.spelling;
 
 			string step_text = "Step " + std::to_string(indx);
 			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), body.c_str());

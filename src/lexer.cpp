@@ -62,16 +62,13 @@ namespace epicr
                     do
                     {
                         if (ch == 0xd)
-                        {
                             istream.get(ch);
-                            vtoken.push_back(0xa);
-                        }
-                        else
-                            vtoken.push_back(ch);
+
+                        vtoken.push_back(ch);
                         istream.get(ch);
                     } while (!istream.eof() && (
-                        ch == vtoken[0] ||
-                        (vtoken[0] == 0xa && ch == 0xd)));
+                        ch == vtoken[0] || /* repeating space and LF endings */
+                        (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings */
 
                     if (vtoken[0] == '\n')
                     {
