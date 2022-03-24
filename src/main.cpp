@@ -11,7 +11,7 @@ using namespace std;
 
 /* Remove or outcomment when not debugging */
 void print_lexer_tokens(epicr::Lexer lexer);
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 
 	cout << "Command line arguments:" << endl;
@@ -22,6 +22,7 @@ int main(int argc, char **argv)
 	}
 
 	ifstream file = epicr::open_file(argv[1]);
+
 	epicr::Lexer myLexer = epicr::Lexer(file);
 
 	epicr::Parser myParser = epicr::Parser(&myLexer);

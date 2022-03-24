@@ -13,8 +13,7 @@ namespace epicr
 		string dir = "src";
 		string file_name = template_name + ".html";
 		string fpath = dir + "/output-templates/" + file_name;
-		std::ifstream fstream;
-		fstream.open(fpath, std::istream::in);
+		std::ifstream fstream = epicr::open_file(fpath);
 
 		int gotten_char = fstream.get();
 		do
@@ -29,11 +28,11 @@ namespace epicr
 	bool generate_html(recipe rcp, string filename)
 	{
 		string base_template_s = load_template("base");
-		const char *base_template = base_template_s.c_str();
+		const char* base_template = base_template_s.c_str();
 		string step_template_s = load_template("step");
-		const char *step_template = step_template_s.c_str();
+		const char* step_template = step_template_s.c_str();
 
-		std::ofstream file{filename};
+		std::ofstream file{ filename };
 		if (!file.is_open())
 			return false;
 
@@ -47,8 +46,8 @@ namespace epicr
 		}
 
 		string instructions_section = "";
-		char *instr_s = (char *)malloc(MAX_S_LENGTH);
-		char *base_s = (char *)malloc(MAX_B_LENGTH);
+		char* instr_s = (char*)malloc(MAX_S_LENGTH);
+		char* base_s = (char*)malloc(MAX_B_LENGTH);
 		int indx = 0;
 		for (auto inst : rcp.instructions)
 		{
@@ -85,13 +84,13 @@ namespace epicr
 		}
 
 		sprintf(base_s, base_template,
-				rcp.title.c_str(),
-				rcp.description.c_str(),
-				rcp.time.c_str(),
-				tags.c_str(),
-				ingredients.c_str(),
-				kitchenware.c_str(),
-				instructions_section.c_str());
+			rcp.title.c_str(),
+			rcp.description.c_str(),
+			rcp.time.c_str(),
+			tags.c_str(),
+			ingredients.c_str(),
+			kitchenware.c_str(),
+			instructions_section.c_str());
 		file << base_s << std::endl;
 		file.close();
 

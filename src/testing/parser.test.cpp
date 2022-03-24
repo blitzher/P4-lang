@@ -19,7 +19,12 @@ void parsed_instruction_yield()
 void parsed_description()
 {
 	test_lib::REGISTER;
-	auto rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	std::ifstream f = epicr::open_file("src/testing/Pasta.rcp");
+	epicr::Lexer l = epicr::Lexer(f);
+	l.DEBUG_MODE = true;
+	epicr::Parser p = epicr::Parser(&l);
+	p.DEBUG_MODE = true;
+	epicr::recipe rcp = p.Parse();
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
 }
 

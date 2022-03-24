@@ -13,7 +13,7 @@ void basic_test()
 
 	std::istringstream test_string("hello!");
 	epicr::Lexer lexer(test_string);
-	epicr::epicr_token tokens[]{lexer.next_token(), lexer.next_token()};
+	epicr::epicr_token tokens[]{ lexer.next_token(), lexer.next_token() };
 	expect_token_type(tokens[0], epicr::ETT_WORD);
 	test_lib::expect_equal_s("hello!", tokens[0].word);
 	expect_token_type(tokens[1], epicr::ETT_EOF);
