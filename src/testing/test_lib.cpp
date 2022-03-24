@@ -49,7 +49,7 @@ namespace test_lib
 		failed = 1; /* fail */
 	}
 
-	void expect_equal_s(const std::string actual, const std::string expected)
+	void expect_equal_s(const std::string expected, const std::string actual)
 	{
 		CHECK_TESTS_NON_EMPTY()
 			if (expected == actual)
