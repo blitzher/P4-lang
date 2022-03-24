@@ -13,7 +13,7 @@ CXXFLAGS   = -std=c++17 \
              -Wall -Wextra -Wpointer-arith -Wcast-qual \
              -Wno-missing-braces -Wempty-body -Wno-error=uninitialized \
              -Wno-error=deprecated-declarations \
-             -pedantic \
+             -pedantic -fansi-escape-codes \
              -Os
 
 LD         = clang++ -o

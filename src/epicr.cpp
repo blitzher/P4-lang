@@ -7,7 +7,7 @@ namespace epicr
 
 	ifstream open_file(string filename)
 	{
-		ifstream file{filename};
+		ifstream file{ filename, ios_base::binary };
 
 		if (!file.is_open())
 			cout << "File " << filename << " could not be opened!" << endl;

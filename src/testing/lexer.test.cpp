@@ -13,10 +13,32 @@ void basic_test()
 
 	std::istringstream test_string("hello!");
 	epicr::Lexer lexer(test_string);
-	epicr::epicr_token tokens[]{lexer.next_token(), lexer.next_token()};
+	epicr::epicr_token tokens[]{ lexer.next_token(), lexer.next_token() };
 	expect_token_type(tokens[0], epicr::ETT_WORD);
 	test_lib::expect_equal_s("hello!", tokens[0].word);
 	expect_token_type(tokens[1], epicr::ETT_EOF);
+}
+
+void sentence_test()
+{
+	test_lib::REGISTER;
+
+	std::istringstream test_string("hello there, this is a sentence!");
+	epicr::Lexer lexer(test_string);
+	std::vector<epicr::epicr_token> tokens = lexer.next_token(13);
+	test_lib::expect_equal_s("hello", tokens[0].word);
+	expect_token_type(tokens[1], epicr::ETT_BLANK);
+	test_lib::expect_equal_s("there", tokens[2].word);
+	expect_token_type(tokens[3], epicr::ETT_COMMA);
+	expect_token_type(tokens[4], epicr::ETT_BLANK);
+	test_lib::expect_equal_s("this", tokens[5].word);
+	expect_token_type(tokens[6], epicr::ETT_BLANK);
+	test_lib::expect_equal_s("is", tokens[7].word);
+	expect_token_type(tokens[8], epicr::ETT_BLANK);
+	test_lib::expect_equal_s("a", tokens[9].word);
+	expect_token_type(tokens[10], epicr::ETT_BLANK);
+	test_lib::expect_equal_s("sentence!", tokens[11].word);
+	expect_token_type(tokens[12], epicr::ETT_EOF);
 }
 
 void special_characters()
@@ -57,6 +79,7 @@ void blank_runs()
 int main(void)
 {
 	basic_test();
+	sentence_test();
 	special_characters();
 	blank_runs();
 	test_lib::print_recap();

@@ -6,9 +6,9 @@ using namespace std;
 struct compare
 {
     char key;
-    compare(char const &i) : key(i) {}
+    compare(char const& i) : key(i) {}
 
-    bool operator()(char const &i)
+    bool operator()(char const& i)
     {
         return (i == key);
     }
@@ -21,17 +21,17 @@ struct compare
 
 namespace epicr
 {
-    vector<char> token_breakers = {' ', '\n', ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*'};
+    vector<char> token_breakers = { ' ', '\n', 0x0d, ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*' };
 
 #pragma region Lexer implementation
 
-    Lexer::Lexer(ifstream &file) : istream(file)
+    Lexer::Lexer(ifstream& file) : istream(file)
     {
         line_num = 1;
         token_count = 0;
         ready = file.is_open();
     }
-    Lexer::Lexer(std::istream &stream) : istream(stream)
+    Lexer::Lexer(std::istream& stream) : istream(stream)
     {
         line_num = 1;
         token_count = 0;
@@ -45,7 +45,7 @@ namespace epicr
         if (istream.eof() || !ready)
         {
             ready = false;
-            return {"EOF", ETT_EOF, token_count, line_num};
+            return { "EOF", ETT_EOF, token_count, line_num };
         }
 
         vector<char> vtoken;
@@ -55,19 +55,25 @@ namespace epicr
         /* Read characters and break into tokens */
         while (istream.get(ch) && !istream.eof())
         {
-
             if (CH_V_CONTAINS(token_breakers, ch))
             {
-                if ((ch == ' ' || ch == '\n') && vtoken.size() == 0)
+                if ((ch == ' ' || ch == '\n' || ch == 0x0d) && vtoken.size() == 0)
                 {
                     do
                     {
+                        if (ch == 0xd)
+                            istream.get(ch);
+
                         vtoken.push_back(ch);
                         istream.get(ch);
-                    } while (!istream.eof() && ch == vtoken[0]);
+                    } while (!istream.eof() && (
+                        ch == vtoken[0] || /* repeating space and LF endings */
+                        (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings */
 
                     if (vtoken[0] == '\n')
+                    {
                         line_num += vtoken.size();
+                    }
 
                     /* since we encountered a non-blank, step back once */
                     if (!istream.eof()) /* can't seek when at EOF */
@@ -83,18 +89,16 @@ namespace epicr
                 break;
             }
 
-            if (CH_V_CONTAINS(token_breakers, ch))
-            {
-                istream.seekg(-1, ios_base::cur);
-                break;
-            }
+            /* if we found a non-numeric, we step back and break,
+               returning the numeric token
+            */
             if (is_numeric && !CH_IS_NUM(ch))
             {
                 if (!istream.eof()) /* can't seek when at EOF */
                     istream.seekg(-1, ios_base::cur);
                 break;
             }
-            if (CH_IS_NUM(ch) && vtoken.size() == 0)
+            if (CH_IS_NUM(ch) && vtoken.size() == 0 && ch != '.')
             {
                 is_numeric = true;
             }
@@ -106,7 +110,10 @@ namespace epicr
         if (stoken.size() == 0)
             return next_token();
 
-        return {stoken, token_type(stoken), token_count++, line_num};
+        epicr_token token{ stoken, token_type(stoken), token_count++, line_num };
+
+
+        return token;
     }
 
     std::vector<epicr_token> Lexer::next_token(int n)
@@ -161,12 +168,12 @@ namespace epicr
             }
         }
 
-        /* Check if the word is a blank */
+        /* Check if the word is a blank or newline*/
         bool is_blank = true;
         bool is_newline = true;
         for (size_t i = 0; i < stoken.size(); i++)
         {
-            if (is_newline && stoken[i] != '\n')
+            if (is_newline && (stoken[i] != '\n' && stoken[i] != 0xd))
                 is_newline = false;
             if (is_blank && stoken[i] != ' ')
             {
@@ -192,7 +199,7 @@ namespace epicr
                 break;
             }
             /* If the word is not 0-9 and not '.', it isn't a number */
-            if ((ch < 48 || ch > 57) && ch != '.')
+            if (!CH_IS_NUM(ch))
             {
                 is_numeric = false;
                 break;
