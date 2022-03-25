@@ -1,6 +1,7 @@
 obj/*
 bin/*
 dist/*
+build/*
 
 .vs/
 .DS_Store
