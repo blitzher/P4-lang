@@ -27,7 +27,7 @@ namespace test_lib
 {
 	void register_test(std::string func_name)
 	{
-		tests[func_name] = { func_name, UNEVALUATED, "Unevaluated\nCall `accept` or `deny` to evaluate" };
+		tests[func_name] = { func_name, UNEVALUATED, "Call \"accept\" or \"deny\" to evaluate" };
 		most_recent_test = &tests[func_name];
 	}
 
@@ -37,7 +37,7 @@ namespace test_lib
 			if (most_recent_test->test_state == UNEVALUATED)
 			{
 				most_recent_test->test_state = ACCEPT;
-				most_recent_test->err_message = "Passed";
+				most_recent_test->err_message = "";
 			}
 	}
 
@@ -146,22 +146,26 @@ namespace test_lib
 			{
 				const test_lib::test_data test = keyval_pair.second;
 
+				printf(" - "); /* test result prefix */
 				switch (test.test_state)
 				{
 				case UNEVALUATED:
-					printf("\033[33muneval\x1B[0m ");
+					printf("\033[33munev\x1B[0m ");	/* colour and status */
 					break;
 				case ACCEPT:
-					std::cout << "\033[32mpassed\x1B[0m ";
+					std::cout << "\033[32mpass\x1B[0m "; /* colour and status */
 					break;
 				case FAIL:
-					std::cout << "\033[31mfailed\x1B[0m ";
+					std::cout << "\033[31mfail\x1B[0m "; /* colour and status */
 					break;
 				default:
 					break;
 				}
 
-				printf("%s: %s\n", test.name.c_str(), test.err_message.c_str());
+				if (test.test_state == ACCEPT)
+					printf("%s\n", test.name.c_str());
+				else
+					printf("%s: %s\n", test.name.c_str(), test.err_message.c_str());
 			}
 	}
 

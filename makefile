@@ -68,12 +68,12 @@ remove: clean
 	@echo "Executable removed!"
 
 $(T_TARGETS)::
-	@echo "Testing $@"
+	@echo "Running \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
 
 # runnable targets 
 test: $(T_TARGETS)
-	@echo "Done test rule"
+	@echo "Finished tests"
 
 run: $(BINDIR)/$(TARGET)
 	./$< examples/Carbonara.rcp
