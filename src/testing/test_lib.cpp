@@ -1,5 +1,8 @@
 #include "./test_lib.h"
 
+/* tests work by registering a test, and running the code,
+ * and accepting/denying based on the results, which update
+ * the state of the most recently registered test. */
 std::unordered_map<std::string, test_lib::test_data> tests;
 test_lib::test_data* most_recent_test;
 
@@ -27,6 +30,7 @@ namespace test_lib
 {
 	void register_test(std::string func_name)
 	{
+		/* tests are by default unevaluated */
 		tests[func_name] = { func_name, UNEVALUATED, "Call \"accept\" or \"deny\" to evaluate" };
 		most_recent_test = &tests[func_name];
 	}
@@ -49,6 +53,8 @@ namespace test_lib
 		failed = 1; /* fail */
 	}
 
+	/* Helper function for asserting equality of two strings,
+	 * generating an error message in case of inequality */
 	void expect_equal_s(const std::string expected, const std::string actual)
 	{
 		CHECK_TESTS_NON_EMPTY()
@@ -67,6 +73,8 @@ namespace test_lib
 		std::vector<char> aline_v;
 		std::vector<char> eline_v;
 		size_t i = 0;
+
+		/* find the line which contains the discrepancy */
 		for (i = 0; i < len_shortest; i++)
 		{
 			if (actual[i] != expected[i])
@@ -86,6 +94,7 @@ namespace test_lib
 			}
 		}
 
+		/* copy the rest of the line into string */
 		int temp = i;
 		while (eline_v.size() < 80 && eline_v[i] != '\n')
 			eline_v.push_back(expected[i++]);
@@ -93,6 +102,7 @@ namespace test_lib
 		while (aline_v.size() < 80 && aline_v[i] != '\n')
 			aline_v.push_back(actual[i++]);
 
+		/* copy line into strings */
 		std::string aline{ aline_v.begin(), aline_v.end() };
 		std::string eline{ eline_v.begin(), eline_v.end() };
 
@@ -105,6 +115,7 @@ namespace test_lib
 		size_t exp_message_size = c_str_size(exp_message);
 		size_t act_message_size = c_str_size(act_message);
 
+		/* find longest message for writing the ^~~ string */
 		size_t longest_msg = (exp_message_size > act_message_size) ? exp_message_size : act_message_size;
 
 		for (uint i = 0; i < line_index + 14; i++)
@@ -114,15 +125,20 @@ namespace test_lib
 
 		dif_message[line_index + 14] = '^';
 
+		/* insert the expected line, actual line and
+		 * difference message into the error message */
 		char* err_message = (char*)malloc(512);
 		sprintf(err_message, "\n%s\n%s\n%s", exp_message, act_message, dif_message);
 		deny(err_message);
 
+		/* release allocated mem of strings that aren't needed anymore */
 		free(act_message);
 		free(exp_message);
 	}
 
-	void expect_equal_i(const int actual, const int expected)
+	/* Helper function for asserting equality of two integers,
+	 * generating an error message in case of inequality */
+	void expect_equal_i(const int expected, const int actual)
 	{
 		CHECK_TESTS_NON_EMPTY()
 
@@ -133,11 +149,12 @@ namespace test_lib
 			else
 			{
 				char* err_message = (char*)malloc(100);
-				sprintf(err_message, "Failed\nExpected: %-5i\nActual: %-5i", expected, actual);
+				sprintf(err_message, "\nExpected: %-5i\nActual: %-5i", expected, actual);
 				deny(err_message);
 			}
 	}
 
+	/* Print the results of the tests */
 	void print_recap()
 	{
 		CHECK_TESTS_NON_EMPTY()
@@ -169,6 +186,8 @@ namespace test_lib
 			}
 	}
 
+	/* Get the success state of all tests run.
+	 * Should be returned at the end of each test file */
 	int was_success()
 	{
 		return failed;
