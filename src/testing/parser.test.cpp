@@ -58,21 +58,23 @@ void parsed_instruction_kitchenware_name()
 	}
 }
 
-void parsed_instruction_body_first_line_is_parsed_correctly()
+void parsed_instruction_body_text_is_parsed_correctly()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
 	size_t actualInstructionBodySize = rcp.instructions[0].body.size();
-	std::string expectedInstructionBody = "Put the 300.000000 wheatflour on the table and make a cavity in the middle.";
-	//the rest: \nCrack the 3.000000 eggs in the cavity, and add salt.\nStart mixing the eggs into the wheatflour.\nIf the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.\nKnead the dough thoroughly.\nAfter kneading, let the dough rest in plastic wrap for 30 minutes.\nAdd wheatflour to the table, and begin rolling out the dough thinly using a rolling pin.\nStart from the middle and work towards the edges.\nWhen the dough is the desired thickness, cut the dough into thin strips.\nDust the thin strips with wheatflour, and roll the strips into a nest.\n
+	std::string expectedInstructionBody = "Put the 300.000000 g wheatflour on the table and make a cavity in the middle.\nCrack the 3.000000 eggs in the cavity, and add salt.\nStart mixing the eggs into the wheatflour.\nIf the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.\nKnead the dough thoroughly.\nAfter kneading, let the dough rest in plastic wrap for 30 minutes.\nAdd wheatflour to the table, and begin rolling out the dough thinly using a rolling pin.\nStart from the middle and work towards the edges.\nWhen the dough is the desired thickness, cut the dough into thin strips.\nDust the thin strips with wheatflour, and roll the strips into a nest.\n";
 	std::string actualInstructionBody = "";
+	int j = 0;
 	for (size_t i = 0; i < actualInstructionBodySize; i++)
-		{
-			if (rcp.instructions[0].body[i].spelling == "\n")
-				break;
+		{	
 			actualInstructionBody += rcp.instructions[0].body[i].spelling;
 			if (rcp.instructions[0].body[i].is_amount)
+			{
 				actualInstructionBody += std::to_string(rcp.instructions[0].body[i].value.amount) + " ";
+				if (rcp.instructions[0].body[i].value.unit != "")
+					actualInstructionBody += rcp.instructions[0].body[i].value.unit + " ";
+			}
 		}
 	test_lib::expect_equal_s(expectedInstructionBody,actualInstructionBody);
 	/* TODO: Take stance on how to deal with instructions words that are amounts 
@@ -95,7 +97,7 @@ int main(void)
 	parsed_instruction_ingredients_name();
 	parsed_instruction_has_correct_amount_of_kitchenware();
 	parsed_instruction_kitchenware_name();
-	parsed_instruction_body_first_line_is_parsed_correctly();
+	parsed_instruction_body_text_is_parsed_correctly();
 	parsed_instruction_yield();
 	test_lib::print_recap();
 	return test_lib::was_success();

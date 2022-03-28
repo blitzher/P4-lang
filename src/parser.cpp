@@ -367,6 +367,11 @@ namespace epicr
 				iword.is_amount = true;
 				iword.value = amnt;
 			}
+			else if (ctoken.type == ETT_NEWLINE)
+			{
+				iword.spelling = ctoken.word;
+				ADV_NON_BLANK(1);
+			}
 			else
 			{
 				iword.spelling = ctoken.word;
