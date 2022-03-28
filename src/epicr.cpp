@@ -7,7 +7,7 @@ namespace epicr
 
 	ifstream open_file(string filename)
 	{
-		ifstream file{ filename, ios_base::binary };
+		ifstream file{filename, ios_base::binary};
 
 		if (!file.is_open())
 			cout << "File " << filename << " could not be opened!" << endl;
@@ -84,9 +84,101 @@ namespace epicr
 		return lowered;
 	}
 
-	epicr::recipe parse_recipe(std::string filename)
+	enum unit_system
 	{
-		std::ifstream pasta = epicr::open_file(filename);
+		metric_system,
+		imperial_system
+	};
+
+	enum html_style
+	{
+		html_style_basic,
+		html_style_fancy
+	};
+
+	struct cmd_args
+	{
+		string input_filepath;
+		unit_system choosen_system;
+		html_style choosen_style;
+		string output_filepath;
+		uint desired_amount;
+	};
+
+	unit_system parse_unit_system(char *argv)
+	{
+		unit_system choosen_system;
+		if (*argv == '--metric' || *argv == '-m')
+		{
+			choosen_system = metric_system;
+		}
+		else if (*argv == '--imperial' || *argv == '-i')
+		{
+			choosen_system = imperial_system;
+		}
+		return choosen_system;
+	}
+
+	html_style parse_style(char *argv)
+	{
+		html_style choosen_style;
+		if (*argv == '--basic' || *argv == '-b')
+		{
+			choosen_style = html_style_basic;
+		}
+		else if (*argv == '--fancy' || *argv == '-f')
+		{
+			choosen_style = html_style_fancy;
+		}
+		return choosen_style;
+	}
+
+	cmd_args parse_cmd_args(int argc, char **argv)
+	{
+		cmd_args CMD_ARGS;
+		for (int i = 0; i < argc; i++)
+		{
+			if (argv[i] == "--metric" || argv[i] == "-m")
+			{
+				CMD_ARGS.choosen_system = parse_unit_system(argv[i]);
+			}
+			else if (argv[i] == "--imperial" || argv[i] == "-i")
+			{
+				CMD_ARGS.choosen_system = parse_unit_system(argv[i]);
+			}
+			else if (argv[i] == "--basic" || argv[i] == "-b")
+			{
+				CMD_ARGS.choosen_style = parse_style(argv[i]);
+			}
+			else if (argv[i] == "--fancy" || argv[i] == "-f")
+			{
+				CMD_ARGS.choosen_style = parse_style(argv[i]);
+			}
+			else if (argv[i] == "-o")
+			{
+				CMD_ARGS.output_filepath = argv[i + 1];
+				i++;
+			}
+			else if (argv[i] == "-for")
+			{
+				if (std::isdigit(*argv[i + 1]))
+				{
+					CMD_ARGS.desired_amount = (uint)argv[i + 1];
+					i++;
+				}
+			}
+			else
+			{
+				CMD_ARGS.input_filepath = argv[i];
+			}
+		}
+		return CMD_ARGS;
+	}
+
+	epicr::recipe parse_recipe(cmd_args clargs)
+	{
+
+		std::ifstream pasta = epicr::open_file(clargs.input_filepath);
 		epicr::Lexer lexer(pasta);
 		epicr::Parser parser(&lexer);
 		epicr::recipe rcp = parser.Parse();

@@ -11,7 +11,7 @@ using namespace std;
 
 /* Remove or outcomment when not debugging */
 void print_lexer_tokens(epicr::Lexer lexer);
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 
 	cout << "Command line arguments:" << endl;
