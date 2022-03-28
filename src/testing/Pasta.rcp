@@ -16,7 +16,7 @@ ingredients:
 
 instructions:
     with(wheatflour, egg, salt, water, extra wheatflour) using(plastic wrap, rolling pin):
-        Put the wheatflour on the table and make a cavity in the middle.
+        Put the [300] wheatflour on the table and make a cavity in the middle.
         Crack the [3] eggs in the cavity, and add salt.
         Start mixing the eggs into the wheatflour.
         If the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.
@@ -26,7 +26,6 @@ instructions:
         Start from the middle and work towards the edges.
         When the dough is the desired thickness, cut the dough into thin strips.
         Dust the thin strips with wheatflour, and roll the strips into a nest.
-
         yield:
             Pasta
     
