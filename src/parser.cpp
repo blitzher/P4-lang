@@ -395,14 +395,18 @@ namespace epicr
 		bool canHaveAsterix = (arg & HAS_ASTERIX) >> 1;
 		bool canHaveQmark = (arg & HAS_QMARK) >> 2;
 
-		ingredient *currentIngredient = (ingredient *)calloc(1, sizeof(ingredient));
-
+		ingredient currentIngredient;
+		currentIngredient.isOptional = false;
+		currentIngredient.isIngredientRef = false;
+		currentIngredient.name = "";
+		currentIngredient.amount = {0, 0, "", "", 0};
+		
 		amount ingredientAmount;
 		if (ctoken.type != ETT_WORD)
 		{
 			ERR("Expected ingredient name", ctoken);
 		}
-		currentIngredient->name = ReadWords();
+		currentIngredient.name = ReadWords();
 
 		while (ctoken.type == ETT_ASTERIX || ctoken.type == ETT_QUESTION_MARK)
 		{
@@ -411,31 +415,32 @@ namespace epicr
 				if (!canHaveAsterix)
 				{
 					ERR("An asterix is not valid in the given context", ctoken);
-					return *currentIngredient;
+					return currentIngredient;
 				}
-				if (currentIngredient->isIngredientRef)
+				if (currentIngredient.isIngredientRef)
 					ERR("Duplicate asterix", ctoken); // should be a warning
-				currentIngredient->isIngredientRef = true;
+				currentIngredient.isIngredientRef = true;
 			}
 			if (ctoken.type == ETT_QUESTION_MARK)
 			{
 				if (!canHaveQmark)
 				{
 					ERR("A question mark is not valid in the given context", ctoken);
-					return *currentIngredient;
+					return currentIngredient;
 				}
-				else if (currentIngredient->isOptional)
+				else if (currentIngredient.isOptional)
 				{
 					ERR("Duplicate question mark", ctoken); // should be a warning
 				}
-				currentIngredient->isOptional = true;
+				currentIngredient.isOptional = true;
 			}
 			ADV_NON_BLANK(1);
 		}
 		ingredientAmount = ReadAmount(arg);
 
-		currentIngredient->amount = ingredientAmount;
-		return *currentIngredient;
+		currentIngredient.amount = ingredientAmount;
+		ingredient dummy = currentIngredient;
+		return currentIngredient;
 	}
 
 	amount Parser::ReadAmount(ingredient_arg arg)
