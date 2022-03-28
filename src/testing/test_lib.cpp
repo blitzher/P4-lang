@@ -154,6 +154,22 @@ namespace test_lib
 			}
 	}
 
+void expect_equal_d(const double expected, const double actual)
+	{
+		CHECK_TESTS_NON_EMPTY()
+
+			if (expected == actual)
+			{
+				accept();
+			}
+			else
+			{
+				char* err_message = (char*)malloc(100);
+				sprintf(err_message, "\nExpected: %-5lf\nActual: %-5lf", expected, actual);
+				deny(err_message);
+			}
+	}
+
 	/* Print the results of the tests */
 	void print_recap()
 	{

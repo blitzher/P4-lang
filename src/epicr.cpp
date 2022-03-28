@@ -86,8 +86,8 @@ namespace epicr
 
 	epicr::recipe parse_recipe(std::string filename)
 	{
-		std::ifstream pasta = epicr::open_file(filename);
-		epicr::Lexer lexer(pasta);
+		std::ifstream input_filestream = epicr::open_file(filename);
+		epicr::Lexer lexer(input_filestream);
 		epicr::Parser parser(&lexer);
 		epicr::recipe rcp = parser.Parse();
 

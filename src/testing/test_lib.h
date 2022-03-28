@@ -38,6 +38,7 @@ namespace test_lib
 	/* Helper functions for asserting values */
 	void expect_equal_s(const std::string actual, const std::string expected);
 	void expect_equal_i(const int actual, const int expected);
+	void expect_equal_d(const double actual, const double expected);
 
 	/* Final call in main, after tests have been run */
 	void print_recap();

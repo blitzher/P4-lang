@@ -97,7 +97,8 @@
     "__threading_support": "cpp",
     "__tuple": "cpp",
     "complex": "cpp",
-    "mutex": "cpp"
+    "mutex": "cpp",
+    "codecvt": "cpp"
   },
   "editor.tabSize": 4,
 }
