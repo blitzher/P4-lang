@@ -45,7 +45,6 @@ std::vector<std::string> optional_fields = {
 	"tags",
 	"time",
 };
-
 namespace epicr
 {
 
@@ -58,11 +57,11 @@ namespace epicr
 	 */
 
 #pragma region Parser implementation
+
 	Parser::Parser(Lexer *lexer_r)
 	{
 		lexer = lexer_r;
 	}
-
 	recipe Parser::Parse()
 	{
 		error = 0;
@@ -113,7 +112,7 @@ namespace epicr
 		}
 		ParseInstructions(rcp);
 
-			return *rcp;
+		return *rcp;
 	}
 
 	void Parser::ParseTitle(recipe *rcp)

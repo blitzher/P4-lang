@@ -42,6 +42,15 @@ namespace epicr
     typedef unsigned int uint;
 #pragma region Recipe Data
 
+    typedef struct cmd_args
+    {
+        string input_filepath;
+        unit_system choosen_system;
+        html_style choosen_style;
+        string output_filepath;
+        uint desired_amount;
+    } cmd_args;
+
     typedef struct amount_s
     {
         double amount;
@@ -129,15 +138,15 @@ namespace epicr
     class Lexer
     {
     private:
-        std::istream& istream;
+        std::istream &istream;
         uint token_count;
         uint line_num;
         bool ready;
 
     public:
         Lexer();
-        Lexer(std::ifstream& file);
-        Lexer(std::istream& file);
+        Lexer(std::ifstream &file);
+        Lexer(std::istream &file);
 
         /* Return whether or not the Lexer is ready to yield tokens */
         bool DEBUG_MODE;
@@ -163,22 +172,20 @@ namespace epicr
     class Parser
     {
     private:
-
-        Lexer* lexer;
-        void ParseTitle(recipe*);
-        void ParseDescription(recipe*);
-        void ParseAmount(recipe*);
-        void ParseNutrients(recipe*);
-        void ParseIngredients(recipe*);
-        void ParseKitchenware(recipe*);
-        void ParseTags(recipe*);
-        void ParseTime(recipe*);
-        void ParseInstructions(recipe*);
-        void ParseInstructionHeaderWith(instruction* singleInstruction);
-        void ParseInstructionHeaderUsing(instruction* singleInstruction);
-        void ParseInstructionBody(instruction* currentInstruction);
-        void ParseInstructionYield(instruction* singleInstruction);
-
+        Lexer *lexer;
+        void ParseTitle(recipe *);
+        void ParseDescription(recipe *);
+        void ParseAmount(recipe *);
+        void ParseNutrients(recipe *);
+        void ParseIngredients(recipe *);
+        void ParseKitchenware(recipe *);
+        void ParseTags(recipe *);
+        void ParseTime(recipe *);
+        void ParseInstructions(recipe *);
+        void ParseInstructionHeaderWith(instruction *singleInstruction);
+        void ParseInstructionHeaderUsing(instruction *singleInstruction);
+        void ParseInstructionBody(instruction *currentInstruction);
+        void ParseInstructionYield(instruction *singleInstruction);
         /* Read an ingredient from the current position */
         ingredient ReadIngredient(ingredient_arg);
         /* Read an amount from the current position */
@@ -191,10 +198,11 @@ namespace epicr
     public:
         bool DEBUG_MODE;
         bool error;
+        epicr::cmd_args clargs;
         std::string error_message;
         epicr_token error_token;
         recipe Parse();
-        Parser(Lexer* lexer_r);
+        Parser(Lexer *lexer_r);
         ~Parser();
     };
 

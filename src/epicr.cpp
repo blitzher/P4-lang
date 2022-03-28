@@ -96,15 +96,6 @@ namespace epicr
 		html_style_fancy
 	};
 
-	struct cmd_args
-	{
-		string input_filepath;
-		unit_system choosen_system;
-		html_style choosen_style;
-		string output_filepath;
-		uint desired_amount;
-	};
-
 	unit_system parse_unit_system(char *argv)
 	{
 		unit_system choosen_system;
@@ -181,8 +172,8 @@ namespace epicr
 		std::ifstream pasta = epicr::open_file(clargs.input_filepath);
 		epicr::Lexer lexer(pasta);
 		epicr::Parser parser(&lexer);
+		parser.clargs = clargs;
 		epicr::recipe rcp = parser.Parse();
-
 		return rcp;
 	}
 
