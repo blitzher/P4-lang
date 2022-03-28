@@ -1,6 +1,5 @@
 #include "./test_lib.h"
 
-
 void parsed_title()
 {
 	test_lib::REGISTER;
@@ -9,23 +8,25 @@ void parsed_title()
 	test_lib::expect_equal_s(rcp.title, "Pasta\n");
 }
 
-void parsed_amount(){
+void parsed_amount()
+{
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
-	printf("rcp expected: %i, %s \n", rcp.amount.count, rcp.amount.descriptor.c_str());
 	test_lib::expect_equal_i(rcp.amount.count, 4);
 	test_lib::expect_equal_s(rcp.amount.descriptor, "people\n");
 }
 
-void parsed_cook_time(){
+void parsed_cook_time()
+{
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
-	test_lib::expect_equal_s(rcp.time,"50 min\n");
+	test_lib::expect_equal_s(rcp.time, "50 min\n");
 }
 
-void parsed_tags(){
+void parsed_tags()
+{
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
@@ -33,28 +34,29 @@ void parsed_tags(){
 	test_lib::expect_equal_s(rcp.tags[1], "easy to make");
 }
 
-void parsed_kitchenware(){
+void parsed_kitchenware()
+{
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
 	test_lib::expect_equal_s(rcp.kitchenware[0], "Pasta");
 	test_lib::expect_equal_s(rcp.kitchenware[1], "roller");
-
 }
 
-void parsed_ingredients(){
+void parsed_ingredients()
+{
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
 
-	if (rcp.ingredients.size() < 5) {
-		char* m = (char*)malloc(100);
-		sprintf(m, "Not all ingredients were parsed properly, found %zu ingredients",rcp.ingredients.size());
+	if (rcp.ingredients.size() < 5)
+	{
+		char *m = (char *)malloc(100);
+		sprintf(m, "Not all ingredients were parsed properly, found %zu ingredients", rcp.ingredients.size());
 		test_lib::deny(m);
-		return ;
+		return;
 	}
-	test_lib::expect_equal_s(rcp.ingredients[0].name, "wheatflour");
-	test_lib::expect_equal_d(rcp.ingredients[0].amount.amount, 300);
+
 	test_lib::expect_equal_s(rcp.ingredients[3].name, "water");
 	if (!rcp.ingredients[3].isOptional)
 	{
@@ -63,7 +65,7 @@ void parsed_ingredients(){
 	if (!rcp.ingredients[3].amount.isUncountable)
 	{
 		test_lib::deny("Expected ingredient water to be uncountable");
-	}	
+	}
 }
 
 void parsed_instruction_yield()

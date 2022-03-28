@@ -96,19 +96,15 @@ namespace epicr
 				ParseTime(rcp);
 			else
 			{
-
 				ADV(1);
 			}
 		}
-		// ParseIngredients(rcp);
-		// for testing - until we get out of the infinite loop in reading ingredient:
-		while (ctoken.word != "instructions" && ctoken.type != ETT_EOF)
+
+		ParseIngredients(rcp);
+		// for testing - until we get out of the infinite loop in reading ingredient:}
+		if (to_lower(ctoken.word) != "procedure")
 		{
-			ADV_NON_BLANK(1)
-		}
-		if (to_lower(ctoken.word) != "instructions")
-		{
-			ERR("expected instructions", ctoken);
+			ERR("expected procedure", ctoken);
 			return *rcp;
 		}
 		ParseInstructions(rcp);
@@ -262,7 +258,7 @@ namespace epicr
 			ADV_NON_BLANK(1);
 			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK);
 			rcp->ingredients.push_back(ingr);
-		} while (ctoken.type != ETT_COMMA);
+		} while (ctoken.type == ETT_COMMA);
 	}
 
 	void Parser::ParseInstructions(recipe *rcp)
@@ -399,13 +395,14 @@ namespace epicr
 		bool canHaveAsterix = (arg & HAS_ASTERIX) >> 1;
 		bool canHaveQmark = (arg & HAS_QMARK) >> 2;
 
-		ingredient currentIngredient;
+		ingredient *currentIngredient = (ingredient *)calloc(1, sizeof(ingredient));
+
 		amount ingredientAmount;
 		if (ctoken.type != ETT_WORD)
 		{
 			ERR("Expected ingredient name", ctoken);
 		}
-		currentIngredient.name = ReadWords();
+		currentIngredient->name = ReadWords();
 
 		while (ctoken.type == ETT_ASTERIX || ctoken.type == ETT_QUESTION_MARK)
 		{
@@ -414,31 +411,31 @@ namespace epicr
 				if (!canHaveAsterix)
 				{
 					ERR("An asterix is not valid in the given context", ctoken);
-					return currentIngredient;
+					return *currentIngredient;
 				}
-				if (currentIngredient.isIngredientRef)
+				if (currentIngredient->isIngredientRef)
 					ERR("Duplicate asterix", ctoken); // should be a warning
-				currentIngredient.isIngredientRef = true;
+				currentIngredient->isIngredientRef = true;
 			}
 			if (ctoken.type == ETT_QUESTION_MARK)
 			{
 				if (!canHaveQmark)
 				{
 					ERR("A question mark is not valid in the given context", ctoken);
-					return currentIngredient;
+					return *currentIngredient;
 				}
-				if (currentIngredient.isOptional)
+				else if (currentIngredient->isOptional)
 				{
 					ERR("Duplicate question mark", ctoken); // should be a warning
 				}
-				currentIngredient.isOptional = true;
+				currentIngredient->isOptional = true;
 			}
 			ADV_NON_BLANK(1);
 		}
 		ingredientAmount = ReadAmount(arg);
 
-		currentIngredient.amount = ingredientAmount;
-		return currentIngredient;
+		currentIngredient->amount = ingredientAmount;
+		return *currentIngredient;
 	}
 
 	amount Parser::ReadAmount(ingredient_arg arg)
