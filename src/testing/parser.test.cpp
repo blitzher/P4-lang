@@ -13,7 +13,6 @@ void parsed_amount(){
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
-	printf("rcp expected: %i, %s \n", rcp.amount.count, rcp.amount.descriptor.c_str());
 	test_lib::expect_equal_i(rcp.amount.count, 4);
 	test_lib::expect_equal_s(rcp.amount.descriptor, "people\n");
 }
