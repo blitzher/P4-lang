@@ -13,7 +13,7 @@ void basic_test()
 
 	std::istringstream test_string("hello!");
 	epicr::Lexer lexer(test_string);
-	epicr::epicr_token tokens[]{ lexer.next_token(), lexer.next_token() };
+	epicr::epicr_token tokens[]{lexer.next_token(), lexer.next_token()};
 	expect_token_type(tokens[0], epicr::ETT_WORD);
 	test_lib::expect_equal_s("hello!", tokens[0].word);
 	expect_token_type(tokens[1], epicr::ETT_EOF);
@@ -39,6 +39,18 @@ void sentence_test()
 	expect_token_type(tokens[10], epicr::ETT_BLANK);
 	test_lib::expect_equal_s("sentence!", tokens[11].word);
 	expect_token_type(tokens[12], epicr::ETT_EOF);
+}
+
+void dash_word_test()
+{
+	test_lib::REGISTER;
+
+	/* should split them up into 'hello' and a bunch of single length tokens */
+	std::istringstream test_string("hello-there");
+	epicr::Lexer lexer(test_string);
+	epicr::epicr_token tok = lexer.next_token();
+	expect_token_type(tok, epicr::ETT_WORD);
+	test_lib::expect_equal_s(tok.word, "hello-there");
 }
 
 void special_characters()
@@ -79,6 +91,7 @@ void blank_runs()
 int main(void)
 {
 	basic_test();
+	dash_word_test();
 	sentence_test();
 	special_characters();
 	blank_runs();

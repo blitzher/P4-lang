@@ -128,6 +128,9 @@ namespace epicr
 		/* Read all words and spaces in title */
 		while (utoken.type != ETT_COLON)
 		{
+			if (ctoken.type == ETT_COMMA)
+				ERR_VOID("Title cannot include a comma!", ctoken);
+
 			rcp->title += ctoken.word;
 			ADV(1);
 		}
