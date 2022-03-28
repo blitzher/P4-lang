@@ -361,7 +361,7 @@ namespace epicr
 				break;
 			}
 
-			instruction_word iword;
+			instruction_word iword = instruction_word();
 
 			if (ctoken.type == ETT_BRACKET_OPEN)
 			{
