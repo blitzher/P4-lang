@@ -113,7 +113,7 @@ namespace epicr
 		}
 		ParseInstructions(rcp);
 
-			return *rcp;
+		return *rcp;
 	}
 
 	void Parser::ParseTitle(recipe *rcp)
@@ -228,12 +228,11 @@ namespace epicr
 
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			if (ctoken.type == ETT_COMMA)
-			{
+			std::string tag = ReadWords();
+			rcp->tags.push_back(tag);
+
+			if (utoken.type != ETT_COLON)
 				ADV_NON_BLANK(1);
-			}
-			rcp->tags.push_back(ctoken.word);
-			ADV_NON_BLANK(1);
 		}
 	}
 
