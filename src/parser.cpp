@@ -111,9 +111,9 @@ namespace epicr
 			ERR("expected instructions", ctoken);
 			return *rcp;
 		}
-		ParseInstructions(rcp);
-
-			return *rcp;
+		ParseInstructions(rcp);		
+		
+		return *rcp;
 	}
 
 	void Parser::ParseTitle(recipe *rcp)
@@ -359,8 +359,8 @@ namespace epicr
 				break;
 			}
 
-			instruction_word iword;
-
+			instruction_word iword = instruction_word();
+			
 			if (ctoken.type == ETT_BRACKET_OPEN)
 			{
 				amount amnt = ReadAmount(0);
