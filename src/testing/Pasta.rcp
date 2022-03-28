@@ -5,6 +5,8 @@ cook time: 50 min
 tags: pasta, easy to make
 
 kitchenware:
+    plastic wrap
+    rolling pin
 
 ingredients:
     wheatflour [300],
@@ -14,18 +16,25 @@ ingredients:
     extra wheatflour+
 
 instructions:
-    with(wheatflour, egg, salt, water, extra wheatflour):
+    with(wheatflour, egg, salt, water):
         Put the wheatflour on the table and make a cavity in the middle.
-        Crack the eggs in the cavity, and add salt.
+        Crack the [3] eggs in the cavity, and add salt.
         Start mixing the eggs into the wheatflour.
         If the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.
         Knead the dough thoroughly.
+    
+    using(plastic wrap):
         After kneading, let the dough rest in plastic wrap for 30 minutes.
-        Add wheatflour to the table, and begin rolling out the dough thinly using a kitchenroller.
+    
+        yield: 
+            dough
+                
+    with(dough,extra wheatflour) using(kitchenroller):
+        Add wheatflour to the table, and begin rolling out the dough thinly using a rolling pin.
         Start from the middle and work towards the edges.
         When the dough is the desired thickness, cut the dough into thin strips.
         Dust the thin strips with wheatflour, and roll the strips into a nest.
 
         yield:
             Pasta
-    
+            
