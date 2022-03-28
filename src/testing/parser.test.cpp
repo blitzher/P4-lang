@@ -58,6 +58,20 @@ void parsed_instruction_kitchenware_name()
 	}
 }
 
+void parsed_instruction_body_amounts_have_is_amount_set_to_true()
+{
+	test_lib::REGISTER;
+	auto rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	test_lib::expect_equal_i(1,rcp.instructions[0].body[4].is_amount); //should be true - ie 1
+}
+
+void parsed_instruction_body_non_amounts_have_is_amount_set_to_false()
+{
+	test_lib::REGISTER;
+	auto rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	test_lib::expect_equal_i(0,rcp.instructions[0].body[0].is_amount); //should be false - ie 0	
+}
+
 void parsed_instruction_body_text_is_parsed_correctly()
 {
 	test_lib::REGISTER;
@@ -89,6 +103,7 @@ void parsed_instruction_body_text_is_parsed_correctly()
 	works now, but the 0's after the decimal-seperator should be omitted*/
 }
 
+//is_amount både true og false
 
 void parsed_instruction_yield()
 {
@@ -105,6 +120,8 @@ int main(void)
 	parsed_instruction_ingredients_name();
 	parsed_instruction_has_correct_amount_of_kitchenware();
 	parsed_instruction_kitchenware_name();
+	parsed_instruction_body_amounts_have_is_amount_set_to_true();
+	parsed_instruction_body_non_amounts_have_is_amount_set_to_false();
 	parsed_instruction_body_text_is_parsed_correctly();
 	parsed_instruction_yield();
 	test_lib::print_recap();
