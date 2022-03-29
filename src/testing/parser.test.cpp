@@ -103,7 +103,6 @@ void parsed_instruction_body_text_is_parsed_correctly()
 	works now, but the 0's after the decimal-seperator should be omitted*/
 }
 
-//is_amount både true og false
 
 void parsed_instruction_yield()
 {
