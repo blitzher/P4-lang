@@ -147,7 +147,7 @@ namespace epicr
 		/*Read the first word and store in amount.count as a number is expected as the first word otherwise throw an error */
 		if (ctoken.type != ETT_NUMBER || utoken.type == ETT_EOF)
 		{
-			ERR_VOID("No correct desciption for amount has been found!", ctoken);
+			ERR_VOID("No correct description for amount has been found!", ctoken);
 		}
 		rcp->amount.count += stoi(ctoken.word);
 		//
@@ -166,8 +166,18 @@ namespace epicr
 		/* Read all words and spaces in amount */
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			rcp->amount.descriptor += ctoken.word;
-			ADV(1);
+			original_amount += ctoken.word;
+
+			if (std::stoi(original_amount) != clargs.desired_amount)
+			{
+				rcp->amount.descriptor += std::to_string(clargs.desired_amount);
+				ADV(1);
+			}
+			else
+			{
+				rcp->amount.descriptor += ctoken.word;
+				ADV(1);
+			}
 		}
 	}
 

@@ -198,6 +198,7 @@ namespace epicr
     public:
         bool DEBUG_MODE;
         bool error;
+        string original_amount;
         epicr::cmd_args clargs;
         std::string error_message;
         epicr_token error_token;
