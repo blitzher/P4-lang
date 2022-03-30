@@ -94,6 +94,18 @@ void parsed_instruction_body()
 	/* TODO: Take stance on how to deal with instructions words that are amounts */
 }
 
+void parse_fields_in_random_order()
+{
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/testing/PastaRandomOrder.rcp");
+
+	test_lib::expect_equal_s(rcp.title, "Pasta\n");
+	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].name, "wheatflour");
+	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
+	test_lib::expect_equal_i(rcp.ingredients[0].amount.amount, 300);
+}
+
 int main(void)
 {
 	parsed_title();
@@ -105,6 +117,7 @@ int main(void)
 	parsed_instruction_yield();
 	parsed_description();
 	parsed_instruction_body();
+	parse_fields_in_random_order();
 	test_lib::print_recap();
 	return test_lib::was_success();
 }

@@ -71,18 +71,17 @@ namespace epicr
 		ctoken = lexer->next_non_blank_token();
 		utoken = lexer->peek_non_blank_token();
 
-		ParseTitle(rcp);
-		if (error)
-			return *rcp;
 		/* Parse all optional fields */
-		while (to_lower(ctoken.word) != "ingredients" && ctoken.type != ETT_EOF)
+		while (ctoken.type != ETT_EOF)
 		{
 			/* If an error occured during parsing,
 			 * return what was parsed so far */
 			if (error)
 				return *rcp;
 			/* TODO: refactor x */
-			if (to_lower(ctoken.word) == "description")
+			if (to_lower(ctoken.word) == "title")
+				ParseTitle(rcp);
+			else if (to_lower(ctoken.word) == "description")
 				ParseDescription(rcp);
 			else if (to_lower(ctoken.word) == "amount")
 				ParseAmount(rcp);
@@ -94,20 +93,15 @@ namespace epicr
 				ParseTags(rcp);
 			else if (to_lower(ctoken.word) == "cook-time")
 				ParseTime(rcp);
+			else if (to_lower(ctoken.word) == "ingredients")
+				ParseIngredients(rcp);
+			else if (to_lower(ctoken.word) == "procedure")
+				ParseInstructions(rcp);
 			else
 			{
 				ADV(1);
 			}
 		}
-
-		ParseIngredients(rcp);
-		// for testing - until we get out of the infinite loop in reading ingredient:}
-		if (to_lower(ctoken.word) != "procedure")
-		{
-			ERR("expected procedure", ctoken);
-			return *rcp;
-		}
-		ParseInstructions(rcp);
 
 		return *rcp;
 	}
@@ -265,12 +259,8 @@ namespace epicr
 	{
 		ADV_NON_BLANK(2);
 		std::vector<instruction> instructions;
-		while (utoken.type != ETT_EOF)
+		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
 		{
-			if (to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using")
-			{
-				ERR_VOID("expected instruction header, either 'with' or 'using'", ctoken);
-			}
 			instruction singleInstruction;
 			if (to_lower(ctoken.word) == "with")
 			{
@@ -344,7 +334,7 @@ namespace epicr
 	{
 		std::vector<instruction_word> Body;
 
-		while (ctoken.type != ETT_EOF)
+		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
 		{
 			// has yield or update
 			if (ctoken.word == "yield" && utoken.type == ETT_COLON)
@@ -377,17 +367,13 @@ namespace epicr
 
 	void Parser::ParseInstructionYield(instruction *singleInstruction)
 	{
-		while (to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using" && ctoken.type != ETT_EOF)
+		do
 		{
 			ingredient currentYield;
-			if (ctoken.type != ETT_WORD)
-				ERR_VOID("Expected an ingredient", ctoken);
 			currentYield = ReadIngredient(HAS_PLUS);
 			singleInstruction->yields.push_back(currentYield);
-
-			if (ctoken.type == ETT_COMMA)
-				ADV_NON_BLANK(1)
-		}
+			ADV_NON_BLANK(1);
+		} while (ctoken.type == ETT_COMMA);
 	}
 
 	ingredient Parser::ReadIngredient(ingredient_arg arg)
@@ -400,7 +386,7 @@ namespace epicr
 		currentIngredient.isIngredientRef = false;
 		currentIngredient.name = "";
 		currentIngredient.amount = {0, 0, "", "", 0};
-		
+
 		amount ingredientAmount;
 		if (ctoken.type != ETT_WORD)
 		{
