@@ -92,6 +92,12 @@ void parsed_instruction_body()
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
 	/* TODO: Take stance on how to deal with instructions words that are amounts */
+	auto body = rcp.instructions[0].body;
+	test_lib::expect_equal_s(body[0].spelling, "Put");
+	test_lib::expect_equal_s(body[1].spelling, " ");
+	test_lib::expect_equal_i(body[2].is_amount, true);
+	test_lib::expect_equal_i(body[2].value.amount, 400);
+	test_lib::expect_equal_s(body[2].value.unit, "g");
 }
 
 void parse_fields_in_random_order()

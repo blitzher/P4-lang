@@ -16,7 +16,7 @@ ingredients:
 
 procedure:
     with(wheatflour, egg, salt, water, extra wheatflour):
-        Put the wheatflour on the table and make a cavity in the middle.
+        Put [400g] the wheatflour on the table and make a cavity in the middle.
         Crack the eggs in the cavity, and add salt.
         Start mixing the eggs into the wheatflour.
         If the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.
