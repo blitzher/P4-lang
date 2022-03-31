@@ -101,7 +101,7 @@ namespace epicr
 				ParseTime(&rcp);
 			else if (to_lower(ctoken.word) == "ingredients")
 				ParseIngredients(&rcp);
-			else if (to_lower(ctoken.word) == "procedure")
+			else if (to_lower(ctoken.word) == "instructions")
 				ParseInstructions(&rcp);
 			else
 			{
