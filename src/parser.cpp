@@ -374,6 +374,8 @@ namespace epicr
 		{
 			if (ctoken.type == ETT_COMMA)
 				ADV_NON_BLANK(1);
+			if (ctoken.type == ETT_EOF)
+				break;
 			ingredient currentYield;
 			currentYield = ReadIngredient(HAS_PLUS);
 			singleInstruction->yields.push_back(currentYield);
