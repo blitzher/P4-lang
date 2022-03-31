@@ -1,23 +1,29 @@
 #include "./epicr.h"
 
 #pragma region Helper macros
-#define ERR(msg, token)                                \
-	{                                                  \
-		error = true;                                  \
-		error_message = msg;                           \
-		error_token = token;                           \
-		std::cout << "ERROR ON LINE " << __LINE__      \
-				  << " (" << __FILE__ << ":"           \
-				  << __FUNCTION__ << ")" << std::endl; \
-		std::cout << msg << std::endl;                 \
-		print_token(token);                            \
-		std::cout << std::endl;                        \
+
+#define ERR(msg, token)                                    \
+	{                                                      \
+		error = true;                                      \
+		error_message = msg;                               \
+		error_token = token;                               \
+		if (!silent)                                       \
+		{                                                  \
+			std::cout << "ERROR ON LINE " << __LINE__      \
+					  << " (" << __FILE__ << ":"           \
+					  << __FUNCTION__ << ")" << std::endl; \
+			std::cout << msg << std::endl;                 \
+			print_token(token);                            \
+			std::cout << std::endl;                        \
+		}                                                  \
 	}
+
 #define ERR_VOID(msg, token) \
 	{                        \
 		ERR(msg, token);     \
 		return;              \
 	}
+
 #define ADV_NON_BLANK(count)                        \
 	{                                               \
 		for (int __i = 0; __i < count; __i++)       \
@@ -67,7 +73,7 @@ namespace epicr
 	{
 		error = 0;
 		error_message = "No error";
-		recipe *rcp = new recipe;
+		recipe rcp = recipe();
 		ctoken = lexer->next_non_blank_token();
 		utoken = lexer->peek_non_blank_token();
 
@@ -77,33 +83,33 @@ namespace epicr
 			/* If an error occured during parsing,
 			 * return what was parsed so far */
 			if (error)
-				return *rcp;
+				return rcp;
 			/* TODO: refactor x */
 			if (to_lower(ctoken.word) == "title")
-				ParseTitle(rcp);
+				ParseTitle(&rcp);
 			else if (to_lower(ctoken.word) == "description")
-				ParseDescription(rcp);
+				ParseDescription(&rcp);
 			else if (to_lower(ctoken.word) == "amount")
-				ParseAmount(rcp);
+				ParseAmount(&rcp);
 			else if (to_lower(ctoken.word) == "nutrients")
-				ParseNutrients(rcp);
+				ParseNutrients(&rcp);
 			else if (to_lower(ctoken.word) == "kitchenware")
-				ParseKitchenware(rcp);
+				ParseKitchenware(&rcp);
 			else if (to_lower(ctoken.word) == "tags")
-				ParseTags(rcp);
+				ParseTags(&rcp);
 			else if (to_lower(ctoken.word) == "cook-time")
-				ParseTime(rcp);
+				ParseTime(&rcp);
 			else if (to_lower(ctoken.word) == "ingredients")
-				ParseIngredients(rcp);
+				ParseIngredients(&rcp);
 			else if (to_lower(ctoken.word) == "procedure")
-				ParseInstructions(rcp);
+				ParseInstructions(&rcp);
 			else
 			{
 				ADV(1);
 			}
 		}
 
-		return *rcp;
+		return rcp;
 	}
 
 	void Parser::ParseTitle(recipe *rcp)
@@ -308,17 +314,14 @@ namespace epicr
 	void Parser::ParseInstructionHeaderUsing(instruction *singleInstruction)
 	{
 		if (ctoken.type != ETT_PARENS_OPEN)
-		{
 			ERR_VOID("expected open bracket with 'using' ", ctoken);
-		}
 
 		while (ctoken.type != ETT_PARENS_CLOSE)
 		{
 			ADV_NON_BLANK(1);
 			if (ctoken.type != ETT_WORD)
-			{
 				ERR_VOID("expected a kitchenware", ctoken);
-			}
+
 			std::string currentKitchenware;
 			currentKitchenware = ReadWords();
 
@@ -504,6 +507,11 @@ namespace epicr
 			ADV_NON_BLANK(1);
 
 		return finalWord;
+	}
+
+	void Parser::silence(bool val)
+	{
+		silent = val;
 	}
 
 	Parser::~Parser()

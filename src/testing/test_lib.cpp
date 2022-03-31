@@ -141,14 +141,12 @@ namespace test_lib
 
 	/* Helper function for asserting equality of two integers,
 	 * generating an error message in case of inequality */
-	void expect_equal_i(const int expected, const int actual)
+	void expect_equal_i(const int actual, const int expected)
 	{
 		CHECK_TESTS_NON_EMPTY()
 
 		if (expected == actual)
-		{
 			accept();
-		}
 		else
 		{
 			char *err_message = (char *)malloc(100);
@@ -157,20 +155,40 @@ namespace test_lib
 		}
 	}
 
-	void expect_equal_d(const double expected, const double actual)
+	void expect_equal_d(const double actual, const double expected)
 	{
 		CHECK_TESTS_NON_EMPTY()
 
 		if (expected == actual)
-		{
 			accept();
-		}
 		else
 		{
 			char *err_message = (char *)malloc(100);
 			sprintf(err_message, "\nExpected: %-5lf\nActual: %-5lf", expected, actual);
 			deny(err_message);
 		}
+	}
+
+	void expect_equal_b(const bool actual, const bool expected)
+	{
+		CHECK_TESTS_NON_EMPTY();
+
+		if (expected == actual)
+			accept();
+		else
+		{
+			char *err_message = (char *)malloc(100);
+			sprintf(err_message, "\nExpected: %-5s\nActual: %-5s", expected ? "true" : "false", actual ? "true" : "false");
+			deny(err_message);
+		}
+	}
+
+	void expect_exception(epicr::parse_ret parse_ret, std::string err_message)
+	{
+		if (!parse_ret.has_err)
+			test_lib::deny("Parser did not throw an error");
+		else
+			test_lib::expect_equal_s(parse_ret.err, err_message);
 	}
 
 	/* Print the results of the tests */

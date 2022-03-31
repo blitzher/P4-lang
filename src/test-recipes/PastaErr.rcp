@@ -1,0 +1,6 @@
+ingredients:
+    wheatflour [300],
+    egg [3],
+    salt**,
+    water?+,
+    extra wheatflour+

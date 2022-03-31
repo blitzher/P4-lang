@@ -4,7 +4,7 @@ void parsed_title()
 {
 	test_lib::REGISTER;
 
-	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_s(rcp.title, "Pasta\n");
 }
 
@@ -12,7 +12,7 @@ void parsed_amount()
 {
 	test_lib::REGISTER;
 
-	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.amount.count, 4);
 	test_lib::expect_equal_s(rcp.amount.descriptor, "people\n");
 }
@@ -21,7 +21,7 @@ void parsed_cook_time()
 {
 	test_lib::REGISTER;
 
-	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_s(rcp.time, "50 min\n");
 }
 
@@ -29,7 +29,7 @@ void parsed_tags()
 {
 	test_lib::REGISTER;
 
-	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_s(rcp.tags[0], "pasta");
 	test_lib::expect_equal_s(rcp.tags[1], "easy to make");
 }
@@ -38,7 +38,7 @@ void parsed_kitchenware()
 {
 	test_lib::REGISTER;
 
-	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_s(rcp.kitchenware[0], "Pasta");
 	test_lib::expect_equal_s(rcp.kitchenware[1], "roller");
 }
@@ -47,7 +47,7 @@ void parsed_ingredients()
 {
 	test_lib::REGISTER;
 
-	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
 	if (rcp.ingredients.size() < 5)
 	{
@@ -71,18 +71,16 @@ void parsed_ingredients()
 void parsed_instruction_yield()
 {
 	test_lib::REGISTER;
-	epicr::recipe rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_s(rcp.instructions[0].yields[0].name, "Pasta");
 }
 
 void parsed_description()
 {
 	test_lib::REGISTER;
-	std::ifstream f = epicr::open_file("src/testing/Pasta.rcp");
+	std::ifstream f = epicr::open_file("src/test-recipes/Pasta.rcp");
 	epicr::Lexer l = epicr::Lexer(f);
-	l.DEBUG_MODE = true;
 	epicr::Parser p = epicr::Parser(&l);
-	p.DEBUG_MODE = true;
 	epicr::recipe rcp = p.Parse();
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
 }
@@ -90,7 +88,7 @@ void parsed_description()
 void parsed_instruction_body()
 {
 	test_lib::REGISTER;
-	auto rcp = epicr::parse_recipe("src/testing/Pasta.rcp");
+	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	/* TODO: Take stance on how to deal with instructions words that are amounts */
 	auto body = rcp.instructions[0].body;
 	test_lib::expect_equal_s(body[0].spelling, "Put");
@@ -104,7 +102,7 @@ void parse_fields_in_random_order()
 {
 	test_lib::REGISTER;
 
-	epicr::recipe rcp = epicr::parse_recipe("src/testing/PastaRandomOrder.rcp");
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/PastaRandomOrder.rcp").recipe;
 
 	test_lib::expect_equal_s(rcp.title, "Pasta\n");
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].name, "wheatflour");

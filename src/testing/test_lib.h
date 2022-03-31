@@ -39,6 +39,8 @@ namespace test_lib
 	void expect_equal_s(const std::string actual, const std::string expected);
 	void expect_equal_i(const int actual, const int expected);
 	void expect_equal_d(const double actual, const double expected);
+	void expect_equal_b(const bool actual, const bool expected);
+	void expect_exception(epicr::parse_ret parse_ret, std::string err_message);
 
 	/* Final call in main, after tests have been run */
 	void print_recap();
