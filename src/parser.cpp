@@ -372,10 +372,11 @@ namespace epicr
 	{
 		do
 		{
+			if (ctoken.type == ETT_COMMA)
+				ADV_NON_BLANK(1);
 			ingredient currentYield;
 			currentYield = ReadIngredient(HAS_PLUS);
 			singleInstruction->yields.push_back(currentYield);
-			ADV_NON_BLANK(1);
 		} while (ctoken.type == ETT_COMMA);
 	}
 
