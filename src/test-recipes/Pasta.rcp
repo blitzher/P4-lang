@@ -1,12 +1,13 @@
 title: Pasta
 description: Frisklavet pasta
 amount: 4 people
-cook time: 50 min
+cook-time: 50 min
 tags: pasta, easy to make
 
 kitchenware:
     plastic wrap,
     rolling pin
+    
 ingredients:
     wheatflour [300 g],
     egg [3],
@@ -15,8 +16,8 @@ ingredients:
     extra wheatflour+
 
 instructions:
-    with(wheatflour, egg, salt, water, extra wheatflour) using(plastic wrap, rolling pin):
-        Put the [300 g] wheatflour on the table and make a cavity in the middle.
+    with(wheatflour, egg, salt, water, extra wheatflour) using(plastic wrap,rolling pin):
+        Put the [300g] wheatflour on the table and make a cavity in the middle.
         Crack the [3] eggs in the cavity, and add salt.
         Start mixing the eggs into the wheatflour.
         If the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.

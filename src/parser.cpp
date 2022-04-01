@@ -1,23 +1,29 @@
 #include "./epicr.h"
 
 #pragma region Helper macros
-#define ERR(msg, token)                                \
-	{                                                  \
-		error = true;                                  \
-		error_message = msg;                           \
-		error_token = token;                           \
-		std::cout << "ERROR ON LINE " << __LINE__      \
-				  << " (" << __FILE__ << ":"           \
-				  << __FUNCTION__ << ")" << std::endl; \
-		std::cout << msg << std::endl;                 \
-		print_token(token);                            \
-		std::cout << std::endl;                        \
+
+#define ERR(msg, token)                                    \
+	{                                                      \
+		error = true;                                      \
+		error_message = msg;                               \
+		error_token = token;                               \
+		if (!silent)                                       \
+		{                                                  \
+			std::cout << "ERROR ON LINE " << __LINE__      \
+					  << " (" << __FILE__ << ":"           \
+					  << __FUNCTION__ << ")" << std::endl; \
+			std::cout << msg << std::endl;                 \
+			print_token(token);                            \
+			std::cout << std::endl;                        \
+		}                                                  \
 	}
+
 #define ERR_VOID(msg, token) \
 	{                        \
 		ERR(msg, token);     \
 		return;              \
 	}
+
 #define ADV_NON_BLANK(count)                        \
 	{                                               \
 		for (int __i = 0; __i < count; __i++)       \
@@ -67,53 +73,43 @@ namespace epicr
 	{
 		error = 0;
 		error_message = "No error";
-		recipe *rcp = new recipe;
+		recipe rcp = recipe();
 		ctoken = lexer->next_non_blank_token();
 		utoken = lexer->peek_non_blank_token();
 
-		ParseTitle(rcp);
-		if (error)
-			return *rcp;
 		/* Parse all optional fields */
-		while (to_lower(ctoken.word) != "ingredients" && ctoken.type != ETT_EOF)
+		while (ctoken.type != ETT_EOF)
 		{
 			/* If an error occured during parsing,
 			 * return what was parsed so far */
 			if (error)
-				return *rcp;
+				return rcp;
 			/* TODO: refactor x */
-			if (to_lower(ctoken.word) == "description")
-				ParseDescription(rcp);
+			if (to_lower(ctoken.word) == "title")
+				ParseTitle(&rcp);
+			else if (to_lower(ctoken.word) == "description")
+				ParseDescription(&rcp);
 			else if (to_lower(ctoken.word) == "amount")
-				ParseAmount(rcp);
+				ParseAmount(&rcp);
 			else if (to_lower(ctoken.word) == "nutrients")
-				ParseNutrients(rcp);
+				ParseNutrients(&rcp);
 			else if (to_lower(ctoken.word) == "kitchenware")
-				ParseKitchenware(rcp);
+				ParseKitchenware(&rcp);
 			else if (to_lower(ctoken.word) == "tags")
-				ParseTags(rcp);
+				ParseTags(&rcp);
 			else if (to_lower(ctoken.word) == "cook-time")
-				ParseTime(rcp);
+				ParseTime(&rcp);
+			else if (to_lower(ctoken.word) == "ingredients")
+				ParseIngredients(&rcp);
+			else if (to_lower(ctoken.word) == "instructions")
+				ParseInstructions(&rcp);
 			else
 			{
-
 				ADV(1);
 			}
 		}
-		// ParseIngredients(rcp);
-		// for testing - until we get out of the infinite loop in reading ingredient:
-		while (ctoken.word != "instructions" && ctoken.type != ETT_EOF)
-		{
-			ADV_NON_BLANK(1)
-		}
-		if (to_lower(ctoken.word) != "instructions")
-		{
-			ERR("expected instructions", ctoken);
-			return *rcp;
-		}
-		ParseInstructions(rcp);		
-		
-		return *rcp;
+
+		return rcp;
 	}
 
 	void Parser::ParseTitle(recipe *rcp)
@@ -128,6 +124,9 @@ namespace epicr
 		/* Read all words and spaces in title */
 		while (utoken.type != ETT_COLON)
 		{
+			if (ctoken.type == ETT_COMMA)
+				ERR_VOID("Title cannot include a comma!", ctoken);
+
 			rcp->title += ctoken.word;
 			ADV(1);
 		}
@@ -200,20 +199,13 @@ namespace epicr
 
 	void Parser::ParseKitchenware(recipe *rcp)
 	{
-
 		ADV_NON_BLANK(2);
-		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
+		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			if (ctoken.type == ETT_EOF)
-			{
-				ERR_VOID("@kitchenware, End of file reached:", ctoken);
-			}
-			else if (ctoken.type == ETT_COMMA)
-			{
+			std::string kitchenware = ReadWords();
+			rcp->kitchenware.push_back(kitchenware);
+			if (utoken.type != ETT_COLON)
 				ADV_NON_BLANK(1);
-			}
-			rcp->kitchenware.push_back(ctoken.word);
-			ADV_NON_BLANK(1);
 		}
 	}
 
@@ -228,12 +220,11 @@ namespace epicr
 
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			if (ctoken.type == ETT_COMMA)
-			{
+			std::string tag = ReadWords();
+			rcp->tags.push_back(tag);
+
+			if (utoken.type != ETT_COLON)
 				ADV_NON_BLANK(1);
-			}
-			rcp->tags.push_back(ctoken.word);
-			ADV_NON_BLANK(1);
 		}
 	}
 
@@ -260,19 +251,15 @@ namespace epicr
 			ADV_NON_BLANK(1);
 			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK);
 			rcp->ingredients.push_back(ingr);
-		} while (ctoken.type != ETT_COMMA);
+		} while (ctoken.type == ETT_COMMA);
 	}
 
 	void Parser::ParseInstructions(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
 		std::vector<instruction> instructions;
-		while (utoken.type != ETT_EOF)
+		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
 		{
-			if (to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using")
-			{
-				ERR_VOID("expected instruction header, either 'with' or 'using'", ctoken);
-			}
 			instruction singleInstruction;
 			if (to_lower(ctoken.word) == "with")
 			{
@@ -320,17 +307,14 @@ namespace epicr
 	void Parser::ParseInstructionHeaderUsing(instruction *singleInstruction)
 	{
 		if (ctoken.type != ETT_PARENS_OPEN)
-		{
 			ERR_VOID("expected open bracket with 'using' ", ctoken);
-		}
 
 		while (ctoken.type != ETT_PARENS_CLOSE)
 		{
 			ADV_NON_BLANK(1);
 			if (ctoken.type != ETT_WORD)
-			{
 				ERR_VOID("expected a kitchenware", ctoken);
-			}
+
 			std::string currentKitchenware;
 			currentKitchenware = ReadWords();
 
@@ -346,7 +330,7 @@ namespace epicr
 	{
 		std::vector<instruction_word> Body;
 
-		while (ctoken.type != ETT_EOF)
+		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
 		{
 			// has yield or update
 			if (ctoken.word == "yield" && utoken.type == ETT_COLON)
@@ -384,17 +368,16 @@ namespace epicr
 
 	void Parser::ParseInstructionYield(instruction *singleInstruction)
 	{
-		while (to_lower(ctoken.word) != "with" && to_lower(ctoken.word) != "using" && ctoken.type != ETT_EOF)
+		do
 		{
+			if (ctoken.type == ETT_COMMA)
+				ADV_NON_BLANK(1);
+			if (ctoken.type == ETT_EOF)
+				break;
 			ingredient currentYield;
-			if (ctoken.type != ETT_WORD)
-				ERR_VOID("Expected an ingredient", ctoken);
 			currentYield = ReadIngredient(HAS_PLUS);
 			singleInstruction->yields.push_back(currentYield);
-
-			if (ctoken.type == ETT_COMMA)
-				ADV_NON_BLANK(1)
-		}
+		} while (ctoken.type == ETT_COMMA);
 	}
 
 	ingredient Parser::ReadIngredient(ingredient_arg arg)
@@ -403,6 +386,11 @@ namespace epicr
 		bool canHaveQmark = (arg & HAS_QMARK) >> 2;
 
 		ingredient currentIngredient;
+		currentIngredient.isOptional = false;
+		currentIngredient.isIngredientRef = false;
+		currentIngredient.name = "";
+		currentIngredient.amount = {0, 0, "", "", 0};
+
 		amount ingredientAmount;
 		if (ctoken.type != ETT_WORD)
 		{
@@ -430,7 +418,7 @@ namespace epicr
 					ERR("A question mark is not valid in the given context", ctoken);
 					return currentIngredient;
 				}
-				if (currentIngredient.isOptional)
+				else if (currentIngredient.isOptional)
 				{
 					ERR("Duplicate question mark", ctoken); // should be a warning
 				}
@@ -441,6 +429,7 @@ namespace epicr
 		ingredientAmount = ReadAmount(arg);
 
 		currentIngredient.amount = ingredientAmount;
+		ingredient dummy = currentIngredient;
 		return currentIngredient;
 	}
 
@@ -519,6 +508,11 @@ namespace epicr
 			ADV_NON_BLANK(1);
 
 		return finalWord;
+	}
+
+	void Parser::silence(bool val)
+	{
+		silent = val;
 	}
 
 	Parser::~Parser()

@@ -4,10 +4,9 @@ using namespace std;
 
 namespace epicr
 {
-
 	ifstream open_file(string filename)
 	{
-		ifstream file{ filename, ios_base::binary };
+		ifstream file{filename, ios_base::binary};
 
 		if (!file.is_open())
 			cout << "File " << filename << " could not be opened!" << endl;
@@ -84,14 +83,25 @@ namespace epicr
 		return lowered;
 	}
 
-	epicr::recipe parse_recipe(std::string filename)
+	epicr::parse_ret parse_recipe(std::string filename)
 	{
-		std::ifstream pasta = epicr::open_file(filename);
-		epicr::Lexer lexer(pasta);
+		std::ifstream input_filestream = epicr::open_file(filename);
+		epicr::Lexer lexer(input_filestream);
 		epicr::Parser parser(&lexer);
 		epicr::recipe rcp = parser.Parse();
 
-		return rcp;
+		return {rcp, parser.error, parser.error_message};
+	}
+
+	epicr::parse_ret parse_recipe_silent(std::string filename)
+	{
+		std::ifstream input_filestream = epicr::open_file(filename);
+		epicr::Lexer lexer(input_filestream);
+		epicr::Parser parser(&lexer);
+		parser.silence(true);
+		epicr::recipe rcp = parser.Parse();
+
+		return {rcp, parser.error, parser.error_message};
 	}
 
 }
