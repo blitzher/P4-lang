@@ -2,6 +2,8 @@
 
 using namespace std;
 
+std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
+
 namespace epicr
 {
 	ifstream open_file(string filename)
@@ -85,23 +87,35 @@ namespace epicr
 
 	epicr::parse_ret parse_recipe(std::string filename)
 	{
+		if (cached_recipes.find(filename) != cached_recipes.end())
+			return cached_recipes[filename];
+
 		std::ifstream input_filestream = epicr::open_file(filename);
 		epicr::Lexer lexer(input_filestream);
 		epicr::Parser parser(&lexer);
 		epicr::recipe rcp = parser.Parse();
 
-		return {rcp, parser.error, parser.error_message};
+		epicr::parse_ret ret = {rcp, parser.error, parser.error_message};
+
+		cached_recipes[filename] = ret;
+
+		return ret;
 	}
 
 	epicr::parse_ret parse_recipe_silent(std::string filename)
 	{
+		if (cached_recipes.find(filename) != cached_recipes.end())
+			return cached_recipes[filename];
+
 		std::ifstream input_filestream = epicr::open_file(filename);
 		epicr::Lexer lexer(input_filestream);
 		epicr::Parser parser(&lexer);
 		parser.silence(true);
 		epicr::recipe rcp = parser.Parse();
 
-		return {rcp, parser.error, parser.error_message};
+		epicr::parse_ret ret = {rcp, parser.error, parser.error_message};
+
+		return ret;
 	}
 
 }
