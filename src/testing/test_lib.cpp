@@ -99,19 +99,19 @@ namespace test_lib
 
 		/* copy the rest of the line into string */
 		int temp = i;
-		while (eline_v.size() < 80 && eline_v[i] != '\n')
+		while (eline_v.size() < 200 && eline_v[i] != '\n')
 			eline_v.push_back(expected[i++]);
 		i = temp;
-		while (aline_v.size() < 80 && aline_v[i] != '\n')
+		while (aline_v.size() < 200 && aline_v[i] != '\n')
 			aline_v.push_back(actual[i++]);
 
 		/* copy line into strings */
 		std::string aline{aline_v.begin(), aline_v.end()};
 		std::string eline{eline_v.begin(), eline_v.end()};
 
-		char *exp_message = (char *)malloc(100);
-		char *act_message = (char *)malloc(100);
-		char *dif_message = (char *)malloc(100);
+		char* exp_message = (char*)malloc(300);
+		char* act_message = (char*)malloc(300);
+		char* dif_message = (char*)malloc(300);
 		sprintf(exp_message, "Expected: %3i %s", line_num, eline.c_str());
 		sprintf(act_message, "Actual  : %3i %s", line_num, aline.c_str());
 

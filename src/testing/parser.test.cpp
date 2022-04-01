@@ -39,8 +39,8 @@ void parsed_kitchenware()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.kitchenware[0], "Pasta");
-	test_lib::expect_equal_s(rcp.kitchenware[1], "roller");
+	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
+	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
 }
 
 void parsed_ingredients()
@@ -85,6 +85,89 @@ void parsed_description()
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
 }
 
+void parsed_instruction_has_correct_amount_of_ingredients()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients.size(), 5);
+}
+
+void parsed_instruction_ingredients_name()
+{
+	std::vector<std::string> ingredients = {"wheatflour", "egg", "salt", "water", "extra wheatflour"};
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	size_t ingredientSize = ingredients.size();
+	for (size_t i = 0; i < ingredientSize; i++)
+	{
+		test_lib::expect_equal_s(rcp.instructions[0].ingredients[i].name, ingredients[i]);	
+	}
+}
+void parsed_instruction_has_correct_amount_of_kitchenware()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[0].kitchenware.size(), 2);
+}
+
+void parsed_instruction_kitchenware_name()
+{
+	std::vector<std::string> kitchenware = {"plastic wrap","rolling pin"};
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	size_t kitchenwareSize = kitchenware.size();
+	for (size_t i = 0; i < kitchenwareSize; i++)
+	{
+		test_lib::expect_equal_s(rcp.instructions[0].kitchenware[i], kitchenware[i]);	
+	}
+}
+
+void parsed_instruction_body_amounts_have_is_amount_set_to_true()
+{
+	test_lib::REGISTER;
+	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(1,rcp.instructions[0].body[4].is_amount); //should be true - ie 1
+}
+
+void parsed_instruction_body_non_amounts_have_is_amount_set_to_false()
+{
+	test_lib::REGISTER;
+	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(0,rcp.instructions[0].body[0].is_amount); //should be false - ie 0	
+}
+
+void parsed_instruction_body_text_is_parsed_correctly()
+{
+	test_lib::REGISTER;
+	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	size_t actualInstructionBodySize = rcp.instructions[0].body.size();
+	std::string expectedInstructionBody = std::string("Put the 300.000000 g wheatflour on the table and make a cavity in the middle.\n")+
+										  std::string("Crack the 3.000000 eggs in the cavity, and add salt.\n")+
+										  std::string("Start mixing the eggs into the wheatflour.\n")+
+								 		  std::string("If the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.\n")+
+								 		  std::string("Knead the dough thoroughly.\n")+
+								 		  std::string("After kneading, let the dough rest in plastic wrap for 30 minutes.\n")+
+										  std::string("Add wheatflour to the table, and begin rolling out the dough thinly using a rolling pin.\n")+
+									 	  std::string("Start from the middle and work towards the edges.\n")+
+										  std::string("When the dough is the desired thickness, cut the dough into thin strips.\n")+
+										  std::string("Dust the thin strips with wheatflour, and roll the strips into a nest.\n");
+	std::string actualInstructionBody = "";
+	for (size_t i = 0; i < actualInstructionBodySize; i++)
+		{	
+			actualInstructionBody += rcp.instructions[0].body[i].spelling;
+			if (rcp.instructions[0].body[i].is_amount)
+			{
+				actualInstructionBody += std::to_string(rcp.instructions[0].body[i].value.amount) + " ";
+				if (rcp.instructions[0].body[i].value.unit != "")
+					actualInstructionBody += rcp.instructions[0].body[i].value.unit + " ";
+			}
+		}
+	test_lib::expect_equal_s(expectedInstructionBody,actualInstructionBody);
+	/* TODO: Take stance on how to deal with instructions words that are amounts 
+	works now, but the 0's after the decimal-seperator should be omitted*/
+}
+
+
 void parsed_instruction_body()
 {
 	test_lib::REGISTER;
@@ -93,9 +176,11 @@ void parsed_instruction_body()
 	auto body = rcp.instructions[0].body;
 	test_lib::expect_equal_s(body[0].spelling, "Put");
 	test_lib::expect_equal_s(body[1].spelling, " ");
-	test_lib::expect_equal_i(body[2].is_amount, true);
-	test_lib::expect_equal_i(body[2].value.amount, 400);
-	test_lib::expect_equal_s(body[2].value.unit, "g");
+	test_lib::expect_equal_s(body[2].spelling, "the");
+	test_lib::expect_equal_s(body[3].spelling, " ");
+	test_lib::expect_equal_i(body[4].is_amount, true);
+	test_lib::expect_equal_i(body[4].value.amount, 300);
+	test_lib::expect_equal_s(body[4].value.unit, "g");
 }
 
 void parse_fields_in_random_order()
@@ -113,6 +198,15 @@ void parse_fields_in_random_order()
 int main(void)
 {
 	parsed_title();
+	parsed_description();
+	parsed_instruction_has_correct_amount_of_ingredients();
+	parsed_instruction_ingredients_name();
+	parsed_instruction_has_correct_amount_of_kitchenware();
+	parsed_instruction_kitchenware_name();
+	parsed_instruction_body_amounts_have_is_amount_set_to_true();
+	parsed_instruction_body_non_amounts_have_is_amount_set_to_false();
+	parsed_instruction_body_text_is_parsed_correctly();
+	parsed_instruction_body();
 	parsed_amount();
 	parsed_cook_time();
 	parsed_tags();

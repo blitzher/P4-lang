@@ -199,20 +199,13 @@ namespace epicr
 
 	void Parser::ParseKitchenware(recipe *rcp)
 	{
-
 		ADV_NON_BLANK(2);
-		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
+		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			if (ctoken.type == ETT_EOF)
-			{
-				ERR_VOID("@kitchenware, End of file reached:", ctoken);
-			}
-			else if (ctoken.type == ETT_COMMA)
-			{
+			std::string kitchenware = ReadWords();
+			rcp->kitchenware.push_back(kitchenware);
+			if (utoken.type != ETT_COLON)
 				ADV_NON_BLANK(1);
-			}
-			rcp->kitchenware.push_back(ctoken.word);
-			ADV_NON_BLANK(1);
 		}
 	}
 
@@ -351,12 +344,17 @@ namespace epicr
 			}
 
 			instruction_word iword = instruction_word();
-
+			
 			if (ctoken.type == ETT_BRACKET_OPEN)
 			{
 				amount amnt = ReadAmount(0);
 				iword.is_amount = true;
 				iword.value = amnt;
+			}
+			else if (ctoken.type == ETT_NEWLINE)
+			{
+				iword.spelling = ctoken.word;
+				ADV_NON_BLANK(1);
 			}
 			else
 			{
