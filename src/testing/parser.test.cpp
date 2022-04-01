@@ -78,7 +78,7 @@ void parsed_ingredients()
 	}
 }
 
-void parsed_instrucion_has_correct_amount_of_instructions()
+void instrucions_has_correct_amount_of_instructions()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
@@ -92,12 +92,6 @@ void first_instruction_has_correct_amount_of_ingredients()
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients.size(), 4);
 }
 
-void second_instruction_has_no_ingredients()
-{
-	test_lib::REGISTER;
-	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.instructions[1].ingredients.size(), 0);
-}
 
 void first_instruction_has_correct_ingredients_name()
 {
@@ -111,6 +105,22 @@ void first_instruction_has_correct_ingredients_name()
 	}
 }
 
+
+void second_instruction_has_no_ingredients()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[1].ingredients.size(), 0);
+}
+
+void third_instruction_has_correct_ingredients_name()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].name, "dough");
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[1].name, "extra wheatflour");
+}
+
 void first_instruction_has_no_kitchenware()
 {
 	test_lib::REGISTER;
@@ -122,21 +132,14 @@ void second_instruction_has_correct_amount_of_kitchenware()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.instructions[0].kitchenware.size(), 1);
+	test_lib::expect_equal_i(rcp.instructions[1].kitchenware.size(), 1);
 }
 
 void second_instruction_has_correct_kitchenware_name()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.instructions[0].kitchenware[0], "plastic wrap");
-}
-void third_instruction_has_correct_ingredients_name()
-{
-	test_lib::REGISTER;
-	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].name, "dough");
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].name, "extra wheatflour");
+	test_lib::expect_equal_s(rcp.instructions[1].kitchenware[0], "plastic wrap");
 }
 
 void third_instruction_has_correct_kitchenware_name()
@@ -146,23 +149,21 @@ void third_instruction_has_correct_kitchenware_name()
 	test_lib::expect_equal_s(rcp.instructions[2].kitchenware[0], "kitchenroller");
 }
 
-void instruction_body_amounts_have_is_amount_set_to_true()
+void parsed_instruction_body()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(1,rcp.instructions[0].body[4].is_amount); //should be true - ie 1
+	/* TODO: Take stance on how to deal with instructions words that are amounts */
+	auto body = rcp.instructions[0].body;
+	test_lib::expect_equal_s(body[0].spelling, "Put");
+	test_lib::expect_equal_s(body[1].spelling, " ");
+	test_lib::expect_equal_s(body[2].spelling, "the");
+	test_lib::expect_equal_s(body[3].spelling, " ");
+	test_lib::expect_equal_i(body[4].is_amount, true);
+	test_lib::expect_equal_i(body[4].value.amount, 300);
+	test_lib::expect_equal_s(body[4].value.unit, "g");
 }
-
-void parsed_instruction_body_non_amounts_have_is_amount_set_to_false()
-{
-	test_lib::REGISTER;
-	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(0,rcp.instructions[0].body[0].is_amount); //should be false - ie 0	
-	test_lib::expect_equal_i(0,rcp.instructions[0].body[11].is_amount); //should be false - ie 0
-	test_lib::expect_equal_i(0,rcp.instructions[1].body[0].is_amount); //should be false - ie 0	
-}
-
-void parsed_instruction_body_text_is_parsed_correctly()
+void first_instruction_body_text_is_parsed_correctly()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
@@ -171,12 +172,7 @@ void parsed_instruction_body_text_is_parsed_correctly()
 										  std::string("Crack the 3.000000 eggs in the cavity, and add salt.\n")+
 										  std::string("Start mixing the eggs into the wheatflour.\n")+
 								 		  std::string("If the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.\n")+
-								 		  std::string("Knead the dough thoroughly.\n")+
-								 		  std::string("After kneading, let the dough rest in plastic wrap for 30 minutes.\n")+
-										  std::string("Add wheatflour to the table, and begin rolling out the dough thinly using a rolling pin.\n")+
-									 	  std::string("Start from the middle and work towards the edges.\n")+
-										  std::string("When the dough is the desired thickness, cut the dough into thin strips.\n")+
-										  std::string("Dust the thin strips with wheatflour, and roll the strips into a nest.\n");
+								 		  std::string("Knead the dough thoroughly.\n");
 	std::string actualInstructionBody = "";
 	for (size_t i = 0; i < actualInstructionBodySize; i++)
 		{	
@@ -193,22 +189,21 @@ void parsed_instruction_body_text_is_parsed_correctly()
 	works now, but the 0's after the decimal-seperator should be omitted*/
 }
 
-
-void parsed_instruction_body()
+void instruction_body_amounts_have_is_amount_set_to_true()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	/* TODO: Take stance on how to deal with instructions words that are amounts */
-	auto body = rcp.instructions[0].body;
-	test_lib::expect_equal_s(body[0].spelling, "Put");
-	test_lib::expect_equal_s(body[1].spelling, " ");
-	test_lib::expect_equal_s(body[2].spelling, "the");
-	test_lib::expect_equal_s(body[3].spelling, " ");
-	test_lib::expect_equal_i(body[4].is_amount, true);
-	test_lib::expect_equal_i(body[4].value.amount, 300);
-	test_lib::expect_equal_s(body[4].value.unit, "g");
+	test_lib::expect_equal_i(1,rcp.instructions[0].body[4].is_amount); //should be true - ie 1
 }
 
+void instruction_body_non_amounts_have_is_amount_set_to_false()
+{
+	test_lib::REGISTER;
+	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(0,rcp.instructions[0].body[0].is_amount); //should be false - ie 0	
+	test_lib::expect_equal_i(0,rcp.instructions[0].body[11].is_amount); //should be false - ie 0
+	test_lib::expect_equal_i(0,rcp.instructions[1].body[0].is_amount); //should be false - ie 0	
+}
 
 void first_instruction_yields_zero_ingredients()
 {
@@ -221,7 +216,7 @@ void second_instruction_yields_an_ingredient()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.instructions[1].yields[0].name, "Pasta");
+	test_lib::expect_equal_s(rcp.instructions[1].yields[0].name, "dough");
 }
 
 
@@ -239,30 +234,29 @@ void parse_fields_in_random_order()
 
 int main(void)
 {
-	// parsed_title();
-	// parsed_description();
-	// parsed_amount();
-	// parsed_cook_time();
-	// parsed_tags();
-	// parsed_kitchenware();
-	// parsed_ingredients();
-	// first_instruction_has_correct_amount_of_ingredients();
-	// second_instruction_has_no_ingredients();
-	// first_instruction_has_correct_ingredients_name();
-	// first_instruction_has_no_kitchenware();
+	parsed_title();
+	parsed_description();
+	parsed_amount();
+	parsed_cook_time();
+	parsed_tags();
+	parsed_kitchenware();
+	parsed_ingredients();
+	instrucions_has_correct_amount_of_instructions();
+	first_instruction_has_correct_amount_of_ingredients();
+	first_instruction_has_correct_ingredients_name();
+	second_instruction_has_no_ingredients();
+	third_instruction_has_correct_ingredients_name();
+	first_instruction_has_no_kitchenware();
 	second_instruction_has_correct_amount_of_kitchenware();
 	second_instruction_has_correct_kitchenware_name();
-	// instruction_body_amounts_have_is_amount_set_to_true();
-	// first_instruction_yields_zero_ingredients();
-	// second_instruction_yields_an_ingredient();
-	// third_instruction_has_correct_ingredients_name();
-	// third_instruction_has_correct_kitchenware_name();
-	// parsed_instruction_body_non_amounts_have_is_amount_set_to_false();
-	// parsed_instruction_body_text_is_parsed_correctly();
-	// parsed_instruction_body();
-	// parsed_instruction_yield();
-	// parsed_instruction_body();
-	// parse_fields_in_random_order();
+	third_instruction_has_correct_kitchenware_name();
+	parsed_instruction_body();
+	first_instruction_body_text_is_parsed_correctly();
+	instruction_body_amounts_have_is_amount_set_to_true();
+	instruction_body_non_amounts_have_is_amount_set_to_false();
+	first_instruction_yields_zero_ingredients();
+	second_instruction_yields_an_ingredient();
+	parse_fields_in_random_order();
 	test_lib::print_recap();
 	return test_lib::was_success();
 }
