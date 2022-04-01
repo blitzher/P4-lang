@@ -376,7 +376,6 @@ namespace epicr
 				break;
 			ingredient currentYield;
 			currentYield = ReadIngredient(HAS_PLUS);
-			currentYield.name = strip_spaces_right(currentYield.name);
 			singleInstruction->yields.push_back(currentYield);
 		} while (ctoken.type == ETT_COMMA);
 	}
@@ -386,13 +385,13 @@ namespace epicr
 		bool canHaveAsterix = (arg & HAS_ASTERIX) >> 1;
 		bool canHaveQmark = (arg & HAS_QMARK) >> 2;
 
-		ingredient currentIngredient;
+		ingredient currentIngredient = ingredient();
 		currentIngredient.isOptional = false;
 		currentIngredient.isIngredientRef = false;
 		currentIngredient.name = "";
 		currentIngredient.amount = {0, 0, "", "", 0};
 
-		amount ingredientAmount;
+		amount ingredientAmount = amount();
 		if (ctoken.type != ETT_WORD)
 		{
 			ERR("Expected ingredient name", ctoken);
@@ -507,7 +506,7 @@ namespace epicr
 
 		if (ctoken.type == ETT_NEWLINE)
 			ADV_NON_BLANK(1);
-
+		finalWord = strip_spaces_right(finalWord);
 		return finalWord;
 	}
 
