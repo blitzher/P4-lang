@@ -260,3 +260,5 @@ int main(void)
 	test_lib::print_recap();
 	return test_lib::was_success();
 }
+
+//mangler test for [amounts i with]

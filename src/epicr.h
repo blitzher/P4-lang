@@ -183,6 +183,7 @@ namespace epicr
     void decompress(std::string filepath);
 
     std::string to_lower(std::string);
+    std::string strip_spaces_right(std::string);
 
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);

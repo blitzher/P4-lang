@@ -27,7 +27,7 @@ instructions:
         After kneading, let the dough rest in plastic wrap for 30 minutes.
         yield: 
             dough
-                
+    
     with(dough,extra wheatflour) using(kitchenroller):
         Add wheatflour to the table, and begin rolling out the dough thinly using a rolling pin.
         Start from the middle and work towards the edges.

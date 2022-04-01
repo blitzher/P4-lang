@@ -376,6 +376,7 @@ namespace epicr
 				break;
 			ingredient currentYield;
 			currentYield = ReadIngredient(HAS_PLUS);
+			currentYield.name = strip_spaces_right(currentYield.name);
 			singleInstruction->yields.push_back(currentYield);
 		} while (ctoken.type == ETT_COMMA);
 	}

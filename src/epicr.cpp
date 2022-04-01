@@ -85,6 +85,14 @@ namespace epicr
 		return lowered;
 	}
 
+	//taken from: https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
+	std::string strip_spaces_right(std::string str)
+	{
+		std::string whitespace = " \n\r\t\f\v";
+		size_t end = str.find_last_not_of(whitespace);
+		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
+	}
+
 	epicr::parse_ret parse_recipe(std::string filename)
 	{
 		if (cached_recipes.find(filename) != cached_recipes.end())
