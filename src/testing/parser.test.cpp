@@ -122,7 +122,17 @@ void second_ingredient_in_first_instruction_has_correct_amount()
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[1].amount.relativeAmount, "all");
 }
 
-
+void ingredients_without_amount_has_correct_amount()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isRelativeAmount, 0);
+	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isUncountable,0);
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.unit,"");
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.relativeAmount,"");
+	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.amount,0);
+	
+}
 
 
 void second_instruction_has_no_ingredients()
@@ -265,6 +275,7 @@ int main(void)
 	first_instruction_has_correct_ingredients_name();
 	first_ingredient_in_first_instruction_has_correct_amount();
 	second_ingredient_in_first_instruction_has_correct_amount();
+	ingredients_without_amount_has_correct_amount();
 	second_instruction_has_no_ingredients();
 	third_instruction_has_correct_ingredients_name();
 	first_instruction_has_no_kitchenware();
