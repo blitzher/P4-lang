@@ -10,9 +10,11 @@
 
 #pragma region Debug macros
 
-#define HAS_PLUS 1    // 0b001
-#define HAS_ASTERIX 2 // 0b010
-#define HAS_QMARK 4   // 0b100
+#define HAS_PLUS 1     // 0b0000 0001
+#define HAS_ASTERIX 2  // 0b0000 0010
+#define HAS_QMARK 4    // 0b0000 0100
+#define ASSUME_1_NUM 8 // 0b0000 1000
+#define ASSUME_REST 16 // 0b0001 0000
 
 #pragma endregion
 
@@ -178,6 +180,37 @@ namespace epicr
         Parser(Lexer *lexer_r);
         ~Parser();
     };
+
+    namespace visitor
+    {
+        class Visitor
+        {
+        private:
+        public:
+            std::string error;
+            bool has_error;
+            void visit(recipe);
+        };
+
+        class IngredientVerifier : public Visitor
+        {
+        private:
+            std::unordered_map<std::string, ingredient> symbols;
+            std::unordered_map<std::string, ingredient> original_symbols;
+            bool ingredients_compatible(ingredient a, ingredient b);
+
+        public:
+            IngredientVerifier();
+            void visit(recipe);
+        };
+
+        class AmountScaler : public Visitor
+        {
+        public:
+            AmountScaler();
+            void visit(recipe);
+        };
+    }
 
     void compress(std::string filepath);
     void decompress(std::string filepath);

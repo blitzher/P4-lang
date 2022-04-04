@@ -28,6 +28,12 @@ int main(int argc, char **argv)
 
 	epicr::recipe myRecipe = myParser.Parse();
 
+	auto ingrvisit = epicr::visitor::IngredientVerifier();
+
+	ingrvisit.visit(myRecipe);
+
+	cout << ingrvisit.has_error << ": " << ingrvisit.error << endl;
+
 	epicr::generate_html(myRecipe, "dist/carbonara.html");
 
 	cout << myParser.error << ": " << myParser.error_message << endl;

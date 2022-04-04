@@ -36,8 +36,8 @@ instructions:
         Fry the bacon using the airfryer
 
         yield:
-            bacon,
-            bacon fat 
+            bacon [100 g],
+            bacon fat
 
     with(butter, onion, bacon fat) using(pan):
         Put butter on the pan with bacon fat and sauté the onions until soft and clear.

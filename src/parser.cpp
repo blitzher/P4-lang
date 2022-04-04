@@ -249,7 +249,7 @@ namespace epicr
 		do
 		{
 			ADV_NON_BLANK(1);
-			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK);
+			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
 			rcp->ingredients.push_back(ingr);
 		} while (ctoken.type == ETT_COMMA);
 	}
@@ -295,7 +295,7 @@ namespace epicr
 		while (ctoken.type != ETT_PARENS_CLOSE)
 		{
 			ADV_NON_BLANK(1);
-			ingredient currentIngredient = ReadIngredient(0);
+			ingredient currentIngredient = ReadIngredient(ASSUME_REST);
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between ingredient or a closing parenthesis for the 'with'", ctoken);
@@ -344,7 +344,7 @@ namespace epicr
 			}
 
 			instruction_word iword = instruction_word();
-			
+
 			if (ctoken.type == ETT_BRACKET_OPEN)
 			{
 				amount amnt = ReadAmount(0);
@@ -375,8 +375,7 @@ namespace epicr
 			if (ctoken.type == ETT_EOF)
 				break;
 			ingredient currentYield;
-			currentYield = ReadIngredient(HAS_PLUS);
-			currentYield.name = strip_spaces_right(currentYield.name);
+			currentYield = ReadIngredient(HAS_PLUS | ASSUME_1_NUM);
 			singleInstruction->yields.push_back(currentYield);
 		} while (ctoken.type == ETT_COMMA);
 	}
@@ -390,7 +389,6 @@ namespace epicr
 		currentIngredient.isOptional = false;
 		currentIngredient.isIngredientRef = false;
 		currentIngredient.name = "";
-		currentIngredient.amount = {0, 0, "", "", 0};
 
 		amount ingredientAmount;
 		if (ctoken.type != ETT_WORD)
@@ -437,7 +435,9 @@ namespace epicr
 	amount Parser::ReadAmount(ingredient_arg arg)
 	{
 		bool canHavePlus = (arg & HAS_PLUS);
-		amount amnt;
+		bool assume_1_num = (arg & ASSUME_1_NUM) >> 3;
+		bool assume_rest = (arg & ASSUME_REST) >> 4;
+		amount amnt = amount();
 
 		if (ctoken.type == ETT_PLUS)
 		{
@@ -453,8 +453,16 @@ namespace epicr
 
 		if (ctoken.type != ETT_BRACKET_OPEN)
 		{
-			amnt.amount = 1;
-			amnt.unit = "";
+			if (assume_1_num)
+			{
+				amnt.amount = 1;
+				amnt.unit = "number";
+			}
+			else if (assume_rest)
+			{
+				amnt.isRelativeAmount = true;
+				amnt.relativeAmount = "rest";
+			}
 			return amnt;
 		}
 
@@ -474,11 +482,16 @@ namespace epicr
 			std::string validRelatives[]{"rest", "quarter", "half", "all"};
 
 			bool isValid = false;
-			for (size_t i = 0; i < 4; i++)
+			size_t i;
+			for (i = 0; i < 4; i++)
 			{
 				if (validRelatives[i] == amnt.relativeAmount)
+				{
 					isValid = true;
+					break;
+				}
 			}
+
 			if (!isValid)
 			{
 				ERR("Invalid relative amount", ctoken);
@@ -508,7 +521,7 @@ namespace epicr
 		if (ctoken.type == ETT_NEWLINE)
 			ADV_NON_BLANK(1);
 
-		return finalWord;
+		return strip_spaces_right(finalWord);
 	}
 
 	void Parser::silence(bool val)
