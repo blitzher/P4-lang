@@ -6,33 +6,13 @@
 #include <queue>
 #include <fstream>
 #include <algorithm>
+#include <unordered_map>
 
 #pragma region Debug macros
-
-#ifdef DEBUG
-#define DEBUG_ERR(x) (std::cerr << (x))
-#define DEBUG_OUT(x) (std::cout << (x))
-#define DEBUG_OUT_F(x) (printf(x))
-#else
-#define DEBUG_ERR(x)
-#define DEBUG_OUT(x)
-//... etc
-#endif
 
 #define HAS_PLUS 1    // 0b001
 #define HAS_ASTERIX 2 // 0b010
 #define HAS_QMARK 4   // 0b100
-
-/*
-
-    100 =>
-    bool has_qmark = (arg & HAS_QMARK) >> 2;
-    100 >> 2 001
-
-    100 =>
-    100 & 001 = 000
-
- */
 
 #pragma endregion
 
@@ -177,6 +157,7 @@ namespace epicr
     class Parser
     {
     private:
+        bool silent;
         Lexer *lexer;
         void ParseTitle(recipe *);
         void ParseDescription(recipe *);
@@ -208,6 +189,7 @@ namespace epicr
         std::string error_message;
         epicr_token error_token;
         recipe Parse();
+        void silence(bool);
         Parser(Lexer *lexer_r);
         ~Parser();
     };
@@ -216,6 +198,7 @@ namespace epicr
     void decompress(std::string filepath);
 
     std::string to_lower(std::string);
+    std::string strip_spaces_right(std::string);
 
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
@@ -224,5 +207,13 @@ namespace epicr
 
     bool generate_html(recipe, std::string filename);
 
-    recipe parse_recipe(std::string filename);
+    typedef struct parse_ret_s
+    {
+        recipe recipe;
+        bool has_err;
+        std::string err;
+    } parse_ret;
+
+    parse_ret parse_recipe(std::string filename);
+    parse_ret parse_recipe_silent(std::string filename);
 }

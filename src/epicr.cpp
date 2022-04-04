@@ -2,9 +2,10 @@
 
 using namespace std;
 
+std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
+
 namespace epicr
 {
-
 	ifstream open_file(string filename)
 	{
 		ifstream file{filename, ios_base::binary};
@@ -123,16 +124,44 @@ namespace epicr
 		}
 		return CMD_ARGS;
 	}
-
-	epicr::recipe parse_recipe(cmd_args clargs)
+	// taken from: https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
+	std::string strip_spaces_right(std::string str)
 	{
-
-		std::ifstream pasta = epicr::open_file(clargs.input_filepath);
-		epicr::Lexer lexer(pasta);
-		epicr::Parser parser(&lexer);
-		parser.clargs = clargs;
-		epicr::recipe rcp = parser.Parse();
-		return rcp;
+		std::string whitespace = " \n\r\t\f\v";
+		size_t end = str.find_last_not_of(whitespace);
+		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
 	}
 
+	epicr::parse_ret parse_recipe(cmd_args clargs)
+	{
+		if (cached_recipes.find(clargs.input_filepath) != cached_recipes.end())
+			return cached_recipes[clargs.input_filepath];
+
+		std::ifstream input_filestream = epicr::open_file(clargs.input_filepath);
+		epicr::Lexer lexer(input_filestream);
+		epicr::Parser parser(&lexer);
+		epicr::recipe rcp = parser.Parse();
+
+		epicr::parse_ret ret = {rcp, parser.error, parser.error_message};
+
+		cached_recipes[clargs.input_filepath] = ret;
+
+		return ret;
+	}
+
+	epicr::parse_ret parse_recipe_silent(std::string filename)
+	{
+		if (cached_recipes.find(filename) != cached_recipes.end())
+			return cached_recipes[filename];
+
+		std::ifstream input_filestream = epicr::open_file(filename);
+		epicr::Lexer lexer(input_filestream);
+		epicr::Parser parser(&lexer);
+		parser.silence(true);
+		epicr::recipe rcp = parser.Parse();
+
+		epicr::parse_ret ret = {rcp, parser.error, parser.error_message};
+
+		return ret;
+	}
 }

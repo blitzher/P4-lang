@@ -13,7 +13,6 @@ using namespace std;
 void print_lexer_tokens(epicr::Lexer lexer);
 int main(int argc, char **argv)
 {
-
 	cout << "Command line arguments:" << endl;
 
 	for (int i = 0; i < argc; i++)
