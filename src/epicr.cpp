@@ -84,32 +84,6 @@ namespace epicr
 		return lowered;
 	}
 
-	enum unit_system
-	{
-		metric_system,
-		imperial_system
-	};
-
-	enum html_style
-	{
-		html_style_basic,
-		html_style_fancy
-	};
-
-	unit_system parse_unit_system(char *argv)
-	{
-		unit_system choosen_system;
-		if (*argv == '--metric' || *argv == '-m')
-		{
-			choosen_system = metric_system;
-		}
-		else if (*argv == '--imperial' || *argv == '-i')
-		{
-			choosen_system = imperial_system;
-		}
-		return choosen_system;
-	}
-
 	html_style parse_style(char *argv)
 	{
 		html_style choosen_style;
@@ -129,15 +103,7 @@ namespace epicr
 		cmd_args CMD_ARGS;
 		for (int i = 0; i < argc; i++)
 		{
-			if (argv[i] == "--metric" || argv[i] == "-m")
-			{
-				CMD_ARGS.choosen_system = parse_unit_system(argv[i]);
-			}
-			else if (argv[i] == "--imperial" || argv[i] == "-i")
-			{
-				CMD_ARGS.choosen_system = parse_unit_system(argv[i]);
-			}
-			else if (argv[i] == "--basic" || argv[i] == "-b")
+			if (argv[i] == "--basic" || argv[i] == "-b")
 			{
 				CMD_ARGS.choosen_style = parse_style(argv[i]);
 			}
@@ -145,18 +111,10 @@ namespace epicr
 			{
 				CMD_ARGS.choosen_style = parse_style(argv[i]);
 			}
-			else if (argv[i] == "-o")
+			else if (argv[i] == "-o ")
 			{
 				CMD_ARGS.output_filepath = argv[i + 1];
 				i++;
-			}
-			else if (argv[i] == "-for")
-			{
-				if (std::isdigit(*argv[i + 1]))
-				{
-					CMD_ARGS.desired_amount = (uint)argv[i + 1];
-					i++;
-				}
 			}
 			else
 			{

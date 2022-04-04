@@ -42,12 +42,17 @@ namespace epicr
     typedef unsigned int uint;
 #pragma region Recipe Data
 
-    typedef struct cmd_args
+    typedef enum html_style_e
     {
-        string input_filepath;
-        unit_system choosen_system;
+        html_style_basic,
+        html_style_fancy
+    } html_style;
+
+    typedef struct cmd_args_e
+    {
+        std::string input_filepath;
         html_style choosen_style;
-        string output_filepath;
+        std::string output_filepath;
         uint desired_amount;
     } cmd_args;
 
@@ -198,7 +203,7 @@ namespace epicr
     public:
         bool DEBUG_MODE;
         bool error;
-        string original_amount;
+        std::string original_amount;
         epicr::cmd_args clargs;
         std::string error_message;
         epicr_token error_token;
