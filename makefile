@@ -65,7 +65,7 @@ clean:
 
 remove: clean
 	@$(RM) $(BINDIR)
-	@echo "Executable removed!"
+	@echo "Executables removed!"
 
 $(T_TARGETS)::
 	@echo "Running \033[4m$(subst $(BINDIR)/,,$@)\033[0m"

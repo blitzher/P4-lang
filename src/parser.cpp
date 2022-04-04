@@ -162,21 +162,11 @@ namespace epicr
 		 * blank token.
 		 * */
 		ADV_NON_BLANK(1);
-		/* Read all words and spaces in amount */
+		/* Read all words and spaces in amoun t */
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			original_amount += ctoken.word;
-
-			if (std::stoi(original_amount) != clargs.desired_amount)
-			{
-				rcp->amount.descriptor += std::to_string(clargs.desired_amount);
-				ADV(1);
-			}
-			else
-			{
-				rcp->amount.descriptor += ctoken.word;
-				ADV(1);
-			}
+			rcp->amount.descriptor += ctoken.word;
+			ADV(1);
 		}
 	}
 

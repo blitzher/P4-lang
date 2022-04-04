@@ -33,7 +33,6 @@ namespace epicr
         std::string input_filepath;
         html_style choosen_style;
         std::string output_filepath;
-        uint desired_amount;
     } cmd_args;
 
     typedef struct amount_s
@@ -215,5 +214,6 @@ namespace epicr
     } parse_ret;
 
     parse_ret parse_recipe(std::string filename);
+    parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
 }

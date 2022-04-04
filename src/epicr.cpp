@@ -85,14 +85,14 @@ namespace epicr
 		return lowered;
 	}
 
-	html_style parse_style(char *argv)
+	html_style parse_style(std::string argv)
 	{
-		html_style choosen_style;
-		if (*argv == '--basic' || *argv == '-b')
+		html_style choosen_style = html_style_basic;
+		if (argv == "--basic" || argv == "-b")
 		{
 			choosen_style = html_style_basic;
 		}
-		else if (*argv == '--fancy' || *argv == '-f')
+		else if (argv == "--fancy" || argv == "-f")
 		{
 			choosen_style = html_style_fancy;
 		}
@@ -101,25 +101,32 @@ namespace epicr
 
 	cmd_args parse_cmd_args(int argc, char **argv)
 	{
+
+		std::vector<std::string> argv_s;
+		for (int i = 0; i < argc; i++)
+		{
+			argv_s.push_back(std::string(argv[i]));
+		}
+
 		cmd_args CMD_ARGS;
 		for (int i = 0; i < argc; i++)
 		{
-			if (argv[i] == "--basic" || argv[i] == "-b")
+			if (argv_s[i] == "--basic" || argv_s[i] == "-b")
 			{
-				CMD_ARGS.choosen_style = parse_style(argv[i]);
+				CMD_ARGS.choosen_style = parse_style(argv_s[i]);
 			}
-			else if (argv[i] == "--fancy" || argv[i] == "-f")
+			else if (argv_s[i] == "--fancy" || argv_s[i] == "-f")
 			{
-				CMD_ARGS.choosen_style = parse_style(argv[i]);
+				CMD_ARGS.choosen_style = parse_style(argv_s[i]);
 			}
-			else if (argv[i] == "-o ")
+			else if (argv_s[i] == "-o ")
 			{
-				CMD_ARGS.output_filepath = argv[i + 1];
+				CMD_ARGS.output_filepath = argv_s[i + 1];
 				i++;
 			}
 			else
 			{
-				CMD_ARGS.input_filepath = argv[i];
+				CMD_ARGS.input_filepath = argv_s[i];
 			}
 		}
 		return CMD_ARGS;
@@ -130,6 +137,12 @@ namespace epicr
 		std::string whitespace = " \n\r\t\f\v";
 		size_t end = str.find_last_not_of(whitespace);
 		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
+	}
+
+	epicr::parse_ret parse_recipe(std::string filename)
+	{
+		cmd_args args = {filename, html_style_basic, "dist"};
+		return parse_recipe(args);
 	}
 
 	epicr::parse_ret parse_recipe(cmd_args clargs)
