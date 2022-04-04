@@ -19,6 +19,7 @@ bool map_contains(std::unordered_map<std::string, epicr::ingredient> m, std::str
 namespace epicr::visitor
 {
 
+#pragma region IngredientVerifier implementation
     IngredientVerifier::IngredientVerifier()
     {
         symbols = std::unordered_map<std::string, ingredient>();
@@ -45,7 +46,6 @@ namespace epicr::visitor
             /* consume */
             for (auto ingr : inst.ingredients)
             {
-
                 if (!map_contains(symbols, ingr.name))
                 {
                     /* TODO: sprintf into error message with ingr name */
@@ -76,7 +76,6 @@ namespace epicr::visitor
                         char *err = (char *)malloc(100);
                         sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relativeAmount.c_str(), ingr.name.c_str());
                         ERR(err);
-
                         return;
                     }
                 }
@@ -135,4 +134,5 @@ namespace epicr::visitor
         }
         return true;
     }
+#pragma endregion
 }

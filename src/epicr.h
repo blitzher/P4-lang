@@ -204,12 +204,6 @@ namespace epicr
             void visit(recipe);
         };
 
-        class AmountScaler : public Visitor
-        {
-        public:
-            AmountScaler();
-            void visit(recipe);
-        };
     }
 
     void compress(std::string filepath);
