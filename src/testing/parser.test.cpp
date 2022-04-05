@@ -76,6 +76,10 @@ void parsed_ingredients()
 	{
 		test_lib::deny("Expected ingredient extra wheatflour to be uncountable");
 	}
+	if (rcp.ingredients[4].amount.amount != std::numeric_limits<double>::infinity())
+	{
+		test_lib::deny("Expected ingredient extra wheatflour to have amount set to INF");
+	}
 }
 
 void instrucions_has_correct_amount_of_instructions()
