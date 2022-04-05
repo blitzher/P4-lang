@@ -60,13 +60,13 @@ namespace epicr
     {
         int count;
         std::string descriptor;
-    } for_amount;
+    } servings;
 
     typedef struct recipe_s
     {
         std::string title;
         std::string description;
-        for_amount amount;
+        servings servings;
         std::string time; /* expand implementation */
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
@@ -148,7 +148,7 @@ namespace epicr
         Lexer *lexer;
         void ParseTitle(recipe *);
         void ParseDescription(recipe *);
-        void ParseAmount(recipe *);
+        void ParseServings(recipe *);
         void ParseNutrients(recipe *);
         void ParseIngredients(recipe *);
         void ParseKitchenware(recipe *);
