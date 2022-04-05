@@ -50,7 +50,7 @@ class App(tk.Frame):
     def compile(self):
         executable = os.path.join(".", "bin", "main")
         clargs = ("%s -o %s --%s" %
-                  (self.input_fpath, self.out_dir, self.html_style))
+                  (self.input_fpath.get(), self.out_dir.get(), self.html_style))
 
         os.system("%s %s" % (
             executable,
@@ -58,11 +58,7 @@ class App(tk.Frame):
         ))
 
     def format_fpath(self, s):
-        max_len = 50
-        if (len(s) < max_len):
-            return s
-        else:
-            return '...' + s[-max_len:-1] + s[-1]
+        return s
 
 
 root = tk.Tk()

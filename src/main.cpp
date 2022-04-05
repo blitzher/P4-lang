@@ -20,17 +20,28 @@ int main(int argc, char **argv)
 		cout << i << ": " << argv[i] << endl;
 	}
 
+	epicr::cmd_args clargs = epicr::parse_cmd_args(argc, argv);
+
 	ifstream file = epicr::open_file(argv[1]);
 
 	epicr::Lexer myLexer = epicr::Lexer(file);
 
 	epicr::Parser myParser = epicr::Parser(&myLexer);
+	myParser.clargs = clargs;
 
 	epicr::recipe myRecipe = myParser.Parse();
 
-	epicr::generate_html(myRecipe, "dist/carbonara.html");
-
 	cout << myParser.error << ": " << myParser.error_message << endl;
+
+	std::cout << "clarg output filepath: " << clargs.output_filepath << std::endl;
+
+	if (!myParser.error)
+	{
+		string output_file = clargs.output_filepath;
+		output_file.append("/" + myRecipe.title + ".html");
+		epicr::generate_html(myRecipe, output_file);
+		printf("Wrote file: %s\n", output_file.c_str());
+	}
 
 	return 0;
 }

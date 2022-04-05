@@ -119,7 +119,7 @@ namespace epicr
 			{
 				CMD_ARGS.choosen_style = parse_style(argv_s[i]);
 			}
-			else if (argv_s[i] == "-o ")
+			else if (argv_s[i] == "-o")
 			{
 				CMD_ARGS.output_filepath = argv_s[i + 1];
 				i++;

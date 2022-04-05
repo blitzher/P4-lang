@@ -216,4 +216,7 @@ namespace epicr
     parse_ret parse_recipe(std::string filename);
     parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
+
+    /* Command line argument related declarations */
+    cmd_args parse_cmd_args(int argc, char **argv);
 }

@@ -129,6 +129,8 @@ namespace epicr
 			rcp->title += ctoken.word;
 			ADV(1);
 		}
+
+		rcp->title = strip_spaces_right(rcp->title);
 	}
 	void Parser::ParseDescription(recipe *rcp)
 	{
