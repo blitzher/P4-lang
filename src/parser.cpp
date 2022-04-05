@@ -224,16 +224,20 @@ namespace epicr
 		//saves which kind of time it is:
 		std::string timeType = to_lower(ctoken.word);
 		ADV_NON_BLANK(2);
-		
-		if (ctoken.type != ETT_NUMBER || utoken.type == ETT_EOF)
+		std::string time = "";
+		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF) 
 		{
-			ERR_VOID("No amount was found!", ctoken);
-		}
-		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
-		{
-			rcp->time += ctoken.word;
+			time += ctoken.word;
 			ADV(1);
 		}
+		time = strip_spaces_right(time);
+		std::cout<<time<<"\n";
+		if (timeType == "prep-time")
+			rcp->time.prep_time = time;
+		else if (timeType == "cook-time")
+			rcp->time.cook_time = time;
+		else /*total-time*/
+			rcp->time.total_time = time;
 	}
 
 	void Parser::ParseIngredients(recipe *rcp)

@@ -61,13 +61,20 @@ namespace epicr
         int count;
         std::string descriptor;
     } servings;
+    
+    typedef struct time
+    {
+        std::string prep_time;
+        std::string cook_time;
+        std::string total_time;
+    } time;
 
     typedef struct recipe_s
     {
         std::string title;
         std::string description;
         servings servings;
-        std::string time; /* expand implementation */
+        time time; /* expand implementation */
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
         std::vector<std::string> tags;

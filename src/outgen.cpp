@@ -77,7 +77,7 @@ namespace epicr
 		sprintf(base_s, base_template,
 			rcp.title.c_str(),
 			rcp.description.c_str(),
-			rcp.time.c_str(),
+			//rcp.time.c_str(),
 			tags.c_str(),
 			ingredients.c_str(),
 			kitchenware.c_str(),
