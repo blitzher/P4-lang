@@ -1,7 +1,6 @@
-from http.server import executable
 import os
 import tkinter as tk
-from tkinter import ttk
+from tkinter import IntVar, ttk
 import tkinter.filedialog as fd
 
 
@@ -9,7 +8,9 @@ class App(tk.Frame):
 
     def __init__(self, master):
         super().__init__(master)
-        root.geometry("550x100")
+        root.geometry("550x150")
+        root.title("epicR - A recipe specification language")
+        self.var = IntVar()
         self.grid_configure(column=10, row=10)
         self.input_file_button = tk.Button(
             self, command=lambda: self.open_file(self.input_fpath), text="Open file", height=1, width=15)
@@ -28,11 +29,14 @@ class App(tk.Frame):
         self.out_dir = tk.StringVar()
         self.out_dir.set("No directory selected")
         self.output_fpath_label["textvariable"] = self.out_dir
-        self.html_style = "basic"
-        # todo: add radio buttons to change
+        self.html_style = ""
 
         self.input_fpath_label.place(x=150, y=3)
         self.output_fpath_label.place(x=150, y=33)
+        tk.Radiobutton(self, text="Fancy", variable=self.var,
+                       value=1, command=self.select_style).pack()
+        tk.Radiobutton(self, text="Basic", variable=self.var,
+                       value=2, command=self.select_style).pack()
 
     def open_file(self, dest):
         file = fd.askopenfile(filetypes=[('epicR Files', '*.rcp')])
@@ -40,6 +44,14 @@ class App(tk.Frame):
         if file:
             filepath = os.path.abspath(file.name)
             dest.set(self.format_fpath(filepath))
+
+    def select_style(self):
+        value = self.var.get()
+
+        if(value == 1):
+            self.html_style = "Fancy"
+        else:
+            self.html_style = "Basic"
 
     def open_dir(self, dest):
         _dir = fd.askdirectory()
