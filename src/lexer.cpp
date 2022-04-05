@@ -3,6 +3,9 @@
 
 using namespace std;
 
+/* Declare struct for comparing equality between chars,
+ * used in the macro below. Useful to allow `any_of` builtin
+ * function to find chars in an array of chars */
 struct compare
 {
     char key;
@@ -77,6 +80,7 @@ namespace epicr
 
                     /* since we encountered a non-blank, step back once */
                     if (!istream.eof()) /* can't seek when at EOF */
+                                         /* seek from current position */
                         istream.seekg(-1, ios_base::cur);
                     break;
                 }
