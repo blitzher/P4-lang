@@ -384,13 +384,8 @@ namespace epicr
 	{
 		bool canHaveAsterix = (arg & HAS_ASTERIX) >> 1;
 		bool canHaveQmark = (arg & HAS_QMARK) >> 2;
-
 		ingredient currentIngredient = ingredient();
-		currentIngredient.isOptional = false;
-		currentIngredient.isIngredientRef = false;
-		currentIngredient.name = "";
-		currentIngredient.amount = {0, 0, "", "", 0};
-
+		
 		amount ingredientAmount = amount();
 		if (ctoken.type != ETT_WORD)
 		{
@@ -427,16 +422,15 @@ namespace epicr
 			ADV_NON_BLANK(1);
 		}
 		ingredientAmount = ReadAmount(arg);
-
+		
 		currentIngredient.amount = ingredientAmount;
-		ingredient dummy = currentIngredient;
 		return currentIngredient;
 	}
 
 	amount Parser::ReadAmount(ingredient_arg arg)
 	{
 		bool canHavePlus = (arg & HAS_PLUS);
-		amount amnt;
+		amount amnt = amount();
 
 		if (ctoken.type == ETT_PLUS)
 		{
@@ -446,6 +440,7 @@ namespace epicr
 				return amnt;
 			}
 			amnt.isUncountable = true;
+			amnt.amount = std::numeric_limits<double>::infinity();
 			ADV_NON_BLANK(1);
 			return amnt;
 		}

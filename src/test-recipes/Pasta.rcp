@@ -12,8 +12,8 @@ ingredients:
     wheatflour [300 g],
     egg [3],
     salt+,
-    water?+,
-    extra wheatflour+
+    water?,
+    extra wheatflour?+
 
 instructions:
     with(wheatflour[300 g], egg[all], salt, water):
