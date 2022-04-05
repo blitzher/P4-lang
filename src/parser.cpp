@@ -97,7 +97,9 @@ namespace epicr
 				ParseKitchenware(&rcp);
 			else if (to_lower(ctoken.word) == "tags")
 				ParseTags(&rcp);
-			else if (to_lower(ctoken.word) == "cook-time")
+			else if (to_lower(ctoken.word) == "prep-time" || 
+					 to_lower(ctoken.word) == "cook-time" || 
+					 to_lower(ctoken.word) == "total-time")
 				ParseTime(&rcp);
 			else if (to_lower(ctoken.word) == "ingredients")
 				ParseIngredients(&rcp);
@@ -228,8 +230,10 @@ namespace epicr
 
 	void Parser::ParseTime(recipe *rcp)
 	{
+		//saves which kind of time it is:
+		std::string timeType = to_lower(ctoken.word);
 		ADV_NON_BLANK(2);
-
+		
 		if (ctoken.type != ETT_NUMBER || utoken.type == ETT_EOF)
 		{
 			ERR_VOID("No amount was found!", ctoken);
