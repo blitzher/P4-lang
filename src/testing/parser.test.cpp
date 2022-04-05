@@ -27,12 +27,28 @@ void parsed_servings()
 	test_lib::expect_equal_s(rcp.servings.descriptor, "people\n");
 }
 
+void parsed_prep_time()
+{
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_s(rcp.time.prep_time, "5-10 min");
+}
+
 void parsed_cook_time()
 {
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.time, "50 min\n");
+	test_lib::expect_equal_s(rcp.time.cook_time, "50 min");
+}
+
+void parsed_total_time()
+{
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_s(rcp.time.total_time, "about an hour");
 }
 
 void parsed_tags()
@@ -269,7 +285,9 @@ int main(void)
 	parsed_title();
 	parsed_description();
 	parsed_servings();
+	parsed_prep_time();
 	parsed_cook_time();
+	parsed_total_time();
 	parsed_tags();
 	parsed_kitchenware();
 	parsed_ingredients();
