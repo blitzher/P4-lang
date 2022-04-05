@@ -376,7 +376,6 @@ namespace epicr
 				break;
 			ingredient currentYield;
 			currentYield = ReadIngredient(HAS_PLUS);
-			currentYield.name = strip_spaces_right(currentYield.name);
 			singleInstruction->yields.push_back(currentYield);
 		} while (ctoken.type == ETT_COMMA);
 	}
@@ -385,14 +384,9 @@ namespace epicr
 	{
 		bool canHaveAsterix = (arg & HAS_ASTERIX) >> 1;
 		bool canHaveQmark = (arg & HAS_QMARK) >> 2;
-
-		ingredient currentIngredient;
-		currentIngredient.isOptional = false;
-		currentIngredient.isIngredientRef = false;
-		currentIngredient.name = "";
-		currentIngredient.amount = {0, 0, "", "", 0};
-
-		amount ingredientAmount;
+		ingredient currentIngredient = ingredient();
+		
+		amount ingredientAmount = amount();
 		if (ctoken.type != ETT_WORD)
 		{
 			ERR("Expected ingredient name", ctoken);
@@ -428,16 +422,15 @@ namespace epicr
 			ADV_NON_BLANK(1);
 		}
 		ingredientAmount = ReadAmount(arg);
-
+		
 		currentIngredient.amount = ingredientAmount;
-		ingredient dummy = currentIngredient;
 		return currentIngredient;
 	}
 
 	amount Parser::ReadAmount(ingredient_arg arg)
 	{
 		bool canHavePlus = (arg & HAS_PLUS);
-		amount amnt;
+		amount amnt = amount();
 
 		if (ctoken.type == ETT_PLUS)
 		{
@@ -447,6 +440,7 @@ namespace epicr
 				return amnt;
 			}
 			amnt.isUncountable = true;
+			amnt.amount = std::numeric_limits<double>::infinity();
 			ADV_NON_BLANK(1);
 			return amnt;
 		}
@@ -507,7 +501,7 @@ namespace epicr
 
 		if (ctoken.type == ETT_NEWLINE)
 			ADV_NON_BLANK(1);
-
+		finalWord = strip_spaces_right(finalWord);
 		return finalWord;
 	}
 

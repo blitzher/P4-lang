@@ -7,6 +7,7 @@
 #include <fstream>
 #include <algorithm>
 #include <unordered_map>
+#include <limits>
 
 #pragma region Debug macros
 

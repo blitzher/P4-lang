@@ -67,14 +67,18 @@ void parsed_ingredients()
 		return;
 	}
 
-	test_lib::expect_equal_s(rcp.ingredients[3].name, "water");
-	if (!rcp.ingredients[3].isOptional)
+	test_lib::expect_equal_s(rcp.ingredients[4].name, "extra wheatflour");
+	if (!rcp.ingredients[4].isOptional)
 	{
-		test_lib::deny("Expected ingredient water to be optional");
+		test_lib::deny("Expected ingredient extra wheatflour to be optional");
 	}
-	if (!rcp.ingredients[3].amount.isUncountable)
+	if (!rcp.ingredients[4].amount.isUncountable)
 	{
-		test_lib::deny("Expected ingredient water to be uncountable");
+		test_lib::deny("Expected ingredient extra wheatflour to be uncountable");
+	}
+	if (rcp.ingredients[4].amount.amount != std::numeric_limits<double>::infinity())
+	{
+		test_lib::deny("Expected ingredient extra wheatflour to have amount set to INF");
 	}
 }
 
@@ -103,6 +107,34 @@ void first_instruction_has_correct_ingredients_name()
 	{
 		test_lib::expect_equal_s(rcp.instructions[0].ingredients[i].name, ingredients[i]);	
 	}
+}
+
+void first_ingredient_in_first_instruction_has_correct_amount()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.isRelativeAmount, 0); //this one fails
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.amount,300);
+	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit,"g");
+}
+
+void second_ingredient_in_first_instruction_has_correct_amount()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients[1].amount.isRelativeAmount, 1);
+	test_lib::expect_equal_s(rcp.instructions[0].ingredients[1].amount.relativeAmount, "all");
+}
+
+void ingredient_in_instruction_without_amount_has_correct_amount()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isRelativeAmount, 0);
+	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isUncountable,0); //this one fails now
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.unit,"");
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.relativeAmount,"");
+	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.amount,1); 
 }
 
 
@@ -244,6 +276,9 @@ int main(void)
 	instrucions_has_correct_amount_of_instructions();
 	first_instruction_has_correct_amount_of_ingredients();
 	first_instruction_has_correct_ingredients_name();
+	first_ingredient_in_first_instruction_has_correct_amount();
+	second_ingredient_in_first_instruction_has_correct_amount();
+	ingredient_in_instruction_without_amount_has_correct_amount();
 	second_instruction_has_no_ingredients();
 	third_instruction_has_correct_ingredients_name();
 	first_instruction_has_no_kitchenware();
