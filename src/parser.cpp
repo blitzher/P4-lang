@@ -122,13 +122,11 @@ namespace epicr
 		ADV_NON_BLANK(2);
 
 		/* Read all words and spaces in title */
-		while (utoken.type != ETT_COLON)
+		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			if (ctoken.type == ETT_COMMA)
-				ERR_VOID("Title cannot include a comma!", ctoken);
-
-			rcp->title += ctoken.word;
-			ADV(1);
+			rcp->title = ReadWords();
+			if (utoken.type != ETT_COLON)
+				ADV_NON_BLANK(1);
 		}
 	}
 	void Parser::ParseDescription(recipe *rcp)
@@ -260,7 +258,7 @@ namespace epicr
 		std::vector<instruction> instructions;
 		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
 		{
-			instruction singleInstruction;
+			instruction singleInstruction = instruction();
 			if (to_lower(ctoken.word) == "with")
 			{
 				ADV_NON_BLANK(1)
@@ -374,8 +372,7 @@ namespace epicr
 				ADV_NON_BLANK(1);
 			if (ctoken.type == ETT_EOF)
 				break;
-			ingredient currentYield;
-			currentYield = ReadIngredient(HAS_PLUS);
+			ingredient currentYield = ReadIngredient(HAS_PLUS);
 			singleInstruction->yields.push_back(currentYield);
 		} while (ctoken.type == ETT_COMMA);
 	}

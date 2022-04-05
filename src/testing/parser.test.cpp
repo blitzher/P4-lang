@@ -5,7 +5,7 @@ void parsed_title()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.title, "Pasta\n");
+	test_lib::expect_equal_s(rcp.title, "Pasta");
 }
 
 void parsed_description()
@@ -258,7 +258,7 @@ void parse_fields_in_random_order()
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/PastaRandomOrder.rcp").recipe;
 
-	test_lib::expect_equal_s(rcp.title, "Pasta\n");
+	test_lib::expect_equal_s(rcp.title, "Pasta");
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].name, "wheatflour");
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
 	test_lib::expect_equal_i(rcp.ingredients[0].amount.amount, 300);
