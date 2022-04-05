@@ -56,7 +56,7 @@ namespace epicr
         std::vector<instruction_word> body;
     } instruction;
 
-    typedef struct for_amount_s
+    typedef struct servings_s
     {
         int count;
         std::string descriptor;
