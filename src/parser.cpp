@@ -89,8 +89,8 @@ namespace epicr
 				ParseTitle(&rcp);
 			else if (to_lower(ctoken.word) == "description")
 				ParseDescription(&rcp);
-			else if (to_lower(ctoken.word) == "amount")
-				ParseAmount(&rcp);
+			else if (to_lower(ctoken.word) == "servings")
+				ParseServings(&rcp);
 			else if (to_lower(ctoken.word) == "nutrients")
 				ParseNutrients(&rcp);
 			else if (to_lower(ctoken.word) == "kitchenware")
@@ -141,7 +141,7 @@ namespace epicr
 			ADV(1);
 		}
 	}
-	void Parser::ParseAmount(recipe *rcp)
+	void Parser::ParseServings(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
 		/*Read the first word and store in amount.count as a number is expected as the first word otherwise throw an error */
@@ -149,24 +149,15 @@ namespace epicr
 		{
 			ERR_VOID("No correct desciption for amount has been found!", ctoken);
 		}
-		rcp->amount.count += stoi(ctoken.word);
+		rcp->servings.count += stoi(ctoken.word);
 		//
 		// todo: tilføj så man kan skrive 2-4 (altså 2 til 4)
 		//
-		/*
-		 * Advance 1 so it goes to the next word,
-		 * which is probably not a blank.
-		 * In fact, it is certainly not a blank,
-		 * since `ADV_NON_BLANK` never leaves the
-		 * current token on a blank, and rather
-		 * skips over them until it reaches a non
-		 * blank token.
-		 * */
 		ADV_NON_BLANK(1);
 		/* Read all words and spaces in amount */
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			rcp->amount.descriptor += ctoken.word;
+			rcp->servings.descriptor += ctoken.word;
 			ADV(1);
 		}
 	}

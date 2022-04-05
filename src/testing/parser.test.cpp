@@ -18,13 +18,13 @@ void parsed_description()
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
 }
 
-void parsed_amount()
+void parsed_servings()
 {
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.amount.count, 4);
-	test_lib::expect_equal_s(rcp.amount.descriptor, "people\n");
+	test_lib::expect_equal_i(rcp.servings.count, 4);
+	test_lib::expect_equal_s(rcp.servings.descriptor, "people\n");
 }
 
 void parsed_cook_time()
@@ -268,7 +268,7 @@ int main(void)
 {
 	parsed_title();
 	parsed_description();
-	parsed_amount();
+	parsed_servings();
 	parsed_cook_time();
 	parsed_tags();
 	parsed_kitchenware();
