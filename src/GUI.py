@@ -1,6 +1,6 @@
 import os
 import tkinter as tk
-from tkinter import IntVar, ttk
+from tkinter import LEFT, W, Entry, IntVar, ttk
 import tkinter.filedialog as fd
 
 
@@ -13,16 +13,20 @@ class App(tk.Frame):
         self.var = IntVar()
         self.grid_configure(column=10, row=10)
         self.input_file_button = tk.Button(
-            self, command=lambda: self.open_file(self.input_fpath), text="Open file", height=1, width=15)
+            self, command=lambda: self.open_file(self.input_fpath), text="Open file/Recipe", height=1, width=15)
         self.output_dir_button = tk.Button(
             self, command=lambda: self.open_dir(self.out_dir), text="Open output dir", height=1, width=15)
         self.compile_btn = tk.Button(
             self, command=lambda: self.compile(), text="Compile output", height=1, width=15)
         self.input_file_button.pack()
         self.output_dir_button.pack()
+        tk.Radiobutton(self, text="Fancy HTML style", variable=self.var,
+                       value=1, command=self.select_style).pack(anchor=W)
+        tk.Radiobutton(self, text="Basic HTML style", variable=self.var,
+                       value=2, command=self.select_style).pack(anchor=W)
         self.compile_btn.pack()
         self.input_fpath = tk.StringVar()
-        self.input_fpath.set("No file selected")
+        self.input_fpath.set("No file or recipe selected")
         self.input_fpath_label = tk.Label()
         self.input_fpath_label["textvariable"] = self.input_fpath
         self.output_fpath_label = tk.Label()
@@ -33,10 +37,6 @@ class App(tk.Frame):
 
         self.input_fpath_label.place(x=150, y=3)
         self.output_fpath_label.place(x=150, y=33)
-        tk.Radiobutton(self, text="Fancy", variable=self.var,
-                       value=1, command=self.select_style).pack()
-        tk.Radiobutton(self, text="Basic", variable=self.var,
-                       value=2, command=self.select_style).pack()
 
     def open_file(self, dest):
         file = fd.askopenfile(filetypes=[('epicR Files', '*.rcp')])
