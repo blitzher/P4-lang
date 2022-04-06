@@ -24,7 +24,7 @@ void parsed_servings()
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.servings.count, 4);
-	test_lib::expect_equal_s(rcp.servings.descriptor, "people\n");
+	test_lib::expect_equal_s(rcp.servings.descriptor, "people");
 }
 
 void parsed_prep_time()
