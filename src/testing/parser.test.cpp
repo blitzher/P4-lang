@@ -48,7 +48,7 @@ void parsed_total_time()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.time.total_time, "about an hour");
+	test_lib::expect_equal_s(rcp.time.total_time, "around 1 hour");
 }
 
 void parsed_tags()
@@ -56,8 +56,10 @@ void parsed_tags()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.tags.size(),3);
 	test_lib::expect_equal_s(rcp.tags[0], "pasta");
 	test_lib::expect_equal_s(rcp.tags[1], "easy to make");
+	test_lib::expect_equal_s(rcp.tags[2], "under 2 hours");
 }
 
 void parsed_kitchenware()
@@ -65,6 +67,7 @@ void parsed_kitchenware()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.kitchenware.size(),2);
 	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
 }
