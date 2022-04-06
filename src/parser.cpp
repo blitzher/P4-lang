@@ -97,8 +97,8 @@ namespace epicr
 				ParseKitchenware(&rcp);
 			else if (to_lower(ctoken.word) == "tags")
 				ParseTags(&rcp);
-			else if (to_lower(ctoken.word) == "prep-time" || 
-					 to_lower(ctoken.word) == "cook-time" || 
+			else if (to_lower(ctoken.word) == "prep-time" ||
+					 to_lower(ctoken.word) == "cook-time" ||
 					 to_lower(ctoken.word) == "total-time")
 				ParseTime(&rcp);
 			else if (to_lower(ctoken.word) == "ingredients")
@@ -205,7 +205,7 @@ namespace epicr
 		std::string timeType = to_lower(ctoken.word);
 		ADV_NON_BLANK(2);
 		std::string time = "";
-		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF) 
+		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
 			time += ctoken.word;
 			ADV(1);
@@ -320,7 +320,7 @@ namespace epicr
 			}
 
 			instruction_word iword = instruction_word();
-			
+
 			if (ctoken.type == ETT_BRACKET_OPEN)
 			{
 				amount amnt = ReadAmount(0);
@@ -360,7 +360,7 @@ namespace epicr
 		bool canHaveAsterix = (arg & HAS_ASTERIX) >> 1;
 		bool canHaveQmark = (arg & HAS_QMARK) >> 2;
 		ingredient currentIngredient = ingredient();
-		
+
 		amount ingredientAmount = amount();
 		if (ctoken.type != ETT_WORD)
 		{
@@ -397,7 +397,7 @@ namespace epicr
 			ADV_NON_BLANK(1);
 		}
 		ingredientAmount = ReadAmount(arg);
-		
+
 		currentIngredient.amount = ingredientAmount;
 		return currentIngredient;
 	}
@@ -415,14 +415,14 @@ namespace epicr
 				return amnt;
 			}
 			amnt.isUncountable = true;
-			amnt.amount = std::numeric_limits<double>::infinity();
+			amnt.number = std::numeric_limits<double>::infinity();
 			ADV_NON_BLANK(1);
 			return amnt;
 		}
 
 		if (ctoken.type != ETT_BRACKET_OPEN)
 		{
-			amnt.amount = 1;
+			amnt.number = 1;
 			amnt.unit = "";
 			return amnt;
 		}
@@ -431,7 +431,7 @@ namespace epicr
 
 		if (ctoken.type == ETT_NUMBER)
 		{
-			amnt.amount = std::stod(ctoken.word);
+			amnt.number = std::stod(ctoken.word);
 			ADV_NON_BLANK(1);
 			amnt.unit = ReadWords();
 		}
