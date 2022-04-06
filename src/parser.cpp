@@ -120,7 +120,7 @@ namespace epicr
 		/* Read all words and spaces in title */
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			rcp->title = ReadWords();
+			rcp->title = ReadWords(true);
 			if (utoken.type != ETT_COLON)
 				ADV_NON_BLANK(1);
 		}
@@ -145,7 +145,7 @@ namespace epicr
 		rcp->servings.count += stoi(ctoken.word);
 		
 		ADV_NON_BLANK(1);
-		rcp->servings.descriptor = ReadWords();
+		rcp->servings.descriptor = ReadWords(false);
 	}
 
 	void Parser::ParseNutrients(recipe *rcp)
@@ -173,7 +173,7 @@ namespace epicr
 		ADV_NON_BLANK(2);
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			std::string kitchenware = ReadWords();
+			std::string kitchenware = ReadWords(true);
 			rcp->kitchenware.push_back(kitchenware);
 			
 			if (ReadSeperatorOrWaitAtNextField())
@@ -192,7 +192,7 @@ namespace epicr
 
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			std::string tag = ReadWords();
+			std::string tag = ReadWords(true);
 			rcp->tags.push_back(tag);
 			if (ReadSeperatorOrWaitAtNextField())
 				ERR_VOID("expected a comma as a seperator between tags.",ctoken);
@@ -289,11 +289,10 @@ namespace epicr
 		while (ctoken.type != ETT_PARENS_CLOSE) /*reads every kitchenware in the "using"*/
 		{
 			ADV_NON_BLANK(1);
-			if (ctoken.type != ETT_WORD)
+			if (ctoken.type != ETT_WORD && ctoken.type != ETT_NUMBER)
 				ERR_VOID("expected a kitchenware", ctoken);
 
-			std::string currentKitchenware = ReadWords();
-
+			std::string currentKitchenware = ReadWords(true);
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'", ctoken);
@@ -362,11 +361,11 @@ namespace epicr
 		ingredient currentIngredient = ingredient();
 
 		amount ingredientAmount = amount();
-		if (ctoken.type != ETT_WORD)
+		if (ctoken.type != ETT_WORD && ctoken.type != ETT_NUMBER)
 		{
 			ERR("Expected ingredient name", ctoken);
 		}
-		currentIngredient.name = ReadWords();
+		currentIngredient.name = ReadWords(true);
 
 		while (ctoken.type == ETT_ASTERIX || ctoken.type == ETT_QUESTION_MARK)
 		{
@@ -433,12 +432,12 @@ namespace epicr
 		{
 			amnt.number = std::stod(ctoken.word);
 			ADV_NON_BLANK(1);
-			amnt.unit = ReadWords();
+			amnt.unit = ReadWords(false);
 		}
 		else if (ctoken.type == ETT_WORD)
 		{
 			amnt.isRelativeAmount = true;
-			amnt.relativeAmount = ReadWords();
+			amnt.relativeAmount = ReadWords(false);
 
 			std::string validRelatives[]{"rest", "quarter", "half", "all"};
 
@@ -465,10 +464,11 @@ namespace epicr
 		return amnt;
 	}
 
-	std::string Parser::ReadWords()
+	std::string Parser::ReadWords(bool canReadNumbers)
 	{
 		std::string finalWord = "";
-		while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK)
+		
+		while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK || (canReadNumbers ? ctoken.type == ETT_NUMBER : false))
 		{
 			finalWord += ctoken.word;
 			ADV(1);

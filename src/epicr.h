@@ -169,8 +169,9 @@ namespace epicr
         ingredient ReadIngredient(ingredient_arg);
         /* Read an amount from the current position */
         amount ReadAmount(ingredient_arg);
-        /*Read words and blanks from the current position, then returns the word, with right spaces stripped*/
-        std::string ReadWords();
+        /*Read words and blanks from the current position, then returns the word, with right spaces stripped
+        accepts a boolean as input stating whether or not it can read numbers as well*/
+        std::string ReadWords(bool);
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
         returns 1 if something went wrong, otherwise returns 0*/
         int ReadSeperatorOrWaitAtNextField();
