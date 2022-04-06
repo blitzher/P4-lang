@@ -259,6 +259,11 @@ namespace epicr
         token_count -= amnt;
         line_num -= line_offset;
         if (!istream.eof())
+        /* seekg is used seek an arbitary position in the file. 
+           offset is the amount of chars read since start. 
+           offset makes it possible to backtrack to the place we were at before and it is used in Lexer::peek_token
+           ios_base is the input output stream
+           cur is the current position in stream   */
             istream.seekg(-offset, ios_base::cur);
 
         return token;
