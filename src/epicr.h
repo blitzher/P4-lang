@@ -25,7 +25,7 @@ namespace epicr
 
     typedef struct amount_s
     {
-        double amount;
+        double number;
         bool isRelativeAmount;
         std::string relativeAmount;
         std::string unit;
@@ -45,7 +45,6 @@ namespace epicr
         std::string spelling;
         bool is_amount;
         amount value;
-        bool is_ingredient_ref;
     } instruction_word;
 
     typedef struct instruction_s
@@ -61,7 +60,7 @@ namespace epicr
         int count;
         std::string descriptor;
     } servings;
-    
+
     typedef struct time
     {
         std::string prep_time;
