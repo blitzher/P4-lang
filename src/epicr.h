@@ -60,8 +60,8 @@ namespace epicr
         int count;
         std::string descriptor;
     } servings;
-
-    typedef struct time
+  
+    typedef struct time_s
     {
         std::string prep_time;
         std::string cook_time;
@@ -73,12 +73,12 @@ namespace epicr
         std::string title;
         std::string description;
         servings servings;
-        time time; /* expand implementation */
+        time time;
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
         std::vector<std::string> tags;
-        std::vector<ingredient> ingredients;   /* missing SOME implementation */
-        std::vector<instruction> instructions; /* missing implementation */
+        std::vector<ingredient> ingredients;
+        std::vector<instruction> instructions;
     } recipe;
 #pragma endregion
 
@@ -165,13 +165,15 @@ namespace epicr
         void ParseInstructionHeaderUsing(instruction *singleInstruction);
         void ParseInstructionBody(instruction *currentInstruction);
         void ParseInstructionYield(instruction *singleInstruction);
-
         /* Read an ingredient from the current position */
         ingredient ReadIngredient(ingredient_arg);
         /* Read an amount from the current position */
         amount ReadAmount(ingredient_arg);
+        /*Read words and blanks from the current position, then returns the word, with right spaces stripped*/
         std::string ReadWords();
-
+        /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
+        returns 1 if something went wrong, otherwise returns 0*/
+        int ReadSeperatorOrWaitAtNextField();
         epicr_token ctoken;
         epicr_token utoken;
 
@@ -188,8 +190,9 @@ namespace epicr
 
     void compress(std::string filepath);
     void decompress(std::string filepath);
-
+    /*returns a new string with all chars in the input string in lowercase*/
     std::string to_lower(std::string);
+    /*returns a new string where all types of spaces to right is stripped from the input string */
     std::string strip_spaces_right(std::string);
 
     /* Print the contents of a token to stdout */

@@ -77,7 +77,7 @@ namespace epicr
 		ctoken = lexer->next_non_blank_token();
 		utoken = lexer->peek_non_blank_token();
 
-		/* Parse all optional fields */
+		/* Parse all fields */
 		while (ctoken.type != ETT_EOF)
 		{
 			/* If an error occured during parsing,
@@ -110,17 +110,11 @@ namespace epicr
 				ADV(1);
 			}
 		}
-
 		return rcp;
 	}
 
 	void Parser::ParseTitle(recipe *rcp)
-	{
-		if (to_lower(ctoken.word) != "title" || utoken.type != ETT_COLON)
-		{
-			ERR_VOID("No 'title:' found at the start of the file!", ctoken);
-		}
-
+	{	
 		ADV_NON_BLANK(2);
 
 		/* Read all words and spaces in title */
@@ -144,22 +138,14 @@ namespace epicr
 	void Parser::ParseServings(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
-		/*Read the first word and store in amount.count as a number is expected as the first word otherwise throw an error */
 		if (ctoken.type != ETT_NUMBER || utoken.type == ETT_EOF)
 		{
-			ERR_VOID("No correct desciption for amount has been found!", ctoken);
+			ERR_VOID("No correct description for amount has been found!", ctoken);
 		}
 		rcp->servings.count += stoi(ctoken.word);
-		//
-		// todo: tilføj så man kan skrive 2-4 (altså 2 til 4)
-		//
+		
 		ADV_NON_BLANK(1);
-		/* Read all words and spaces in amount */
-		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
-		{
-			rcp->servings.descriptor += ctoken.word;
-			ADV(1);
-		}
+		rcp->servings.descriptor = ReadWords();
 	}
 
 	void Parser::ParseNutrients(recipe *rcp)
@@ -172,17 +158,11 @@ namespace epicr
 		{
 			ingredient nutrient = ReadIngredient(0);
 			if (nutrient.amount.unit != "kcal" && nutrient.amount.unit != "cal" && nutrient.amount.unit != "g")
-			{
-
 				ERR_VOID("Invalid unit after nutrient", ctoken);
-			}
 
 			nutrients.push_back(nutrient);
-
-			if (ctoken.type == ETT_COMMA)
-			{
-				ADV_NON_BLANK(1);
-			}
+			if (ReadSeperatorOrWaitAtNextField())
+				ERR_VOID("expected a comma as a seperator between nutrients.",ctoken);
 		}
 
 		rcp->nutrients = nutrients;
@@ -195,11 +175,12 @@ namespace epicr
 		{
 			std::string kitchenware = ReadWords();
 			rcp->kitchenware.push_back(kitchenware);
-			if (utoken.type != ETT_COLON)
-				ADV_NON_BLANK(1);
+			
+			if (ReadSeperatorOrWaitAtNextField())
+				ERR_VOID("expected a comma as a seperator between kitchenware.",ctoken);
 		}
 	}
-
+	
 	void Parser::ParseTags(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
@@ -213,15 +194,14 @@ namespace epicr
 		{
 			std::string tag = ReadWords();
 			rcp->tags.push_back(tag);
-
-			if (utoken.type != ETT_COLON)
-				ADV_NON_BLANK(1);
+			if (ReadSeperatorOrWaitAtNextField())
+				ERR_VOID("expected a comma as a seperator between tags.",ctoken);
 		}
 	}
 
 	void Parser::ParseTime(recipe *rcp)
 	{
-		// saves which kind of time it is:
+		/*saves which kind of time it is: */
 		std::string timeType = to_lower(ctoken.word);
 		ADV_NON_BLANK(2);
 		std::string time = "";
@@ -231,7 +211,6 @@ namespace epicr
 			ADV(1);
 		}
 		time = strip_spaces_right(time);
-		std::cout << time << "\n";
 		if (timeType == "prep-time")
 			rcp->time.prep_time = time;
 		else if (timeType == "cook-time")
@@ -242,13 +221,14 @@ namespace epicr
 
 	void Parser::ParseIngredients(recipe *rcp)
 	{
-		ADV_NON_BLANK(1);
-		do
+		ADV_NON_BLANK(2);
+		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			ADV_NON_BLANK(1);
 			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK);
 			rcp->ingredients.push_back(ingr);
-		} while (ctoken.type == ETT_COMMA);
+			if (ReadSeperatorOrWaitAtNextField())
+				ERR_VOID("expected a comma as a seperator between ingredients.",ctoken);
+		}
 	}
 
 	void Parser::ParseInstructions(recipe *rcp)
@@ -289,7 +269,7 @@ namespace epicr
 		{
 			ERR_VOID("expected open bracket with 'with' ", ctoken);
 		}
-		while (ctoken.type != ETT_PARENS_CLOSE)
+		while (ctoken.type != ETT_PARENS_CLOSE) /*reads every ingredient in the "with"*/
 		{
 			ADV_NON_BLANK(1);
 			ingredient currentIngredient = ReadIngredient(0);
@@ -299,21 +279,20 @@ namespace epicr
 			}
 			singleInstruction->ingredients.push_back(currentIngredient);
 		}
-		ADV_NON_BLANK(1)
+		ADV_NON_BLANK(1) /*reads through the end parenthesis*/
 	}
 	void Parser::ParseInstructionHeaderUsing(instruction *singleInstruction)
 	{
 		if (ctoken.type != ETT_PARENS_OPEN)
 			ERR_VOID("expected open bracket with 'using' ", ctoken);
 
-		while (ctoken.type != ETT_PARENS_CLOSE)
+		while (ctoken.type != ETT_PARENS_CLOSE) /*reads every kitchenware in the "using"*/
 		{
 			ADV_NON_BLANK(1);
 			if (ctoken.type != ETT_WORD)
 				ERR_VOID("expected a kitchenware", ctoken);
 
-			std::string currentKitchenware;
-			currentKitchenware = ReadWords();
+			std::string currentKitchenware = ReadWords();
 
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
@@ -321,7 +300,7 @@ namespace epicr
 			}
 			singleInstruction->kitchenware.push_back(currentKitchenware);
 		}
-		ADV_NON_BLANK(1);
+		ADV_NON_BLANK(1); /*reads through the end parenthesis*/
 	}
 	void Parser::ParseInstructionBody(instruction *currentInstruction)
 	{
@@ -500,6 +479,21 @@ namespace epicr
 		finalWord = strip_spaces_right(finalWord);
 		return finalWord;
 	}
+
+	int Parser::ReadSeperatorOrWaitAtNextField()
+	{
+		if (ctoken.type == ETT_COMMA)
+		{
+			ADV_NON_BLANK(1);
+			return 0;
+		}
+		if (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	
 
 	void Parser::silence(bool val)
 	{
