@@ -5,7 +5,7 @@ void parsed_title()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.title, "Pasta\n");
+	test_lib::expect_equal_s(rcp.title, "Pasta");
 }
 
 void parsed_description()
@@ -18,13 +18,21 @@ void parsed_description()
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
 }
 
-void parsed_amount()
+void parsed_servings()
 {
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.amount.count, 4);
-	test_lib::expect_equal_s(rcp.amount.descriptor, "people\n");
+	test_lib::expect_equal_i(rcp.servings.count, 4);
+	test_lib::expect_equal_s(rcp.servings.descriptor, "people");
+}
+
+void parsed_prep_time()
+{
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_s(rcp.time.prep_time, "5-10 min");
 }
 
 void parsed_cook_time()
@@ -32,7 +40,15 @@ void parsed_cook_time()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.time, "50 min\n");
+	test_lib::expect_equal_s(rcp.time.cook_time, "50 min");
+}
+
+void parsed_total_time()
+{
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_s(rcp.time.total_time, "around 1 hour");
 }
 
 void parsed_tags()
@@ -40,8 +56,10 @@ void parsed_tags()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.tags.size(), 3);
 	test_lib::expect_equal_s(rcp.tags[0], "pasta");
 	test_lib::expect_equal_s(rcp.tags[1], "easy to make");
+	test_lib::expect_equal_s(rcp.tags[2], "under 2 hours");
 }
 
 void parsed_kitchenware()
@@ -49,6 +67,7 @@ void parsed_kitchenware()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.kitchenware.size(), 2);
 	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
 }
@@ -67,14 +86,18 @@ void parsed_ingredients()
 		return;
 	}
 
-	test_lib::expect_equal_s(rcp.ingredients[3].name, "water");
-	if (!rcp.ingredients[3].isOptional)
+	test_lib::expect_equal_s(rcp.ingredients[4].name, "extra wheatflour");
+	if (!rcp.ingredients[4].isOptional)
 	{
-		test_lib::deny("Expected ingredient water to be optional");
+		test_lib::deny("Expected ingredient extra wheatflour to be optional");
 	}
-	if (!rcp.ingredients[3].amount.isUncountable)
+	if (!rcp.ingredients[4].amount.isUncountable)
 	{
-		test_lib::deny("Expected ingredient water to be uncountable");
+		test_lib::deny("Expected ingredient extra wheatflour to be uncountable");
+	}
+	if (rcp.ingredients[4].amount.number != std::numeric_limits<double>::infinity())
+	{
+		test_lib::deny("Expected ingredient extra wheatflour to have amount set to INF");
 	}
 }
 
@@ -102,6 +125,37 @@ void first_instruction_has_correct_ingredients_name()
 	{
 		test_lib::expect_equal_s(rcp.instructions[0].ingredients[i].name, ingredients[i]);
 	}
+}
+
+void first_ingredient_in_first_instruction_has_correct_amount()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.isRelativeAmount, 0); // this one fails
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.number, 300);
+	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "g");
+}
+
+void second_ingredient_in_first_instruction_has_correct_amount()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients[1].amount.isRelativeAmount, 1);
+	test_lib::expect_equal_s(rcp.instructions[0].ingredients[1].amount.relativeAmount, "all");
+}
+
+void ingredient_in_instruction_without_amount_has_correct_amount()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	epicr::amount amnt = rcp.instructions[2].ingredients[0].amount;
+	test_lib::expect_equal_i(amnt.isRelativeAmount, 0);
+	test_lib::expect_equal_i(amnt.isUncountable, 0); // this one fails now
+	printf("Finished parsing %lu\n", amnt.unit.size());
+	std::cout << amnt.unit << std::endl;
+	test_lib::expect_equal_s(amnt.unit, "");
+	test_lib::expect_equal_s(amnt.relativeAmount, "");
+	test_lib::expect_equal_i(amnt.number, 1);
 }
 
 void second_instruction_has_no_ingredients()
@@ -158,7 +212,7 @@ void parsed_instruction_body()
 	test_lib::expect_equal_s(body[2].spelling, "the");
 	test_lib::expect_equal_s(body[3].spelling, " ");
 	test_lib::expect_equal_i(body[4].is_amount, true);
-	test_lib::expect_equal_i(body[4].value.amount, 300);
+	test_lib::expect_equal_i(body[4].value.number, 300);
 	test_lib::expect_equal_s(body[4].value.unit, "g");
 }
 void first_instruction_body_text_is_parsed_correctly()
@@ -177,7 +231,7 @@ void first_instruction_body_text_is_parsed_correctly()
 		actualInstructionBody += rcp.instructions[0].body[i].spelling;
 		if (rcp.instructions[0].body[i].is_amount)
 		{
-			actualInstructionBody += std::to_string(rcp.instructions[0].body[i].value.amount) + " ";
+			actualInstructionBody += std::to_string(rcp.instructions[0].body[i].value.number) + " ";
 			if (rcp.instructions[0].body[i].value.unit != "")
 				actualInstructionBody += rcp.instructions[0].body[i].value.unit + " ";
 		}
@@ -223,24 +277,30 @@ void parse_fields_in_random_order()
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/PastaRandomOrder.rcp").recipe;
 
-	test_lib::expect_equal_s(rcp.title, "Pasta\n");
-	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].name, "wheatflour");
+	test_lib::expect_equal_s(rcp.title, "Pasta");
+	test_lib::expect_equal_i(rcp.instructions.size(), 3);
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
-	test_lib::expect_equal_i(rcp.ingredients[0].amount.amount, 300);
+	test_lib::expect_equal_i(rcp.ingredients.size(), 5);
+	test_lib::expect_equal_i(rcp.ingredients[0].amount.number, 300);
 }
 
 int main(void)
 {
 	parsed_title();
 	parsed_description();
-	parsed_amount();
+	parsed_servings();
+	parsed_prep_time();
 	parsed_cook_time();
+	parsed_total_time();
 	parsed_tags();
 	parsed_kitchenware();
 	parsed_ingredients();
 	instrucions_has_correct_amount_of_instructions();
 	first_instruction_has_correct_amount_of_ingredients();
 	first_instruction_has_correct_ingredients_name();
+	first_ingredient_in_first_instruction_has_correct_amount();
+	second_ingredient_in_first_instruction_has_correct_amount();
+	ingredient_in_instruction_without_amount_has_correct_amount();
 	second_instruction_has_no_ingredients();
 	third_instruction_has_correct_ingredients_name();
 	first_instruction_has_no_kitchenware();
