@@ -85,7 +85,7 @@ namespace epicr
 		return lowered;
 	}
 
-	//taken from: https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
+	/* taken from: https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/ */
 	std::string strip_spaces_right(std::string str)
 	{
 		std::string whitespace = " \n\r\t\f\v";
