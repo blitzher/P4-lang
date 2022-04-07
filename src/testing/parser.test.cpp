@@ -281,6 +281,23 @@ void parse_fields_in_random_order()
 	test_lib::expect_equal_i(rcp.ingredients[0].amount.number, 300);
 }
 
+void parse_recipe_with_random_casing()
+{
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/PastaRandomCasing.rcp").recipe;
+
+	test_lib::expect_equal_s(rcp.title, "Pasta");
+	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
+	test_lib::expect_equal_i(rcp.servings.count,4);
+	test_lib::expect_equal_i(rcp.ingredients.size(), 4);
+	test_lib::expect_equal_i(rcp.instructions.size(),1);
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients.size(),4);
+	test_lib::expect_equal_i(rcp.instructions[0].yields.size(),1);
+	
+}
+
+
 int main(void)
 {
 	parsed_title();
@@ -311,6 +328,7 @@ int main(void)
 	first_instruction_yields_zero_ingredients();
 	second_instruction_yields_an_ingredient();
 	parse_fields_in_random_order();
+	parse_recipe_with_random_casing();
 	test_lib::print_recap();
 	return test_lib::was_success();
 }
