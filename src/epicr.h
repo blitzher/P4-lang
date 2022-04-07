@@ -203,7 +203,6 @@ namespace epicr
             IngredientVerifier();
             void visit(recipe);
         };
-
     }
 
     void compress(std::string filepath);

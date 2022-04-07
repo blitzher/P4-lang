@@ -447,6 +447,7 @@ namespace epicr
 				return amnt;
 			}
 			amnt.isUncountable = true;
+			amnt.amount = 0;
 			ADV_NON_BLANK(1);
 			return amnt;
 		}
