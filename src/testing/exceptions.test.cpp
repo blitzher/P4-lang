@@ -10,7 +10,6 @@ void parser_double_asterix_exception()
 
 int main()
 {
-
     parser_double_asterix_exception();
     test_lib::print_recap();
     return test_lib::was_success();

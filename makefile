@@ -3,10 +3,7 @@
 #  /obj
 #  /src
 
-# Use 'make remove' to clean up the hole project
-
-# Name of target file
-
+# Use 'make remove' to clean up the whole project
 
 CXX        = clang++
 CXXFLAGS   = -std=c++17 \

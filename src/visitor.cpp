@@ -40,7 +40,6 @@ namespace epicr::visitor
         }
 
         /* check the flow of the instructions are reasonable */
-
         for (auto inst : rcp.instructions)
         {
             /* consume */
@@ -62,17 +61,16 @@ namespace epicr::visitor
                         break;
                     case 'h': /* half */
                         ingr.amount = original_symbols[ingr.name].amount;
-                        ingr.amount.amount *= 0.5f;
+                        ingr.amount.number *= 0.5f;
                         break;
                     case 'q': /* quarter */
                         ingr.amount = original_symbols[ingr.name].amount;
-                        ingr.amount.amount *= 0.25f;
+                        ingr.amount.number *= 0.25f;
                         break;
                     case 'a': /* all */
                         ingr.amount = original_symbols[ingr.name].amount;
                         break;
                     default:
-
                         char *err = (char *)malloc(100);
                         sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relativeAmount.c_str(), ingr.name.c_str());
                         ERR(err);
@@ -80,17 +78,16 @@ namespace epicr::visitor
                     }
                 }
 
-                if (symbols[ingr.name].amount.isUncountable)
-                {
-                }
-                else if (ingr.amount.amount > symbols[ingr.name].amount.amount)
+                if (ingr.amount.number > symbols[ingr.name].amount.number)
                 {
                     ingredients_compatible(symbols[ingr.name], ingr);
                     ERR("Used too much of ingredient");
                     return;
                 }
-
-                symbols[ingr.name].amount.amount -= ingr.amount.amount;
+                else if (!symbols[ingr.name].amount.isUncountable)
+                {
+                    symbols[ingr.name].amount.number -= ingr.amount.number;
+                }
             }
 
             /* yield */
@@ -104,9 +101,9 @@ namespace epicr::visitor
                         ERR("Yielded ingredient of different unit type than in ingredients list");
                         return;
                     }
-                    symbols[yield.name].amount.amount += yield.amount.amount;
+                    symbols[yield.name].amount.number += yield.amount.number;
                 }
-                /* if  */
+                /* otherwise, add it to the symbol table */
                 else
                     symbols[yield.name] = yield;
             }
@@ -115,18 +112,17 @@ namespace epicr::visitor
         for (auto pair : symbols)
         {
             ingredient ingr = pair.second;
-            if (ingr.amount.amount != 0 && ingr.name != rcp.title)
+            if (ingr.amount.number != 0 && ingr.name != rcp.title)
             {
                 ERR("Unused ingredient after instructions");
             }
 
-            printf("[%s %lf %s]\n", ingr.name.c_str(), ingr.amount.amount, ingr.amount.unit.c_str());
+            printf("[%s %lf %s]\n", ingr.name.c_str(), ingr.amount.number, ingr.amount.unit.c_str());
         }
     }
 
     bool IngredientVerifier::ingredients_compatible(ingredient a, ingredient b)
     {
-        printf("a unit: %s, b unit: %s\n", a.amount.unit.c_str(), b.amount.unit.c_str());
         if (a.amount.unit != b.amount.unit)
         {
             ERR("Invalid unit used in instruction");

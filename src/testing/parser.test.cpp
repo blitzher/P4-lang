@@ -56,7 +56,7 @@ void parsed_tags()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.tags.size(),3);
+	test_lib::expect_equal_i(rcp.tags.size(), 3);
 	test_lib::expect_equal_s(rcp.tags[0], "pasta");
 	test_lib::expect_equal_s(rcp.tags[1], "easy to make");
 	test_lib::expect_equal_s(rcp.tags[2], "under 2 hours");
@@ -67,7 +67,7 @@ void parsed_kitchenware()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.kitchenware.size(),2);
+	test_lib::expect_equal_i(rcp.kitchenware.size(), 2);
 	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
 }
@@ -148,11 +148,14 @@ void ingredient_in_instruction_without_amount_has_correct_amount()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isRelativeAmount, 0);
-	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isUncountable, 0); // this one fails now
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.unit, "");
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.relativeAmount, "");
-	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.number, 1);
+	epicr::amount amnt = rcp.instructions[2].ingredients[0].amount;
+	test_lib::expect_equal_i(amnt.isRelativeAmount, 0);
+	test_lib::expect_equal_i(amnt.isUncountable, 0); // this one fails now
+	printf("Finished parsing %lu\n", amnt.unit.size());
+	std::cout << amnt.unit << std::endl;
+	test_lib::expect_equal_s(amnt.unit, "");
+	test_lib::expect_equal_s(amnt.relativeAmount, "");
+	test_lib::expect_equal_i(amnt.number, 1);
 }
 
 void second_instruction_has_no_ingredients()
@@ -275,7 +278,7 @@ void parse_fields_in_random_order()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/PastaRandomOrder.rcp").recipe;
 
 	test_lib::expect_equal_s(rcp.title, "Pasta");
-	test_lib::expect_equal_i(rcp.instructions.size(),3);
+	test_lib::expect_equal_i(rcp.instructions.size(), 3);
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
 	test_lib::expect_equal_i(rcp.ingredients.size(), 5);
 	test_lib::expect_equal_i(rcp.ingredients[0].amount.number, 300);

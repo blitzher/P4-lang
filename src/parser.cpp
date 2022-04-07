@@ -114,7 +114,7 @@ namespace epicr
 	}
 
 	void Parser::ParseTitle(recipe *rcp)
-	{	
+	{
 		ADV_NON_BLANK(2);
 
 		/* Read all words and spaces in title */
@@ -143,7 +143,7 @@ namespace epicr
 			ERR_VOID("No correct description for amount has been found!", ctoken);
 		}
 		rcp->servings.count += stoi(ctoken.word);
-		
+
 		ADV_NON_BLANK(1);
 		rcp->servings.descriptor = ReadWords(false);
 	}
@@ -162,7 +162,7 @@ namespace epicr
 
 			nutrients.push_back(nutrient);
 			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between nutrients.",ctoken);
+				ERR_VOID("expected a comma as a seperator between nutrients.", ctoken);
 		}
 
 		rcp->nutrients = nutrients;
@@ -175,12 +175,12 @@ namespace epicr
 		{
 			std::string kitchenware = ReadWords(true);
 			rcp->kitchenware.push_back(kitchenware);
-			
+
 			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between kitchenware.",ctoken);
+				ERR_VOID("expected a comma as a seperator between kitchenware.", ctoken);
 		}
 	}
-	
+
 	void Parser::ParseTags(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
@@ -195,7 +195,7 @@ namespace epicr
 			std::string tag = ReadWords(true);
 			rcp->tags.push_back(tag);
 			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between tags.",ctoken);
+				ERR_VOID("expected a comma as a seperator between tags.", ctoken);
 		}
 	}
 
@@ -224,17 +224,19 @@ namespace epicr
 		ADV_NON_BLANK(2);
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK);
+			// ADV_NON_BLANK(1);
+			// ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
+			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
 			rcp->ingredients.push_back(ingr);
 			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between ingredients.",ctoken);
+				ERR_VOID("expected a comma as a seperator between ingredients.", ctoken);
 		}
 	}
 
 	void Parser::ParseInstructions(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
-		std::vector<instruction> instructions;
+
 		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
 		{
 			instruction singleInstruction = instruction();
@@ -377,7 +379,9 @@ namespace epicr
 					return currentIngredient;
 				}
 				if (currentIngredient.isIngredientRef)
-					ERR("Duplicate asterix", ctoken); // should be a warning
+				{
+					ERR("Duplicate asterix", ctoken);
+				} // should be a warning
 				currentIngredient.isIngredientRef = true;
 			}
 			if (ctoken.type == ETT_QUESTION_MARK)
@@ -416,7 +420,7 @@ namespace epicr
 				return amnt;
 			}
 			amnt.isUncountable = true;
-			amnt.number = std::numeric_limits<double>::infinity();
+			amnt.number = 0;
 			ADV_NON_BLANK(1);
 			return amnt;
 		}
@@ -482,7 +486,7 @@ namespace epicr
 	std::string Parser::ReadWords(bool canReadNumbers)
 	{
 		std::string finalWord = "";
-		
+
 		while (ctoken.type == ETT_WORD || ctoken.type == ETT_BLANK || (canReadNumbers ? ctoken.type == ETT_NUMBER : false))
 		{
 			finalWord += ctoken.word;
@@ -508,7 +512,6 @@ namespace epicr
 		}
 		return 0;
 	}
-	
 
 	void Parser::silence(bool val)
 	{

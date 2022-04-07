@@ -55,7 +55,7 @@ namespace test_lib
 
 	/* Helper function for asserting equality of two strings,
 	 * generating an error message in case of inequality */
-	void expect_equal_s(const std::string expected, const std::string actual)
+	void expect_equal_s(const std::string actual, const std::string expected)
 	{
 		CHECK_TESTS_NON_EMPTY()
 		if (expected == actual)
@@ -64,8 +64,7 @@ namespace test_lib
 			return;
 		}
 
-		std::cout << expected << std::endl;
-		std::cout << actual << std::endl;
+		printf("exp: %s act: %s\n", expected.c_str(), actual.c_str());
 
 		size_t expected_size = expected.size();
 		size_t actual_size = actual.size();
@@ -109,9 +108,9 @@ namespace test_lib
 		std::string aline{aline_v.begin(), aline_v.end()};
 		std::string eline{eline_v.begin(), eline_v.end()};
 
-		char* exp_message = (char*)malloc(300);
-		char* act_message = (char*)malloc(300);
-		char* dif_message = (char*)malloc(300);
+		char *exp_message = (char *)malloc(300);
+		char *act_message = (char *)malloc(300);
+		char *dif_message = (char *)malloc(300);
 		sprintf(exp_message, "Expected: %3i %s", line_num, eline.c_str());
 		sprintf(act_message, "Actual  : %3i %s", line_num, aline.c_str());
 

@@ -122,7 +122,6 @@ namespace epicr
 		epicr::recipe rcp = parser.Parse();
 
 		epicr::parse_ret ret = {rcp, parser.error, parser.error_message};
-
 		return ret;
 	}
 
