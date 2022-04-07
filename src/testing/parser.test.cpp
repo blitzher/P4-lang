@@ -275,8 +275,9 @@ void parse_fields_in_random_order()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/PastaRandomOrder.rcp").recipe;
 
 	test_lib::expect_equal_s(rcp.title, "Pasta");
-	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].name, "wheatflour");
+	test_lib::expect_equal_i(rcp.instructions.size(),3);
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta\n");
+	test_lib::expect_equal_i(rcp.ingredients.size(), 5);
 	test_lib::expect_equal_i(rcp.ingredients[0].amount.number, 300);
 }
 
