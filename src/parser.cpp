@@ -420,7 +420,7 @@ namespace epicr
 				return amnt;
 			}
 			amnt.isUncountable = true;
-			amnt.number = 0;
+			amnt.number = std::numeric_limits<double>::infinity();
 			ADV_NON_BLANK(1);
 			return amnt;
 		}
