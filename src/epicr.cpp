@@ -34,10 +34,6 @@ namespace epicr
 			return "ETT_BRACKET_OPEN"; /* [] */
 		case ETT_BRACKET_CLOSE:
 			return "ETT_BRACKET_CLOSE";
-		case ETT_CURLY_OPEN:
-			return "ETT_CURLY_OPEN"; /* {} */
-		case ETT_CURLY_CLOSE:
-			return "ETT_CURLY_CLOSE";
 		case ETT_PLUS:
 			return "ETT_PLUS"; /* ingredients  + */
 		case ETT_ASTERIX:

@@ -92,8 +92,6 @@ namespace epicr
         ETT_PARENS_CLOSE,  /* ) */
         ETT_BRACKET_OPEN,  /* [ */
         ETT_BRACKET_CLOSE, /* ] */
-        ETT_CURLY_OPEN,    /* { */
-        ETT_CURLY_CLOSE,   /* } */
         ETT_PLUS,          /* + */
         ETT_ASTERIX,       /* * */
         ETT_QUESTION_MARK, /* ? */

@@ -159,10 +159,6 @@ namespace epicr
                 return ETT_BRACKET_OPEN;
             case ']':
                 return ETT_BRACKET_CLOSE;
-            case '{':
-                return ETT_CURLY_OPEN;
-            case '}':
-                return ETT_CURLY_CLOSE;
             case '+':
                 return ETT_PLUS;
             case '*':
