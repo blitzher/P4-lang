@@ -150,7 +150,7 @@ void ingredient_in_instruction_without_amount_has_correct_amount()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isRelativeAmount, 0);
 	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isUncountable, 0); // this one fails now
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.unit, "");
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.unit, "number");
 	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.relativeAmount, "");
 	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.number, 1);
 }

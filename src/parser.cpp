@@ -430,7 +430,7 @@ namespace epicr
 		if (ctoken.type != ETT_BRACKET_OPEN)
 		{
 			amnt.number = 1;
-			amnt.unit = "";
+			amnt.unit = "number";
 			return amnt;
 		}
 
