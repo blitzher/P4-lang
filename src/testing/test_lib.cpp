@@ -30,6 +30,7 @@ namespace test_lib
 {
 	void register_test(std::string func_name)
 	{
+		std::cout <<func_name << std::endl;
 		/* tests are by default unevaluated */
 		tests[func_name] = {func_name, UNEVALUATED, "Call \"accept\" or \"deny\" to evaluate"};
 		most_recent_test = &tests[func_name];

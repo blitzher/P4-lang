@@ -94,8 +94,6 @@ namespace epicr
         ETT_PARENS_CLOSE,  /* ) */
         ETT_BRACKET_OPEN,  /* [ */
         ETT_BRACKET_CLOSE, /* ] */
-        ETT_CURLY_OPEN,    /* { */
-        ETT_CURLY_CLOSE,   /* } */
         ETT_PLUS,          /* + */
         ETT_ASTERIX,       /* * */
         ETT_QUESTION_MARK, /* ? */
@@ -173,7 +171,8 @@ namespace epicr
         amount ReadAmount(ingredient_arg);
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
         accepts a boolean as input stating whether or not it can read numbers as well*/
-        std::string ReadWords(bool);
+        std::string ReadWords(bool,bool);
+        bool ReadWordsPredicate(int,bool,bool);
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
         returns 1 if something went wrong, otherwise returns 0*/
         int ReadSeperatorOrWaitAtNextField();
