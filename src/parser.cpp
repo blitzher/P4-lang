@@ -121,7 +121,7 @@ namespace epicr
 	}
 
 	void Parser::ParseTitle(recipe *rcp)
-	{	
+	{
 		ADV_NON_BLANK(2);
 
 		/* Read all words and spaces in title */
@@ -151,7 +151,7 @@ namespace epicr
 			ERR_VOID("No correct description for amount has been found!", ctoken);
 		}
 		rcp->servings.count += stoi(ctoken.word);
-		
+
 		ADV_NON_BLANK(1);
 		rcp->servings.descriptor = ReadWords(false,false);
 	}
@@ -170,7 +170,7 @@ namespace epicr
 
 			nutrients.push_back(nutrient);
 			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between nutrients.",ctoken);
+				ERR_VOID("expected a comma as a seperator between nutrients.", ctoken);
 		}
 
 		rcp->nutrients = nutrients;
@@ -183,12 +183,12 @@ namespace epicr
 		{
 			std::string kitchenware = ReadWords(true,false);
 			rcp->kitchenware.push_back(kitchenware);
-			
+
 			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between kitchenware.",ctoken);
+				ERR_VOID("expected a comma as a seperator between kitchenware.", ctoken);
 		}
 	}
-	
+
 	void Parser::ParseTags(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
@@ -203,7 +203,7 @@ namespace epicr
 			std::string tag = ReadWords(true,true);
 			rcp->tags.push_back(tag);
 			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between tags.",ctoken);
+				ERR_VOID("expected a comma as a seperator between tags.", ctoken);
 		}
 	}
 
@@ -232,17 +232,19 @@ namespace epicr
 		ADV_NON_BLANK(2);
 		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
 		{
-			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK);
+			// ADV_NON_BLANK(1);
+			// ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
+			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
 			rcp->ingredients.push_back(ingr);
 			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between ingredients.",ctoken);
+				ERR_VOID("expected a comma as a seperator between ingredients.", ctoken);
 		}
 	}
 
 	void Parser::ParseInstructions(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
-		std::vector<instruction> instructions;
+
 		while (utoken.type != ETT_COLON && utoken.type != ETT_EOF)
 		{
 			instruction singleInstruction = instruction();
@@ -280,7 +282,7 @@ namespace epicr
 		while (ctoken.type != ETT_PARENS_CLOSE) /*reads every ingredient in the "with"*/
 		{
 			ADV_NON_BLANK(1);
-			ingredient currentIngredient = ReadIngredient(0);
+			ingredient currentIngredient = ReadIngredient(ASSUME_REST);
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between ingredient or a closing parenthesis for the 'with'", ctoken);
@@ -351,18 +353,17 @@ namespace epicr
 	}
 
 	void Parser::ParseInstructionYield(instruction *singleInstruction)
-	{
-		do
-		{
-			if (ctoken.type == ETT_COMMA)
-				ADV_NON_BLANK(1);
-			if (ctoken.type == ETT_EOF)
-				break;
-			ingredient currentYield = ReadIngredient(HAS_PLUS);
-			singleInstruction->yields.push_back(currentYield);
-		} while (ctoken.type == ETT_COMMA);
-	}
-
+    {
+        do
+        {
+            if (ctoken.type == ETT_COMMA)
+                ADV_NON_BLANK(1);
+            if (ctoken.type == ETT_EOF)
+                break;
+            ingredient currentYield = ReadIngredient(HAS_PLUS);
+            singleInstruction->yields.push_back(currentYield);
+        } while (ctoken.type == ETT_COMMA);
+    }
 	ingredient Parser::ReadIngredient(ingredient_arg arg)
 	{
 		bool canHaveAsterix = (arg & HAS_ASTERIX) >> 1;
@@ -386,7 +387,9 @@ namespace epicr
 					return currentIngredient;
 				}
 				if (currentIngredient.isIngredientRef)
-					ERR("Duplicate asterix", ctoken); // should be a warning
+				{
+					ERR("Duplicate asterix", ctoken);
+				} // should be a warning
 				currentIngredient.isIngredientRef = true;
 			}
 			if (ctoken.type == ETT_QUESTION_MARK)
@@ -412,6 +415,8 @@ namespace epicr
 	amount Parser::ReadAmount(ingredient_arg arg)
 	{
 		bool canHavePlus = (arg & HAS_PLUS);
+		bool assume_1_num = (arg & ASSUME_1_NUM) >> 3;
+		bool assume_rest = (arg & ASSUME_REST) >> 4;
 		amount amnt = amount();
 
 		if (ctoken.type == ETT_PLUS)
@@ -429,8 +434,17 @@ namespace epicr
 
 		if (ctoken.type != ETT_BRACKET_OPEN)
 		{
-			amnt.number = 1;
-			amnt.unit = "number";
+
+			if (assume_1_num)
+			{
+				amnt.number = 1;
+				amnt.unit = "number";
+			}
+			else if (assume_rest)
+			{
+				amnt.isRelativeAmount = true;
+				amnt.relativeAmount = "rest";
+			}
 			return amnt;
 		}
 
@@ -450,11 +464,16 @@ namespace epicr
 			std::string validRelatives[]{"rest", "quarter", "half", "all"};
 
 			bool isValid = false;
-			for (size_t i = 0; i < 4; i++)
+			size_t i;
+			for (i = 0; i < 4; i++)
 			{
 				if (validRelatives[i] == amnt.relativeAmount)
+				{
 					isValid = true;
+					break;
+				}
 			}
+
 			if (!isValid)
 			{
 				ERR("Invalid relative amount", ctoken);
@@ -484,8 +503,8 @@ namespace epicr
 
 		if (ctoken.type == ETT_NEWLINE)
 			ADV_NON_BLANK(1);
-		finalWord = strip_spaces_right(finalWord);
-		return finalWord;
+
+		return strip_spaces_right(finalWord);
 	}
 	
 	bool Parser::ReadWordsPredicate(int ctokenType, bool canReadNumbers, bool canReadParenthesis)
@@ -522,7 +541,6 @@ namespace epicr
 		}
 		return 0;
 	}
-	
 
 	void Parser::silence(bool val)
 	{

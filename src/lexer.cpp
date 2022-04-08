@@ -1,4 +1,3 @@
-
 #include "./epicr.h"
 
 using namespace std;
@@ -9,9 +8,9 @@ using namespace std;
 struct compare
 {
     char key;
-    compare(char const& i) : key(i) {}
+    compare(char const &i) : key(i) {}
 
-    bool operator()(char const& i)
+    bool operator()(char const &i)
     {
         return (i == key);
     }
@@ -24,17 +23,17 @@ struct compare
 
 namespace epicr
 {
-    vector<char> token_breakers = { ' ', '\n', 0x0d, ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*' };
+    vector<char> token_breakers = {' ', '\n', 0x0d, ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*'};
 
 #pragma region Lexer implementation
 
-    Lexer::Lexer(ifstream& file) : istream(file)
+    Lexer::Lexer(ifstream &file) : istream(file)
     {
         line_num = 1;
         token_count = 0;
         ready = file.is_open();
     }
-    Lexer::Lexer(std::istream& stream) : istream(stream)
+    Lexer::Lexer(std::istream &stream) : istream(stream)
     {
         line_num = 1;
         token_count = 0;
@@ -48,7 +47,7 @@ namespace epicr
         if (istream.eof() || !ready)
         {
             ready = false;
-            return { "EOF", ETT_EOF, token_count, line_num };
+            return {"EOF", ETT_EOF, token_count, line_num};
         }
 
         vector<char> vtoken;
@@ -69,9 +68,8 @@ namespace epicr
 
                         vtoken.push_back(ch);
                         istream.get(ch);
-                    } while (!istream.eof() && (
-                        ch == vtoken[0] || /* repeating space and LF endings */
-                        (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings */
+                    } while (!istream.eof() && (ch == vtoken[0] ||                 /* repeating space and LF endings */
+                                                (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings */
 
                     if (vtoken[0] == '\n')
                     {
@@ -114,8 +112,7 @@ namespace epicr
         if (stoken.size() == 0)
             return next_token();
 
-        epicr_token token{ stoken, token_type(stoken), token_count++, line_num };
-
+        epicr_token token{stoken, token_type(stoken), token_count++, line_num};
 
         return token;
     }
