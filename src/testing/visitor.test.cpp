@@ -32,8 +32,8 @@ void all_ingredients_used()
 	}
 	
 
-	test_lib::expect_equal_i(rcp.ingredients[0].amount.amount, 0);
-	test_lib::expect_equal_i(rcp.ingredients[1].amount.amount, 0);
+	test_lib::expect_equal_i(rcp.ingredients[0].amount.number, 0);
+	test_lib::expect_equal_i(rcp.ingredients[1].amount.number, 0);
 }
 
 int main(void){

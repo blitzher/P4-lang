@@ -65,11 +65,11 @@ namespace epicr::visitor
                         break;
                     case 'h': /* half */
                         ingr.amount = original_symbols[ingr.name].amount;
-                        ingr.amount.amount *= 0.5f;
+                        ingr.amount.number *= 0.5f;
                         break;
                     case 'q': /* quarter */
                         ingr.amount = original_symbols[ingr.name].amount;
-                        ingr.amount.amount *= 0.25f;
+                        ingr.amount.number *= 0.25f;
                         break;
                     case 'a': /* all */
                         ingr.amount = original_symbols[ingr.name].amount;
@@ -86,14 +86,14 @@ namespace epicr::visitor
                 if (symbols[ingr.name].amount.isUncountable)
                 {
                 }
-                else if (ingr.amount.amount > symbols[ingr.name].amount.amount)
+                else if (ingr.amount.number > symbols[ingr.name].amount.number)
                 {
                     ingredients_compatible(symbols[ingr.name], ingr);
                     ERR("Used too much of ingredient");
                     return;
                 }
 
-                symbols[ingr.name].amount.amount -= ingr.amount.amount;
+                symbols[ingr.name].amount.number -= ingr.amount.number;
             }
 
             /* yield */
@@ -107,7 +107,7 @@ namespace epicr::visitor
                         ERR("Yielded ingredient of different unit type than in ingredients list");
                         return;
                     }
-                    symbols[yield.name].amount.amount += yield.amount.amount;
+                    symbols[yield.name].amount.number += yield.amount.number;
                 }
                 /* if */
                 else
@@ -118,12 +118,12 @@ namespace epicr::visitor
         for (auto KeyValuePair : symbols)
         {
             ingredient ingr = KeyValuePair.second;
-            if (ingr.amount.amount != 0 && ingr.name != rcp.title)
+            if (ingr.amount.number != 0 && ingr.name != rcp.title)
             {
                 ERR("Unused ingredient after instructions");
             }
 
-            printf("[%s %lf %s]\n", ingr.name.c_str(), ingr.amount.amount, ingr.amount.unit.c_str());
+            printf("[%s %lf %s]\n", ingr.name.c_str(), ingr.amount.number, ingr.amount.unit.c_str());
         }
     }
 
