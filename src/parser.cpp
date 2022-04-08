@@ -134,6 +134,7 @@ namespace epicr
 			rcp->description += ctoken.word;
 			ADV(1);
 		}
+		rcp->description = strip_spaces_right(rcp->description);
 	}
 	void Parser::ParseServings(recipe *rcp)
 	{
