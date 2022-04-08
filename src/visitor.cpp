@@ -6,11 +6,12 @@
         error = s;        \
     }
 
+/* Check if something exits in the map. E.g checks if an ingredient is in the ingredient list */
 bool map_contains(std::unordered_map<std::string, epicr::ingredient> m, std::string k)
 {
-    for (auto pair : m)
+    for (auto KeyValuePair : m)
     {
-        if (pair.first == k)
+        if (KeyValuePair.first == k)
             return true;
     }
     return false;
@@ -18,13 +19,14 @@ bool map_contains(std::unordered_map<std::string, epicr::ingredient> m, std::str
 
 namespace epicr::visitor
 {
-
+/* Just used to group things */
 #pragma region IngredientVerifier implementation
+
     IngredientVerifier::IngredientVerifier()
     {
         symbols = std::unordered_map<std::string, ingredient>();
         original_symbols = std::unordered_map<std::string, ingredient>();
-        has_error = 0;
+        has_error = false;
     };
     void IngredientVerifier::visit(recipe a_rcp)
     {
@@ -39,7 +41,8 @@ namespace epicr::visitor
             original_symbols[ingr.name] = ingr;
         }
 
-        /* check the flow of the instructions are reasonable */
+        /* check the flow of the instructions are reasonable
+        aka check if the recipe comply by all the rules */
 
         for (auto inst : rcp.instructions)
         {
@@ -106,15 +109,15 @@ namespace epicr::visitor
                     }
                     symbols[yield.name].amount.amount += yield.amount.amount;
                 }
-                /* if  */
+                /* if */
                 else
                     symbols[yield.name] = yield;
             }
         }
 
-        for (auto pair : symbols)
+        for (auto KeyValuePair : symbols)
         {
-            ingredient ingr = pair.second;
+            ingredient ingr = KeyValuePair.second;
             if (ingr.amount.amount != 0 && ingr.name != rcp.title)
             {
                 ERR("Unused ingredient after instructions");
