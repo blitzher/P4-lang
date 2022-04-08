@@ -149,10 +149,10 @@ void ingredient_in_instruction_without_amount_has_correct_amount()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+
 	epicr::amount amnt = rcp.instructions[2].ingredients[0].amount;
 	test_lib::expect_equal_i(amnt.isRelativeAmount, 1);
 	test_lib::expect_equal_i(amnt.isUncountable, 0);
-	printf("amount unit  (%s) \n", amnt.unit.c_str());
 	test_lib::expect_equal_s(amnt.unit, "");
 	test_lib::expect_equal_s(amnt.relativeAmount, "rest");
 	test_lib::expect_equal_i(amnt.number, 0);

@@ -434,6 +434,7 @@ namespace epicr
 
 		if (ctoken.type != ETT_BRACKET_OPEN)
 		{
+
 			if (assume_1_num)
 			{
 				amnt.number = 1;
