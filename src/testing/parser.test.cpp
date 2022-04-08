@@ -56,7 +56,7 @@ void parsed_tags()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.tags.size(),3);
+	test_lib::expect_equal_i(rcp.tags.size(), 3);
 	test_lib::expect_equal_s(rcp.tags[0], "pasta");
 	test_lib::expect_equal_s(rcp.tags[1], "easy to make (for most)");
 	test_lib::expect_equal_s(rcp.tags[2], "under 2 hours");
@@ -67,7 +67,7 @@ void parsed_kitchenware()
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.kitchenware.size(),2);
+	test_lib::expect_equal_i(rcp.kitchenware.size(), 2);
 	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
 }
@@ -97,6 +97,7 @@ void parsed_ingredients()
 	}
 	if (rcp.ingredients[4].amount.number != std::numeric_limits<double>::infinity())
 	{
+		std::cout<<rcp.ingredients[4].amount.number;
 		test_lib::deny("Expected ingredient extra wheatflour to have amount set to INF");
 	}
 }
@@ -148,11 +149,13 @@ void ingredient_in_instruction_without_amount_has_correct_amount()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isRelativeAmount, 0);
-	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.isUncountable, 0); // this one fails now
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.unit, "");
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].amount.relativeAmount, "");
-	test_lib::expect_equal_i(rcp.instructions[2].ingredients[0].amount.number, 1);
+	epicr::amount amnt = rcp.instructions[2].ingredients[0].amount;
+	test_lib::expect_equal_i(amnt.isRelativeAmount, 1);
+	test_lib::expect_equal_i(amnt.isUncountable, 0);
+	printf("amount unit  (%s) \n", amnt.unit.c_str());
+	test_lib::expect_equal_s(amnt.unit, "");
+	test_lib::expect_equal_s(amnt.relativeAmount, "rest");
+	test_lib::expect_equal_i(amnt.number, 0);
 }
 
 void second_instruction_has_no_ingredients()

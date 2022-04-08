@@ -75,7 +75,6 @@ namespace epicr::visitor
                         ingr.amount = original_symbols[ingr.name].amount;
                         break;
                     default:
-
                         char *err = (char *)malloc(100);
                         sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relativeAmount.c_str(), ingr.name.c_str());
                         ERR(err);
@@ -83,16 +82,12 @@ namespace epicr::visitor
                     }
                 }
 
-                if (symbols[ingr.name].amount.isUncountable)
-                {
-                }
-                else if (ingr.amount.number > symbols[ingr.name].amount.number)
+                if (ingr.amount.number > symbols[ingr.name].amount.number)
                 {
                     ingredients_compatible(symbols[ingr.name], ingr);
                     ERR("Used too much of ingredient");
                     return;
                 }
-
                 symbols[ingr.name].amount.number -= ingr.amount.number;
             }
 
@@ -109,7 +104,7 @@ namespace epicr::visitor
                     }
                     symbols[yield.name].amount.number += yield.amount.number;
                 }
-                /* if */
+                /* otherwise, add it to the symbol table */
                 else
                     symbols[yield.name] = yield;
             }
@@ -129,7 +124,6 @@ namespace epicr::visitor
 
     bool IngredientVerifier::ingredients_compatible(ingredient a, ingredient b)
     {
-        printf("a unit: %s, b unit: %s\n", a.amount.unit.c_str(), b.amount.unit.c_str());
         if (a.amount.unit != b.amount.unit)
         {
             ERR("Invalid unit used in instruction");
