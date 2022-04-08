@@ -105,6 +105,13 @@ namespace epicr
 				ParseIngredients(&rcp);
 			else if (to_lower(ctoken.word) == "instructions")
 				ParseInstructions(&rcp);
+			/*if there is a colon as the utoken, and it didn't match any of the other statements,
+			then it must be an invalid field */
+			else if (utoken.type == ETT_COLON) 
+			{
+				ERR("invalid field: No field with this name",ctoken);
+				return rcp;
+			}
 			else
 			{
 				ADV(1);
@@ -340,8 +347,6 @@ namespace epicr
 			}
 			Body.push_back(iword);
 		}
-		for(size_t i = 0;i<Body.size();i++)
-			std::cout<<Body[i].spelling;
 		currentInstruction->body = Body;
 	}
 
@@ -400,7 +405,6 @@ namespace epicr
 			ADV_NON_BLANK(1);
 		}
 		ingredientAmount = ReadAmount(arg);
-
 		currentIngredient.amount = ingredientAmount;
 		return currentIngredient;
 	}
