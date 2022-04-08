@@ -58,7 +58,7 @@ void parsed_tags()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.tags.size(),3);
 	test_lib::expect_equal_s(rcp.tags[0], "pasta");
-	test_lib::expect_equal_s(rcp.tags[1], "easy to make");
+	test_lib::expect_equal_s(rcp.tags[1], "easy to make (for most)");
 	test_lib::expect_equal_s(rcp.tags[2], "under 2 hours");
 }
 
@@ -220,7 +220,7 @@ void first_instruction_body_text_is_parsed_correctly()
 	std::string expectedInstructionBody = std::string("Put the 300.000000 g wheatflour on the table and make a cavity in the middle.\n") +
 										  std::string("Crack the 3.000000 eggs in the cavity, and add salt.\n") +
 										  std::string("Start mixing the eggs into the wheatflour.\n") +
-										  std::string("If the dough becomes to dry, add water, and if it becomes to sticky add wheatflour.\n") +
+										  std::string("If the dough becomes too dry, add water, and if it becomes to sticky add wheatflour.\n") +
 										  std::string("Knead the dough thoroughly.\n");
 	std::string actualInstructionBody = "";
 	for (size_t i = 0; i < actualInstructionBodySize; i++)
