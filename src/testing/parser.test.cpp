@@ -82,6 +82,16 @@ void parsed_tags()
 	test_lib::expect_equal_s(rcp.tags[2], "under 2 hours");
 }
 
+void parsed_kitchenware()
+{
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.kitchenware.size(), 2);
+	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
+	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
+}
+
 void parsed_ingredients()
 {
 	test_lib::REGISTER;
@@ -95,6 +105,7 @@ void parsed_ingredients()
 		test_lib::deny(m);
 		return;
 	}
+
 
 	test_lib::expect_equal_s(rcp.ingredients[4].name, "extra wheatflour");
 	if (!rcp.ingredients[4].isOptional)
@@ -314,6 +325,7 @@ int main(void)
 	parsed_total_time();
 	parsed_tags();
 	parsed_ingredients();
+	parsed_kitchenware();
 	instrucions_has_correct_number_of_instructions();
 	instruction_has_correct_amount_of_ingredients();
 	instruction_has_correct_ingredients_name();
