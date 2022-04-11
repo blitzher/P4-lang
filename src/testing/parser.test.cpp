@@ -62,16 +62,6 @@ void parsed_tags()
 	test_lib::expect_equal_s(rcp.tags[2], "under 2 hours");
 }
 
-void parsed_kitchenware()
-{
-	test_lib::REGISTER;
-
-	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(rcp.kitchenware.size(), 2);
-	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
-	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
-}
-
 void parsed_ingredients()
 {
 	test_lib::REGISTER;
@@ -102,45 +92,48 @@ void parsed_ingredients()
 	}
 }
 
-void instrucions_has_correct_amount_of_instructions()
+void instrucions_has_correct_number_of_instructions()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.instructions.size(), 3);
 }
 
-void first_instruction_has_correct_amount_of_ingredients()
+void instruction_has_correct_amount_of_ingredients()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients.size(), 4);
 }
 
-void first_instruction_has_correct_ingredients_name()
+void instruction_has_correct_ingredients_name()
 {
-	std::vector<std::string> ingredients = {"wheatflour", "egg", "salt", "water"};
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+
+	std::vector<std::string> ingredients = {"wheatflour", "egg", "salt", "water"};
 	size_t ingredientSize = ingredients.size();
 	for (size_t i = 0; i < ingredientSize; i++)
 	{
 		test_lib::expect_equal_s(rcp.instructions[0].ingredients[i].name, ingredients[i]);
 	}
+
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].name, "dough");
+	test_lib::expect_equal_s(rcp.instructions[2].ingredients[1].name, "extra wheatflour");
+
 }
 
-void first_ingredient_in_first_instruction_has_correct_amount()
+void ingredient_in_instruction_has_correct_amount()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+
+	/* First ingredient */
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.isRelativeAmount, 0); // this one fails
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.number, 300);
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "g");
-}
 
-void second_ingredient_in_first_instruction_has_correct_amount()
-{
-	test_lib::REGISTER;
-	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	/* Second ingredient */
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients[1].amount.isRelativeAmount, 1);
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[1].amount.relativeAmount, "all");
 }
@@ -165,14 +158,6 @@ void second_instruction_has_no_ingredients()
 	test_lib::expect_equal_i(rcp.instructions[1].ingredients.size(), 0);
 }
 
-void third_instruction_has_correct_ingredients_name()
-{
-	test_lib::REGISTER;
-	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].name, "dough");
-	test_lib::expect_equal_s(rcp.instructions[2].ingredients[1].name, "extra wheatflour");
-}
-
 void first_instruction_has_no_kitchenware()
 {
 	test_lib::REGISTER;
@@ -180,26 +165,22 @@ void first_instruction_has_no_kitchenware()
 	test_lib::expect_equal_i(rcp.instructions[0].kitchenware.size(), 0);
 }
 
-void second_instruction_has_correct_amount_of_kitchenware()
+void instruction_has_correct_amount_of_kitchenware()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.instructions[1].kitchenware.size(), 1);
 }
 
-void second_instruction_has_correct_kitchenware_name()
+void instruction_has_correct_kitchenware_name()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_s(rcp.instructions[1].kitchenware[0], "plastic wrap");
-}
 
-void third_instruction_has_correct_kitchenware_name()
-{
-	test_lib::REGISTER;
-	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_s(rcp.instructions[1].kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.instructions[2].kitchenware[0], "kitchenroller");
 }
+
 
 void parsed_instruction_body()
 {
@@ -215,7 +196,7 @@ void parsed_instruction_body()
 	test_lib::expect_equal_i(body[4].value.number, 300);
 	test_lib::expect_equal_s(body[4].value.unit, "g");
 }
-void first_instruction_body_text_is_parsed_correctly()
+void instruction_body_text_is_parsed_correctly()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
@@ -257,14 +238,14 @@ void instruction_body_non_amounts_have_is_amount_set_to_false()
 	test_lib::expect_equal_i(0, rcp.instructions[1].body[0].is_amount);	 // should be false - ie 0
 }
 
-void first_instruction_yields_zero_ingredients()
+void instruction_yields_zero_ingredients()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.instructions[0].yields.size(), 0);
 }
 
-void second_instruction_yields_an_ingredient()
+void instruction_yields_an_ingredient()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
@@ -310,26 +291,22 @@ int main(void)
 	parsed_cook_time();
 	parsed_total_time();
 	parsed_tags();
-	parsed_kitchenware();
 	parsed_ingredients();
-	instrucions_has_correct_amount_of_instructions();
-	first_instruction_has_correct_amount_of_ingredients();
-	first_instruction_has_correct_ingredients_name();
-	first_ingredient_in_first_instruction_has_correct_amount();
-	second_ingredient_in_first_instruction_has_correct_amount();
+	instrucions_has_correct_number_of_instructions();
+	instruction_has_correct_amount_of_ingredients();
+	instruction_has_correct_ingredients_name();
+	ingredient_in_instruction_has_correct_amount();
 	ingredient_in_instruction_without_amount_has_correct_amount();
 	second_instruction_has_no_ingredients();
-	third_instruction_has_correct_ingredients_name();
 	first_instruction_has_no_kitchenware();
-	second_instruction_has_correct_amount_of_kitchenware();
-	second_instruction_has_correct_kitchenware_name();
-	third_instruction_has_correct_kitchenware_name();
+	instruction_has_correct_amount_of_kitchenware();
+	instruction_has_correct_kitchenware_name();
 	parsed_instruction_body();
-	first_instruction_body_text_is_parsed_correctly();
+	instruction_body_text_is_parsed_correctly();
 	instruction_body_amounts_have_is_amount_set_to_true();
 	instruction_body_non_amounts_have_is_amount_set_to_false();
-	first_instruction_yields_zero_ingredients();
-	second_instruction_yields_an_ingredient();
+	instruction_yields_zero_ingredients();
+	instruction_yields_an_ingredient();
 	parse_fields_in_random_order();
 	parse_recipe_with_random_casing();
 	test_lib::print_recap();
