@@ -98,7 +98,9 @@
     "__tuple": "cpp",
     "complex": "cpp",
     "mutex": "cpp",
-    "codecvt": "cpp"
+    "codecvt": "cpp",
+    "stop_token": "cpp",
+    "thread": "cpp"
   },
   "editor.tabSize": 4,
   "C_Cpp.default.cppStandard": "c++17",

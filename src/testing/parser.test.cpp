@@ -1,5 +1,25 @@
 #include "./test_lib.h"
 
+void pasta_recipe_parses_without_error()
+{
+	test_lib::REGISTER;
+	std::ifstream f = epicr::open_file("src/test-recipes/Pasta.rcp");
+	epicr::Lexer l = epicr::Lexer(f);
+	epicr::Parser p = epicr::Parser(&l);
+	epicr::recipe rcp = p.Parse();
+	test_lib::expect_equal_i(p.error,0);
+}
+
+void carbonara_recipe_parses_without_error()
+{
+	test_lib::REGISTER;
+	std::ifstream f = epicr::open_file("src/test-recipes/Carbonara.rcp");
+	epicr::Lexer l = epicr::Lexer(f);
+	epicr::Parser p = epicr::Parser(&l);
+	epicr::recipe rcp = p.Parse();
+	test_lib::expect_equal_i(p.error,0);
+}
+
 void parsed_title()
 {
 	test_lib::REGISTER;
@@ -284,6 +304,8 @@ void parse_recipe_with_random_casing()
 
 int main(void)
 {
+	pasta_recipe_parses_without_error();
+	carbonara_recipe_parses_without_error();
 	parsed_title();
 	parsed_description();
 	parsed_servings();
