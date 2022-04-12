@@ -39,19 +39,25 @@ namespace epicr
 		string instructions_section = "";
 		char* instr_s = (char*)malloc(MAX_S_LENGTH);
 		char* base_s = (char*)malloc(MAX_B_LENGTH);
-		int indx = 0;
+		int index = 0;
 		for (auto inst : rcp.instructions)
 		{
-			indx++;
+			index++;
 			string ingredients = "";
 			for (auto ingr : inst.ingredients)
 				ingredients += ingr.name + " ";
 
 			string body = "";
 			for (auto word : inst.body)
+			{
 				body += word.spelling;
-
-			string step_text = "Step " + std::to_string(indx);
+				if (word.is_amount == true)
+				{
+					body += epicr::double_to_string(word.value.number);
+					body += " " + word.value.unit;
+				}
+			}
+			string step_text = "Step " + std::to_string(index);
 			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), body.c_str());
 			instructions_section += instr_s;
 		}
