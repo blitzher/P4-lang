@@ -70,8 +70,9 @@ $(T_TARGETS)::
 	@./$@
 
 # runnable targets 
-test: $(T_TARGETS)
+test::
 	@rm -rf $(BINDIR)/.tests
+test:: $(T_TARGETS)
 	@echo "Finished tests"
 
 run: $(BINDIR)/$(TARGET)

@@ -32,19 +32,35 @@ namespace epicr
         line_num = 1;
         token_count = 0;
         ready = file.is_open();
+        can_return_pre_eof_token = false;
+        is_peaking = false;
     }
+
     Lexer::Lexer(std::istream &stream) : istream(stream)
     {
         line_num = 1;
         token_count = 0;
         ready = !stream.eof();
+        can_return_pre_eof_token = false;
+        is_peaking = false;
     }
 
     epicr_token Lexer::next_token()
     {
-
+        // std::cout << can_return_pre_eof_token << ready << "getting token\n";
+        // print_token(pre_eof_token);
         /* Check if the file stream is ended */
-        if (istream.eof() || !ready)
+        if (!ready)
+        {
+            return {"EOF", ETT_EOF, token_count, line_num};
+        }
+        else if (istream.eof() && can_return_pre_eof_token)
+        {
+            can_return_pre_eof_token = false;
+            ready = false;
+            return pre_eof_token;
+        }
+        else if (istream.eof())
         {
             ready = false;
             return {"EOF", ETT_EOF, token_count, line_num};
@@ -78,7 +94,7 @@ namespace epicr
 
                     /* since we encountered a non-blank, step back once */
                     if (!istream.eof()) /* can't seek when at EOF */
-                                         /* seek from current position */
+                                        /* seek from current position */
                         istream.seekg(-1, ios_base::cur);
                     break;
                 }
@@ -113,7 +129,12 @@ namespace epicr
             return next_token();
 
         epicr_token token{stoken, token_type(stoken), token_count++, line_num};
-
+        /* store most recent token, in case we were peaking, and hit eof */
+        pre_eof_token = token;
+        if (is_peaking && istream.eof())
+        {
+            can_return_pre_eof_token = true;
+        }
         return token;
     }
 
@@ -210,6 +231,8 @@ namespace epicr
         size_t offset = 0;
         uint line_offset = 0;
         epicr_token token;
+        is_peaking = true;
+
         for (int i = 0; i < amnt; i++)
         {
             token = next_token();
@@ -220,8 +243,12 @@ namespace epicr
         token_count -= amnt;
         line_num -= line_offset;
         /* retract the header by the width of the read tokens */
+
+        // printf("can_return...:%i eof_flag:%i ready:%i\n", can_return_pre_eof_token, istream.eof(), ready);
+        is_peaking = false;
         if (!istream.eof())
             istream.seekg(-offset, ios_base::cur);
+
         return token;
     }
 
@@ -236,6 +263,7 @@ namespace epicr
         epicr_token token;
         size_t offset = 0;
         size_t line_offset = 0;
+        is_peaking = true;
 
         while (non_blank_count < amnt)
         {
@@ -251,12 +279,13 @@ namespace epicr
 
         token_count -= amnt;
         line_num -= line_offset;
+        is_peaking = false;
         if (!istream.eof())
-        /* seekg is used seek an arbitary position in the file. 
-           offset is the amount of chars read since start. 
-           offset makes it possible to backtrack to the place we were at before and it is used in Lexer::peek_token
-           ios_base is the input output stream
-           cur is the current position in stream   */
+            /* seekg is used seek an arbitary position in the file.
+               offset is the amount of chars read since start.
+               offset makes it possible to backtrack to the place we were at before and it is used in Lexer::peek_token
+               ios_base is the input output stream
+               cur is the current position in stream   */
             istream.seekg(-offset, ios_base::cur);
 
         return token;

@@ -62,7 +62,7 @@ namespace epicr
         int count;
         std::string descriptor;
     } servings;
-  
+
     typedef struct time_s
     {
         std::string prep_time;
@@ -120,6 +120,9 @@ namespace epicr
         uint token_count;
         uint line_num;
         bool ready;
+        bool can_return_pre_eof_token;
+        epicr_token pre_eof_token;
+        bool is_peaking;
 
     public:
         Lexer();
@@ -171,8 +174,8 @@ namespace epicr
         amount ReadAmount(ingredient_arg);
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
         accepts a boolean as input stating whether or not it can read numbers as well*/
-        std::string ReadWords(bool,bool);
-        bool ReadWordsPredicate(int,bool,bool);
+        std::string ReadWords(bool, bool);
+        bool ReadWordsPredicate(epicr_token_type, bool, bool);
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
         returns 1 if something went wrong, otherwise returns 0*/
         int ReadSeperatorOrWaitAtNextField();

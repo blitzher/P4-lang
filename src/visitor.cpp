@@ -44,8 +44,10 @@ namespace epicr::visitor
         /* check the flow of the instructions are reasonable
         aka check if the recipe comply by all the rules */
 
+        int instruction_count = 0;
         for (auto inst : rcp.instructions)
         {
+            instruction_count++;
             /* consume */
             for (auto ingr : inst.ingredients)
             {
@@ -99,7 +101,11 @@ namespace epicr::visitor
                 {
                     if (!ingredients_compatible(symbols[yield.name], yield))
                     {
-                        ERR("Yielded ingredient of different unit type than in ingredients list");
+                        char *err_msg = (char *)malloc(200);
+                        sprintf(err_msg, "Differing unit types for yield\
+\nIn list: %s\nIn yield: %s\nFor ingredient '%s' in instruction #%i\n",
+                                symbols[yield.name].amount.unit.c_str(), yield.amount.unit.c_str(), yield.name.c_str(), instruction_count);
+                        ERR(err_msg);
                         return;
                     }
                     symbols[yield.name].amount.number += yield.amount.number;
@@ -113,12 +119,10 @@ namespace epicr::visitor
         for (auto KeyValuePair : symbols)
         {
             ingredient ingr = KeyValuePair.second;
-            if (ingr.amount.number != 0 && ingr.name != rcp.title)
+            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != rcp.title)
             {
                 ERR("Unused ingredient after instructions");
             }
-
-            printf("[%s %lf %s]\n", ingr.name.c_str(), ingr.amount.number, ingr.amount.unit.c_str());
         }
     }
 

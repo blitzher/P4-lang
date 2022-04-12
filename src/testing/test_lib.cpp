@@ -5,7 +5,7 @@
  * and accepting/denying based on the results, which update
  * the state of the most recently registered test. */
 std::unordered_map<std::string, test_lib::test_data> tests;
-test_lib::test_data* most_recent_test;
+test_lib::test_data *most_recent_test;
 
 #define CHECK_TESTS_NON_EMPTY(return_val)                            \
 	{                                                                \
@@ -16,7 +16,7 @@ test_lib::test_data* most_recent_test;
 			return return_val;                                       \
 		}                                                            \
 	}
-size_t c_str_size(char* c_str)
+size_t c_str_size(char *c_str)
 {
 	size_t i = 0;
 	while (c_str[i] != '\0')
@@ -32,26 +32,26 @@ namespace test_lib
 	void register_test(std::string func_name)
 	{
 		/* tests are by default unevaluated */
-		tests[func_name] = { func_name, UNEVALUATED, "Call \"accept\" or \"deny\" to evaluate" };
+		tests[func_name] = {func_name, UNEVALUATED, "Call \"accept\" or \"deny\" to evaluate"};
 		most_recent_test = &tests[func_name];
 	}
 
 	void accept()
 	{
 		CHECK_TESTS_NON_EMPTY()
-			if (most_recent_test->test_state == UNEVALUATED)
-			{
-				most_recent_test->test_state = ACCEPT;
-				most_recent_test->err_message = "";
-			}
+		if (most_recent_test->test_state == UNEVALUATED)
+		{
+			most_recent_test->test_state = ACCEPT;
+			most_recent_test->err_message = "";
+		}
 	}
 
 	void deny(std::string err_message)
 	{
-		CHECK_TESTS_NON_EMPTY()
-			most_recent_test->test_state = FAIL;
+		CHECK_TESTS_NON_EMPTY();
+		most_recent_test->test_state = FAIL;
 		most_recent_test->err_message = err_message;
-		failed = 1; /* fail */
+		failed = 1;
 	}
 
 	/* Helper function for asserting equality of two strings,
@@ -106,12 +106,12 @@ namespace test_lib
 			aline_v.push_back(actual[i++]);
 
 		/* copy line into strings */
-		std::string aline{ aline_v.begin(), aline_v.end() };
-		std::string eline{ eline_v.begin(), eline_v.end() };
+		std::string aline{aline_v.begin(), aline_v.end()};
+		std::string eline{eline_v.begin(), eline_v.end()};
 
-		char* exp_message = (char*)malloc(100);
-		char* act_message = (char*)malloc(100);
-		char* dif_message = (char*)malloc(100);
+		char *exp_message = (char *)malloc(100);
+		char *act_message = (char *)malloc(100);
+		char *dif_message = (char *)malloc(100);
 		sprintf(exp_message, "Expected: %3i %s", line_num, eline.c_str());
 		sprintf(act_message, "Actual  : %3i %s", line_num, aline.c_str());
 
@@ -130,7 +130,7 @@ namespace test_lib
 
 		/* insert the expected line, actual line and
 		 * difference message into the error message */
-		char* err_message = (char*)malloc(512 * sizeof(char));
+		char *err_message = (char *)malloc(512 * sizeof(char));
 		sprintf(err_message, "\n%s\n%s\n%s", exp_message, act_message, dif_message);
 		deny(err_message);
 
@@ -145,28 +145,28 @@ namespace test_lib
 	{
 		CHECK_TESTS_NON_EMPTY()
 
-			if (expected == actual)
-				accept();
-			else
-			{
-				char* err_message = (char*)malloc(100);
-				sprintf(err_message, "\nExpected: %-5i\nActual: %-5i", expected, actual);
-				deny(err_message);
-			}
+		if (expected == actual)
+			accept();
+		else
+		{
+			char *err_message = (char *)malloc(100);
+			sprintf(err_message, "\nExpected: %-5i\nActual: %-5i", expected, actual);
+			deny(err_message);
+		}
 	}
 
 	void expect_equal_d(const double actual, const double expected)
 	{
 		CHECK_TESTS_NON_EMPTY()
 
-			if (expected == actual)
-				accept();
-			else
-			{
-				char* err_message = (char*)malloc(100);
-				sprintf(err_message, "\nExpected: %-5lf\nActual: %-5lf", expected, actual);
-				deny(err_message);
-			}
+		if (expected == actual)
+			accept();
+		else
+		{
+			char *err_message = (char *)malloc(100);
+			sprintf(err_message, "\nExpected: %-5lf\nActual: %-5lf", expected, actual);
+			deny(err_message);
+		}
 	}
 
 	void expect_equal_b(const bool actual, const bool expected)
@@ -177,7 +177,7 @@ namespace test_lib
 			accept();
 		else
 		{
-			char* err_message = (char*)malloc(100);
+			char *err_message = (char *)malloc(100);
 			sprintf(err_message, "\nExpected: %-5s\nActual: %-5s", expected ? "true" : "false", actual ? "true" : "false");
 			deny(err_message);
 		}
@@ -196,31 +196,31 @@ namespace test_lib
 	{
 		CHECK_TESTS_NON_EMPTY()
 
-			for (const auto& keyval_pair : tests)
+		for (const auto &keyval_pair : tests)
+		{
+			const test_lib::test_data test = keyval_pair.second;
+
+			printf(" - "); /* test result prefix */
+			switch (test.test_state)
 			{
-				const test_lib::test_data test = keyval_pair.second;
-
-				printf(" - "); /* test result prefix */
-				switch (test.test_state)
-				{
-				case UNEVALUATED:
-					printf("\033[33munev\x1B[0m "); /* colour and status */
-					break;
-				case ACCEPT:
-					std::cout << "\033[32mpass\x1B[0m "; /* colour and status */
-					break;
-				case FAIL:
-					std::cout << "\033[31mfail\x1B[0m "; /* colour and status */
-					break;
-				default:
-					break;
-				}
-
-				if (test.test_state == ACCEPT)
-					printf("%s\n", test.name.c_str());
-				else
-					printf("%s: %s\n", test.name.c_str(), test.err_message.c_str());
+			case UNEVALUATED:
+				printf("\033[33munev\x1B[0m "); /* colour and status */
+				break;
+			case ACCEPT:
+				std::cout << "\033[32mpass\x1B[0m "; /* colour and status */
+				break;
+			case FAIL:
+				std::cout << "\033[31mfail\x1B[0m "; /* colour and status */
+				break;
+			default:
+				break;
 			}
+
+			if (test.test_state == ACCEPT)
+				printf("%s\n", test.name.c_str());
+			else
+				printf("%s: %s\n", test.name.c_str(), test.err_message.c_str());
+		}
 	}
 
 	/* Get the success state of all tests run.
@@ -247,8 +247,9 @@ namespace test_lib
 		/* count number of test files adjacent */
 		const auto dir = std::filesystem::directory_iterator("./bin/");
 		unsigned int test_file_count = 0;
-		for (const auto& file : dir) {
-			std::string fpath{ file.path().u8string() };
+		for (const auto &file : dir)
+		{
+			std::string fpath{file.path().u8string()};
 			if (ends_with(fpath, ".test"))
 				test_file_count++;
 		}
@@ -267,8 +268,9 @@ namespace test_lib
 	}
 }
 
-bool ends_with(std::string const& value, std::string const& ending)
+bool ends_with(std::string const &value, std::string const &ending)
 {
-	if (ending.size() > value.size()) return false;
+	if (ending.size() > value.size())
+		return false;
 	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
