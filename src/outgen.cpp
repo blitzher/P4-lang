@@ -35,7 +35,6 @@ namespace epicr
 		std::ofstream file{ filename };
 		if (!file.is_open())
 			return false;
-
 		string instructions_section = "";
 		char* instr_s = (char*)malloc(MAX_S_LENGTH);
 		char* base_s = (char*)malloc(MAX_B_LENGTH);
@@ -63,9 +62,14 @@ namespace epicr
 		}
 
 		string tags = "";
-		for (auto tag : rcp.tags)
+		size_t tags_size = rcp.tags.size();
+		if (tags_size != 0)
+			tags += "Tags: ";
+		for (size_t i = 0;i<tags_size;i++)
 		{
-			tags += tag + " ";
+			tags += rcp.tags[i];
+			if (i != tags_size - 1)
+				tags += ", ";
 		}
 
 		string ingredients = "";
