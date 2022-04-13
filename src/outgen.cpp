@@ -24,6 +24,42 @@ namespace epicr
 
 		return file_content;
 	}
+	//elements are merely strings
+	string insertDelimiterSeperatedFields(string header, string delimiter, std::vector<string> elements)
+	{
+		string result = "";
+		size_t elementsCount = elements.size();
+		if (elementsCount != 0)
+			result += header;
+		for (size_t i = 0;i<elementsCount;i++)
+		{
+			result += elements[i];
+			
+			if (i != elementsCount - 1)
+				result += delimiter;
+		}
+		return result;
+	}
+	//fields are structs
+	string insertDelimiterSeperatedFieldsWithAmounts(string header, string delimiter, std::vector<ingredient> fields)
+	{
+		
+	}
+
+	string insertTags(recipe rcp)
+	{
+		return insertDelimiterSeperatedFields("Tags: ",", ",rcp.tags);
+	}
+	
+	string insertKitchenware(recipe rcp)
+	{
+		return insertDelimiterSeperatedFields("Kitchenware: ",", ",rcp.kitchenware);
+	}
+
+	string insertIngredients(recipe rcp)
+	{
+		//insertDelimiterSeperatedFieldsWithAmounts("",rcp.ingrdients,)
+	}
 
 	bool generate_html(recipe rcp, string filename)
 	{
@@ -60,28 +96,14 @@ namespace epicr
 			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), body.c_str());
 			instructions_section += instr_s;
 		}
-
-		string tags = "";
-		size_t tags_size = rcp.tags.size();
-		if (tags_size != 0)
-			tags += "Tags: ";
-		for (size_t i = 0;i<tags_size;i++)
-		{
-			tags += rcp.tags[i];
-			if (i != tags_size - 1)
-				tags += ", ";
-		}
+		string tags = insertTags(rcp);
+		string kitchenware = insertKitchenware(rcp);
+		
 
 		string ingredients = "";
 		for (auto ingredient : rcp.ingredients)
 		{
 			ingredients += ingredient.name + " ";
-		}
-
-		string kitchenware = "";
-		for (auto ware : rcp.kitchenware)
-		{
-			kitchenware += ware + " ";
 		}
 
 		sprintf(base_s, base_template,
@@ -97,4 +119,5 @@ namespace epicr
 
 		return true;
 	}
+	
 }
