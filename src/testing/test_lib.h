@@ -5,9 +5,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <sstream>
+#include <thread>
+#include <chrono>
 #include "../epicr.h"
+#include <filesystem>
 
 typedef unsigned int uint;
 
@@ -48,3 +51,5 @@ namespace test_lib
 
 	int was_success();
 }
+
+bool ends_with(std::string const &value, std::string const &ending);

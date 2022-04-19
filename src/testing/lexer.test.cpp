@@ -83,33 +83,31 @@ void special_characters_non_token_breakers()
 	epicr::Lexer lexer(test_string);
 	std::vector<epicr::epicr_token> tokens = lexer.next_token(8);
 
-
 	expect_token_type(tokens[0], epicr::ETT_BRACKET_OPEN);
 	expect_token_type(tokens[1], epicr::ETT_BRACKET_CLOSE);
 
-	expect_token_type(tokens[2], epicr::ETT_WORD);
+	expect_token_type(tokens[2], epicr::ETT_WORD); /* @ */
 	expect_token_type(tokens[3], epicr::ETT_BLANK);
 
-	expect_token_type(tokens[4], epicr::ETT_WORD);
-	expect_token_type(tokens[5], epicr::ETT_COMMA);
+	expect_token_type(tokens[4], epicr::ETT_WORD);	/* æøå */
+	expect_token_type(tokens[5], epicr::ETT_COMMA); /* , */
 
-	expect_token_type(tokens[6], epicr::ETT_WORD);
-
+	expect_token_type(tokens[6], epicr::ETT_WORD); /* ¤ */
 
 	expect_token_type(tokens[7], epicr::ETT_EOF);
 }
 
-/* carriage return means that it moves the cursor to the left. 
+/* carriage return means that it moves the cursor to the left.
 It differs from windows to unix because of line endings.
 Line endings on unix is LF and on windows it is CRLF */
-void carriage_return(){
+void carriage_return()
+{
 	test_lib::REGISTER;
 
 	std::istringstream test_string("\r\n\r\n");
 
 	epicr::Lexer lexer(test_string);
 	std::vector<epicr::epicr_token> tokens = lexer.next_token(3);
-
 
 	expect_token_type(tokens[0], epicr::ETT_NEWLINE);
 	test_lib::expect_equal_i(tokens[0].word.size(), 2);

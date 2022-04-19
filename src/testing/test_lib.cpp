@@ -1,9 +1,10 @@
 #include "./test_lib.h"
+#include <filesystem>
 
 /* tests work by registering a test, and running the code,
  * and accepting/denying based on the results, which update
  * the state of the most recently registered test. */
-std::unordered_map<std::string, test_lib::test_data> tests;
+std::map<std::string, test_lib::test_data> tests;
 test_lib::test_data *most_recent_test;
 
 #define CHECK_TESTS_NON_EMPTY(return_val)                            \
@@ -47,25 +48,24 @@ namespace test_lib
 
 	void deny(std::string err_message)
 	{
-		CHECK_TESTS_NON_EMPTY()
+		CHECK_TESTS_NON_EMPTY();
 		most_recent_test->test_state = FAIL;
 		most_recent_test->err_message = err_message;
-		failed = 1; /* fail */
+		failed = 1;
 	}
 
 	/* Helper function for asserting equality of two strings,
 	 * generating an error message in case of inequality */
-	void expect_equal_s(const std::string expected, const std::string actual)
+	void expect_equal_s(const std::string actual, const std::string expected)
 	{
-		CHECK_TESTS_NON_EMPTY()
+		CHECK_TESTS_NON_EMPTY();
 		if (expected == actual)
 		{
 			accept();
 			return;
 		}
 
-		std::cout << expected << std::endl;
-		std::cout << actual << std::endl;
+		printf("exp: %s act: %s\n", expected.c_str(), actual.c_str());
 
 		size_t expected_size = expected.size();
 		size_t actual_size = actual.size();
@@ -99,19 +99,19 @@ namespace test_lib
 
 		/* copy the rest of the line into string */
 		int temp = i;
-		while (eline_v.size() < 200 && eline_v[i] != '\n')
+		while (eline_v.size() < 200 && eline_v[i] != '\n' && eline_v[i] != '\0')
 			eline_v.push_back(expected[i++]);
 		i = temp;
-		while (aline_v.size() < 200 && aline_v[i] != '\n')
+		while (aline_v.size() < 200 && aline_v[i] != '\n' && aline_v[i] != '\0')
 			aline_v.push_back(actual[i++]);
 
 		/* copy line into strings */
 		std::string aline{aline_v.begin(), aline_v.end()};
 		std::string eline{eline_v.begin(), eline_v.end()};
 
-		char* exp_message = (char*)malloc(300);
-		char* act_message = (char*)malloc(300);
-		char* dif_message = (char*)malloc(300);
+		char *exp_message = (char *)malloc(100);
+		char *act_message = (char *)malloc(100);
+		char *dif_message = (char *)malloc(100);
 		sprintf(exp_message, "Expected: %3i %s", line_num, eline.c_str());
 		sprintf(act_message, "Actual  : %3i %s", line_num, aline.c_str());
 
@@ -130,7 +130,7 @@ namespace test_lib
 
 		/* insert the expected line, actual line and
 		 * difference message into the error message */
-		char *err_message = (char *)malloc(512);
+		char *err_message = (char *)malloc(512 * sizeof(char));
 		sprintf(err_message, "\n%s\n%s\n%s", exp_message, act_message, dif_message);
 		deny(err_message);
 
@@ -227,6 +227,50 @@ namespace test_lib
 	 * Should be returned at the end of each test file */
 	int was_success()
 	{
-		return failed;
+		std::ifstream file;
+		file.open("./bin/.tests", std::ios_base::in);
+		file.seekg(0, std::ios_base::beg);
+
+		/* read current results in the file */
+		std::string results = "";
+		char ch = file.get();
+
+		while (ch != -1)
+		{
+			results += ch;
+			ch = file.get();
+		}
+
+		results += failed ? '1' : '0';
+		size_t results_size = results.size();
+
+		/* count number of test files adjacent */
+		const auto dir = std::filesystem::directory_iterator("./bin/");
+		unsigned int test_file_count = 0;
+		for (const auto &file : dir)
+		{
+			std::string fpath{file.path().u8string()};
+			if (ends_with(fpath, ".test"))
+				test_file_count++;
+		}
+
+		/* append own result at the end, and return to base */
+		std::ofstream o_file;
+		o_file.open("./bin/.tests", std::ios_base::app);
+		o_file << (failed ? '1' : '0');
+		o_file.close();
+
+		if (results_size == test_file_count)
+			for (char c : results)
+				if (c == '1')
+					return 1;
+		return 0;
 	}
+}
+
+bool ends_with(std::string const &value, std::string const &ending)
+{
+	if (ending.size() > value.size())
+		return false;
+	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
