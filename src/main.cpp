@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
 	auto ingrvisit = epicr::visitor::IngredientVerifier();
 
-	ingrvisit.visit(myRecipe);
+	ingrvisit.visit(&myRecipe);
 
 	cout << ingrvisit.has_error << ": " << ingrvisit.error << endl;
 
