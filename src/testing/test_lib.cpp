@@ -4,7 +4,7 @@
 /* tests work by registering a test, and running the code,
  * and accepting/denying based on the results, which update
  * the state of the most recently registered test. */
-std::unordered_map<std::string, test_lib::test_data> tests;
+std::map<std::string, test_lib::test_data> tests;
 test_lib::test_data *most_recent_test;
 
 #define CHECK_TESTS_NON_EMPTY(return_val)                            \

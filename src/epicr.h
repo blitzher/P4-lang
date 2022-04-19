@@ -201,7 +201,7 @@ namespace epicr
         public:
             std::string error;
             bool has_error;
-            void visit(recipe);
+            void visit(recipe *);
         };
 
         class IngredientVerifier : public Visitor
@@ -213,7 +213,7 @@ namespace epicr
 
         public:
             IngredientVerifier();
-            void visit(recipe);
+            void visit(recipe *);
         };
     }
 
