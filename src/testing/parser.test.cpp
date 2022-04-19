@@ -80,6 +80,15 @@ void parsed_ingredients()
 	{
 		test_lib::deny("Expected ingredient extra wheatflour to have amount set to INF");
 	}
+
+	if (rcp.ingredients[4].amount.isScaleable !=0)
+	{
+		test_lib::deny("Expected ingredient extra wheatflour to not be scaleabele");
+	}
+	if (rcp.ingredients[4].amount.isConvertable !=0)
+	{
+		test_lib::deny("Expected ingredient extra wheatflour to not be convertiable");
+	}
 }
 
 void instrucions_has_correct_amount_of_instructions()

@@ -419,6 +419,8 @@ namespace epicr
 	{
 		bool canHavePlus = (arg & HAS_PLUS);
 		amount amnt = amount();
+		amnt.isConvertable = false;
+
 
 		if (ctoken.type == ETT_PLUS)
 		{
@@ -435,6 +437,7 @@ namespace epicr
 
 		if (ctoken.type != ETT_BRACKET_OPEN)
 		{
+			amnt.isScaleable = true;
 			amnt.amount = 1;
 			amnt.unit = "";
 			return amnt;
@@ -446,6 +449,8 @@ namespace epicr
 		{
 			amnt.amount = std::stod(ctoken.word);
 			ADV_NON_BLANK(1);
+			amnt.isScaleable = true;
+			amnt.isConvertable = ReadConvertableUnits(ctoken.word);
 			amnt.unit = ReadWords();
 		}
 		else if (ctoken.type == ETT_WORD)
@@ -491,6 +496,18 @@ namespace epicr
 			ADV_NON_BLANK(1);
 		finalWord = strip_spaces_right(finalWord);
 		return finalWord;
+	}
+
+		bool Parser::ReadConvertableUnits(std::string targetWord) {
+		// checks if unit is standardized by comparing it to a string ig
+		std::string convertableunits[] = {"g","kg", "ml","dl","l","mm","cm","c","kcal",
+									"oz","lbs","fl-oz", "cup", "qt", "gal", "in", "ft", "f", "cal"};
+		bool exists = std::find(std::begin(convertableunits), std::end(convertableunits), to_lower(targetWord)) != std::end(convertableunits);
+			if(exists == true && utoken.type == ETT_BRACKET_CLOSE) {
+				return true;
+ 			}
+		//if not found, returns false
+		return false;
 	}
 
 	void Parser::silence(bool val)

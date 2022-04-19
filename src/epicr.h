@@ -30,6 +30,8 @@ namespace epicr
         std::string relativeAmount;
         std::string unit;
         bool isUncountable;
+        bool isConvertable;
+        bool isScaleable;
     } amount;
 
     typedef struct ingredient_s
@@ -165,6 +167,7 @@ namespace epicr
         /* Read an amount from the current position */
         amount ReadAmount(ingredient_arg);
         std::string ReadWords();
+        bool ReadConvertableUnits(std::string);
 
         epicr_token ctoken;
         epicr_token utoken;
