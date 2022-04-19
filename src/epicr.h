@@ -7,12 +7,15 @@
 #include <fstream>
 #include <algorithm>
 #include <unordered_map>
+#include <limits>
 
 #pragma region Debug macros
 
-#define HAS_PLUS 1    // 0b001
-#define HAS_ASTERIX 2 // 0b010
-#define HAS_QMARK 4   // 0b100
+#define HAS_PLUS 1     // 0b0000 0001
+#define HAS_ASTERIX 2  // 0b0000 0010
+#define HAS_QMARK 4    // 0b0000 0100
+#define ASSUME_1_NUM 8 // 0b0000 1000
+#define ASSUME_REST 16 // 0b0001 0000
 
 #pragma endregion
 
@@ -37,7 +40,7 @@ namespace epicr
 
     typedef struct amount_s
     {
-        double amount;
+        double number;
         bool isRelativeAmount;
         std::string relativeAmount;
         std::string unit;
@@ -57,7 +60,6 @@ namespace epicr
         std::string spelling;
         bool is_amount;
         amount value;
-        bool is_ingredient_ref;
     } instruction_word;
 
     typedef struct instruction_s
@@ -68,23 +70,30 @@ namespace epicr
         std::vector<instruction_word> body;
     } instruction;
 
-    typedef struct for_amount_s
+    typedef struct servings_s
     {
         int count;
         std::string descriptor;
-    } for_amount;
+    } servings;
+
+    typedef struct time_s
+    {
+        std::string prep_time;
+        std::string cook_time;
+        std::string total_time;
+    } time;
 
     typedef struct recipe_s
     {
         std::string title;
         std::string description;
-        for_amount amount;
-        std::string time; /* expand implementation */
+        servings servings;
+        time time;
         std::vector<std::string> kitchenware;
         std::vector<ingredient> nutrients;
         std::vector<std::string> tags;
-        std::vector<ingredient> ingredients;   /* missing SOME implementation */
-        std::vector<instruction> instructions; /* missing implementation */
+        std::vector<ingredient> ingredients;
+        std::vector<instruction> instructions;
     } recipe;
 #pragma endregion
 
@@ -98,8 +107,6 @@ namespace epicr
         ETT_PARENS_CLOSE,  /* ) */
         ETT_BRACKET_OPEN,  /* [ */
         ETT_BRACKET_CLOSE, /* ] */
-        ETT_CURLY_OPEN,    /* { */
-        ETT_CURLY_CLOSE,   /* } */
         ETT_PLUS,          /* + */
         ETT_ASTERIX,       /* * */
         ETT_QUESTION_MARK, /* ? */
@@ -126,6 +133,9 @@ namespace epicr
         uint token_count;
         uint line_num;
         bool ready;
+        bool can_return_pre_eof_token;
+        epicr_token pre_eof_token;
+        bool is_peaking;
 
     public:
         Lexer();
@@ -160,7 +170,7 @@ namespace epicr
         Lexer *lexer;
         void ParseTitle(recipe *);
         void ParseDescription(recipe *);
-        void ParseAmount(recipe *);
+        void ParseServings(recipe *);
         void ParseNutrients(recipe *);
         void ParseIngredients(recipe *);
         void ParseKitchenware(recipe *);
@@ -175,8 +185,13 @@ namespace epicr
         ingredient ReadIngredient(ingredient_arg);
         /* Read an amount from the current position */
         amount ReadAmount(ingredient_arg);
-        std::string ReadWords();
-
+        /*Read words and blanks from the current position, then returns the word, with right spaces stripped
+        accepts a boolean as input stating whether or not it can read numbers as well*/
+        std::string ReadWords(bool, bool);
+        bool ReadWordsPredicate(epicr_token_type, bool, bool);
+        /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
+        returns 1 if something went wrong, otherwise returns 0*/
+        int ReadSeperatorOrWaitAtNextField();
         epicr_token ctoken;
         epicr_token utoken;
 
@@ -193,10 +208,35 @@ namespace epicr
         ~Parser();
     };
 
+    namespace visitor
+    {
+        class Visitor
+        {
+        private:
+        public:
+            std::string error;
+            bool has_error;
+            void visit(recipe *);
+        };
+
+        class IngredientVerifier : public Visitor
+        {
+        private:
+            std::unordered_map<std::string, ingredient> symbols;
+            std::unordered_map<std::string, ingredient> original_symbols;
+            bool ingredients_compatible(ingredient a, ingredient b);
+
+        public:
+            IngredientVerifier();
+            void visit(recipe *);
+        };
+    }
+
     void compress(std::string filepath);
     void decompress(std::string filepath);
-
+    /*returns a new string with all chars in the input string in lowercase*/
     std::string to_lower(std::string);
+    /*returns a new string where all types of spaces to right is stripped from the input string */
     std::string strip_spaces_right(std::string);
 
     /* Print the contents of a token to stdout */

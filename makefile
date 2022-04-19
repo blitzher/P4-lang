@@ -3,10 +3,7 @@
 #  /obj
 #  /src
 
-# Use 'make remove' to clean up the hole project
-
-# Name of target file
-
+# Use 'make remove' to clean up the whole project
 
 CXX        = clang++
 CXXFLAGS   = -std=c++17 \
@@ -41,6 +38,7 @@ MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
 TARGET       = main
 
+
 $(T_TARGETS):: $(T_OBJECTS) $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
 
@@ -72,7 +70,9 @@ $(T_TARGETS)::
 	@./$@
 
 # runnable targets 
-test: $(T_TARGETS)
+test::
+	@rm -rf $(BINDIR)/.tests
+test:: $(T_TARGETS)
 	@echo "Finished tests"
 
 run: $(BINDIR)/$(TARGET)
