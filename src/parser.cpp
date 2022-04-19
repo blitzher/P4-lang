@@ -80,6 +80,7 @@ namespace epicr
 		/* Parse all fields */
 		while (ctoken.type != ETT_EOF)
 		{
+			
 			/* If an error occured during parsing,
 			 * return what was parsed so far */
 			if (error)
@@ -282,7 +283,7 @@ namespace epicr
 		while (ctoken.type != ETT_PARENS_CLOSE) /*reads every ingredient in the "with"*/
 		{
 			ADV_NON_BLANK(1);
-			ingredient currentIngredient = ReadIngredient(ASSUME_REST);
+			ingredient currentIngredient = ReadIngredient(ASSUME_1_NUM);
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between ingredient or a closing parenthesis for the 'with'", ctoken);
@@ -437,7 +438,7 @@ namespace epicr
 			if (assume_1_num)
 			{
 				amnt.number = 1;
-				amnt.unit = "number";
+				amnt.unit = "";
 			}
 			else if (assume_rest)
 			{
