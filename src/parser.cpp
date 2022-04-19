@@ -154,16 +154,7 @@ namespace epicr
 		rcp->servings.count += stoi(ctoken.word);
 
 		ADV_NON_BLANK(1);
-<<<<<<< HEAD
-		/* Read all words and spaces in amoun t */
-		while (utoken.type != ETT_COLON && ctoken.type != ETT_EOF)
-		{
-			rcp->amount.descriptor += ctoken.word;
-			ADV(1);
-		}
-=======
 		rcp->servings.descriptor = ReadWords(false, false);
->>>>>>> 7b1906f09e1b970988f731e9724a93036de79393
 	}
 
 	void Parser::ParseNutrients(recipe *rcp)
