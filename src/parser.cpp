@@ -283,7 +283,7 @@ namespace epicr
 		while (ctoken.type != ETT_PARENS_CLOSE) /*reads every ingredient in the "with"*/
 		{
 			ADV_NON_BLANK(1);
-			ingredient currentIngredient = ReadIngredient(ASSUME_1_NUM);
+			ingredient currentIngredient = ReadIngredient(ASSUME_REST);
 			if (ctoken.type != ETT_COMMA && ctoken.type != ETT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between ingredient or a closing parenthesis for the 'with'", ctoken);
