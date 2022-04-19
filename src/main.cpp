@@ -1,4 +1,4 @@
-#define DEBUG 1
+#define DEBUG 0
 #include "epicr.h"
 
 #define PRINT_VEC(vec)          \
@@ -11,6 +11,7 @@ using namespace std;
 
 /* Remove or outcomment when not debugging */
 void print_lexer_tokens(epicr::Lexer lexer);
+
 int main(int argc, char **argv)
 {
 	cout << "Command line arguments:" << endl;
