@@ -33,10 +33,9 @@ int main(int argc, char **argv)
 	epicr::recipe myRecipe = myParser.Parse();
 
 	auto ingrvisit = epicr::visitor::IngredientVerifier();
-	auto relativeVisit = epicr::visitor::RelativeResolver();
 
-	relativeVisit.visit(&myRecipe);
-	ingrvisit.visit(myRecipe);
+	//relativeVisit.visit(&myRecipe);
+	ingrvisit.visit(&myRecipe);
 
 	cout << ingrvisit.has_error << ": " << ingrvisit.error << endl;
 	cout << myParser.error << ": " << myParser.error_message << endl;
