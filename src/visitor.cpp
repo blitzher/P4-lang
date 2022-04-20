@@ -79,9 +79,9 @@ namespace epicr
         unit_aliases["c"] = {"c", "celsius"};
         unit_aliases["f"] = {"f", "fahrenheit"};
 
-        units_in_system[E_US_IMPERIAL] = {
-            "g", "kg", "ml", "dl", "l", "mm", "cm", "c"};
         units_in_system[E_US_METRIC] = {
+            "g", "kg", "ml", "dl", "l", "mm", "cm", "c"};
+        units_in_system[E_US_IMPERIAL] = {
             "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "f"};
 
         map_is_initalized = true;
@@ -98,6 +98,7 @@ namespace epicr::visitor
         symbols = std::unordered_map<std::string, ingredient>();
         original_symbols = std::unordered_map<std::string, ingredient>();
         has_error = false;
+        error = "No error";
     };
     void IngredientVerifier::visit(recipe a_rcp)
     {
@@ -213,13 +214,15 @@ namespace epicr::visitor
     AmountConverter::AmountConverter()
     {
         initialize_maps();
+        error = "No error";
+        has_error = false;
     }
 
     bool AmountConverter::is_convertable(std::string unit)
     {
         for (const auto &pair : unit_aliases)
             for (const auto &alias : pair.second)
-                if (unit == alias)
+                if (to_lower(unit) == alias)
                     return true;
 
         return false;
@@ -233,9 +236,10 @@ namespace epicr::visitor
      */
     std::string AmountConverter::standardize(std::string unit)
     {
+        std::string unit_lower = to_lower(unit);
         for (const auto &pair : unit_aliases)
             for (const auto &alias : pair.second)
-                if (unit == alias)
+                if (unit_lower == alias)
                     return unit_aliases[pair.first][0];
 
         ERR("No valid standard found for unit");
@@ -251,7 +255,7 @@ namespace epicr::visitor
      */
     void AmountConverter::scale_amount(amount *amnt, epicr_unit_system tar_sys)
     {
-        std::string standardized = standardize(amnt->unit);
+        std::string standardized = to_lower(standardize(amnt->unit));
         epicr_unit_system cur_sys;
 
         /* find out what system the current unit is in*/
@@ -272,7 +276,6 @@ namespace epicr::visitor
             return;
 
         /* Conversions metric -> imperial */
-
         if (tar_sys == E_US_IMPERIAL)
         {
             if (standardized == "g")
@@ -371,20 +374,20 @@ namespace epicr::visitor
         }
     }
 
-    void AmountConverter::visit(recipe rcp)
+    void AmountConverter::visit(recipe *rcp)
     {
 
         std::vector<amount *> scaleables;
 
         /* Get all amounts from ingredients */
-        for (auto &ingr : rcp.ingredients)
+        for (auto &ingr : rcp->ingredients)
         {
             amount *amnt_ptr = &ingr.amount;
             scaleables.push_back(amnt_ptr);
         }
 
         /* Get all amounts from instructions */
-        for (auto &inst : rcp.instructions)
+        for (auto &inst : rcp->instructions)
         {
             for (auto &ingr : inst.ingredients)
                 scaleables.push_back(&(ingr.amount));

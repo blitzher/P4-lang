@@ -27,15 +27,15 @@ int main(int argc, char **argv)
 	epicr::Parser myParser = epicr::Parser(&myLexer);
 	epicr::recipe myRecipe = myParser.Parse();
 
-	cout << myParser.error << " PA: " << myParser.error_message << endl;
+	cout << myParser.error << " Parser: " << myParser.error_message << endl;
 
 	auto ingrvisit = epicr::visitor::IngredientVerifier();
 	ingrvisit.visit(myRecipe);
-	cout << ingrvisit.has_error << " IV: " << ingrvisit.error << endl;
+	cout << ingrvisit.has_error << " IngVis: " << ingrvisit.error << endl;
 
 	auto amntconve = epicr::visitor::AmountConverter();
-	amntconve.visit(myRecipe);
-	cout << amntconve.has_error << " AC: " << amntconve.error << endl;
+	amntconve.visit(&myRecipe);
+	cout << amntconve.has_error << " AmtCon: " << amntconve.error << endl;
 
 	epicr::generate_html(myRecipe, "dist/carbonara.html");
 

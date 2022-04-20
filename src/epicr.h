@@ -246,7 +246,7 @@ namespace epicr
             void scale_amount(amount *amnt, epicr_unit_system system);
 
         public:
-            void visit(recipe);
+            void visit(recipe *);
             AmountConverter();
         };
 
