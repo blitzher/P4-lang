@@ -28,11 +28,11 @@ namespace epicr::visitor
         original_symbols = std::unordered_map<std::string, ingredient>();
         has_error = false;
     };
-    void IngredientVerifier::visit(recipe a_rcp)
+    void IngredientVerifier::visit(recipe* a_rcp)
     {
 
         /* shallow copy of input recipe */
-        recipe rcp = a_rcp;
+        recipe rcp = *a_rcp;
 
         /* fill the symbol table */
         for (auto ingr : rcp.ingredients)
@@ -45,7 +45,7 @@ namespace epicr::visitor
         aka check if the recipe comply by all the rules */
 
         int instruction_count = 0;
-        for (auto inst : rcp.instructions)
+        for (auto inst : a_rcp->instructions)
         {
             instruction_count++;
             /* consume */
@@ -119,7 +119,7 @@ namespace epicr::visitor
         for (auto KeyValuePair : symbols)
         {
             ingredient ingr = KeyValuePair.second;
-            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != rcp.title)
+            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != a_rcp->title)
             {
                 ERR("Unused ingredient after instructions");
             }

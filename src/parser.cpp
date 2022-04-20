@@ -80,6 +80,7 @@ namespace epicr
 		/* Parse all fields */
 		while (ctoken.type != ETT_EOF)
 		{
+			
 			/* If an error occured during parsing,
 			 * return what was parsed so far */
 			if (error)
@@ -437,7 +438,7 @@ namespace epicr
 			if (assume_1_num)
 			{
 				amnt.number = 1;
-				amnt.unit = "number";
+				amnt.unit = "";
 			}
 			else if (assume_rest)
 			{
