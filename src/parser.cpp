@@ -51,7 +51,6 @@ std::vector<std::string> optional_fields = {
 	"tags",
 	"time",
 };
-
 namespace epicr
 {
 
@@ -64,11 +63,11 @@ namespace epicr
 	 */
 
 #pragma region Parser implementation
+
 	Parser::Parser(Lexer *lexer_r)
 	{
 		lexer = lexer_r;
 	}
-
 	recipe Parser::Parse()
 	{
 		error = 0;
@@ -80,7 +79,7 @@ namespace epicr
 		/* Parse all fields */
 		while (ctoken.type != E_TT_EOF)
 		{
-			
+
 			/* If an error occured during parsing,
 			 * return what was parsed so far */
 			if (error)
@@ -132,6 +131,8 @@ namespace epicr
 			if (utoken.type != E_TT_COLON)
 				ADV_NON_BLANK(1);
 		}
+
+		rcp->title = strip_spaces_right(rcp->title);
 	}
 	void Parser::ParseDescription(recipe *rcp)
 	{
@@ -407,6 +408,7 @@ namespace epicr
 			}
 			ADV_NON_BLANK(1);
 		}
+		ADV_NON_BLANK(1);
 		ingredientAmount = ReadAmount(arg);
 		currentIngredient.amount = ingredientAmount;
 		return currentIngredient;
@@ -434,7 +436,6 @@ namespace epicr
 
 		if (ctoken.type != E_TT_BRACKET_OPEN)
 		{
-
 			if (assume_1_num)
 			{
 				amnt.number = 1;

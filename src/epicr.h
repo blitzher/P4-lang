@@ -22,9 +22,16 @@
 
 namespace epicr
 {
+
     typedef char ingredient_arg;
     typedef unsigned int uint;
 #pragma region Recipe Data
+
+    typedef enum html_style_e
+    {
+        html_style_basic,
+        html_style_fancy
+    } html_style;
 
     typedef struct amount_s
     {
@@ -118,6 +125,17 @@ namespace epicr
         E_US_IMPERIAL
     };
 
+    typedef struct cmd_args_s
+    {
+        std::string input_filepath;
+        html_style choosen_style;
+        std::string output_filepath;
+        epicr_unit_system unit_system;
+
+    } cmd_args;
+
+    extern cmd_args clargs;
+
     extern std::map<epicr_unit_type, std::vector<std::string>> units_in_type;
     extern std::map<std::string, std::vector<std::string>> unit_aliases;
     extern std::map<epicr_unit_system, std::vector<std::string>> units_in_system;
@@ -191,20 +209,22 @@ namespace epicr
         /* Read an ingredient from the current position */
         ingredient ReadIngredient(ingredient_arg);
         /* Read an amount from the current position */
-        amount ReadAmount(ingredient_arg);
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
         accepts a boolean as input stating whether or not it can read numbers as well*/
         std::string ReadWords(bool, bool);
+        amount ReadAmount(ingredient_arg arg);
         bool ReadWordsPredicate(epicr_token_type, bool, bool);
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
         returns 1 if something went wrong, otherwise returns 0*/
         int ReadSeperatorOrWaitAtNextField();
+
         epicr_token ctoken;
         epicr_token utoken;
 
     public:
         bool DEBUG_MODE;
         bool error;
+        std::string original_amount;
         std::string error_message;
         epicr_token error_token;
         recipe Parse();
@@ -292,5 +312,9 @@ namespace epicr
     } parse_ret;
 
     parse_ret parse_recipe(std::string filename);
+    parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
+
+    /* Command line argument related declarations */
+    void parse_cmd_args(int argc, char **argv);
 }

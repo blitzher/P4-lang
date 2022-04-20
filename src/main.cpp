@@ -1,4 +1,4 @@
-#define DEBUG 1
+#define DEBUG 0
 #include "epicr.h"
 
 #define PRINT_VEC(vec)          \
@@ -11,6 +11,7 @@ using namespace std;
 
 /* Remove or outcomment when not debugging */
 void print_lexer_tokens(epicr::Lexer lexer);
+
 int main(int argc, char **argv)
 {
 	cout << "Command line arguments:" << endl;
@@ -20,6 +21,8 @@ int main(int argc, char **argv)
 		cout << i << ": " << argv[i] << endl;
 	}
 	cout << "-------\n";
+
+	epicr::parse_cmd_args(argc, argv);
 
 	ifstream file = epicr::open_file(argv[1]);
 
@@ -37,7 +40,15 @@ int main(int argc, char **argv)
 	amntconve.visit(&myRecipe);
 	cout << amntconve.has_error << " AmtCon: " << amntconve.error << endl;
 
-	epicr::generate_html(myRecipe, "dist/carbonara.html");
+	std::cout << "clarg output filepath: " << epicr::clargs.output_filepath << std::endl;
+
+	if (!myParser.error)
+	{
+		string output_file = epicr::clargs.output_filepath;
+		output_file.append("/" + myRecipe.title + ".html");
+		epicr::generate_html(myRecipe, output_file);
+		printf("Wrote file: %s\n", output_file.c_str());
+	}
 
 	return 0;
 }

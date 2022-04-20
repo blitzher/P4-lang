@@ -255,6 +255,12 @@ namespace epicr::visitor
      */
     void AmountConverter::scale_amount(amount *amnt, epicr_unit_system tar_sys)
     {
+
+        /* If the target unit system is undefined, don't modify
+         * any of the ingredients */
+        if (tar_sys == E_US_NONE)
+            return;
+
         std::string standardized = to_lower(standardize(amnt->unit));
         epicr_unit_system cur_sys;
 
@@ -408,7 +414,7 @@ namespace epicr::visitor
                 continue;
 
             /* Scale to the unit system from clargs */
-            scale_amount(amnt, E_US_IMPERIAL);
+            scale_amount(amnt, epicr::clargs.unit_system);
         }
     }
 
