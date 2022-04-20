@@ -276,7 +276,7 @@ namespace epicr
         const double ML_TO_FLOZ = 0.0338;
         const double DL_TO_FLOZ = 3.38;
         const double M_TO_FEET = 3.28;
-        const double CM_TO_INCH = 0.39;
+        const double CM_TO_INCH = 0.39370079;
         const double MM_TO_INCH = 0.039;
 
         inline double C_TO_F(double deg)
