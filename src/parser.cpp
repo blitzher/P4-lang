@@ -53,15 +53,6 @@ std::vector<std::string> optional_fields = {
 };
 namespace epicr
 {
-
-	/*
-	class Bla {
-
-
-	}
-
-	 */
-
 #pragma region Parser implementation
 
 	Parser::Parser(Lexer *lexer_r)
@@ -167,6 +158,7 @@ namespace epicr
 		while (utoken.type != E_TT_COLON)
 		{
 			ingredient nutrient = ReadIngredient(0);
+
 			if (nutrient.amount.unit != "kcal" && nutrient.amount.unit != "cal" && nutrient.amount.unit != "g")
 				ERR_VOID("Invalid unit after nutrient", ctoken);
 
@@ -408,7 +400,7 @@ namespace epicr
 			}
 			ADV_NON_BLANK(1);
 		}
-		ADV_NON_BLANK(1);
+
 		ingredientAmount = ReadAmount(arg);
 		currentIngredient.amount = ingredientAmount;
 		return currentIngredient;

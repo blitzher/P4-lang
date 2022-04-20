@@ -26,6 +26,8 @@ int main(int argc, char **argv)
 
 	ifstream file = epicr::open_file(argv[1]);
 
+	cout << "Compiling " << epicr::clargs.input_filepath << endl;
+
 	epicr::Lexer myLexer = epicr::Lexer(file);
 	epicr::Parser myParser = epicr::Parser(&myLexer);
 	epicr::recipe myRecipe = myParser.Parse();

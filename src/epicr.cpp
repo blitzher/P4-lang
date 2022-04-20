@@ -7,6 +7,8 @@ std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
 namespace epicr
 {
 
+	cmd_args clargs;
+
 	ifstream open_file(string filename)
 	{
 		ifstream file{filename, ios_base::binary};
@@ -58,7 +60,7 @@ namespace epicr
 	{
 		string type = token_to_string(token.type);
 
-		if (token.type != epicr::E_TT_BLANK && token.type != epicr::E_TT_NEWLINE)
+		if (token.type != E_TT_BLANK && token.type != E_TT_NEWLINE)
 			printf("%-18s-> %-10s uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.uid, token.line);
 		else
 			printf("%-18s   %-10i uid:%i line:%i\n", type.c_str(), (int)token.word.size(), token.uid, token.line);
@@ -101,54 +103,54 @@ namespace epicr
 		return str.substr(0, seperatorPosition);
 	}
 
-	epicr::parse_ret parse_recipe(std::string filename)
+	parse_ret parse_recipe(std::string filename)
 	{
-		cmd_args args = {filename, html_style_basic, "dist"};
+		cmd_args args = {filename, html_style_basic, "dist", E_US_NONE};
 		return parse_recipe(args);
 	}
 
-	epicr::parse_ret parse_recipe(cmd_args clargs)
+	parse_ret parse_recipe(cmd_args clargs)
 	{
 		if (cached_recipes.find(clargs.input_filepath) != cached_recipes.end())
 			return cached_recipes[clargs.input_filepath];
 
-		std::ifstream input_filestream = epicr::open_file(clargs.input_filepath);
-		epicr::Lexer lexer(input_filestream);
-		epicr::Parser parser(&lexer);
-		epicr::recipe rcp = parser.Parse();
+		std::ifstream input_filestream = open_file(clargs.input_filepath);
+		Lexer lexer(input_filestream);
+		Parser parser(&lexer);
+		recipe rcp = parser.Parse();
 
-		epicr::parse_ret ret = {rcp, parser.error, parser.error_message};
+		parse_ret ret = {rcp, parser.error, parser.error_message};
 
 		cached_recipes[clargs.input_filepath] = ret;
 
 		return ret;
 	}
 
-	epicr::parse_ret parse_recipe_silent(std::string filename)
+	parse_ret parse_recipe_silent(std::string filename)
 	{
 		if (cached_recipes.find(filename) != cached_recipes.end())
 			return cached_recipes[filename];
 
-		std::ifstream input_filestream = epicr::open_file(filename);
-		epicr::Lexer lexer(input_filestream);
-		epicr::Parser parser(&lexer);
+		std::ifstream input_filestream = open_file(filename);
+		Lexer lexer(input_filestream);
+		Parser parser(&lexer);
 		parser.silence(true);
-		epicr::recipe rcp = parser.Parse();
+		recipe rcp = parser.Parse();
 
-		epicr::parse_ret ret = {rcp, parser.error, parser.error_message};
+		parse_ret ret = {rcp, parser.error, parser.error_message};
 		return ret;
 	}
 
-	epicr::html_style parse_style(std::string argv)
+	html_style parse_style(std::string argv)
 	{
-		epicr::html_style choosen_style = epicr::html_style_basic;
+		html_style choosen_style = html_style_basic;
 		if (argv == "--basic" || argv == "-b")
 		{
-			choosen_style = epicr::html_style_basic;
+			choosen_style = html_style_basic;
 		}
 		else if (argv == "--fancy" || argv == "-f")
 		{
-			choosen_style = epicr::html_style_fancy;
+			choosen_style = html_style_fancy;
 		}
 		return choosen_style;
 	}
@@ -161,7 +163,7 @@ namespace epicr
 			argv_s.push_back(std::string(argv[i]));
 		}
 
-		epicr::cmd_args CMD_ARGS;
+		cmd_args CMD_ARGS;
 		for (int i = 0; i < argc; i++)
 		{
 			if (argv_s[i] == "--basic" || argv_s[i] == "-b")
