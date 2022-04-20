@@ -47,7 +47,7 @@ $(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
-	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
+	$(LD) $@ $(LDFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
 $(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp

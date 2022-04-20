@@ -100,7 +100,8 @@
     "mutex": "cpp",
     "codecvt": "cpp",
     "stop_token": "cpp",
-    "thread": "cpp"
+    "thread": "cpp",
+    "__tree": "cpp"
   },
   "editor.tabSize": 4,
   "C_Cpp.default.cppStandard": "c++17",

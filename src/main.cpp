@@ -19,24 +19,25 @@ int main(int argc, char **argv)
 	{
 		cout << i << ": " << argv[i] << endl;
 	}
+	cout << "-------\n";
 
 	ifstream file = epicr::open_file(argv[1]);
 
 	epicr::Lexer myLexer = epicr::Lexer(file);
-
 	epicr::Parser myParser = epicr::Parser(&myLexer);
-
 	epicr::recipe myRecipe = myParser.Parse();
 
+	cout << myParser.error << " PA: " << myParser.error_message << endl;
+
 	auto ingrvisit = epicr::visitor::IngredientVerifier();
-
 	ingrvisit.visit(myRecipe);
+	cout << ingrvisit.has_error << " IV: " << ingrvisit.error << endl;
 
-	cout << ingrvisit.has_error << ": " << ingrvisit.error << endl;
+	auto amntconve = epicr::visitor::AmountConverter();
+	amntconve.visit(myRecipe);
+	cout << amntconve.has_error << " AC: " << amntconve.error << endl;
 
 	epicr::generate_html(myRecipe, "dist/carbonara.html");
-
-	cout << myParser.error << ": " << myParser.error_message << endl;
 
 	return 0;
 }

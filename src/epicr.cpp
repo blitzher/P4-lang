@@ -6,6 +6,7 @@ std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
 
 namespace epicr
 {
+
 	ifstream open_file(string filename)
 	{
 		ifstream file{filename, ios_base::binary};
@@ -20,36 +21,36 @@ namespace epicr
 	{
 		switch (type)
 		{
-		case ETT_WORD:
-			return "ETT_WORD";
-		case ETT_COLON:
-			return "ETT_COLON";
-		case ETT_COMMA:
-			return "ETT_COMMA";
-		case ETT_PARENS_OPEN:
-			return "ETT_PARENS_OPEN"; /* () */
-		case ETT_PARENS_CLOSE:
-			return "ETT_PARENS_CLOSE";
-		case ETT_BRACKET_OPEN:
-			return "ETT_BRACKET_OPEN"; /* [] */
-		case ETT_BRACKET_CLOSE:
-			return "ETT_BRACKET_CLOSE";
-		case ETT_PLUS:
-			return "ETT_PLUS"; /* ingredients  + */
-		case ETT_ASTERIX:
-			return "ETT_ASTERIX"; /* ingredients  * */
-		case ETT_QUESTION_MARK:
-			return "ETT_QUESTION_MARK"; /* ingredients ? */
-		case ETT_NUMBER:
-			return "ETT_NUMBER";
-		case ETT_BLANK:
-			return "ETT_BLANK";
-		case ETT_NEWLINE:
-			return "ETT_NEWLINE";
-		case ETT_EOF:
-			return "ETT_EOF";
+		case E_TT_WORD:
+			return "E_TT_WORD";
+		case E_TT_COLON:
+			return "E_TT_COLON";
+		case E_TT_COMMA:
+			return "E_TT_COMMA";
+		case E_TT_PARENS_OPEN:
+			return "E_TT_PARENS_OPEN"; /* () */
+		case E_TT_PARENS_CLOSE:
+			return "E_TT_PARENS_CLOSE";
+		case E_TT_BRACKET_OPEN:
+			return "E_TT_BRACKET_OPEN"; /* [] */
+		case E_TT_BRACKET_CLOSE:
+			return "E_TT_BRACKET_CLOSE";
+		case E_TT_PLUS:
+			return "E_TT_PLUS"; /* ingredients  + */
+		case E_TT_ASTERIX:
+			return "E_TT_ASTERIX"; /* ingredients  * */
+		case E_TT_QUESTION_MARK:
+			return "E_TT_QUESTION_MARK"; /* ingredients ? */
+		case E_TT_NUMBER:
+			return "E_TT_NUMBER";
+		case E_TT_BLANK:
+			return "E_TT_BLANK";
+		case E_TT_NEWLINE:
+			return "E_TT_NEWLINE";
+		case E_TT_EOF:
+			return "E_TT_EOF";
 		default:
-			return "ETT_UNKOWN";
+			return "E_TT_UNKOWN";
 		}
 	}
 
@@ -57,7 +58,7 @@ namespace epicr
 	{
 		string type = token_to_string(token.type);
 
-		if (token.type != epicr::ETT_BLANK && token.type != epicr::ETT_NEWLINE)
+		if (token.type != epicr::E_TT_BLANK && token.type != epicr::E_TT_NEWLINE)
 			printf("%-18s-> %-10s uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.uid, token.line);
 		else
 			printf("%-18s   %-10i uid:%i line:%i\n", type.c_str(), (int)token.word.size(), token.uid, token.line);

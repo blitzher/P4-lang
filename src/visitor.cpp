@@ -17,6 +17,77 @@ bool map_contains(std::unordered_map<std::string, epicr::ingredient> m, std::str
     return false;
 }
 
+template <typename T, typename A>
+bool vec_contains(std::vector<T, A> vector, T value)
+{
+    for (const T t : vector)
+        if (value == t)
+            return true;
+    return false;
+}
+
+bool map_is_initalized = false;
+
+namespace epicr
+{
+
+    std::map<epicr_unit_type, std::vector<std::string>> units_in_type;
+    std::map<std::string, std::vector<std::string>> unit_aliases;
+    std::map<epicr_unit_system, std::vector<std::string>> units_in_system;
+
+    void initialize_maps()
+    {
+        if (map_is_initalized)
+            return;
+
+        /* all units and their type */
+        std::vector<std::string> weight_units = {
+            "g", "kg", "oz", "lbs"};
+        units_in_type[E_UT_WEIGHT] = weight_units;
+
+        std::vector<std::string> volume_units = {
+            "ml", "dl", "l", "fl-oz", "cup", "qt", "gal"};
+        units_in_type[E_UT_VOLUME] = volume_units;
+
+        std::vector<std::string> length_units = {
+            "mm", "cm", "in", "ft"};
+        units_in_type[E_UT_LENGTH] = length_units;
+
+        std::vector<std::string> temperature_units = {
+            "c", "f"};
+        units_in_type[E_UT_TEMPERATURE] = temperature_units;
+
+        /* alias' of the different units */
+        unit_aliases["g"] = {"g", "gram", "grams"};
+        unit_aliases["kg"] = {"kg", "kilo gram", "kgs", "kilo grams"};
+        unit_aliases["oz"] = {"oz", "ounce", "ounces"};
+        unit_aliases["lbs"] = {"lbs", "pounds"};
+
+        unit_aliases["ml"] = {"ml", "mili liter"};
+        unit_aliases["dl"] = {"dl", "deci liter"};
+        unit_aliases["l"] = {"l", "liter"};
+        unit_aliases["fl-oz"] = {"fl-oz", "fluid ounce"};
+        unit_aliases["cup"] = {"cup", "cups"};
+        unit_aliases["qt"] = {"qt", "quarts"};
+        unit_aliases["gal"] = {"gal", "gallon", "gallons"};
+
+        unit_aliases["mm"] = {"milimeter", "milimeters"};
+        unit_aliases["cm"] = {"centimeter", "centimeters"};
+        unit_aliases["in"] = {"in", "inch", "inches"};
+        unit_aliases["ft"] = {"ft", "feet"};
+
+        unit_aliases["c"] = {"c", "celsius"};
+        unit_aliases["f"] = {"f", "fahrenheit"};
+
+        units_in_system[E_US_IMPERIAL] = {
+            "g", "kg", "ml", "dl", "l", "mm", "cm", "c"};
+        units_in_system[E_US_METRIC] = {
+            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "f"};
+
+        map_is_initalized = true;
+    }
+}
+
 namespace epicr::visitor
 {
 /* Just used to group things */
@@ -135,5 +206,208 @@ namespace epicr::visitor
         }
         return true;
     }
+#pragma endregion
+
+#pragma region AmountConverter implemention
+
+    AmountConverter::AmountConverter()
+    {
+        initialize_maps();
+    }
+
+    bool AmountConverter::is_convertable(std::string unit)
+    {
+        for (const auto &pair : unit_aliases)
+            for (const auto &alias : pair.second)
+                if (unit == alias)
+                    return true;
+
+        return false;
+    }
+
+    /**
+     * @brief Convert a unit alias into the standard, i.e. 'grams' to 'g'.
+     *
+     * @param unit Unit to standardize
+     * @return std::string The standard for a specific unit alias
+     */
+    std::string AmountConverter::standardize(std::string unit)
+    {
+        for (const auto &pair : unit_aliases)
+            for (const auto &alias : pair.second)
+                if (unit == alias)
+                    return unit_aliases[pair.first][0];
+
+        ERR("No valid standard found for unit");
+        return "";
+    }
+
+    /**
+     * @brief Convert a unit into a different unit system, i.e. E_TT_METRIC to E_TT_IMPERIAL
+     *
+     * @param amnt The amount to be scaled
+     * @param system The system to be scaled into
+     * @return amount
+     */
+    void AmountConverter::scale_amount(amount *amnt, epicr_unit_system tar_sys)
+    {
+        std::string standardized = standardize(amnt->unit);
+        epicr_unit_system cur_sys;
+
+        /* find out what system the current unit is in*/
+        for (const auto &pair : epicr::units_in_system)
+        {
+            for (const auto &unit_in_sys : pair.second)
+            {
+                if (standardized == unit_in_sys)
+                {
+                    cur_sys = pair.first;
+                    break;
+                }
+            }
+        }
+
+        /* if no system change is needed, short-circuit  */
+        if (cur_sys == tar_sys)
+            return;
+
+        /* Conversions metric -> imperial */
+
+        if (tar_sys == E_US_IMPERIAL)
+        {
+            if (standardized == "g")
+            {
+                amnt->number = amnt->number * G_TO_OZ;
+                amnt->unit = "oz";
+            }
+            else if (standardized == "kg")
+            {
+                amnt->number = amnt->number * KG_TO_LBS;
+                amnt->unit = "lbs";
+            }
+            else if (standardized == "ml")
+            {
+                amnt->number = amnt->number * ML_TO_FLOZ;
+                amnt->unit = "fl-oz";
+            }
+            else if (standardized == "dl")
+            {
+                amnt->number = amnt->number * DL_TO_FLOZ;
+                amnt->unit = "fl-oz";
+            }
+            else if (standardized == "l")
+            {
+                amnt->number = amnt->number * L_TO_QT;
+                amnt->unit = "qt";
+            }
+            else if (standardized == "m")
+            {
+                amnt->number = amnt->number * M_TO_FEET;
+                amnt->unit = "ft";
+            }
+            else if (standardized == "cm")
+            {
+                amnt->number = amnt->number * CM_TO_INCH;
+                amnt->unit = "in";
+            }
+            else if (standardized == "mm")
+            {
+                amnt->number = amnt->number * MM_TO_INCH;
+                amnt->unit = "in";
+            }
+            else if (standardized == "c")
+            {
+                amnt->number = C_TO_F(amnt->number);
+                amnt->unit = "f";
+            }
+        }
+        else
+        {
+            if (standardized == "oz")
+            {
+                amnt->number = amnt->number / G_TO_OZ;
+                amnt->unit = "g";
+            }
+            else if (standardized == "lbs")
+            {
+                amnt->number = amnt->number / KG_TO_LBS;
+                amnt->unit = "kg";
+            }
+            else if (standardized == "fl-oz")
+            {
+                amnt->number = amnt->number / ML_TO_FLOZ;
+                amnt->unit = "ml";
+            }
+            else if (standardized == "fl-oz")
+            {
+                amnt->number = amnt->number / DL_TO_FLOZ;
+                amnt->unit = "dl";
+            }
+            else if (standardized == "qt")
+            {
+                amnt->number = amnt->number / L_TO_QT;
+                amnt->unit = "l";
+            }
+            else if (standardized == "ft")
+            {
+                amnt->number = amnt->number / M_TO_FEET;
+                amnt->unit = "m";
+            }
+            else if (standardized == "in")
+            {
+                amnt->number = amnt->number / CM_TO_INCH;
+                amnt->unit = "cm";
+            }
+            else if (standardized == "in")
+            {
+                amnt->number = amnt->number / MM_TO_INCH;
+                amnt->unit = "mm";
+            }
+            else if (standardized == "f")
+            {
+                amnt->number = F_TO_C(amnt->number);
+                amnt->unit = "c";
+            }
+        }
+    }
+
+    void AmountConverter::visit(recipe rcp)
+    {
+
+        std::vector<amount *> scaleables;
+
+        /* Get all amounts from ingredients */
+        for (auto &ingr : rcp.ingredients)
+        {
+            amount *amnt_ptr = &ingr.amount;
+            scaleables.push_back(amnt_ptr);
+        }
+
+        /* Get all amounts from instructions */
+        for (auto &inst : rcp.instructions)
+        {
+            for (auto &ingr : inst.ingredients)
+                scaleables.push_back(&(ingr.amount));
+
+            for (auto &word : inst.body)
+            {
+                if (word.is_amount)
+                    scaleables.push_back(&(word.value));
+            }
+
+            for (auto &ingr : inst.yields)
+                scaleables.push_back(&(ingr.amount));
+        }
+
+        for (auto &amnt : scaleables)
+        {
+            if (!is_convertable(amnt->unit))
+                continue;
+
+            /* Scale to the unit system from clargs */
+            scale_amount(amnt, E_US_IMPERIAL);
+        }
+    }
+
 #pragma endregion
 }
