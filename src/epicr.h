@@ -25,6 +25,19 @@ namespace epicr
     typedef unsigned int uint;
 #pragma region Recipe Data
 
+    typedef enum html_style_e
+    {
+        html_style_basic,
+        html_style_fancy
+    } html_style;
+
+    typedef struct cmd_args_e
+    {
+        std::string input_filepath;
+        html_style choosen_style;
+        std::string output_filepath;
+    } cmd_args;
+
     typedef struct amount_s
     {
         double number;
@@ -189,6 +202,8 @@ namespace epicr
     public:
         bool DEBUG_MODE;
         bool error;
+        std::string original_amount;
+        epicr::cmd_args clargs;
         std::string error_message;
         epicr_token error_token;
         recipe Parse();
@@ -243,5 +258,9 @@ namespace epicr
     } parse_ret;
 
     parse_ret parse_recipe(std::string filename);
+    parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
+
+    /* Command line argument related declarations */
+    cmd_args parse_cmd_args(int argc, char **argv);
 }

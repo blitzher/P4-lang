@@ -7,7 +7,7 @@ void pasta_recipe_parses_without_error()
 	epicr::Lexer l = epicr::Lexer(f);
 	epicr::Parser p = epicr::Parser(&l);
 	epicr::recipe rcp = p.Parse();
-	test_lib::expect_equal_i(p.error,0);
+	test_lib::expect_equal_i(p.error, 0);
 }
 
 void carbonara_recipe_parses_without_error()
@@ -17,7 +17,7 @@ void carbonara_recipe_parses_without_error()
 	epicr::Lexer l = epicr::Lexer(f);
 	epicr::Parser p = epicr::Parser(&l);
 	epicr::recipe rcp = p.Parse();
-	test_lib::expect_equal_i(p.error,0);
+	test_lib::expect_equal_i(p.error, 0);
 }
 
 void parsed_title()
@@ -106,7 +106,6 @@ void parsed_ingredients()
 		return;
 	}
 
-
 	test_lib::expect_equal_s(rcp.ingredients[4].name, "extra wheatflour");
 	if (!rcp.ingredients[4].isOptional)
 	{
@@ -118,7 +117,7 @@ void parsed_ingredients()
 	}
 	if (rcp.ingredients[4].amount.number != std::numeric_limits<double>::infinity())
 	{
-		std::cout<<rcp.ingredients[4].amount.number;
+		std::cout << rcp.ingredients[4].amount.number;
 		test_lib::deny("Expected ingredient extra wheatflour to have amount set to INF");
 	}
 
@@ -160,7 +159,6 @@ void instruction_has_correct_ingredients_name()
 
 	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].name, "dough");
 	test_lib::expect_equal_s(rcp.instructions[2].ingredients[1].name, "extra wheatflour");
-
 }
 
 void ingredient_in_instruction_has_correct_amount()
@@ -220,7 +218,6 @@ void instruction_has_correct_kitchenware_name()
 	test_lib::expect_equal_s(rcp.instructions[1].kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.instructions[2].kitchenware[0], "kitchenroller");
 }
-
 
 void parsed_instruction_body()
 {
@@ -299,7 +296,7 @@ void parse_fields_in_random_order()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/PastaRandomOrder.rcp").recipe;
 
 	test_lib::expect_equal_s(rcp.title, "Pasta");
-	test_lib::expect_equal_i(rcp.instructions.size(),3);
+	test_lib::expect_equal_i(rcp.instructions.size(), 3);
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta");
 	test_lib::expect_equal_i(rcp.ingredients.size(), 5);
 	test_lib::expect_equal_i(rcp.ingredients[0].amount.number, 300);
@@ -313,14 +310,12 @@ void parse_recipe_with_random_casing()
 
 	test_lib::expect_equal_s(rcp.title, "Pasta");
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta");
-	test_lib::expect_equal_i(rcp.servings.count,4);
+	test_lib::expect_equal_i(rcp.servings.count, 4);
 	test_lib::expect_equal_i(rcp.ingredients.size(), 4);
-	test_lib::expect_equal_i(rcp.instructions.size(),1);
-	test_lib::expect_equal_i(rcp.instructions[0].ingredients.size(),4);
-	test_lib::expect_equal_i(rcp.instructions[0].yields.size(),1);
-	
+	test_lib::expect_equal_i(rcp.instructions.size(), 1);
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients.size(), 4);
+	test_lib::expect_equal_i(rcp.instructions[0].yields.size(), 1);
 }
-
 
 int main(void)
 {
