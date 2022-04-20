@@ -30,6 +30,8 @@ namespace epicr
 		size_t elementsCount = elements.size();
 		if (elementsCount == 0)
 			return result;
+        header.insert(0, "<h3>");
+        header.append("</h3>");
 		result += header;
 		for (size_t i = 0;i<elementsCount;i++)
 		{
@@ -38,6 +40,18 @@ namespace epicr
 			if (i != elementsCount - 1)
 				result += delimiter;
 		}
+		return result;
+	}
+
+    string insertTime(string header, string time)
+	{
+		string result = "";
+		if (time == "")
+			return result;
+        header.insert(0, "<h3>");
+        header.append("</h3>");
+		result += header;
+		result += " " + time;
 		return result;
 	}
 	
@@ -52,12 +66,14 @@ namespace epicr
 	}
 	
 	//fields are structs
-	string insertDelimiterSeperatedFieldsWithAmounts(string header, string delimiter, std::vector<ingredient> fields)
+	string insertIngredients(string header, string delimiter, std::vector<ingredient> fields)
 	{
 		string result = "";
 		size_t fieldCount = fields.size();
 		if (fieldCount== 0)
 			return result;
+        header.insert(0, "<h3>");
+        header.append("</h3>");
 		result += header;
 		for (size_t i = 0;i<fieldCount;i++)
 		{
@@ -70,21 +86,6 @@ namespace epicr
 		return result;
 	}
 
-	string insertTags(recipe rcp)
-	{
-		return insertDelimiterSeperatedFields("Tags: ",", ",rcp.tags);
-	}
-	
-	string insertKitchenware(recipe rcp)
-	{
-		return insertDelimiterSeperatedFields("Kitchenware: ",", ",rcp.kitchenware);
-	}
-
-	string insertIngredients(recipe rcp)
-	{
-		return insertDelimiterSeperatedFieldsWithAmounts("Ingredients: ",", ",rcp.ingredients);
-	}
-	
 	string insertInstructionBody(std::vector<instruction_word> body)
 	{
 		string result = "";
@@ -126,7 +127,7 @@ namespace epicr
 		for (auto inst : rcp.instructions)
 		{
 			index++;
-			string ingredients = insertDelimiterSeperatedFieldsWithAmounts("Ingredients: ",", ",inst.ingredients);
+			string ingredients = insertIngredients("Ingredients: ",", ",inst.ingredients);
 			string kitchenware = insertDelimiterSeperatedFields("Kitchenware: ",", ",inst.kitchenware);
 			string body = insertInstructionBody(inst.body);
 			
@@ -135,16 +136,22 @@ namespace epicr
 			instructions_section += instr_s;
 		}
 
-		string tags = insertTags(rcp);
-		string kitchenware = insertKitchenware(rcp);
-		string ingredients = insertIngredients(rcp);
+        // format final HTML strings
+		string tags = insertDelimiterSeperatedFields("Tags: ", ", ", rcp.tags);
+		string kitchenware = insertDelimiterSeperatedFields("Kitchenware: ", ", ", rcp.kitchenware);
+		string ingredients = insertIngredients("Ingredients: ", ", ", rcp.ingredients);
+        string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
+        string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
+        string cookTime = insertTime("Cook time: ", rcp.time.cook_time.c_str());
 
         string output_string = base_template;  // convert base template to string
         
         // replace placeholders with final HTML
         replace(output_string, "~title~", rcp.title.c_str());
         replace(output_string, "~description~", rcp.description.c_str());
-        replace(output_string, "~cook-time~", rcp.time.cook_time.c_str());
+        replace(output_string, "~total-time~", totalTime);
+        replace(output_string, "~cook-time~", prepTime);
+        replace(output_string, "~prep-time~", cookTime);
         replace(output_string, "~tags~", tags.c_str());
         replace(output_string, "~ingredients~", ingredients.c_str());
         replace(output_string, "~kitchenware~", kitchenware.c_str());
