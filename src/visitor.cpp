@@ -71,8 +71,8 @@ namespace epicr
         unit_aliases["qt"] = {"qt", "quarts"};
         unit_aliases["gal"] = {"gal", "gallon", "gallons"};
 
-        unit_aliases["mm"] = {"milimeter", "milimeters"};
-        unit_aliases["cm"] = {"centimeter", "centimeters"};
+        unit_aliases["mm"] = {"mm", "milimeter", "milimeters"};
+        unit_aliases["cm"] = {"cm", "centimeter", "centimeters"};
         unit_aliases["in"] = {"in", "inch", "inches"};
         unit_aliases["ft"] = {"ft", "feet"};
 
@@ -282,6 +282,7 @@ namespace epicr::visitor
             return;
 
         /* Conversions metric -> imperial */
+        printf("standardized: %s\n", standardized.c_str());
         if (tar_sys == E_US_IMPERIAL)
         {
             if (standardized == "g")
