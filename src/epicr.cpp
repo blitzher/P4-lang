@@ -88,6 +88,26 @@ namespace epicr
 		size_t end = str.find_last_not_of(whitespace);
 		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
 	}
+	
+	bool ingredient_exist_in_ingredient_vector(std::string ingredientName,std::vector<ingredient> ingredients)
+	{
+		for(ingredient &an_ingredient : ingredients)
+        {
+            if (an_ingredient.name == ingredientName)
+				return true;
+        }
+        return false;
+	}
+	
+	ingredient find_ingredient_in_vector_by_name(std::string ingredientName,std::vector<ingredient> ingredients)
+	{
+		for(ingredient &an_ingredient : ingredients)
+        {
+            if (an_ingredient.name == ingredientName)
+				return an_ingredient;
+        }
+		return ingredient(); /*this will never run, if ingredient_exist_in_ingredient_vector is called before */
+	}
 
 	epicr::parse_ret parse_recipe(std::string filename)
 	{
