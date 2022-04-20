@@ -102,6 +102,15 @@ namespace epicr
 		return result;
 	}
 
+    // find a string in another string and replace with a third string
+    bool replace(string& str, const string& from_string, const string& to_string) {
+        size_t start_position = str.find(from_string);   
+        if(start_position == string::npos)  // if no matching string was found
+            return false;
+        str.replace(start_position, from_string.length(), to_string);
+        return true;
+    }
+
 	bool generate_html(recipe rcp, string filename)
 	{
 		string base_template_s = load_template("base");
@@ -114,7 +123,6 @@ namespace epicr
 			return false;
 		string instructions_section = "";
 		char* instr_s = (char*)malloc(MAX_S_LENGTH);
-		char* base_s = (char*)malloc(MAX_B_LENGTH);
 		int index = 0;
 		for (auto inst : rcp.instructions)
 		{
@@ -127,19 +135,23 @@ namespace epicr
 			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), kitchenware.c_str(), body.c_str());
 			instructions_section += instr_s;
 		}
+
 		string tags = insertTags(rcp);
 		string kitchenware = insertKitchenware(rcp);
 		string ingredients = insertIngredients(rcp);
 
-		sprintf(base_s, base_template,
-			rcp.title.c_str(),
-			rcp.description.c_str(),
-			rcp.time.cook_time.c_str(),
-			tags.c_str(),
-			ingredients.c_str(),
-			kitchenware.c_str(),
-			instructions_section.c_str());
-		file << base_s << std::endl;
+        string output_string = base_template;  // convert base template to string
+        
+        // replace placeholders with final HTML
+        replace(output_string, "~title~", rcp.title.c_str());
+        replace(output_string, "~description~", rcp.description.c_str());
+        replace(output_string, "~cook-time~", rcp.time.cook_time.c_str());
+        replace(output_string, "~tags~", tags.c_str());
+        replace(output_string, "~ingredients~", ingredients.c_str());
+        replace(output_string, "~kitchenware~", kitchenware.c_str());
+        replace(output_string, "~instructions~", instructions_section.c_str());
+        
+        file << output_string << std::endl;
 		file.close();
 
 		return true;
