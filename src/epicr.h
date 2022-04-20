@@ -220,7 +220,17 @@ namespace epicr
         public:
             std::string error;
             bool has_error;
-            void visit(recipe *);
+            void visit(recipe);
+        };
+
+        class RelativeResolver : public Visitor
+        {
+            private:
+                std::unordered_map<std::string, ingredient> symbols; 
+            public:
+                RelativeResolver();
+                void visit(recipe *);
+            
         };
 
         class IngredientVerifier : public Visitor
@@ -232,7 +242,7 @@ namespace epicr
 
         public:
             IngredientVerifier();
-            void visit(recipe *);
+            void visit(recipe);
         };
     }
 
@@ -242,6 +252,10 @@ namespace epicr
     std::string to_lower(std::string);
     /*returns a new string where all types of spaces to right is stripped from the input string */
     std::string strip_spaces_right(std::string);
+    /*must be called before find_ingredient_in_vector_by_ingredient_name - 
+	return whether or not an ingredient with that name exists in the list*/
+    bool ingredient_exist_in_ingredient_vector(std::string,std::vector<ingredient>);
+    ingredient find_ingredient_in_vector_by_name(std::string,std::vector<ingredient>);
 
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
