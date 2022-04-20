@@ -51,7 +51,6 @@ std::vector<std::string> optional_fields = {
 	"tags",
 	"time",
 };
-
 namespace epicr
 {
 
@@ -64,11 +63,11 @@ namespace epicr
 	 */
 
 #pragma region Parser implementation
+
 	Parser::Parser(Lexer *lexer_r)
 	{
 		lexer = lexer_r;
 	}
-
 	recipe Parser::Parse()
 	{
 		error = 0;
@@ -131,6 +130,8 @@ namespace epicr
 			if (utoken.type != ETT_COLON)
 				ADV_NON_BLANK(1);
 		}
+
+		rcp->title = strip_spaces_right(rcp->title);
 	}
 	void Parser::ParseDescription(recipe *rcp)
 	{
@@ -417,6 +418,8 @@ namespace epicr
 		bool assume_1_num = (arg & ASSUME_1_NUM) >> 3;
 		bool assume_rest = (arg & ASSUME_REST) >> 4;
 		amount amnt = amount();
+		amnt.isConvertable = false;
+
 
 		if (ctoken.type == ETT_PLUS)
 		{
@@ -433,7 +436,7 @@ namespace epicr
 
 		if (ctoken.type != ETT_BRACKET_OPEN)
 		{
-
+			amnt.isScaleable = true;
 			if (assume_1_num)
 			{
 				amnt.number = 1;
@@ -454,6 +457,8 @@ namespace epicr
 			amnt.number = std::stod(ctoken.word);
 			ADV_NON_BLANK(1);
 			amnt.unit = ReadWords(false, false);
+			amnt.isScaleable = true;
+			amnt.isConvertable = ReadConvertableUnits(ctoken.word);
 		}
 		else if (ctoken.type == ETT_WORD)
 		{
@@ -539,6 +544,18 @@ namespace epicr
 			return 1;
 		}
 		return 0;
+	}
+
+		bool Parser::ReadConvertableUnits(std::string targetWord) {
+		// checks if unit is standardized by comparing it to a string ig
+		std::string convertableunits[] = {"g","kg", "ml","dl","l","mm","cm","c","kcal",
+									"oz","lbs","fl-oz", "cup", "qt", "gal", "in", "ft", "f", "cal"};
+		bool exists = std::find(std::begin(convertableunits), std::end(convertableunits), to_lower(targetWord)) != std::end(convertableunits);
+			if(exists == true && utoken.type == ETT_BRACKET_CLOSE) {
+				return true;
+ 			}
+		//if not found, returns false
+		return false;
 	}
 
 	void Parser::silence(bool val)
