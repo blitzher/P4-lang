@@ -282,7 +282,6 @@ namespace epicr::visitor
             return;
 
         /* Conversions metric -> imperial */
-        printf("standardized: %s\n", standardized.c_str());
         if (tar_sys == E_US_IMPERIAL)
         {
             if (standardized == "g")

@@ -158,7 +158,13 @@ namespace test_lib
 	{
 		CHECK_TESTS_NON_EMPTY()
 
-		if (expected == actual)
+		double min = expected > actual ? actual : expected;
+		double max = expected > actual ? expected : actual;
+
+		double percent_diff = max / min;
+
+		/* 1% wiggle room */
+		if (percent_diff < 1.01)
 			accept();
 		else
 		{

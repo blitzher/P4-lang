@@ -6,7 +6,6 @@ import tkinter.filedialog as fd
 
 
 class App(tk.Frame):
-
     def __init__(self, master):
         super().__init__(master)
         root.geometry("550x210")
@@ -15,23 +14,63 @@ class App(tk.Frame):
         self.var2 = IntVar()
         self.grid_configure(column=10, row=10)
         self.input_file_button = tk.Button(
-            self, command=lambda: self.open_file(self.input_fpath), text="Open file/Recipe", height=1, width=15)
+            self,
+            command=lambda: self.open_file(self.input_fpath),
+            text="Open file/Recipe",
+            height=1,
+            width=15,
+        )
         self.output_dir_button = tk.Button(
-            self, command=lambda: self.open_dir(self.out_dir), text="Open output dir", height=1, width=15)
+            self,
+            command=lambda: self.open_dir(self.out_dir),
+            text="Open output dir",
+            height=1,
+            width=15,
+        )
         self.compile_btn = tk.Button(
-            self, command=lambda: self.compile(), text="Compile output", height=1, width=15)
+            self,
+            command=lambda: self.compile(),
+            text="Compile output",
+            height=1,
+            width=15,
+        )
         self.input_file_button.pack(anchor=W)
         self.output_dir_button.pack(anchor=W)
-        tk.Radiobutton(self, text="Fancy HTML style", variable=self.var,
-                       value=1, command=self.select_style).pack(anchor=W)
-        tk.Radiobutton(self, text="Basic HTML style", variable=self.var,
-                       value=2, command=self.select_style).pack(anchor=W)
-        tk.Radiobutton(self, text="Imperial system", variable=self.var2,
-                       value=1, command=self.select_system).pack(anchor=W)
-        tk.Radiobutton(self, text="Metric system", variable=self.var2,
-                       value=2, command=self.select_system).pack(anchor=W)
-        tk.Radiobutton(self, text="No conversion of unit system desired", variable=self.var2,
-                       value=3, command=self.select_system).pack(anchor=W)
+        tk.Radiobutton(
+            self,
+            text="Fancy HTML style",
+            variable=self.var,
+            value=1,
+            command=self.select_style,
+        ).pack(anchor=W)
+        tk.Radiobutton(
+            self,
+            text="Basic HTML style",
+            variable=self.var,
+            value=2,
+            command=self.select_style,
+        ).pack(anchor=W)
+        tk.Radiobutton(
+            self,
+            text="Imperial system",
+            variable=self.var2,
+            value=1,
+            command=self.select_system,
+        ).pack(anchor=W)
+        tk.Radiobutton(
+            self,
+            text="Metric system",
+            variable=self.var2,
+            value=2,
+            command=self.select_system,
+        ).pack(anchor=W)
+        tk.Radiobutton(
+            self,
+            text="No conversion of unit system desired",
+            variable=self.var2,
+            value=3,
+            command=self.select_system,
+        ).pack(anchor=W)
         self.compile_btn.pack(anchor=W)
         self.input_fpath = tk.StringVar()
         self.input_fpath.set("No file or recipe selected")
@@ -48,7 +87,7 @@ class App(tk.Frame):
         self.output_fpath_label.place(x=150, y=33)
 
     def open_file(self, dest):
-        file = fd.askopenfile(filetypes=[('epicR Files', '*.rcp')])
+        file = fd.askopenfile(filetypes=[("epicR Files", "*.rcp")])
 
         if file:
             filepath = os.path.abspath(file.name)
@@ -57,19 +96,19 @@ class App(tk.Frame):
     def select_style(self):
         value = self.var.get()
 
-        if(value == 1):
+        if value == 1:
             self.html_style = "Fancy"
-        elif(value == 2):
+        elif value == 2:
             self.html_style = "Basic"
 
     def select_system(self):
         value = self.var2.get()
 
-        if(value == 1):
+        if value == 1:
             self.unit_system = "Imperial"
-        elif(value == 2):
+        elif value == 2:
             self.unit_system = "Metric"
-        elif(value == 3):
+        elif value == 3:
             self.unit_system = "None"
 
     def open_dir(self, dest):
@@ -80,18 +119,20 @@ class App(tk.Frame):
 
     def compile(self):
         executable = os.path.join(".", "bin", "main")
-        clargs = ("%s -o %s --%s --%s" %
-                  (self.input_fpath.get(), self.out_dir.get(), self.html_style, self.unit_system))
+        clargs = "%s -o %s --%s --%s" % (
+            self.input_fpath.get(),
+            self.out_dir.get(),
+            self.html_style,
+            self.unit_system,
+        )
 
-        os.system("%s %s" % (
-            executable,
-            clargs
-        ))
+        os.system("%s %s" % (executable, clargs))
 
     def format_fpath(self, s):
         return s
 
 
-root = tk.Tk()
-app = App(root)
-app.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = App(root)
+    app.mainloop()
