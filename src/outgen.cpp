@@ -21,7 +21,6 @@ namespace epicr
 			file_content += gotten_char;
 			gotten_char = fstream.get();
 		} while (!fstream.eof());
-
 		return file_content;
 	}
 	//elements are merely strings
@@ -114,11 +113,11 @@ namespace epicr
 	bool generate_html(recipe rcp, string filename)
 	{
 		string base_template_s = load_template("base");
-		const char* base_template = base_template_s.c_str();
+		const char *base_template = base_template_s.c_str();
 		string step_template_s = load_template("step");
-		const char* step_template = step_template_s.c_str();
+		const char *step_template = step_template_s.c_str();
 
-		std::ofstream file{ filename };
+		std::ofstream file{filename};
 		if (!file.is_open())
 			return false;
 		string instructions_section = "";

@@ -25,6 +25,19 @@ namespace epicr
     typedef unsigned int uint;
 #pragma region Recipe Data
 
+    typedef enum html_style_e
+    {
+        html_style_basic,
+        html_style_fancy
+    } html_style;
+
+    typedef struct cmd_args_e
+    {
+        std::string input_filepath;
+        html_style choosen_style;
+        std::string output_filepath;
+    } cmd_args;
+
     typedef struct amount_s
     {
         double number;
@@ -32,6 +45,8 @@ namespace epicr
         std::string relativeAmount;
         std::string unit;
         bool isUncountable;
+        bool isConvertable;
+        bool isScaleable;
     } amount;
 
     typedef struct ingredient_s
@@ -179,12 +194,16 @@ namespace epicr
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
         returns 1 if something went wrong, otherwise returns 0*/
         int ReadSeperatorOrWaitAtNextField();
+
+        bool ReadConvertableUnits(std::string);
         epicr_token ctoken;
         epicr_token utoken;
 
     public:
         bool DEBUG_MODE;
         bool error;
+        std::string original_amount;
+        epicr::cmd_args clargs;
         std::string error_message;
         epicr_token error_token;
         recipe Parse();
@@ -201,7 +220,17 @@ namespace epicr
         public:
             std::string error;
             bool has_error;
-            void visit(recipe *);
+            void visit(recipe);
+        };
+
+        class RelativeResolver : public Visitor
+        {
+            private:
+                std::unordered_map<std::string, ingredient> symbols; 
+            public:
+                RelativeResolver();
+                void visit(recipe *);
+            
         };
 
         class IngredientVerifier : public Visitor
@@ -213,7 +242,7 @@ namespace epicr
 
         public:
             IngredientVerifier();
-            void visit(recipe *);
+            void visit(recipe);
         };
     }
 
@@ -224,6 +253,11 @@ namespace epicr
     /*returns a new string where all types of spaces to right is stripped from the input string */
     std::string strip_spaces_right(std::string);
     std::string double_to_string(double);
+    /*must be called before find_ingredient_in_vector_by_ingredient_name - 
+	return whether or not an ingredient with that name exists in the list*/
+    bool ingredient_exist_in_ingredient_vector(std::string,std::vector<ingredient>);
+    ingredient find_ingredient_in_vector_by_name(std::string,std::vector<ingredient>);
+
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
 
@@ -239,5 +273,9 @@ namespace epicr
     } parse_ret;
 
     parse_ret parse_recipe(std::string filename);
+    parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
+
+    /* Command line argument related declarations */
+    cmd_args parse_cmd_args(int argc, char **argv);
 }

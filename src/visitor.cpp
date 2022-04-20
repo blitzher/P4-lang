@@ -19,6 +19,66 @@ bool map_contains(std::unordered_map<std::string, epicr::ingredient> m, std::str
 
 namespace epicr::visitor
 {
+
+#pragma region RelativeResolver implementation
+
+    RelativeResolver::RelativeResolver()
+    {
+        symbols = std::unordered_map<std::string, ingredient>();
+    };
+
+    void RelativeResolver::visit(recipe *a_rcp)
+    {
+        /* shallow copy of input recipe */
+        recipe rcp = *a_rcp;
+
+        /* fill the symbol table */
+        for (auto ingr : rcp.ingredients)
+        {
+            symbols[ingr.name] = ingr;
+        }
+        
+        for (auto &inst : a_rcp->instructions)
+        {
+            for (auto &ingr : inst.ingredients)
+            {
+                if (ingr.amount.isRelativeAmount)
+                {
+                    switch (ingr.amount.relativeAmount[0])
+                    {
+                    case 'r': /* rest */
+                        if (!ingredient_exist_in_ingredient_vector(ingr.name,rcp.ingredients))
+                        {
+                            char *err = (char *)malloc(100);
+                            sprintf(err,"Ingredient %s used in instruction not found in ingredients list",ingr.name.c_str());
+                            ERR(err);
+                        }
+                        ingr.amount = find_ingredient_in_vector_by_name(ingr.name,rcp.ingredients).amount; 
+                        break;
+                    case 'h': /* half */
+                        ingr.amount = symbols[ingr.name].amount;
+                        ingr.amount.number *= 0.5f;
+                        break;
+                    case 'q': /* quarter */
+                        ingr.amount = symbols[ingr.name].amount;
+                        ingr.amount.number *= 0.25f;
+                        break;
+                    case 'a': /* all */
+                        ingr.amount = symbols[ingr.name].amount;
+                        break;
+                    default:
+                        char *err = (char *)malloc(100);
+                        sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relativeAmount.c_str(), ingr.name.c_str());
+                        ERR(err);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+#pragma endregion
+
 /* Just used to group things */
 #pragma region IngredientVerifier implementation
 
@@ -28,12 +88,11 @@ namespace epicr::visitor
         original_symbols = std::unordered_map<std::string, ingredient>();
         has_error = false;
     };
-    void IngredientVerifier::visit(recipe* a_rcp)
+    void IngredientVerifier::visit(recipe a_rcp)
     {
 
         /* shallow copy of input recipe */
-        recipe rcp = *a_rcp;
-
+        recipe rcp = a_rcp;
         /* fill the symbol table */
         for (auto ingr : rcp.ingredients)
         {
@@ -45,7 +104,7 @@ namespace epicr::visitor
         aka check if the recipe comply by all the rules */
 
         int instruction_count = 0;
-        for (auto inst : a_rcp->instructions)
+        for (auto inst : rcp.instructions)
         {
             instruction_count++;
             /* consume */
@@ -56,32 +115,6 @@ namespace epicr::visitor
                     /* TODO: sprintf into error message with ingr name */
                     ERR("Ingredient used in instruction not found in ingredients list");
                     return;
-                }
-
-                if (ingr.amount.isRelativeAmount)
-                {
-                    switch (ingr.amount.relativeAmount[0])
-                    {
-                    case 'r': /* rest */
-                        ingr.amount = symbols[ingr.name].amount;
-                        break;
-                    case 'h': /* half */
-                        ingr.amount = original_symbols[ingr.name].amount;
-                        ingr.amount.number *= 0.5f;
-                        break;
-                    case 'q': /* quarter */
-                        ingr.amount = original_symbols[ingr.name].amount;
-                        ingr.amount.number *= 0.25f;
-                        break;
-                    case 'a': /* all */
-                        ingr.amount = original_symbols[ingr.name].amount;
-                        break;
-                    default:
-                        char *err = (char *)malloc(100);
-                        sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relativeAmount.c_str(), ingr.name.c_str());
-                        ERR(err);
-                        return;
-                    }
                 }
 
                 if (ingr.amount.number > symbols[ingr.name].amount.number)
@@ -119,7 +152,7 @@ namespace epicr::visitor
         for (auto KeyValuePair : symbols)
         {
             ingredient ingr = KeyValuePair.second;
-            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != a_rcp->title)
+            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != rcp.title)
             {
                 ERR("Unused ingredient after instructions");
             }
