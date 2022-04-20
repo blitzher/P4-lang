@@ -21,7 +21,6 @@ namespace epicr
 			file_content += gotten_char;
 			gotten_char = fstream.get();
 		} while (!fstream.eof());
-
 		return file_content;
 	}
 	// elements are merely strings

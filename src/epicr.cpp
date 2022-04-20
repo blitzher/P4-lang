@@ -91,6 +91,16 @@ namespace epicr
 		size_t end = str.find_last_not_of(whitespace);
 		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
 	}
+	
+	bool ingredient_exist_in_ingredient_vector(std::string ingredientName,std::unordered_map<std::string, ingredient> ingredients)
+	{
+		for(const auto &pair : ingredients)
+        {
+            if (pair.first == ingredientName)
+				return true;
+        }
+        return false;
+	}
 
 	std::string double_to_string(double num)
 	{

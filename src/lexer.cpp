@@ -75,12 +75,14 @@ namespace epicr
         {
             if (CH_V_CONTAINS(token_breakers, ch))
             {
+                /*                              ascii value 13=        if token size
+                          space       newline   carriage return           is 0 */
                 if ((ch == ' ' || ch == '\n' || ch == 0x0d) && vtoken.size() == 0)
                 {
                     do
                     {
                         if (ch == 0xd)
-                            istream.get(ch);
+                            istream.get(ch); /* gets the next char in the stream */
 
                         vtoken.push_back(ch);
                         istream.get(ch);
