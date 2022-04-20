@@ -232,8 +232,8 @@ void instruction_body_text_is_parsed_correctly()
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	size_t actualInstructionBodySize = rcp.instructions[0].body.size();
-	std::string expectedInstructionBody = std::string("Put the 300.000000 g wheatflour on the table and make a cavity in the middle.\n") +
-										  std::string("Crack the 3.000000 eggs in the cavity, and add salt.\n") +
+	std::string expectedInstructionBody = std::string("Put the 300 g wheatflour on the table and make a cavity in the middle.\n") +
+										  std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
 										  std::string("Start mixing the eggs into the wheatflour.\n") +
 										  std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
 										  std::string("Knead the dough thoroughly.\n");
@@ -243,7 +243,7 @@ void instruction_body_text_is_parsed_correctly()
 		actualInstructionBody += rcp.instructions[0].body[i].spelling;
 		if (rcp.instructions[0].body[i].is_amount)
 		{
-			actualInstructionBody += std::to_string(rcp.instructions[0].body[i].value.number) + " ";
+			actualInstructionBody += epicr::double_to_string(rcp.instructions[0].body[i].value.number) + " ";
 			if (rcp.instructions[0].body[i].value.unit != "")
 				actualInstructionBody += rcp.instructions[0].body[i].value.unit + " ";
 		}

@@ -116,7 +116,7 @@ namespace epicr::visitor
         aka check if the recipe comply by all the rules */
 
         int instruction_count = 0;
-        for (auto inst : rcp.instructions)
+        for (auto inst : a_rcp.instructions)
         {
             instruction_count++;
             /* consume */
@@ -190,7 +190,7 @@ namespace epicr::visitor
         for (auto KeyValuePair : symbols)
         {
             ingredient ingr = KeyValuePair.second;
-            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != rcp.title)
+            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != a_rcp.title)
             {
                 ERR("Unused ingredient after instructions");
             }
