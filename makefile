@@ -56,14 +56,14 @@ $(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo "Compiled "$<" successfully!"
 
 # Named rules, ignore files if such exist
-.PHONY: clean remove dirs test run
+.PHONY: clean remove dirs test run gui
 clean:
 	@$(RM) $(OBJDIR) $(DISDIR)
 	@echo "Cleanup complete!"
 
 remove: clean
 	@$(RM) $(BINDIR)
-	@echo "Executable removed!"
+	@echo "Executables removed!"
 
 $(T_TARGETS)::
 	@echo "Running \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
@@ -76,4 +76,7 @@ test:: $(T_TARGETS)
 	@echo "Finished tests"
 
 run: $(BINDIR)/$(TARGET)
-	./$< examples/Carbonara.rcp
+	./$< examples/Carbonara.rcp -o dist
+
+gui: $(BINDIR)/$(TARGET)
+	python3 src/GUI.py

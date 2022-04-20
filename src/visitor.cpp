@@ -19,6 +19,7 @@ bool map_contains(std::unordered_map<std::string, epicr::ingredient> m, std::str
 
 namespace epicr::visitor
 {
+
 /* Just used to group things */
 #pragma region IngredientVerifier implementation
 
@@ -28,41 +29,39 @@ namespace epicr::visitor
         original_symbols = std::unordered_map<std::string, ingredient>();
         has_error = false;
     };
-    void IngredientVerifier::visit(recipe* a_rcp)
+    void IngredientVerifier::visit(recipe *a_rcp)
     {
 
         /* shallow copy of input recipe */
-        recipe rcp = *a_rcp;
-
+        // recipe rcp = a_rcp;
         /* fill the symbol table */
-        for (auto ingr : rcp.ingredients)
+        for (auto ingr : a_rcp->ingredients)
         {
-            symbols[ingr.name] = ingr;
-            original_symbols[ingr.name] = ingr;
+            symbols[ingr.name] = ingr;          // used to check correspondance between ingredient list and instructions
+            original_symbols[ingr.name] = ingr; // copy of ingredients
         }
 
         /* check the flow of the instructions are reasonable
         aka check if the recipe comply by all the rules */
 
         int instruction_count = 0;
-        for (auto inst : a_rcp->instructions)
+        for (auto &inst : a_rcp->instructions)
         {
             instruction_count++;
             /* consume */
-            for (auto ingr : inst.ingredients)
+            for (auto &ingr : inst.ingredients)
             {
-                if (!map_contains(symbols, ingr.name))
-                {
-                    /* TODO: sprintf into error message with ingr name */
-                    ERR("Ingredient used in instruction not found in ingredients list");
-                    return;
-                }
-
                 if (ingr.amount.isRelativeAmount)
                 {
                     switch (ingr.amount.relativeAmount[0])
                     {
                     case 'r': /* rest */
+                        if (!ingredient_exist_in_ingredient_vector(ingr.name, symbols))
+                        {
+                            char *err = (char *)malloc(100);
+                            sprintf(err, "Ingredient %s used in instruction not found in ingredients list", ingr.name.c_str());
+                            ERR(err);
+                        }
                         ingr.amount = symbols[ingr.name].amount;
                         break;
                     case 'h': /* half */
@@ -82,6 +81,12 @@ namespace epicr::visitor
                         ERR(err);
                         return;
                     }
+                }
+                if (!map_contains(symbols, ingr.name))
+                {
+                    /* TODO: sprintf into error message with ingr name */
+                    ERR("Ingredient used in instruction not found in ingredients list");
+                    return;
                 }
 
                 if (ingr.amount.number > symbols[ingr.name].amount.number)
