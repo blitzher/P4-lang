@@ -242,9 +242,9 @@ namespace epicr
     std::string to_lower(std::string);
     /*returns a new string where all types of spaces to right is stripped from the input string */
     std::string strip_spaces_right(std::string);
-    /*must be called before find_ingredient_in_vector_by_ingredient_name - 
-	return whether or not an ingredient with that name exists in the list*/
-    bool ingredient_exist_in_ingredient_vector(std::string,std::unordered_map<std::string,ingredient>);
+    std::string double_to_string(double);
+    
+    bool ingredient_exist_in_ingredient_map(std::string,std::unordered_map<std::string,ingredient>);
 
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
