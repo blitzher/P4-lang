@@ -151,8 +151,8 @@ namespace epicr
 		for (auto inst : rcp.instructions)
 		{
 			index++;
-			string ingredients = insertIngredientFields("<h3>Ingredients:</h3>",true, inst.ingredients);
-			string kitchenware = insertStringFields("<h3>Kitchenware:</h3>",true, inst.kitchenware);
+			string ingredients = insertIngredientFields("Ingredients: ",true, inst.ingredients);
+			string kitchenware = insertStringFields("Kitchenware: ",true, inst.kitchenware);
 			string body = insertInstructionBody(inst.body);
 			string yield = insertIngredientFields("-> ",true, inst.yields);
 			string step_text = "Step " + std::to_string(index);
