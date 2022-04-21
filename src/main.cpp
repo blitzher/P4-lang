@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 	cout << myParser.error << " Parser: " << myParser.error_message << endl;
 
 	auto ingrvisit = epicr::visitor::IngredientVerifier();
-	ingrvisit.visit(myRecipe);
+	ingrvisit.visit(&myRecipe);
 	cout << ingrvisit.has_error << " IngVis: " << ingrvisit.error << endl;
 
 	auto amntconve = epicr::visitor::AmountConverter();
