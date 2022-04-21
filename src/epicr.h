@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <limits>
+#include <cmath>
 
 #pragma region Debug macros
 
