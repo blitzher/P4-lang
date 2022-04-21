@@ -360,8 +360,9 @@ namespace epicr
 				ADV_NON_BLANK(1);
 			if (ctoken.type == ETT_EOF)
 				break;
-			ingredient currentYield = ReadIngredient(HAS_PLUS);
+			ingredient currentYield = ReadIngredient(HAS_PLUS|ASSUME_1_NUM);
 			singleInstruction->yields.push_back(currentYield);
+			std::cout<<"curr yield:::"<<currentYield.name<<"\n";
 		} while (ctoken.type == ETT_COMMA);
 	}
 	ingredient Parser::ReadIngredient(ingredient_arg arg)
@@ -440,7 +441,7 @@ namespace epicr
 			if (assume_1_num)
 			{
 				amnt.number = 1;
-				amnt.unit = "number";
+				amnt.unit = "";
 			}
 			else if (assume_rest)
 			{
