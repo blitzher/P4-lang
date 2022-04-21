@@ -101,7 +101,7 @@ namespace epicr
 		return str.substr(0,seperatorPosition);
 	}
 	
-	bool ingredient_exist_in_ingredient_vector(std::string ingredientName,std::unordered_map<std::string, ingredient> ingredients)
+	bool ingredient_exist_in_ingredient_map(std::string ingredientName,std::unordered_map<std::string, ingredient> ingredients)
 	{
 		for(const auto &pair : ingredients)
         {
