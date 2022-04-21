@@ -37,12 +37,20 @@
 			padding: 0 0 0 0;
 		}
 
-		h3,
-		h4,
+		h3{
+
+        }
+		h4{
+            margin: 5px 0 5px 0;
+        }
 		h5 {
-			margin: 10px 0 5px 0;
+			margin: 25px 0 5px 0;
 			padding: 0 0 0 0;
 		}
+
+        h3:first-of-type{
+            margin: 10px 0 5px 0;
+        }
 
 		a {
 			font-style: normal
@@ -58,11 +66,11 @@
 
 		.collapsible {
             padding-left: 10px;
-            padding-bottom: 10px;
             float: left;
 		}
         .wrapper {
             overflow: hidden; /* add this to contain floated children */
+            position: relative;
         }
         .time-header {
             margin-left: 10px;
@@ -73,6 +81,15 @@
         .time-content {
             float: left; 
             margin-right: 20px;
+        }
+        #titleDiv{
+            float:left; 
+            margin-bottom: 10px;
+        }
+        #servingsDiv{
+            position: absolute;
+            bottom: 10px;
+            right: 0;
         }
         .leftHalf{
             float: left;
@@ -100,6 +117,9 @@
             cursor: pointer;
             user-select: none;
         }
+        .collapsible-body{
+            margin-bottom: 30px;
+        }
         #description{
             padding-left: 10px;
             float: left;
@@ -111,9 +131,14 @@
         }
 	</style>
 </header>
-<h1>
-	~title~
-</h1>
+<div class="wrapper">
+    <h1 id="titleDiv">
+        ~title~
+    </h1>
+    <div id="servingsDiv">
+    ~servings~
+    </div>
+</div>
 <hr>
 <div class="wrapper">
     ~total-time~
@@ -144,9 +169,9 @@
     <div class="rightHalf">
         <div class="collapsible-wrapper">
             <div class="arrow-down"></div>
-            <h4 class="collapsible">
+            <h3 class="collapsible">
                 Description
-            </h4>
+            </h3>
         </div>
         <div class="collapsible-body">
             ~description~

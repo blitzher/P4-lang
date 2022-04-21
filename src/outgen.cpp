@@ -65,14 +65,11 @@ namespace epicr
 		return result;
 	}
 
-	string insertServings(string header, servings servings)
+	string insertServings(servings servings)
 	{
 		string result = "";
 		if (servings.count == 0)
 			return result;
-		header.insert(0, "<h3>");
-		header.append("</h3>");
-		result += header;
 		result += " " + std::to_string(servings.count) + " " + servings.descriptor;
 		return result;
 	}
@@ -194,7 +191,7 @@ namespace epicr
 		}
 
 		// format final HTML strings
-		string servings = insertServings("Servings: ", rcp.servings);
+		string servings = insertServings(rcp.servings);
 		string tags = insertStringFields("Tags: ", rcp.tags);
 		string kitchenware = insertStringFields("Kitchenware: ", rcp.kitchenware);
 		string ingredients = insertIngredientFields("Ingredients: ", rcp.ingredients);
