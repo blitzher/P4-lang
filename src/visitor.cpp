@@ -200,7 +200,7 @@ namespace epicr::visitor
         for (auto KeyValuePair : symbols)
         {
             ingredient ingr = KeyValuePair.second;
-            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != a_rcp.title)
+            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && ingr.name != a_rcp->title)
             {
                 ERR("Unused ingredient after instructions");
             }

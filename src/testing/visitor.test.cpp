@@ -6,7 +6,7 @@ void no_error_on_valid_file()
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Carbonara.rcp").recipe;
 	epicr::visitor::IngredientVerifier verifier = epicr::visitor::IngredientVerifier();
-	verifier.visit(rcp);
+	verifier.visit(&rcp);
 
 	if (verifier.has_error != false)
 	{
