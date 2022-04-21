@@ -13,12 +13,16 @@
 <html>
 <header>
 	<style>
-		html {
-			margin: 0 20%;
+        *{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
 
+		html {
+			margin: 10%;
+            margin-top: 20px;
 		}
 
-		.instruction {
+		#instruction {
 			border: 2px solid black;
 			border-radius: 5px;
 			padding: 5px 15px;
@@ -36,7 +40,7 @@
 		h3,
 		h4,
 		h5 {
-			margin: 10px 0 0 0;
+			margin: 10px 0 5px 0;
 			padding: 0 0 0 0;
 		}
 
@@ -52,7 +56,7 @@
 			cursor: context-menu;
 		}
 
-		.step-header {
+		.collapsible {
             padding-left: 10px;
             padding-bottom: 10px;
             float: left;
@@ -61,6 +65,7 @@
             overflow: hidden; /* add this to contain floated children */
         }
         .time-header {
+            margin-left: 10px;
             margin-right: 5px;
             font-weight: bold;
             float:left; 
@@ -70,7 +75,6 @@
             margin-right: 20px;
         }
         .leftHalf{
-            float: left;
             float: left;
             margin-right: 5%;
             width: 15%;
@@ -87,14 +91,23 @@
             border-right: 10px solid transparent;
             border-top: 10px solid #d7d7d7;
         }
-        .step-header-wrapper:hover>.arrow-down{
+        .collapsible-wrapper:hover>.arrow-down{
             border-top-color: #898989;
         }
-        .step-header-wrapper{
+        .collapsible-wrapper{
             align-items: center;
             display: flex;
             cursor: pointer;
             user-select: none;
+        }
+        #description{
+            padding-left: 10px;
+            float: left;
+        }
+        .collapseAllButton{
+            float: right;
+            margin-right: 10px;
+            width: 100px;
         }
 	</style>
 </header>
@@ -106,19 +119,35 @@
     ~total-time~
     ~prep-time~
     ~cook-time~
+    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse </button>
 </div>
 <hr>
 <div class="wrapper">
     <div class="leftHalf">
+        <div>
+            <!--
+            <form>
+                <input type="radio" id="original" name="measurementSysten" value="original">
+                <label for="html">Original</label><br>
+                <input type="radio" id="metric" name="measurementSysten" value="metric">
+                <label for="css">Metric</label><br>
+                <input type="radio" id="imperial" name="measurementSysten" value="imperial">
+                <label for="javascript">Imperial</label>
+            </form>
+            -->
+        </div>  
         ~ingredients~
         ~kitchenware~
         ~tags~
     </div>
     <div class="rightHalf">
-        <h3 class="descriptionHeader">
-            Description
-        </h3>
-        <div class="description">
+        <div class="collapsible-wrapper">
+            <div class="arrow-down"></div>
+            <h4 class="collapsible">
+                Description
+            </h4>
+        </div>
+        <div class="collapsible-body">
             ~description~
         </div>
     
@@ -126,9 +155,11 @@
         ~instructions~
     
         <script>
-            const allHeaders = document.getElementsByClassName("step-header-wrapper");
-            const allSteps = document.getElementsByClassName("instruction");
+            collapsed = false;
+            const allHeaders = document.getElementsByClassName("collapsible-wrapper");
+            const allSteps = document.getElementsByClassName("collapsible-body");
             const allArrows = document.getElementsByClassName("arrow-down");
+            const collapseAllButton = document.getElementsByClassName("collapseAllButton")[0];
 
             for (i = 0; i < allHeaders.length; i++) {
                 const header = allHeaders[i];
@@ -144,8 +175,71 @@
                         step.style.display = "none";
                         arrow.style.transform = "rotate(-90deg)";
                     }
+                        
+                    checkCollapseStatus();
                 });
+                
+                // check if all headers are collapsed
             }
+
+        function collapseOrExpand(){
+            if (collapsed){
+                expandAll();
+            }
+            else {
+                collapseAll();
+            }
+            checkCollapseStatus();
+        }
+
+        function checkCollapseStatus(){
+            oneIsNotCollapsed = false;
+            for (j = 0; j < allHeaders.length; j++) {
+                if (allSteps[j].style.display == "block"){
+                    oneIsNotCollapsed = true;
+                }
+            }
+
+            if(oneIsNotCollapsed){
+                collapsed = false;
+            }
+            else {
+                collapsed = true;
+            }
+
+            if(collapsed){
+                collapseAllButton.innerHTML = "Expand";
+            }
+            else {
+                collapseAllButton.innerHTML = "Collapse";
+            }
+        }
+
+        function collapseAll(){
+            collapsed = true;
+
+            for (i = 0; i < allHeaders.length; i++) {
+                const header = allHeaders[i];
+                const step = allSteps[i];
+                const arrow = allArrows[i];
+
+                step.style.display = "none";
+                arrow.style.transform = "rotate(-90deg)";
+            }
+        }
+
+        function expandAll(){
+            collapsed = false;
+            
+            for (i = 0; i < allHeaders.length; i++) {
+                const header = allHeaders[i];
+                const step = allSteps[i];
+                const arrow = allArrows[i];
+
+                step.style.display = "block";
+                arrow.style.transform = "rotate(0deg)";
+            }
+        }
         </script>
     </div>
 </div>
