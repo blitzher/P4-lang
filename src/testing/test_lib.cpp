@@ -65,8 +65,6 @@ namespace test_lib
 			return;
 		}
 
-		printf("exp: %s act: %s\n", expected.c_str(), actual.c_str());
-
 		size_t expected_size = expected.size();
 		size_t actual_size = actual.size();
 		size_t len_shortest = (expected_size > actual_size) ? actual_size : expected_size;
@@ -99,10 +97,10 @@ namespace test_lib
 
 		/* copy the rest of the line into string */
 		int temp = i;
-		while (eline_v.size() < 200 && eline_v[i] != '\n' && eline_v[i] != '\0')
+		while (eline_v.size() < 200 && expected[i] != '\n' && expected[i] != '\0')
 			eline_v.push_back(expected[i++]);
 		i = temp;
-		while (aline_v.size() < 200 && aline_v[i] != '\n' && aline_v[i] != '\0')
+		while (aline_v.size() < 200 && actual[i] != '\n' && actual[i] != '\0')
 			aline_v.push_back(actual[i++]);
 
 		/* copy line into strings */
@@ -127,6 +125,7 @@ namespace test_lib
 			dif_message[i] = '~';
 
 		dif_message[line_index + 14] = '^';
+		dif_message[i + 14] = '\0';
 
 		/* insert the expected line, actual line and
 		 * difference message into the error message */
@@ -159,7 +158,13 @@ namespace test_lib
 	{
 		CHECK_TESTS_NON_EMPTY()
 
-		if (expected == actual)
+		double min = expected > actual ? actual : expected;
+		double max = expected > actual ? expected : actual;
+
+		double percent_diff = max / min;
+
+		/* 1% wiggle room */
+		if (percent_diff < 1.01)
 			accept();
 		else
 		{
