@@ -33,7 +33,7 @@ namespace epicr
         header.insert(0, "<h3>");
         header.append("</h3>");
 		result += header;
-		for (size_t i = 0;i<elementsCount;i++)
+		for (size_t i = 0; i < elementsCount; i++)
 		{
             elements[i].insert(0, "<li>");
             elements[i].append("</li>");
@@ -72,7 +72,7 @@ namespace epicr
 	{
 		string result = " (";
 		result += epicr::double_to_string(amount.number);
-		if(!(amount.unit == ""))
+		if (!(amount.unit == ""))
 			result += " " + amount.unit;
 		result += ")";
 		return result;
@@ -83,12 +83,12 @@ namespace epicr
 	{
 		string result = "";
 		size_t fieldCount = fields.size();
-		if (fieldCount== 0)
+		if (fieldCount == 0)
 			return result;
         header.insert(0, "<h3>");
         header.append("</h3>");
 		result += header;
-		for (size_t i = 0;i<fieldCount;i++)
+		for (size_t i = 0; i < fieldCount; i++)
 		{
             result += "<li>";
 			result += fields[i].name;
@@ -103,7 +103,7 @@ namespace epicr
 	{
 		string result = "";
 		size_t bodyLength = body.size();
-		for (size_t i = 0;i<bodyLength;i++)
+		for (size_t i = 0; i < bodyLength; i++)
 		{
 			result += body[i].spelling;
 			if (body[i].is_amount == true)
@@ -111,7 +111,7 @@ namespace epicr
 				result += epicr::double_to_string(body[i].value.number);
 				result += " " + body[i].value.unit;
 			}
-		}	
+		}
 		return result;
 	}
 
@@ -143,7 +143,7 @@ namespace epicr
 			string ingredients = insertIngredients("Ingredients: ", inst.ingredients);
 			string kitchenware = insertBulletPoints("Kitchenware: ",inst.kitchenware);
 			string body = insertInstructionBody(inst.body);
-			
+
 			string step_text = "Step " + std::to_string(index);
 			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), kitchenware.c_str(), body.c_str());
 			instructions_section += instr_s;
@@ -179,5 +179,5 @@ namespace epicr
 
 		return true;
 	}
-	
+
 }

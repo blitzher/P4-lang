@@ -7,7 +7,9 @@
 #include <fstream>
 #include <algorithm>
 #include <unordered_map>
+#include <map>
 #include <limits>
+#include <cmath>
 
 #pragma region Debug macros
 
@@ -21,6 +23,7 @@
 
 namespace epicr
 {
+
     typedef char ingredient_arg;
     typedef unsigned int uint;
 #pragma region Recipe Data
@@ -31,13 +34,6 @@ namespace epicr
         html_style_fancy
     } html_style;
 
-    typedef struct cmd_args_e
-    {
-        std::string input_filepath;
-        html_style choosen_style;
-        std::string output_filepath;
-    } cmd_args;
-
     typedef struct amount_s
     {
         double number;
@@ -45,8 +41,6 @@ namespace epicr
         std::string relativeAmount;
         std::string unit;
         bool isUncountable;
-        bool isConvertable;
-        bool isScaleable;
     } amount;
 
     typedef struct ingredient_s
@@ -101,21 +95,51 @@ namespace epicr
 
     enum epicr_token_type
     {
-        ETT_WORD,
-        ETT_COLON,
-        ETT_COMMA,
-        ETT_NUMBER,
-        ETT_PARENS_OPEN,   /* ( */
-        ETT_PARENS_CLOSE,  /* ) */
-        ETT_BRACKET_OPEN,  /* [ */
-        ETT_BRACKET_CLOSE, /* ] */
-        ETT_PLUS,          /* + */
-        ETT_ASTERIX,       /* * */
-        ETT_QUESTION_MARK, /* ? */
-        ETT_BLANK,
-        ETT_NEWLINE,
-        ETT_EOF,
+        E_TT_WORD,
+        E_TT_COLON,
+        E_TT_COMMA,
+        E_TT_NUMBER,
+        E_TT_PARENS_OPEN,   /* ( */
+        E_TT_PARENS_CLOSE,  /* ) */
+        E_TT_BRACKET_OPEN,  /* [ */
+        E_TT_BRACKET_CLOSE, /* ] */
+        E_TT_PLUS,          /* + */
+        E_TT_ASTERIX,       /* * */
+        E_TT_QUESTION_MARK, /* ? */
+        E_TT_BLANK,
+        E_TT_NEWLINE,
+        E_TT_EOF,
     };
+
+    enum epicr_unit_type
+    {
+        E_UT_WEIGHT,
+        E_UT_VOLUME,
+        E_UT_LENGTH,
+        E_UT_TEMPERATURE
+    };
+
+    enum epicr_unit_system
+    {
+        E_US_NONE,
+        E_US_METRIC,
+        E_US_IMPERIAL
+    };
+
+    typedef struct cmd_args_s
+    {
+        std::string input_filepath;
+        html_style choosen_style;
+        std::string output_filepath;
+        epicr_unit_system unit_system;
+
+    } cmd_args;
+
+    extern cmd_args clargs;
+
+    extern std::map<epicr_unit_type, std::vector<std::string>> units_in_type;
+    extern std::map<std::string, std::vector<std::string>> unit_aliases;
+    extern std::map<epicr_unit_system, std::vector<std::string>> units_in_system;
 
     std::string token_to_string(epicr_token_type);
 
@@ -186,16 +210,15 @@ namespace epicr
         /* Read an ingredient from the current position */
         ingredient ReadIngredient(ingredient_arg);
         /* Read an amount from the current position */
-        amount ReadAmount(ingredient_arg);
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
         accepts a boolean as input stating whether or not it can read numbers as well*/
         std::string ReadWords(bool, bool);
+        amount ReadAmount(ingredient_arg arg);
         bool ReadWordsPredicate(epicr_token_type, bool, bool);
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
         returns 1 if something went wrong, otherwise returns 0*/
         int ReadSeperatorOrWaitAtNextField();
 
-        bool ReadConvertableUnits(std::string);
         epicr_token ctoken;
         epicr_token utoken;
 
@@ -203,7 +226,6 @@ namespace epicr
         bool DEBUG_MODE;
         bool error;
         std::string original_amount;
-        epicr::cmd_args clargs;
         std::string error_message;
         epicr_token error_token;
         recipe Parse();
@@ -214,9 +236,11 @@ namespace epicr
 
     namespace visitor
     {
+
         class Visitor
         {
         private:
+            // cmd_args
         public:
             std::string error;
             bool has_error;
@@ -231,9 +255,40 @@ namespace epicr
             bool ingredients_compatible(ingredient a, ingredient b);
 
         public:
-            IngredientVerifier();
             void visit(recipe *);
+            IngredientVerifier();
         };
+
+        class AmountConverter : public Visitor
+        {
+        private:
+            bool is_convertable(std::string);
+            std::string standardize(std::string);
+            void scale_amount(amount *amnt, epicr_unit_system system);
+
+        public:
+            void visit(recipe *);
+            AmountConverter();
+        };
+
+        const double G_TO_OZ = 0.035;
+        const double KG_TO_LBS = 2.2046;
+        const double L_TO_QT = 1.057;
+        const double ML_TO_FLOZ = 0.0338;
+        const double DL_TO_FLOZ = 3.38;
+        const double M_TO_FEET = 3.28;
+        const double CM_TO_INCH = 0.39370079;
+        const double MM_TO_INCH = 0.039;
+
+        inline double C_TO_F(double deg)
+        {
+            return deg * 9 / 5 + 32;
+        }
+        inline double F_TO_C(double deg)
+        {
+            return (deg - 32) * 5 / 9;
+        }
+
     }
 
     void compress(std::string filepath);
@@ -265,5 +320,5 @@ namespace epicr
     parse_ret parse_recipe_silent(std::string filename);
 
     /* Command line argument related declarations */
-    cmd_args parse_cmd_args(int argc, char **argv);
+    void parse_cmd_args(int argc, char **argv);
 }
