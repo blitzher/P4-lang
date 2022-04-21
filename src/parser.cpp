@@ -441,7 +441,7 @@ namespace epicr
 			if (assume_1_num)
 			{
 				amnt.number = 1;
-				amnt.unit = "number";
+				amnt.unit = "";
 			}
 			else if (assume_rest)
 			{
