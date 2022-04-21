@@ -30,17 +30,26 @@ namespace epicr
 		size_t elementsCount = elements.size();
 		if (elementsCount == 0)
 			return result;
-        header.insert(0, "<h3>");
-        header.append("</h3>");
 		result += header;
 		for (size_t i = 0;i<elementsCount;i++)
 		{
 			result += elements[i];
-			
 			if (i != elementsCount - 1)
 				result += delimiter;
 		}
 		return result;
+	}
+	
+	string insertKitchenwareInInstruction(string header, std::vector<string> elements)
+	{
+		return insertDelimiterSeperatedFields(header,", ",elements);
+	}
+	string insertDelimiterSeperatedFieldsWithHeader(string header, std::vector<string> elements)
+	{
+		string fullHeader = "<h3>" + header + "</h3>";
+		//should be bullepoint thing here
+		return insertDelimiterSeperatedFields(fullHeader,"\n .",elements); 
+
 	}
 
     string insertTime(string header, string time)
@@ -84,8 +93,6 @@ namespace epicr
 		size_t fieldCount = fields.size();
 		if (fieldCount== 0)
 			return result;
-        header.insert(0, "<h3>");
-        header.append("</h3>");
 		result += header;
 		for (size_t i = 0;i<fieldCount;i++)
 		{
@@ -96,6 +103,18 @@ namespace epicr
 				result += delimiter;
 		}	
 		return result;
+	}
+	
+	string insertIngredientsInDeclaration(string header, std::vector<ingredient> fields)
+	{
+		string fullHeader = "<h3>" + header + "</h3>";
+		//this should be bulletpoint as delimiter - but how do
+		return insertIngredients(fullHeader,"\n. ",fields);
+	}
+	
+	string insertIngredientsInInstruction(string header, std::vector<ingredient> fields)
+	{
+		return insertIngredients(header,", ",fields);
 	}
 
 	string insertInstructionBody(std::vector<instruction_word> body)
@@ -139,21 +158,22 @@ namespace epicr
 		for (auto inst : rcp.instructions)
 		{
 			index++;
-			string ingredients = insertIngredients("Ingredients: ",", ",inst.ingredients);
-			string kitchenware = insertDelimiterSeperatedFields("Kitchenware: ",", ",inst.kitchenware);
+			string ingredients = insertIngredientsInInstruction("Ingredients: ",inst.ingredients);
+			string kitchenware = insertKitchenwareInInstruction("Kitchenware: ",inst.kitchenware);
 			string body = insertInstructionBody(inst.body);
+			string yield = insertIngredientsInInstruction("-> ",inst.yields);
 			
 			string step_text = "Step " + std::to_string(index);
-			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), kitchenware.c_str(), body.c_str());
+			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), kitchenware.c_str(), body.c_str(), yield.c_str());
 			instructions_section += instr_s;
 		}
 
         // format final HTML strings
 		string servings = insertServings("Servings: ",rcp.servings);
-		string tags = insertDelimiterSeperatedFields("Tags: ", ", ", rcp.tags);
-		string kitchenware = insertDelimiterSeperatedFields("Kitchenware: ", ", ", rcp.kitchenware);
-		string ingredients = insertIngredients("Ingredients: ", ", ", rcp.ingredients);
-		string nutrients = insertIngredients("Nutrients",", ",rcp.nutrients);
+		string tags = insertDelimiterSeperatedFieldsWithHeader("Tags: ", rcp.tags);
+		string kitchenware = insertDelimiterSeperatedFieldsWithHeader("Kitchenware: ", rcp.kitchenware);
+		string ingredients = insertIngredientsInDeclaration("Ingredients: ", rcp.ingredients);
+		string nutrients = insertIngredientsInDeclaration("Nutrients",rcp.nutrients);
         string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
         string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
         string cookTime = insertTime("Cook time: ", rcp.time.cook_time.c_str());
