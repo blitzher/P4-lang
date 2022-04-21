@@ -53,7 +53,7 @@ namespace epicr
         /* Check if the file stream is ended */
         if (!ready)
         {
-            return {"EOF", ETT_EOF, token_count, line_num};
+            return {"EOF", E_TT_EOF, token_count, line_num};
         }
         else if (istream.eof() && can_return_pre_eof_token)
         {
@@ -64,7 +64,7 @@ namespace epicr
         else if (istream.eof())
         {
             ready = false;
-            return {"EOF", ETT_EOF, token_count, line_num};
+            return {"EOF", E_TT_EOF, token_count, line_num};
         }
 
         vector<char> vtoken;
@@ -159,7 +159,7 @@ namespace epicr
         do
         {
             next = next_token();
-        } while (next.type == ETT_BLANK || next.type == ETT_NEWLINE);
+        } while (next.type == E_TT_BLANK || next.type == E_TT_NEWLINE);
         return next;
     }
 
@@ -171,23 +171,23 @@ namespace epicr
             switch (charr)
             {
             case ',':
-                return ETT_COMMA;
+                return E_TT_COMMA;
             case ':':
-                return ETT_COLON;
+                return E_TT_COLON;
             case '(':
-                return ETT_PARENS_OPEN;
+                return E_TT_PARENS_OPEN;
             case ')':
-                return ETT_PARENS_CLOSE;
+                return E_TT_PARENS_CLOSE;
             case '[':
-                return ETT_BRACKET_OPEN;
+                return E_TT_BRACKET_OPEN;
             case ']':
-                return ETT_BRACKET_CLOSE;
+                return E_TT_BRACKET_CLOSE;
             case '+':
-                return ETT_PLUS;
+                return E_TT_PLUS;
             case '*':
-                return ETT_ASTERIX;
+                return E_TT_ASTERIX;
             case '?':
-                return ETT_QUESTION_MARK;
+                return E_TT_QUESTION_MARK;
             }
         }
 
@@ -206,9 +206,9 @@ namespace epicr
                 break;
         }
         if (is_blank)
-            return ETT_BLANK;
+            return E_TT_BLANK;
         if (is_newline)
-            return ETT_NEWLINE;
+            return E_TT_NEWLINE;
 
         /* Check if the word is a numeric */
         bool is_numeric = true;
@@ -228,7 +228,7 @@ namespace epicr
                 break;
             }
         }
-        return (is_numeric) ? ETT_NUMBER : ETT_WORD;
+        return (is_numeric) ? E_TT_NUMBER : E_TT_WORD;
     }
 
     epicr_token Lexer::peek_token(int amnt)
@@ -242,7 +242,7 @@ namespace epicr
         {
             token = next_token();
             offset += token.word.size();
-            if (token.type == ETT_NEWLINE)
+            if (token.type == E_TT_NEWLINE)
                 line_offset += token.word.size();
         }
         token_count -= amnt;
@@ -275,10 +275,10 @@ namespace epicr
             token = next_token();
             offset += token.word.size();
 
-            if (token.type == ETT_NEWLINE)
+            if (token.type == E_TT_NEWLINE)
                 line_offset += token.word.size();
 
-            if (token.type != ETT_BLANK && token.type != ETT_NEWLINE)
+            if (token.type != E_TT_BLANK && token.type != E_TT_NEWLINE)
                 non_blank_count++;
         }
 
