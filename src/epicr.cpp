@@ -99,26 +99,16 @@ namespace epicr
 		if (!(str[seperatorPosition+1] == '0' && str[seperatorPosition+2] == '0'))
 			return str.substr(0,seperatorPosition+3); //if it is a decimal we take the first 2 decimals
 		return str.substr(0,seperatorPosition);
-    }
-    
-	bool ingredient_exist_in_ingredient_vector(std::string ingredientName,std::vector<ingredient> ingredients)
+	}
+	
+	bool ingredient_exist_in_ingredient_map(std::string ingredientName,std::unordered_map<std::string, ingredient> ingredients)
 	{
-		for(ingredient &an_ingredient : ingredients)
+		for(const auto &pair : ingredients)
         {
-            if (an_ingredient.name == ingredientName)
+            if (pair.first == ingredientName)
 				return true;
         }
         return false;
-	}
-	
-	ingredient find_ingredient_in_vector_by_name(std::string ingredientName,std::vector<ingredient> ingredients)
-	{
-		for(ingredient &an_ingredient : ingredients)
-        {
-            if (an_ingredient.name == ingredientName)
-				return an_ingredient;
-        }
-		return ingredient(); /*this will never run, if ingredient_exist_in_ingredient_vector is called before */
 	}
 
 	epicr::parse_ret parse_recipe(std::string filename)

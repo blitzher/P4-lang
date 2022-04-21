@@ -56,6 +56,18 @@ namespace epicr
 		return result;
 	}
 	
+	string insertServings(string header,servings servings)
+	{
+		string result = "";
+		if (servings.count == 0)
+			return result;
+		header.insert(0, "<h3>");
+        header.append("</h3>");
+		result += header;
+		result += " " + std::to_string(servings.count) + " " + servings.descriptor;
+		return result;
+	}
+	
 	string insertAmount(amount amount)
 	{
 		string result = " (";
@@ -138,9 +150,11 @@ namespace epicr
 		}
 
         // format final HTML strings
+		string servings = insertServings("Servings: ",rcp.servings);
 		string tags = insertBulletPoints("Tags: ", rcp.tags);
 		string kitchenware = insertBulletPoints("Kitchenware: ", rcp.kitchenware);
 		string ingredients = insertIngredients("Ingredients: ", rcp.ingredients);
+		string nutrients = insertIngredients("Nutrients",", ",rcp.nutrients);
         string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
         string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
         string cookTime = insertTime("Cook time: ", rcp.time.cook_time.c_str());
@@ -149,6 +163,7 @@ namespace epicr
         
         // replace placeholders with final HTML
         replace(output_string, "~title~", rcp.title.c_str());
+        replace(output_string, "~servings~", servings);
         replace(output_string, "~description~", rcp.description.c_str());
         replace(output_string, "~total-time~", totalTime);
         replace(output_string, "~prep-time~", prepTime);
@@ -156,6 +171,7 @@ namespace epicr
         replace(output_string, "~tags~", tags.c_str());
         replace(output_string, "~ingredients~", ingredients.c_str());
         replace(output_string, "~kitchenware~", kitchenware.c_str());
+        replace(output_string, "~nutrients~", nutrients.c_str());
         replace(output_string, "~instructions~", instructions_section.c_str());
         
         file << output_string << std::endl;
