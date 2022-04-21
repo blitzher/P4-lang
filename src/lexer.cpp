@@ -49,6 +49,7 @@ namespace epicr
     {
         // std::cout << can_return_pre_eof_token << ready << "getting token\n";
         // print_token(pre_eof_token);
+
         /* Check if the file stream is ended */
         if (!ready)
         {
@@ -82,12 +83,13 @@ namespace epicr
                     do
                     {
                         if (ch == 0xd)
+                        {
                             istream.get(ch); /* gets the next char in the stream */
-
+                        }
                         vtoken.push_back(ch);
                         istream.get(ch);
                     } while (!istream.eof() && (ch == vtoken[0] ||                 /* repeating space and LF endings */
-                                                (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings */
+                                                (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings (0xa is newline) [Windows] */
 
                     if (vtoken[0] == '\n')
                     {
@@ -96,8 +98,9 @@ namespace epicr
 
                     /* since we encountered a non-blank, step back once */
                     if (!istream.eof()) /* can't seek when at EOF */
-                                        /* seek from current position */
-                        istream.seekg(-1, ios_base::cur);
+                    {
+                        istream.seekg(-1, ios_base::cur); /* seek from current position */
+                    } 
                     break;
                 }
                 else if (vtoken.size() == 0)
