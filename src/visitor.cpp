@@ -56,7 +56,7 @@ namespace epicr::visitor
                     switch (ingr.amount.relativeAmount[0])
                     {
                     case 'r': /* rest */
-                        if (!ingredient_exist_in_ingredient_vector(ingr.name, symbols))
+                        if (!ingredient_exist_in_ingredient_map(ingr.name, symbols))
                         {
                             char *err = (char *)malloc(100);
                             sprintf(err, "Ingredient %s used in instruction not found in ingredients list", ingr.name.c_str());
