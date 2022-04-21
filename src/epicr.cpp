@@ -1,4 +1,5 @@
 #include "./epicr.h"
+#include <cmath>
 
 using namespace std;
 
@@ -91,7 +92,7 @@ namespace epicr
 		size_t end = str.find_last_not_of(whitespace);
 		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
 	}
-
+	
 	std::string double_to_string(double num)
 	{
 		num = floor((num + 0.005) * 100.0) / 100.0; /*rounds to the nearest 2 decimals*/

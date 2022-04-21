@@ -70,13 +70,19 @@ $(T_TARGETS)::
 	@./$@
 
 # runnable targets 
+run: $(BINDIR)/$(TARGET)
+	./$< examples/Carbonara.rcp -o dist
+
 test::
 	@rm -rf $(BINDIR)/.tests
 test:: $(T_TARGETS)
 	@echo "Finished tests"
 
-run: $(BINDIR)/$(TARGET)
-	./$< examples/Carbonara.rcp -o dist
+watch:
+	while true; do make run -q || make run; sleep 0.5; done
 
 gui: $(BINDIR)/$(TARGET)
 	python3 src/GUI.py
+	
+
+	

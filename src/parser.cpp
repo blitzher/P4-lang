@@ -176,7 +176,7 @@ namespace epicr
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
 			std::string kitchenware = ReadWords(true, false);
-			rcp->kitchenware.push_back(kitchenware);
+			rcp->kitchenware.push_back(kitchenware);	
 
 			if (ReadSeperatorOrWaitAtNextField())
 				ERR_VOID("expected a comma as a seperator between kitchenware.", ctoken);

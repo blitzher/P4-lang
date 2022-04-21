@@ -1,16 +1,22 @@
 <div>
-	<h4 class="step-header">
-		%s <!-- step X -->
-	</h4>
-	<div class="instruction step collapsible">
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            ~stepText~
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
 		<h5>
-			%s <!-- with statement -->
+			~instructionIngredients~
 		</h5>
 		<h5>
-			%s <!-- using statment -->
+			~instructionKitchenware~
 		</h5>
 		<p>
-			%s <!-- main text -->
+			~instructionBody~
 		</p>
+		<h5>
+			~instructionYield~
+		</h5>
 	</div>
 </div>
