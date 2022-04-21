@@ -154,7 +154,7 @@ namespace epicr
 		string tags = insertBulletPoints("Tags: ", rcp.tags);
 		string kitchenware = insertBulletPoints("Kitchenware: ", rcp.kitchenware);
 		string ingredients = insertIngredients("Ingredients: ", rcp.ingredients);
-		string nutrients = insertIngredients("Nutrients",", ",rcp.nutrients);
+		string nutrients = insertIngredients("Nutrients", rcp.nutrients);
         string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
         string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
         string cookTime = insertTime("Cook time: ", rcp.time.cook_time.c_str());

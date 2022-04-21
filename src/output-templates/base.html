@@ -87,6 +87,9 @@
             border-right: 10px solid transparent;
             border-top: 10px solid #d7d7d7;
         }
+        .step-header-wrapper:hover>.arrow-down{
+            border-top-color: #898989;
+        }
         .step-header-wrapper{
             align-items: center;
             display: flex;
@@ -112,13 +115,11 @@
         ~tags~
     </div>
     <div class="rightHalf">
-        <h3>
+        <h3 class="descriptionHeader">
             Description
         </h3>
-        <div class="description collapsible">
-            <span>
-                ~description~
-            </span>
+        <div class="description">
+            ~description~
         </div>
     
         <!-- steps -->
@@ -134,15 +135,6 @@
                 const step = allSteps[i];
                 const arrow = allArrows[i];
 
-                header.addEventListener("mouseover", (ev) => {
-                    arrow.style.borderTop = "10px solid #898989";
-                });
-
-                header.addEventListener("mouseout", (ev) => {
-                    arrow.style.borderTop = "10px solid #d7d7d7 ";
-                });
-
-                
                 header.addEventListener("click", (ev) => {
                     if(step.style.display == "none"){
                         step.style.display = "block";
