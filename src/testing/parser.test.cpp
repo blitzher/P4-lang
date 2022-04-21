@@ -285,8 +285,14 @@ void instruction_yields_1_if_no_amount_specified()
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.instructions[1].yields[0].amount.number,1);
-	test_lib::expect_equal_s(rcp.instructions[1].yields[0].amount.unit,"");
-	
+	test_lib::expect_equal_s(rcp.instructions[1].yields[0].amount.unit,"");	
+}
+
+void last_instruction_yields_correct_ingredient_name()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_s(rcp.instructions[2].yields[0].name,"Pasta");
 }
 
 void parse_fields_in_random_order()
@@ -346,6 +352,7 @@ int main(void)
 	instruction_yields_zero_ingredients();
 	instruction_yields_an_ingredient();
 	instruction_yields_1_if_no_amount_specified();
+	last_instruction_yields_correct_ingredient_name();
 	parse_fields_in_random_order();
 	parse_recipe_with_random_casing();
 	test_lib::print_recap();
