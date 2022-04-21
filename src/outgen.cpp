@@ -171,19 +171,26 @@ namespace epicr
 		std::ofstream file{filename};
 		if (!file.is_open())
 			return false;
-		string instructions_section = "";
-		char *instr_s = (char *)malloc(MAX_S_LENGTH);
 		int index = 0;
+		string instruction_strings;
 		for (auto inst : rcp.instructions)
 		{
 			index++;
+			string step_text = "Step " + std::to_string(index);
 			string ingredients = insertIngredientFields("Ingredients: ", inst.ingredients,true);
 			string kitchenware = insertStringFields("Kitchenware: ", inst.kitchenware,true);
 			string body = insertInstructionBody(inst.body);
 			string yield = insertIngredientFields("-> ", inst.yields,true);
-			string step_text = "Step " + std::to_string(index);
-			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), kitchenware.c_str(), body.c_str(), yield.c_str());
-			instructions_section += instr_s;
+			
+			string instruction_string = step_template;
+			
+			// replace placeholders with final HTML
+			replace(instruction_string, "~stepText~", step_text);
+			replace(instruction_string, "~instructionIngredients~", ingredients);
+			replace(instruction_string, "~instructionKitchenware~", kitchenware);
+			replace(instruction_string, "~instructionBody~", body);
+			replace(instruction_string, "~instructionYield~", yield);
+			instruction_strings += instruction_string;
 		}
 
 		// format final HTML strings
@@ -211,7 +218,7 @@ namespace epicr
 		replace(output_string, "~optionalIngredients~", optionalIngredients.c_str());
 		replace(output_string, "~kitchenware~", kitchenware.c_str());
 		replace(output_string, "~nutrients~", nutrients.c_str());
-		replace(output_string, "~instructions~", instructions_section.c_str());
+		replace(output_string, "~instructions~", instruction_strings.c_str());
 
 		file << output_string << std::endl;
 		file.close();
