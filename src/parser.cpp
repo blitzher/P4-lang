@@ -353,7 +353,7 @@ namespace epicr
 				ADV_NON_BLANK(1);
 			if (ctoken.type == E_TT_EOF)
 				break;
-			ingredient currentYield = ReadIngredient(HAS_PLUS);
+			ingredient currentYield = ReadIngredient(HAS_PLUS | ASSUME_1_NUM);
 			singleInstruction->yields.push_back(currentYield);
 		} while (ctoken.type == E_TT_COMMA);
 	}

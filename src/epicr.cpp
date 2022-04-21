@@ -92,7 +92,18 @@ namespace epicr
 		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
 	}
 	
-	bool ingredient_exist_in_ingredient_vector(std::string ingredientName,std::unordered_map<std::string, ingredient> ingredients)
+	std::string double_to_string(double num)
+	{
+		num = floor((num+0.005) * 100.0 ) / 100.0; /*rounds to the nearest 2 decimals*/
+		std::string str = std::to_string(num);
+		int seperatorPosition = str.find('.');
+		/* if the 2 first decimals are 0, the number is seen as a whole number */
+		if (!(str[seperatorPosition+1] == '0' && str[seperatorPosition+2] == '0'))
+			return str.substr(0,seperatorPosition+3); //if it is a decimal we take the first 2 decimals
+		return str.substr(0,seperatorPosition);
+	}
+	
+	bool ingredient_exist_in_ingredient_map(std::string ingredientName,std::unordered_map<std::string, ingredient> ingredients)
 	{
 		for(const auto &pair : ingredients)
         {

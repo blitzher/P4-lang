@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <map>
 #include <limits>
+#include <cmath>
 
 #pragma region Debug macros
 
