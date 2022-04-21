@@ -24,7 +24,7 @@ namespace epicr
 		return file_content;
 	}
 	//elements are merely strings
-	string insertDelimiterSeperatedFields(string header, string delimiter, std::vector<string> elements)
+	string insertBulletPoints(string header, std::vector<string> elements)
 	{
 		string result = "";
 		size_t elementsCount = elements.size();
@@ -35,10 +35,9 @@ namespace epicr
 		result += header;
 		for (size_t i = 0;i<elementsCount;i++)
 		{
+            elements[i].insert(0, "<li>");
+            elements[i].append("</li>");
 			result += elements[i];
-			
-			if (i != elementsCount - 1)
-				result += delimiter;
 		}
 		return result;
 	}
@@ -48,16 +47,18 @@ namespace epicr
 		string result = "";
 		if (time == "")
 			return result;
-        header.insert(0, "<h3>");
-        header.append("</h3>");
+        header.insert(0, "<div class=time-header>");
+        header.append("</div>");
 		result += header;
-		result += " " + time;
+        time.insert(0, "<div class=time-content>");
+        time.append("</div>");
+		result += time;
 		return result;
 	}
 	
 	string insertAmount(amount amount)
 	{
-		string result = "(";
+		string result = " (";
 		result += epicr::double_to_string(amount.number);
 		if(!(amount.unit == ""))
 			result += " " + amount.unit;
@@ -66,7 +67,7 @@ namespace epicr
 	}
 	
 	//fields are structs
-	string insertIngredients(string header, string delimiter, std::vector<ingredient> fields)
+	string insertIngredients(string header, std::vector<ingredient> fields)
 	{
 		string result = "";
 		size_t fieldCount = fields.size();
@@ -77,11 +78,11 @@ namespace epicr
 		result += header;
 		for (size_t i = 0;i<fieldCount;i++)
 		{
+            result += "<li>";
 			result += fields[i].name;
 			if (!fields[i].amount.isUncountable)
 				result += insertAmount(fields[i].amount);
-			if (i != fieldCount - 1)
-				result += delimiter;
+            result += "</li>";
 		}	
 		return result;
 	}
@@ -127,8 +128,8 @@ namespace epicr
 		for (auto inst : rcp.instructions)
 		{
 			index++;
-			string ingredients = insertIngredients("Ingredients: ",", ",inst.ingredients);
-			string kitchenware = insertDelimiterSeperatedFields("Kitchenware: ",", ",inst.kitchenware);
+			string ingredients = insertIngredients("Ingredients: ", inst.ingredients);
+			string kitchenware = insertBulletPoints("Kitchenware: ",inst.kitchenware);
 			string body = insertInstructionBody(inst.body);
 			
 			string step_text = "Step " + std::to_string(index);
@@ -137,9 +138,9 @@ namespace epicr
 		}
 
         // format final HTML strings
-		string tags = insertDelimiterSeperatedFields("Tags: ", ", ", rcp.tags);
-		string kitchenware = insertDelimiterSeperatedFields("Kitchenware: ", ", ", rcp.kitchenware);
-		string ingredients = insertIngredients("Ingredients: ", ", ", rcp.ingredients);
+		string tags = insertBulletPoints("Tags: ", rcp.tags);
+		string kitchenware = insertBulletPoints("Kitchenware: ", rcp.kitchenware);
+		string ingredients = insertIngredients("Ingredients: ", rcp.ingredients);
         string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
         string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
         string cookTime = insertTime("Cook time: ", rcp.time.cook_time.c_str());
@@ -150,8 +151,8 @@ namespace epicr
         replace(output_string, "~title~", rcp.title.c_str());
         replace(output_string, "~description~", rcp.description.c_str());
         replace(output_string, "~total-time~", totalTime);
-        replace(output_string, "~cook-time~", prepTime);
-        replace(output_string, "~prep-time~", cookTime);
+        replace(output_string, "~prep-time~", prepTime);
+        replace(output_string, "~cook-time~", cookTime);
         replace(output_string, "~tags~", tags.c_str());
         replace(output_string, "~ingredients~", ingredients.c_str());
         replace(output_string, "~kitchenware~", kitchenware.c_str());

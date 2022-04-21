@@ -19,12 +19,11 @@
 		}
 
 		.instruction {
-			border: 3px solid black;
-			border-radius: 15px;
+			border: 2px solid black;
+			border-radius: 5px;
 			padding: 5px 15px;
 			min-height: 10px;
-			border-top-left-radius: 0px;
-			
+            background-color: #faf3ee;
 		}
 
 		h5 {
@@ -54,87 +53,109 @@
 		}
 
 		.step-header {
-			border: 3px solid black;
-			width: fit-content;
-			border-radius: 15px;
-			padding: 0px 10px;
-			border-bottom-width: 0px;
-			border-bottom-left-radius: 0px;
-			border-bottom-right-radius: 0px;
-			z-index: 1;
-			background-color: white;
+            padding-left: 10px;
+            padding-bottom: 10px;
+            float: left;
 		}
+        .wrapper {
+            overflow: hidden; /* add this to contain floated children */
+        }
+        .time-header {
+            margin-right: 5px;
+            font-weight: bold;
+            float:left; 
+        }
+        .time-content {
+            float: left; 
+            margin-right: 20px;
+        }
+        .leftHalf{
+            float: left;
+            float: left;
+            margin-right: 5%;
+            width: 15%;
+        }
+        .rightHalf{
+            float: left;
+            width: 80%;
+        }
+        .arrow-down {
+            width: 0; 
+            height: 0; 
+            float: left;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #d7d7d7;
+        }
+        .step-header-wrapper{
+            align-items: center;
+            display: flex;
+            cursor: pointer;
+            user-select: none;
+        }
 	</style>
 </header>
 <h1>
 	~title~
 </h1>
-
-<h3>
-	Description
-</h3>
-<div class="description collapsible">
-	<span>
-		~description~
-	</span>
+<hr>
+<div class="wrapper">
+    ~total-time~
+    ~prep-time~
+    ~cook-time~
 </div>
+<hr>
+<div class="wrapper">
+    <div class="leftHalf">
+        ~ingredients~
+        ~kitchenware~
+        ~tags~
+    </div>
+    <div class="rightHalf">
+        <h3>
+            Description
+        </h3>
+        <div class="description collapsible">
+            <span>
+                ~description~
+            </span>
+        </div>
+    
+        <!-- steps -->
+        ~instructions~
+    
+        <script>
+            const allHeaders = document.getElementsByClassName("step-header-wrapper");
+            const allSteps = document.getElementsByClassName("instruction");
+            const allArrows = document.getElementsByClassName("arrow-down");
 
-<h5>
-~total-time~
-~prep-time~
-~cook-time~
-</h5>
+            for (i = 0; i < allHeaders.length; i++) {
+                const header = allHeaders[i];
+                const step = allSteps[i];
+                const arrow = allArrows[i];
 
-<h5>
-~tags~
-</h5>
+                header.addEventListener("mouseover", (ev) => {
+                    arrow.style.borderTop = "10px solid #898989";
+                });
 
+                header.addEventListener("mouseout", (ev) => {
+                    arrow.style.borderTop = "10px solid #d7d7d7 ";
+                });
 
-~ingredients~
-
-<span>
-
-<span class="kitchenware">
-		~kitchenware~
-</span>
-
-
-	<!-- steps -->
-	~instructions~
-
-	<script>
-		const allColls = document.getElementsByClassName("collapsible");
-
-		function set_display_after(el, val, timeout) {
-			setTimeout(() => {
-				el.style.display = val;
-			}, timeout);
-		}
-		for (i = 0; i < allColls.length; i++) {
-			const coll = allColls[i];
-			let chil = coll.children;
-			let e = document.createElement("p");
-			e.innerText = "Right click to collapse";
-			e.classList.add("colltext")
-			coll.appendChild(e);
-			console.log(chil);
-			coll.addEventListener("click", (event, el) => {
-				for (let j = 0; j < chil.length; j++) {
-					chil[j].style.display = "block";
-					e.innerText = "Right click to collapse";
-				}
-			});
-			coll.addEventListener("contextmenu", (ev) => {
-				ev.preventDefault();
-				ev.stopPropagation();
-				for (let j = chil.length - 2; j >= 0; j--) {
-					chil[j].style.display = "none";
-				}
-				e.innerText = "Click to expand";
-			});
-			coll.dispatchEvent(new Event('contextmenu'));
-		}
-
-	</script>
+                
+                header.addEventListener("click", (ev) => {
+                    if(step.style.display == "none"){
+                        step.style.display = "block";
+                        arrow.style.transform = "rotate(0deg)";
+                    }
+                    else {
+                        step.style.display = "none";
+                        arrow.style.transform = "rotate(-90deg)";
+                    }
+                });
+            }
+        </script>
+    </div>
+</div>
 
 </html>
