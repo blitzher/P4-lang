@@ -24,13 +24,17 @@ namespace epicr
 		return file_content;
 	}
 	// elements are merely strings
-	string insertStringFields(string header, bool isInInstruction, std::vector<string> elements)
+	string insertStringFields(string header, std::vector<string> elements,bool isInInstruction=false)
 	{
 		string result = "";
 		size_t elementsCount = elements.size();
 		if (elementsCount == 0)
 			return result;
+		if (!isInInstruction)
+			result += "<h3>";
 		result += header;
+		if (!isInInstruction)
+			result += "</h3>";
 		for (size_t i = 0; i < elementsCount; i++)
 		{
 			if (!isInInstruction)
@@ -83,23 +87,45 @@ namespace epicr
 		return result;
 	}
 
+	/*returns whether or not there are any optional ingredients or non-optioanl ingredients, respectively based on bool parameter*/
+	bool isAnyIngredients(bool ingredientsAreOptional,std::vector<ingredient> ingredients)
+	{
+		for (const ingredient &ingredient : ingredients)
+		{
+			if (ingredientsAreOptional == ingredient.isOptional)
+				return true;
+		}
+		return false;
+	}
+
 	// fields are structs
-	string insertIngredientFields(string header, bool isInInstruction, std::vector<ingredient> fields)
+	string insertIngredientFields(string header, std::vector<ingredient> fields,bool isInInstruction=false,bool fieldIsOptional=false)
 	{
 		string result = "";
 		size_t fieldCount = fields.size();
-		if (fieldCount == 0)
+		if (!isAnyIngredients(fieldIsOptional,fields))
 			return result;
+		if (!isInInstruction)
+			result += "<h3>";
 		result += header;
+		if (!isInInstruction)
+			result += "</h3>";
 		for (size_t i = 0; i < fieldCount; i++)
 		{
+			/*if the ingredient is non-optional and it is an optional field, or the ingredient is optional and it is a non-optional field */
+			if ((!fields[i].isOptional && fieldIsOptional) || (fields[i].isOptional && !fieldIsOptional))
+				continue;
 			if (!isInInstruction)
+			{
 				result += "<li>";
+			}
 			result += fields[i].name;
 			if (!fields[i].amount.isUncountable)
 				result += insertAmount(fields[i].amount);
 			if (!isInInstruction)
+			{
 				result += "</li>";
+			}
 			else
 			{
 				if (i != fieldCount - 1)
@@ -145,27 +171,35 @@ namespace epicr
 		std::ofstream file{filename};
 		if (!file.is_open())
 			return false;
-		string instructions_section = "";
-		char *instr_s = (char *)malloc(MAX_S_LENGTH);
 		int index = 0;
+		string instruction_strings;
 		for (auto inst : rcp.instructions)
 		{
 			index++;
-			string ingredients = insertIngredientFields("Ingredients: ",true, inst.ingredients);
-			string kitchenware = insertStringFields("Kitchenware: ",true, inst.kitchenware);
-			string body = insertInstructionBody(inst.body);
-			string yield = insertIngredientFields("-> ",true, inst.yields);
 			string step_text = "Step " + std::to_string(index);
-			sprintf(instr_s, step_template, step_text.c_str(), ingredients.c_str(), kitchenware.c_str(), body.c_str(), yield.c_str());
-			instructions_section += instr_s;
+			string ingredients = insertIngredientFields("Ingredients: ", inst.ingredients,true);
+			string kitchenware = insertStringFields("Kitchenware: ", inst.kitchenware,true);
+			string body = insertInstructionBody(inst.body);
+			string yield = insertIngredientFields("-> ", inst.yields,true);
+			
+			string instruction_string = step_template;
+			
+			// replace placeholders with final HTML
+			replace(instruction_string, "~stepText~", step_text);
+			replace(instruction_string, "~instructionIngredients~", ingredients);
+			replace(instruction_string, "~instructionKitchenware~", kitchenware);
+			replace(instruction_string, "~instructionBody~", body);
+			replace(instruction_string, "~instructionYield~", yield);
+			instruction_strings += instruction_string;
 		}
 
 		// format final HTML strings
 		string servings = insertServings("Servings: ", rcp.servings);
-		string tags = insertStringFields("Tags: ",false, rcp.tags);
-		string kitchenware = insertStringFields("Kitchenware: ",false, rcp.kitchenware);
-		string ingredients = insertIngredientFields("Ingredients: ", false, rcp.ingredients);
-		string nutrients = insertIngredientFields("Nutrients",false, rcp.nutrients);
+		string tags = insertStringFields("Tags: ", rcp.tags);
+		string kitchenware = insertStringFields("Kitchenware: ", rcp.kitchenware);
+		string ingredients = insertIngredientFields("Ingredients: ", rcp.ingredients);
+		string optionalIngredients = insertIngredientFields("Optional ingredients: ",rcp.ingredients,false,true);
+		string nutrients = insertIngredientFields("Nutrients", rcp.nutrients);
 		string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
 		string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
 		string cookTime = insertTime("Cook time: ", rcp.time.cook_time.c_str());
@@ -181,9 +215,10 @@ namespace epicr
 		replace(output_string, "~cook-time~", cookTime);
 		replace(output_string, "~tags~", tags.c_str());
 		replace(output_string, "~ingredients~", ingredients.c_str());
+		replace(output_string, "~optionalIngredients~", optionalIngredients.c_str());
 		replace(output_string, "~kitchenware~", kitchenware.c_str());
 		replace(output_string, "~nutrients~", nutrients.c_str());
-		replace(output_string, "~instructions~", instructions_section.c_str());
+		replace(output_string, "~instructions~", instruction_strings.c_str());
 
 		file << output_string << std::endl;
 		file.close();
