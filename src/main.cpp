@@ -20,31 +20,33 @@ int main(int argc, char **argv)
 	{
 		cout << i << ": " << argv[i] << endl;
 	}
+	cout << "-------\n";
 
-	epicr::cmd_args clargs = epicr::parse_cmd_args(argc, argv);
+	epicr::parse_cmd_args(argc, argv);
 
 	ifstream file = epicr::open_file(argv[1]);
 
+	cout << "Compiling " << epicr::clargs.input_filepath << endl;
+
 	epicr::Lexer myLexer = epicr::Lexer(file);
-
 	epicr::Parser myParser = epicr::Parser(&myLexer);
-	myParser.clargs = clargs;
-
 	epicr::recipe myRecipe = myParser.Parse();
 
+	cout << myParser.error << " Parser: " << myParser.error_message << endl;
+
 	auto ingrvisit = epicr::visitor::IngredientVerifier();
-
-	//relativeVisit.visit(&myRecipe);
 	ingrvisit.visit(&myRecipe);
+	cout << ingrvisit.has_error << " IngVis: " << ingrvisit.error << endl;
 
-	cout << ingrvisit.has_error << ": " << ingrvisit.error << endl;
-	cout << myParser.error << ": " << myParser.error_message << endl;
+	auto amntconve = epicr::visitor::AmountConverter();
+	amntconve.visit(&myRecipe);
+	cout << amntconve.has_error << " AmtCon: " << amntconve.error << endl;
 
-	std::cout << "clarg output filepath: " << clargs.output_filepath << std::endl;
+	std::cout << "clarg output filepath: " << epicr::clargs.output_filepath << std::endl;
 
 	if (!myParser.error)
 	{
-		string output_file = clargs.output_filepath;
+		string output_file = epicr::clargs.output_filepath;
 		output_file.append("/" + myRecipe.title + ".html");
 		epicr::generate_html(myRecipe, output_file);
 		printf("Wrote file: %s\n", output_file.c_str());

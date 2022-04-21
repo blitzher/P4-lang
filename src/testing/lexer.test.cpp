@@ -14,9 +14,9 @@ void basic_test()
 	std::istringstream test_string("hello!");
 	epicr::Lexer lexer(test_string);
 	epicr::epicr_token tokens[]{lexer.next_token(), lexer.next_token()};
-	expect_token_type(tokens[0], epicr::ETT_WORD);
+	expect_token_type(tokens[0], epicr::E_TT_WORD);
 	test_lib::expect_equal_s("hello!", tokens[0].word);
-	expect_token_type(tokens[1], epicr::ETT_EOF);
+	expect_token_type(tokens[1], epicr::E_TT_EOF);
 }
 
 void sentence_test()
@@ -27,18 +27,18 @@ void sentence_test()
 	epicr::Lexer lexer(test_string);
 	std::vector<epicr::epicr_token> tokens = lexer.next_token(13);
 	test_lib::expect_equal_s("hello", tokens[0].word);
-	expect_token_type(tokens[1], epicr::ETT_BLANK);
+	expect_token_type(tokens[1], epicr::E_TT_BLANK);
 	test_lib::expect_equal_s("there", tokens[2].word);
-	expect_token_type(tokens[3], epicr::ETT_COMMA);
-	expect_token_type(tokens[4], epicr::ETT_BLANK);
+	expect_token_type(tokens[3], epicr::E_TT_COMMA);
+	expect_token_type(tokens[4], epicr::E_TT_BLANK);
 	test_lib::expect_equal_s("this", tokens[5].word);
-	expect_token_type(tokens[6], epicr::ETT_BLANK);
+	expect_token_type(tokens[6], epicr::E_TT_BLANK);
 	test_lib::expect_equal_s("is", tokens[7].word);
-	expect_token_type(tokens[8], epicr::ETT_BLANK);
+	expect_token_type(tokens[8], epicr::E_TT_BLANK);
 	test_lib::expect_equal_s("a", tokens[9].word);
-	expect_token_type(tokens[10], epicr::ETT_BLANK);
+	expect_token_type(tokens[10], epicr::E_TT_BLANK);
 	test_lib::expect_equal_s("sentence!", tokens[11].word);
-	expect_token_type(tokens[12], epicr::ETT_EOF);
+	expect_token_type(tokens[12], epicr::E_TT_EOF);
 }
 
 void dash_word_test()
@@ -49,7 +49,7 @@ void dash_word_test()
 	std::istringstream test_string("hello-there");
 	epicr::Lexer lexer(test_string);
 	epicr::epicr_token tok = lexer.next_token();
-	expect_token_type(tok, epicr::ETT_WORD);
+	expect_token_type(tok, epicr::E_TT_WORD);
 	test_lib::expect_equal_s(tok.word, "hello-there");
 }
 
@@ -63,15 +63,15 @@ void special_characters_token_breakers()
 	epicr::Lexer lexer(test_string);
 	std::vector<epicr::epicr_token> tokens = lexer.next_token(7);
 
-	expect_token_type(tokens[0], epicr::ETT_WORD);
-	expect_token_type(tokens[1], epicr::ETT_COLON);
+	expect_token_type(tokens[0], epicr::E_TT_WORD);
+	expect_token_type(tokens[1], epicr::E_TT_COLON);
 
-	expect_token_type(tokens[2], epicr::ETT_QUESTION_MARK);
-	expect_token_type(tokens[3], epicr::ETT_PLUS);
-	expect_token_type(tokens[4], epicr::ETT_ASTERIX);
+	expect_token_type(tokens[2], epicr::E_TT_QUESTION_MARK);
+	expect_token_type(tokens[3], epicr::E_TT_PLUS);
+	expect_token_type(tokens[4], epicr::E_TT_ASTERIX);
 
-	expect_token_type(tokens[5], epicr::ETT_WORD);
-	expect_token_type(tokens[6], epicr::ETT_EOF);
+	expect_token_type(tokens[5], epicr::E_TT_WORD);
+	expect_token_type(tokens[6], epicr::E_TT_EOF);
 }
 
 void special_characters_non_token_breakers()
@@ -83,18 +83,18 @@ void special_characters_non_token_breakers()
 	epicr::Lexer lexer(test_string);
 	std::vector<epicr::epicr_token> tokens = lexer.next_token(8);
 
-	expect_token_type(tokens[0], epicr::ETT_BRACKET_OPEN);
-	expect_token_type(tokens[1], epicr::ETT_BRACKET_CLOSE);
+	expect_token_type(tokens[0], epicr::E_TT_BRACKET_OPEN);
+	expect_token_type(tokens[1], epicr::E_TT_BRACKET_CLOSE);
 
-	expect_token_type(tokens[2], epicr::ETT_WORD); /* @ */
-	expect_token_type(tokens[3], epicr::ETT_BLANK);
+	expect_token_type(tokens[2], epicr::E_TT_WORD); /* @ */
+	expect_token_type(tokens[3], epicr::E_TT_BLANK);
 
-	expect_token_type(tokens[4], epicr::ETT_WORD);	/* æøå */
-	expect_token_type(tokens[5], epicr::ETT_COMMA); /* , */
+	expect_token_type(tokens[4], epicr::E_TT_WORD);	 /* æøå */
+	expect_token_type(tokens[5], epicr::E_TT_COMMA); /* , */
 
-	expect_token_type(tokens[6], epicr::ETT_WORD); /* ¤ */
+	expect_token_type(tokens[6], epicr::E_TT_WORD); /* ¤ */
 
-	expect_token_type(tokens[7], epicr::ETT_EOF);
+	expect_token_type(tokens[7], epicr::E_TT_EOF);
 }
 
 /* carriage return means that it moves the cursor to the left.
@@ -109,9 +109,9 @@ void carriage_return()
 	epicr::Lexer lexer(test_string);
 	std::vector<epicr::epicr_token> tokens = lexer.next_token(3);
 
-	expect_token_type(tokens[0], epicr::ETT_NEWLINE);
+	expect_token_type(tokens[0], epicr::E_TT_NEWLINE);
 	test_lib::expect_equal_i(tokens[0].word.size(), 2);
-	expect_token_type(tokens[1], epicr::ETT_EOF);
+	expect_token_type(tokens[1], epicr::E_TT_EOF);
 }
 
 void blank_runs()
@@ -122,11 +122,11 @@ void blank_runs()
 	std::istringstream test_string("  \n\nhello!\n\n\n");
 	epicr::Lexer lexer(test_string);
 	std::vector<epicr::epicr_token> tokens = lexer.next_token(5);
-	expect_token_type(tokens[0], epicr::ETT_BLANK);
-	expect_token_type(tokens[1], epicr::ETT_NEWLINE);
-	expect_token_type(tokens[2], epicr::ETT_WORD);
-	expect_token_type(tokens[3], epicr::ETT_NEWLINE);
-	expect_token_type(tokens[4], epicr::ETT_EOF);
+	expect_token_type(tokens[0], epicr::E_TT_BLANK);
+	expect_token_type(tokens[1], epicr::E_TT_NEWLINE);
+	expect_token_type(tokens[2], epicr::E_TT_WORD);
+	expect_token_type(tokens[3], epicr::E_TT_NEWLINE);
+	expect_token_type(tokens[4], epicr::E_TT_EOF);
 }
 
 int main(void)
