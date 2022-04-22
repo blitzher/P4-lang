@@ -13,18 +13,21 @@
 <html>
 <header>
 	<style>
-		html {
-			margin: 0 20%;
+        *{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
 
+		html {
+			margin: 10%;
+            margin-top: 20px;
 		}
 
-		.instruction {
-			border: 3px solid black;
-			border-radius: 15px;
+		#instruction {
+			border: 2px solid black;
+			border-radius: 5px;
 			padding: 5px 15px;
 			min-height: 10px;
-			border-top-left-radius: 0px;
-			
+            background-color: #faf3ee;
 		}
 
 		h5 {
@@ -34,12 +37,20 @@
 			padding: 0 0 0 0;
 		}
 
-		h3,
-		h4,
+		h3{
+
+        }
+		h4{
+            margin: 5px 0 5px 0;
+        }
 		h5 {
-			margin: 10px 0 0 0;
+			margin: 25px 0 5px 0;
 			padding: 0 0 0 0;
 		}
+
+        h3:first-of-type{
+            margin: 10px 0 5px 0;
+        }
 
 		a {
 			font-style: normal
@@ -53,93 +64,210 @@
 			cursor: context-menu;
 		}
 
-		.step-header {
-			border: 3px solid black;
-			width: fit-content;
-			border-radius: 15px;
-			padding: 0px 10px;
-			border-bottom-width: 0px;
-			border-bottom-left-radius: 0px;
-			border-bottom-right-radius: 0px;
-			z-index: 1;
-			background-color: white;
+		.collapsible {
+            padding-left: 10px;
+            float: left;
 		}
+        .wrapper {
+            overflow: hidden; /* add this to contain floated children */
+            position: relative;
+        }
+        .time-header {
+            margin-left: 10px;
+            margin-right: 5px;
+            font-weight: bold;
+            float:left; 
+        }
+        .time-content {
+            float: left; 
+            margin-right: 20px;
+        }
+        #titleDiv{
+            float:left; 
+            margin-bottom: 10px;
+        }
+        #servingsDiv{
+            position: absolute;
+            bottom: 10px;
+            right: 0;
+        }
+        .leftHalf{
+            float: left;
+            margin-right: 5%;
+            width: 15%;
+        }
+        .rightHalf{
+            float: left;
+            width: 80%;
+        }
+        .arrow-down {
+            width: 0; 
+            height: 0; 
+            float: left;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #d7d7d7;
+        }
+        .collapsible-wrapper:hover>.arrow-down{
+            border-top-color: #898989;
+        }
+        .collapsible-wrapper{
+            align-items: center;
+            display: flex;
+            cursor: pointer;
+            user-select: none;
+        }
+        .collapsible-body{
+            margin-bottom: 30px;
+        }
+        #description{
+            padding-left: 10px;
+            float: left;
+        }
+        .collapseAllButton{
+            float: right;
+            margin-right: 10px;
+            width: 100px;
+        }
 	</style>
 </header>
-<h1>
-	%s
-</h1>
-
-<h3>
-	Description
-</h3>
-<div class="description collapsible">
-	<span>
-		
-		%s
-	</span>
+<div class="wrapper">
+    <h1 id="titleDiv">
+        ~title~
+    </h1>
+    <div id="servingsDiv">
+    ~servings~
+    </div>
 </div>
+<hr>
+<div class="wrapper">
+    ~total-time~
+    ~prep-time~
+    ~cook-time~
+    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse </button>
+</div>
+<hr>
+<div class="wrapper">
+    <div class="leftHalf">
+        <div>
+            <!--
+            <form>
+                <input type="radio" id="original" name="measurementSysten" value="original">
+                <label for="html">Original</label><br>
+                <input type="radio" id="metric" name="measurementSysten" value="metric">
+                <label for="css">Metric</label><br>
+                <input type="radio" id="imperial" name="measurementSysten" value="imperial">
+                <label for="javascript">Imperial</label>
+            </form>
+            -->
+        </div>  
+        ~ingredients~
+		~optionalIngredients~
+        ~kitchenware~
+        ~tags~
+    </div>
+    <div class="rightHalf">
+        <div class="collapsible-wrapper">
+            <div class="arrow-down"></div>
+            <h3 class="collapsible">
+                Description
+            </h3>
+        </div>
+        <div class="collapsible-body">
+            ~description~
+        </div>
+    
+        <!-- steps -->
+        ~instructions~
+    
+        <script>
+            collapsed = false;
+            const allHeaders = document.getElementsByClassName("collapsible-wrapper");
+            const allSteps = document.getElementsByClassName("collapsible-body");
+            const allArrows = document.getElementsByClassName("arrow-down");
+            const collapseAllButton = document.getElementsByClassName("collapseAllButton")[0];
 
-<h5>
-%s
-</h5>
+            for (i = 0; i < allHeaders.length; i++) {
+                const header = allHeaders[i];
+                const step = allSteps[i];
+                const arrow = allArrows[i];
 
-<h5>
-%s
-</h5>
+                header.addEventListener("click", (ev) => {
+                    if(step.style.display == "none"){
+                        step.style.display = "block";
+                        arrow.style.transform = "rotate(0deg)";
+                    }
+                    else {
+                        step.style.display = "none";
+                        arrow.style.transform = "rotate(-90deg)";
+                    }
+                        
+                    checkCollapseStatus();
+                });
+                
+                // check if all headers are collapsed
+            }
 
-<h3>
-	Ingredients
-</h3>
-<ul>
-	%s
-</ul>
-<span>
+        function collapseOrExpand(){
+            if (collapsed){
+                expandAll();
+            }
+            else {
+                collapseAll();
+            }
+            checkCollapseStatus();
+        }
 
-<span class="kitchenware">
-	<h3>Kitchenware</h3>
-	<ul>
-		%s
-	</ul>
-</span>
+        function checkCollapseStatus(){
+            oneIsNotCollapsed = false;
+            for (j = 0; j < allHeaders.length; j++) {
+                if (allSteps[j].style.display == "block"){
+                    oneIsNotCollapsed = true;
+                }
+            }
 
+            if(oneIsNotCollapsed){
+                collapsed = false;
+            }
+            else {
+                collapsed = true;
+            }
 
-	<!-- steps -->
-	%s
+            if(collapsed){
+                collapseAllButton.innerHTML = "Expand";
+            }
+            else {
+                collapseAllButton.innerHTML = "Collapse";
+            }
+        }
 
-	<script>
-		const allColls = document.getElementsByClassName("collapsible");
+        function collapseAll(){
+            collapsed = true;
 
-		function set_display_after(el, val, timeout) {
-			setTimeout(() => {
-				el.style.display = val;
-			}, timeout);
-		}
-		for (i = 0; i < allColls.length; i++) {
-			const coll = allColls[i];
-			let chil = coll.children;
-			let e = document.createElement("p");
-			e.innerText = "Right click to collapse";
-			e.classList.add("colltext")
-			coll.appendChild(e);
-			console.log(chil);
-			coll.addEventListener("click", (event, el) => {
-				for (let j = 0; j < chil.length; j++) {
-					chil[j].style.display = "block";
-					e.innerText = "Right click to collapse";
-				}
-			});
-			coll.addEventListener("contextmenu", (ev) => {
-				ev.preventDefault();
-				ev.stopPropagation();
-				for (let j = chil.length - 2; j >= 0; j--) {
-					chil[j].style.display = "none";
-				}
-				e.innerText = "Click to expand";
-			});
-			coll.dispatchEvent(new Event('contextmenu'));
-		}
+            for (i = 0; i < allHeaders.length; i++) {
+                const header = allHeaders[i];
+                const step = allSteps[i];
+                const arrow = allArrows[i];
 
-	</script>
+                step.style.display = "none";
+                arrow.style.transform = "rotate(-90deg)";
+            }
+        }
+
+        function expandAll(){
+            collapsed = false;
+            
+            for (i = 0; i < allHeaders.length; i++) {
+                const header = allHeaders[i];
+                const step = allSteps[i];
+                const arrow = allArrows[i];
+
+                step.style.display = "block";
+                arrow.style.transform = "rotate(0deg)";
+            }
+        }
+        </script>
+    </div>
+</div>
 
 </html>

@@ -1,0 +1,17 @@
+title: Pasta
+
+kitchenware:
+    stuff
+    
+ingredients:
+    wheatflour [1 g],
+    flour [1 kg],
+    water [1 dl],
+    cocaine [1 cm]
+
+instructions:
+        
+    using(stuff):
+        
+        yield: 
+            Pasta

@@ -7,7 +7,11 @@ void pasta_recipe_parses_without_error()
 	epicr::Lexer l = epicr::Lexer(f);
 	epicr::Parser p = epicr::Parser(&l);
 	epicr::recipe rcp = p.Parse();
+<<<<<<< HEAD
 	test_lib::expect_equal_i(p.error,0);
+=======
+	test_lib::expect_equal_b(p.error, false);
+>>>>>>> 17e6a82fc8be347b6d37d0bb731397b0c6907ddc
 }
 
 void carbonara_recipe_parses_without_error()
@@ -17,7 +21,11 @@ void carbonara_recipe_parses_without_error()
 	epicr::Lexer l = epicr::Lexer(f);
 	epicr::Parser p = epicr::Parser(&l);
 	epicr::recipe rcp = p.Parse();
+<<<<<<< HEAD
 	test_lib::expect_equal_i(p.error,0);
+=======
+	test_lib::expect_equal_b(p.error, false);
+>>>>>>> 17e6a82fc8be347b6d37d0bb731397b0c6907ddc
 }
 
 void parsed_title()
@@ -118,7 +126,7 @@ void parsed_ingredients()
 	}
 	if (rcp.ingredients[4].amount.number != std::numeric_limits<double>::infinity())
 	{
-		std::cout<<rcp.ingredients[4].amount.number;
+		std::cout << rcp.ingredients[4].amount.number;
 		test_lib::deny("Expected ingredient extra wheatflour to have amount set to INF");
 	}
 }
@@ -151,7 +159,10 @@ void instruction_has_correct_ingredients_name()
 
 	test_lib::expect_equal_s(rcp.instructions[2].ingredients[0].name, "dough");
 	test_lib::expect_equal_s(rcp.instructions[2].ingredients[1].name, "extra wheatflour");
+<<<<<<< HEAD
 
+=======
+>>>>>>> 17e6a82fc8be347b6d37d0bb731397b0c6907ddc
 }
 
 void ingredient_in_instruction_has_correct_amount()
@@ -160,12 +171,20 @@ void ingredient_in_instruction_has_correct_amount()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
 	/* First ingredient */
+<<<<<<< HEAD
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.isRelativeAmount, 0); // this one fails
+=======
+	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.isRelativeAmount, false); // this one fails
+>>>>>>> 17e6a82fc8be347b6d37d0bb731397b0c6907ddc
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.number, 300);
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "g");
 
 	/* Second ingredient */
+<<<<<<< HEAD
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients[1].amount.isRelativeAmount, 1);
+=======
+	test_lib::expect_equal_b(rcp.instructions[0].ingredients[1].amount.isRelativeAmount, true);
+>>>>>>> 17e6a82fc8be347b6d37d0bb731397b0c6907ddc
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[1].amount.relativeAmount, "all");
 }
 
@@ -175,8 +194,8 @@ void ingredient_in_instruction_without_amount_has_correct_amount()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
 	epicr::amount amnt = rcp.instructions[2].ingredients[0].amount;
-	test_lib::expect_equal_i(amnt.isRelativeAmount, 1);
-	test_lib::expect_equal_i(amnt.isUncountable, 0);
+	test_lib::expect_equal_b(amnt.isRelativeAmount, true);
+	test_lib::expect_equal_b(amnt.isUncountable, false);
 	test_lib::expect_equal_s(amnt.unit, "");
 	test_lib::expect_equal_s(amnt.relativeAmount, "rest");
 	test_lib::expect_equal_i(amnt.number, 0);
@@ -223,7 +242,7 @@ void parsed_instruction_body()
 	test_lib::expect_equal_s(body[1].spelling, " ");
 	test_lib::expect_equal_s(body[2].spelling, "the");
 	test_lib::expect_equal_s(body[3].spelling, " ");
-	test_lib::expect_equal_i(body[4].is_amount, true);
+	test_lib::expect_equal_b(body[4].is_amount, true);
 	test_lib::expect_equal_i(body[4].value.number, 300);
 	test_lib::expect_equal_s(body[4].value.unit, "g");
 }
@@ -232,8 +251,8 @@ void instruction_body_text_is_parsed_correctly()
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	size_t actualInstructionBodySize = rcp.instructions[0].body.size();
-	std::string expectedInstructionBody = std::string("Put the 300.000000 g wheatflour on the table and make a cavity in the middle.\n") +
-										  std::string("Crack the 3.000000 eggs in the cavity, and add salt.\n") +
+	std::string expectedInstructionBody = std::string("Put the 300 g wheatflour on the table and make a cavity in the middle.\n") +
+										  std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
 										  std::string("Start mixing the eggs into the wheatflour.\n") +
 										  std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
 										  std::string("Knead the dough thoroughly.\n");
@@ -243,7 +262,7 @@ void instruction_body_text_is_parsed_correctly()
 		actualInstructionBody += rcp.instructions[0].body[i].spelling;
 		if (rcp.instructions[0].body[i].is_amount)
 		{
-			actualInstructionBody += std::to_string(rcp.instructions[0].body[i].value.number) + " ";
+			actualInstructionBody += epicr::double_to_string(rcp.instructions[0].body[i].value.number) + " ";
 			if (rcp.instructions[0].body[i].value.unit != "")
 				actualInstructionBody += rcp.instructions[0].body[i].value.unit + " ";
 		}
@@ -257,16 +276,16 @@ void instruction_body_amounts_have_is_amount_set_to_true()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(1, rcp.instructions[0].body[4].is_amount); // should be true - ie 1
+	test_lib::expect_equal_b(rcp.instructions[0].body[4].is_amount,true);
 }
 
 void instruction_body_non_amounts_have_is_amount_set_to_false()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	test_lib::expect_equal_i(0, rcp.instructions[0].body[0].is_amount);	 // should be false - ie 0
-	test_lib::expect_equal_i(0, rcp.instructions[0].body[11].is_amount); // should be false - ie 0
-	test_lib::expect_equal_i(0, rcp.instructions[1].body[0].is_amount);	 // should be false - ie 0
+	test_lib::expect_equal_b(rcp.instructions[0].body[0].is_amount,false);
+	test_lib::expect_equal_b(rcp.instructions[0].body[11].is_amount,false);
+	test_lib::expect_equal_b(rcp.instructions[1].body[0].is_amount,false);	 
 }
 
 void instruction_yields_zero_ingredients()
@@ -283,6 +302,21 @@ void instruction_yields_an_ingredient()
 	test_lib::expect_equal_s(rcp.instructions[1].yields[0].name, "dough");
 }
 
+void instruction_yields_1_if_no_amount_specified()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_i(rcp.instructions[1].yields[0].amount.number,1);
+	test_lib::expect_equal_s(rcp.instructions[1].yields[0].amount.unit,"");	
+}
+
+void last_instruction_yields_correct_ingredient_name()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
+	test_lib::expect_equal_s(rcp.instructions[2].yields[0].name,"Pasta");
+}
+
 void parse_fields_in_random_order()
 {
 	test_lib::REGISTER;
@@ -290,7 +324,7 @@ void parse_fields_in_random_order()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/PastaRandomOrder.rcp").recipe;
 
 	test_lib::expect_equal_s(rcp.title, "Pasta");
-	test_lib::expect_equal_i(rcp.instructions.size(),3);
+	test_lib::expect_equal_i(rcp.instructions.size(), 3);
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta");
 	test_lib::expect_equal_i(rcp.ingredients.size(), 5);
 	test_lib::expect_equal_i(rcp.ingredients[0].amount.number, 300);
@@ -304,14 +338,12 @@ void parse_recipe_with_random_casing()
 
 	test_lib::expect_equal_s(rcp.title, "Pasta");
 	test_lib::expect_equal_s(rcp.description, "Frisklavet pasta");
-	test_lib::expect_equal_i(rcp.servings.count,4);
+	test_lib::expect_equal_i(rcp.servings.count, 4);
 	test_lib::expect_equal_i(rcp.ingredients.size(), 4);
-	test_lib::expect_equal_i(rcp.instructions.size(),1);
-	test_lib::expect_equal_i(rcp.instructions[0].ingredients.size(),4);
-	test_lib::expect_equal_i(rcp.instructions[0].yields.size(),1);
-	
+	test_lib::expect_equal_i(rcp.instructions.size(), 1);
+	test_lib::expect_equal_i(rcp.instructions[0].ingredients.size(), 4);
+	test_lib::expect_equal_i(rcp.instructions[0].yields.size(), 1);
 }
-
 
 int main(void)
 {
@@ -341,6 +373,11 @@ int main(void)
 	instruction_body_non_amounts_have_is_amount_set_to_false();
 	instruction_yields_zero_ingredients();
 	instruction_yields_an_ingredient();
+<<<<<<< HEAD
+=======
+	instruction_yields_1_if_no_amount_specified();
+	last_instruction_yields_correct_ingredient_name();
+>>>>>>> 17e6a82fc8be347b6d37d0bb731397b0c6907ddc
 	parse_fields_in_random_order();
 	parse_recipe_with_random_casing();
 	test_lib::print_recap();
