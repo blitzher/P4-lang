@@ -8,21 +8,21 @@
 		html {
 			margin: 10%;
             margin-top: 20px;
+            overflow: -moz-scrollbars-vertical; 
+            overflow-y: scroll;
 		}
-
 		#instruction {
 			border: 2px solid black;
 			border-radius: 5px;
-			padding: 5px 15px;
 			min-height: 10px;
             background-color: #faf3ee;
+            padding: 10px 15px 5px 10px;
 		}
  
 		h5 {
 			font-weight: normal;
-
-			margin: 0 0 0 0;
-			padding: 0 0 0 0;
+            margin: 0px 0px 5px 0px;
+            font-size: 16px;
 		}
 
 		h3{
@@ -32,10 +32,6 @@
 		h4{
             margin: 5px 0 5px 0;
         }
-		h5 {
-			margin: 25px 0 5px 0;
-			padding: 0 0 0 0;
-		}
 
         h3:first-of-type{
             margin: 10px 0 5px 0;
@@ -116,15 +112,26 @@
             padding-left: 10px;
             float: left;
         }
-        .restoreDefaultAmount, .collapseAllButton{
+        .collapseAllButton{
             float: right;
+            margin-right: 10px;
+            width: 100px;
+        }
+        .resetAmount{
             margin-right: 10px;
             width: 100px;
         }
         .servings{
             width: 50px;
-
-            
+        }
+        .instructionBody{
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        .body-rule{
+            border: none;
+            height: 2px;
+            background: black;
         }
 	</style>
 </header>
@@ -133,6 +140,7 @@
         ~title~
     </h1>
     <div id="servingsDiv">
+        <button class = resetAmount onclick="resetAmount()" > Reset Amount </button>
     ~servings~
     </div>
 </div>
@@ -142,7 +150,6 @@
     ~prep-time~
     ~cook-time~
     <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse All </button>
-    <button class = restoreDefaultAmount onclick="restoreDefaultAmount()" > Reset Amount </button>
 </div>
 <hr>
 <div class="wrapper">
@@ -162,6 +169,7 @@
         ~ingredients~
 		~optionalIngredients~
         ~kitchenware~
+        ~nutrients~
         ~tags~
     </div>
     <div class="rightHalf">
@@ -184,7 +192,7 @@
             const allSteps = document.getElementsByClassName("collapsible-body");
             const allArrows = document.getElementsByClassName("arrow-down");
             const collapseAllButton = document.getElementsByClassName("collapseAllButton")[0];
-            const resetAmountButton = document.getElementsByClassName("restoreDefaultAmount")[0];
+            const resetAmountButton = document.getElementsByClassName("resetAmount")[0];
             const allNumbers = document.getElementsByClassName("number");
             let allDefaultNumbers = [];
             const servingsField = document.getElementsByClassName("servings")[0];
@@ -315,7 +323,7 @@
         }
         saveStartValues();
 
-        function restoreDefaultAmount(){
+        function resetAmount(){
             servingsField.value = defaultAmount.toString();
             updateNumbers(servingsField);
         }

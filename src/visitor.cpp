@@ -59,7 +59,7 @@ namespace epicr
 
         /* alias' of the different units */
         unit_aliases["g"] = {"g", "gram", "grams"};
-        unit_aliases["kg"] = {"kg", "kilo gram", "kgs", "kilo grams"};
+        unit_aliases["kg"] = {"kg", "kilogram", "kgs", "kilograms"};
         unit_aliases["oz"] = {"oz", "ounce", "ounces"};
         unit_aliases["lbs"] = {"lbs", "pounds"};
 
