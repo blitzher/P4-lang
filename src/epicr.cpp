@@ -92,7 +92,7 @@ namespace epicr
 		size_t end = str.find_last_not_of(whitespace);
 		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
 	}
-	
+
 	std::string double_to_string(double num)
 	{
 		num = floor((num + 0.005) * 100.0) / 100.0; /*rounds to the nearest 2 decimals*/
@@ -104,7 +104,9 @@ namespace epicr
 		return str.substr(0, seperatorPosition);
 	}
 
-	bool ingredient_exist_in_ingredient_map(std::string ingredientName, std::unordered_map<std::string, ingredient> ingredients)
+	bool ingredient_exist_in_ingredient_map(
+		std::string ingredientName,
+		std::unordered_map<std::string, ingredient> ingredients)
 	{
 		for (const auto &pair : ingredients)
 		{
@@ -155,11 +157,11 @@ namespace epicr
 	epicr::html_style parse_style(std::string argv)
 	{
 		epicr::html_style choosen_style = epicr::html_style_basic;
-		if (argv == "--Basic" || argv == "-b")
+		if (argv == "--basic" || argv == "-b")
 		{
 			choosen_style = epicr::html_style_basic;
 		}
-		else if (argv == "--Fancy" || argv == "-f")
+		else if (argv == "--fancy" || argv == "-f")
 		{
 			choosen_style = epicr::html_style_fancy;
 		}
@@ -168,11 +170,11 @@ namespace epicr
 	epicr_unit_system parse_unit_system(std::string argv)
 	{
 		epicr_unit_system choosen_system = epicr::E_US_NONE;
-		if (argv == "--Imperial" || argv == "-i")
+		if (argv == "--imperial" || argv == "-i")
 		{
 			choosen_system = epicr::E_US_IMPERIAL;
 		}
-		else if (argv == "--Metric" || argv == "-m")
+		else if (argv == "--metric" || argv == "-m")
 		{
 			choosen_system = epicr::E_US_METRIC;
 		}
@@ -190,27 +192,28 @@ namespace epicr
 		epicr::cmd_args CMD_ARGS;
 		for (int i = 0; i < argc; i++)
 		{
-			if (argv_s[i] == "--Basic" || argv_s[i] == "-b")
+			std::string arg = to_lower(argv_s[i]);
+			if (arg == "--basic" || arg == "-b")
 			{
-				CMD_ARGS.choosen_style = parse_style(argv_s[i]);
+				CMD_ARGS.choosen_style = parse_style(arg);
 			}
-			else if (argv_s[i] == "--Fancy" || argv_s[i] == "-f")
+			else if (arg == "--fancy" || arg == "-f")
 			{
-				CMD_ARGS.choosen_style = parse_style(argv_s[i]);
+				CMD_ARGS.choosen_style = parse_style(arg);
 			}
-			else if (argv_s[i] == "--Imperial" || argv_s[i] == "-i")
+			else if (arg == "--imperial" || arg == "-i")
 			{
-				CMD_ARGS.unit_system = parse_unit_system(argv_s[i]);
+				CMD_ARGS.unit_system = parse_unit_system(arg);
 			}
-			else if (argv_s[i] == "--Metric" || argv_s[i] == "-m")
+			else if (arg == "--metric" || arg == "-m")
 			{
-				CMD_ARGS.unit_system = parse_unit_system(argv_s[i]);
+				CMD_ARGS.unit_system = parse_unit_system(arg);
 			}
-			else if (argv_s[i] == "--None" || argv_s[i] == "-n")
+			else if (arg == "--none" || arg == "-n")
 			{
-				CMD_ARGS.unit_system = parse_unit_system(argv_s[i]);
+				CMD_ARGS.unit_system = parse_unit_system(arg);
 			}
-			else if (argv_s[i] == "-o")
+			else if (arg == "-o")
 			{
 				CMD_ARGS.output_filepath = argv_s[i + 1];
 				i++;
