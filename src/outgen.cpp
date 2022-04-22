@@ -70,7 +70,10 @@ namespace epicr
 		string result = "";
 		if (servings.count == 0)
 			return result;
-		result += " " + std::to_string(servings.count) + " " + servings.descriptor;
+        result.insert(0, "<input type='number' class='servings' max='999' min='1' oninput='truncate(this)' onfocusout='checkNaN(this)' value=");
+        result.append(std::to_string(servings.count));
+        result.append(">");
+		result += " " + servings.descriptor;
 		return result;
 	}
 
@@ -195,7 +198,7 @@ namespace epicr
 		string tags = insertStringFields("Tags: ", rcp.tags);
 		string kitchenware = insertStringFields("Kitchenware: ", rcp.kitchenware);
 		string ingredients = insertIngredientFields("Ingredients: ", rcp.ingredients);
-		string optionalIngredients = insertIngredientFields("Optional ingredients: ",rcp.ingredients,false,true);
+		string optionalIngredients = insertIngredientFields("Optional: ",rcp.ingredients,false,true);
 		string nutrients = insertIngredientFields("Nutrients", rcp.nutrients);
 		string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
 		string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
