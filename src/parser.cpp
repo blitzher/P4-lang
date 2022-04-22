@@ -521,18 +521,18 @@ namespace epicr
 		}
 	}
 
-	int Parser::ReadSeperatorOrWaitAtNextField()
+	bool Parser::ReadSeperatorOrWaitAtNextField()
 	{
 		if (ctoken.type == E_TT_COMMA)
 		{
 			ADV_NON_BLANK(1);
-			return 0;
+			return false;
 		}
 		if (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
-			return 1;
+			return true;
 		}
-		return 0;
+		return false;
 	}
 
 	void Parser::silence(bool val)
