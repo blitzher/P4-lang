@@ -323,6 +323,17 @@ void parse_recipe_with_random_casing()
 	test_lib::expect_equal_i(rcp.instructions[0].yields.size(), 1);
 }
 
+void parse_ingredients_with_non_ascii_chars()
+{
+	test_lib::REGISTER;
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/ingrWithNonAscii.rcp").recipe;
+	test_lib::expect_equal_s(rcp.ingredients[0].name,"æbleåø");
+	test_lib::expect_equal_s(rcp.ingredients[1].name,"rød ålborg");
+	test_lib::expect_equal_s(rcp.ingredients[2].name,"sorbét");
+	test_lib::expect_equal_s(rcp.ingredients[3].name,"驰");
+	test_lib::expect_equal_s(rcp.ingredients[4].name,"໙៨ᱷ꠷𑇩𑇰");
+}
+
 int main(void)
 {
 	pasta_recipe_parses_without_error();
@@ -355,6 +366,7 @@ int main(void)
 	last_instruction_yields_correct_ingredient_name();
 	parse_fields_in_random_order();
 	parse_recipe_with_random_casing();
+	parse_ingredients_with_non_ascii_chars();
 	test_lib::print_recap();
 	return test_lib::was_success();
 }
