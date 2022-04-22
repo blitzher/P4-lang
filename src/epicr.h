@@ -217,7 +217,7 @@ namespace epicr
         bool ReadWordsPredicate(epicr_token_type, bool, bool);
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
         returns 1 if something went wrong, otherwise returns 0*/
-        bool ReadSeperatorOrWaitAtNextField();
+        void ReadSeperatorOrWaitAtNextField(std::string);
 
         epicr_token ctoken;
         epicr_token utoken;

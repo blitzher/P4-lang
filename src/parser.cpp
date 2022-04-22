@@ -70,7 +70,6 @@ namespace epicr
 		/* Parse all fields */
 		while (ctoken.type != E_TT_EOF)
 		{
-
 			/* If an error occured during parsing,
 			 * return what was parsed so far */
 			if (error)
@@ -163,8 +162,7 @@ namespace epicr
 				ERR_VOID("Invalid unit after nutrient", ctoken);
 
 			nutrients.push_back(nutrient);
-			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between nutrients.", ctoken);
+			ReadSeperatorOrWaitAtNextField("nutrients");
 		}
 
 		rcp->nutrients = nutrients;
@@ -178,8 +176,7 @@ namespace epicr
 			std::string kitchenware = ReadWords(true, false);
 			rcp->kitchenware.push_back(kitchenware);	
 
-			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between kitchenware.", ctoken);
+			ReadSeperatorOrWaitAtNextField("kitchenware");
 		}
 	}
 
@@ -196,8 +193,7 @@ namespace epicr
 		{
 			std::string tag = ReadWords(true, true);
 			rcp->tags.push_back(tag);
-			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between tags.", ctoken);
+			ReadSeperatorOrWaitAtNextField("tags");
 		}
 	}
 
@@ -230,8 +226,7 @@ namespace epicr
 			// ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
 			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
 			rcp->ingredients.push_back(ingr);
-			if (ReadSeperatorOrWaitAtNextField())
-				ERR_VOID("expected a comma as a seperator between ingredients.", ctoken);
+			ReadSeperatorOrWaitAtNextField("ingredients");
 		}
 	}
 
@@ -521,18 +516,19 @@ namespace epicr
 		}
 	}
 
-	bool Parser::ReadSeperatorOrWaitAtNextField()
+	void Parser::ReadSeperatorOrWaitAtNextField(std::string fieldName)
 	{
 		if (ctoken.type == E_TT_COMMA)
 		{
 			ADV_NON_BLANK(1);
-			return false;
+			return;
 		}
 		if (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
-			return true;
+			std::string error_string = "expected a comma as a seperator between " + fieldName;
+			ERR_VOID(error_string, ctoken);
 		}
-		return false;
+		return;
 	}
 
 	void Parser::silence(bool val)
