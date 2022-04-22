@@ -1,15 +1,3 @@
-<!-- 7 string interpolations
-0. title
-1. description
-2. time
-3. tags
-4. ingredients
-5. kitchenware
-6. instructions
-
-
--->
-
 <html>
 <header>
 	<style>
@@ -20,33 +8,30 @@
 		html {
 			margin: 10%;
             margin-top: 20px;
+            overflow: -moz-scrollbars-vertical; 
+            overflow-y: scroll;
 		}
-
 		#instruction {
 			border: 2px solid black;
 			border-radius: 5px;
-			padding: 5px 15px;
 			min-height: 10px;
             background-color: #faf3ee;
+            padding: 10px 15px 5px 10px;
 		}
-
+ 
 		h5 {
 			font-weight: normal;
-
-			margin: 0 0 0 0;
-			padding: 0 0 0 0;
+            margin: 0px 0px 5px 0px;
+            font-size: 16px;
 		}
 
 		h3{
-
+            margin-bottom: 5px;
+            margin-top: 35px;
         }
 		h4{
             margin: 5px 0 5px 0;
         }
-		h5 {
-			margin: 25px 0 5px 0;
-			padding: 0 0 0 0;
-		}
 
         h3:first-of-type{
             margin: 10px 0 5px 0;
@@ -58,7 +43,7 @@
 
 		.colltext {
 			display: block;
-			color: darkslategray;
+			color: darkslategray;  
 			margin: 5px 10px;
 			font-style: italic;
 			cursor: context-menu;
@@ -85,20 +70,23 @@
         #titleDiv{
             float:left; 
             margin-bottom: 10px;
+            margin-left: 10px;
         }
         #servingsDiv{
             position: absolute;
             bottom: 10px;
-            right: 0;
+            right: 10px;
         }
         .leftHalf{
             float: left;
             margin-right: 5%;
-            width: 15%;
+            width: calc(15% - 10px);
+            margin-left: 10px;
         }
         .rightHalf{
             float: left;
-            width: 80%;
+            width: calc(80% - 10px);
+            margin-right: 10px;
         }
         .arrow-down {
             width: 0; 
@@ -129,6 +117,22 @@
             margin-right: 10px;
             width: 100px;
         }
+        .resetAmount{
+            margin-right: 10px;
+            width: 100px;
+        }
+        .servings{
+            width: 50px;
+        }
+        .instructionBody{
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        .body-rule{
+            border: none;
+            height: 2px;
+            background: black;
+        }
 	</style>
 </header>
 <div class="wrapper">
@@ -136,6 +140,7 @@
         ~title~
     </h1>
     <div id="servingsDiv">
+        <button class = resetAmount onclick="resetAmount()" > Reset Amount </button>
     ~servings~
     </div>
 </div>
@@ -144,7 +149,7 @@
     ~total-time~
     ~prep-time~
     ~cook-time~
-    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse </button>
+    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse All </button>
 </div>
 <hr>
 <div class="wrapper">
@@ -164,6 +169,7 @@
         ~ingredients~
 		~optionalIngredients~
         ~kitchenware~
+        ~nutrients~
         ~tags~
     </div>
     <div class="rightHalf">
@@ -181,11 +187,16 @@
         ~instructions~
     
         <script>
-            collapsed = false;
+            let collapsed = false;
             const allHeaders = document.getElementsByClassName("collapsible-wrapper");
             const allSteps = document.getElementsByClassName("collapsible-body");
             const allArrows = document.getElementsByClassName("arrow-down");
             const collapseAllButton = document.getElementsByClassName("collapseAllButton")[0];
+            const resetAmountButton = document.getElementsByClassName("resetAmount")[0];
+            const allNumbers = document.getElementsByClassName("number");
+            let allDefaultNumbers = [];
+            const servingsField = document.getElementsByClassName("servings")[0];
+            let defaultAmount = servingsField.value;
 
             for (i = 0; i < allHeaders.length; i++) {
                 const header = allHeaders[i];
@@ -234,10 +245,10 @@
             }
 
             if(collapsed){
-                collapseAllButton.innerHTML = "Expand";
+                collapseAllButton.innerHTML = "Expand All";
             }
             else {
-                collapseAllButton.innerHTML = "Collapse";
+                collapseAllButton.innerHTML = "Collapse All";
             }
         }
 
@@ -266,6 +277,57 @@
                 arrow.style.transform = "rotate(0deg)";
             }
         }
+
+        function truncate(){
+            value = parseInt(servingsField.value);
+            max = parseInt(servingsField.max);
+            min = parseInt(servingsField.min);
+            if(value > max){
+                servingsField.value = inservingsFieldputField.max;
+            }
+            else if(value < min){
+                servingsField.value = servingsField.min;
+            }
+        }
+
+        invalidChars = [
+        "-",
+        "+",
+        "e",
+        ","
+        ];
+
+        servingsField.addEventListener("keydown", e => {
+        if (invalidChars.includes(e.key)) {
+            e.preventDefault();
+        }
+        })
+
+        function updateNumbers(){
+            truncate();
+
+            if (servingsField.value != ""){
+                for (i = 0; i < allNumbers.length; i++) {
+                    let newNumber = (allDefaultNumbers[i] * parseFloat(servingsField.value));
+                    newNumber = Math.round((newNumber + Number.EPSILON)* 100.0) / 100.0;
+                    allNumbers[i].innerHTML = newNumber.toString();
+                }
+            }
+        }
+
+        function saveStartValues(){
+            for (i = 0; i < allNumbers.length; i++) {
+                let defaultNumber = parseFloat(allNumbers[i].innerHTML) / defaultAmount;
+                allDefaultNumbers.push(defaultNumber);
+            }
+        }
+        saveStartValues();
+
+        function resetAmount(){
+            servingsField.value = defaultAmount.toString();
+            updateNumbers(servingsField);
+        }
+
         </script>
     </div>
 </div>

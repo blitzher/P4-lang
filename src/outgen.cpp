@@ -24,7 +24,7 @@ namespace epicr
 		return file_content;
 	}
 	// elements are merely strings
-	string insertStringFields(string header, std::vector<string> elements,bool isInInstruction=false)
+	string insertStringFields(string header, std::vector<string> elements,bool isInInstruction=false, string type="")
 	{
 		string result = "";
 		size_t elementsCount = elements.size();
@@ -32,7 +32,9 @@ namespace epicr
 			return result;
 		if (!isInInstruction)
 			result += "<h3>";
+        result.insert(0, "<strong>");
 		result += header;
+        result.append("</strong>");
 		if (!isInInstruction)
 			result += "</h3>";
 		for (size_t i = 0; i < elementsCount; i++)
@@ -48,6 +50,11 @@ namespace epicr
 					result += ", ";
 			}
 		}
+
+        if(type == "input"){
+            result.append("<hr class='body-rule'>");
+        }
+
 		return result;
 	}
 
@@ -70,7 +77,10 @@ namespace epicr
 		string result = "";
 		if (servings.count == 0)
 			return result;
-		result += " " + std::to_string(servings.count) + " " + servings.descriptor;
+        result.insert(0, "<input type='number' class='servings' max='999' min='1' oninput='updateNumbers()' onfocusout='updateNumbers(this)' value=");
+        result.append(std::to_string(servings.count));
+        result.append(">");
+		result += " " + servings.descriptor;
 		return result;
 	}
 
@@ -96,7 +106,7 @@ namespace epicr
 	}
 
 	// fields are structs
-	string insertIngredientFields(string header, std::vector<ingredient> fields,bool isInInstruction=false,bool fieldIsOptional=false)
+	string insertIngredientFields(string header, std::vector<ingredient> fields,bool isInInstruction=false,bool fieldIsOptional=false, string type ="")
 	{
 		string result = "";
 		size_t fieldCount = fields.size();
@@ -104,7 +114,9 @@ namespace epicr
 			return result;
 		if (!isInInstruction)
 			result += "<h3>";
+        result.insert(0, "<strong>");
 		result += header;
+        result.append("</strong>");
 		if (!isInInstruction)
 			result += "</h3>";
 		for (size_t i = 0; i < fieldCount; i++)
@@ -116,9 +128,19 @@ namespace epicr
 			{
 				result += "<li>";
 			}
-			result += fields[i].name;
-			if (!fields[i].amount.isUncountable)
-				result += insertAmount(fields[i].amount);
+			result += fields[i].name + " ";
+			if (!fields[i].amount.isUncountable){
+                std::string number = epicr::double_to_string(fields[i].amount.number);
+                std::string unit = fields[i].amount.unit;
+                result.append("(");
+                result.append("<text class='number'>");
+                result.append(number.c_str());
+                result.append("</text>");
+                if (fields[i].amount.unit != ""){
+                    result.append(" ").append(unit);
+                }
+                result.append(")"); 
+            }
 			if (!isInInstruction)
 			{
 				result += "</li>";
@@ -129,6 +151,14 @@ namespace epicr
 					result += ", ";
 			}
 		}
+
+        if(type == "input"){
+            result.append("<hr class='body-rule'>");
+        }
+        else if (type == "yield"){
+            result.insert(0, "<hr class='body-rule'>");
+        }
+
 		return result;
 	}
 
@@ -170,14 +200,28 @@ namespace epicr
 			return false;
 		int index = 0;
 		string instruction_strings;
+        bool lineUnderIngredients = false;
 		for (auto inst : rcp.instructions)
 		{
 			index++;
+
+            lineUnderIngredients = false;
+            if(inst.kitchenware.size() == 0){
+                lineUnderIngredients = true;
+            }
+
 			string step_text = "Step " + std::to_string(index);
-			string ingredients = insertIngredientFields("Ingredients: ", inst.ingredients,true);
-			string kitchenware = insertStringFields("Kitchenware: ", inst.kitchenware,true);
+            string ingredients = "";
+            if (lineUnderIngredients){
+                ingredients = insertIngredientFields("Ingredients: ", inst.ingredients, true, false, "input");
+            }
+            else {
+                ingredients = insertIngredientFields("Ingredients: ", inst.ingredients, true);
+            }
+                
+			string kitchenware = insertStringFields("Kitchenware: ", inst.kitchenware, true, "input");
 			string body = insertInstructionBody(inst.body);
-			string yield = insertIngredientFields("-> ", inst.yields,true);
+			string yield = insertIngredientFields("-> ", inst.yields,true, false, "yield");
 			
 			string instruction_string = step_template;
 			
@@ -189,13 +233,13 @@ namespace epicr
 			replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
-
+        
 		// format final HTML strings
 		string servings = insertServings(rcp.servings);
 		string tags = insertStringFields("Tags: ", rcp.tags);
 		string kitchenware = insertStringFields("Kitchenware: ", rcp.kitchenware);
 		string ingredients = insertIngredientFields("Ingredients: ", rcp.ingredients);
-		string optionalIngredients = insertIngredientFields("Optional ingredients: ",rcp.ingredients,false,true);
+		string optionalIngredients = insertIngredientFields("Optional: ",rcp.ingredients,false,true);
 		string nutrients = insertIngredientFields("Nutrients", rcp.nutrients);
 		string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
 		string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
