@@ -114,10 +114,16 @@ class App(tk.Frame):
         _dir = fd.askdirectory()
 
         if _dir:
-            dest.set(self.format_fpath(_dir))
+            dirpath = os.path.abspath(_dir)
+            dest.set(self.format_fpath(dirpath))
 
     def compile(self):
-        executable = os.path.join(".", "bin", "main")
+        
+        if (os.name == "nt"):
+            executable = os.path.join("bin", "main.exe")
+        else:
+            executable = os.path.join(".", "bin", "main")
+        
         clargs = "%s -o %s --%s --%s" % (
             self.input_fpath.get(),
             self.out_dir.get(),
