@@ -1,5 +1,4 @@
 import os
-from readline import insert_text
 import tkinter as tk
 from tkinter import E, LEFT, W, Entry, IntVar, ttk
 import tkinter.filedialog as fd
