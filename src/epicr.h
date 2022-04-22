@@ -209,14 +209,15 @@ namespace epicr
         void ParseInstructionYield(instruction *singleInstruction);
         /* Read an ingredient from the current position */
         ingredient ReadIngredient(ingredient_arg);
-        /* Read an amount from the current position */
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
         accepts a boolean as input stating whether or not it can read numbers as well*/
         std::string ReadWords(bool, bool);
+        /* Read an amount from the current position */
         amount ReadAmount(ingredient_arg arg);
+        /*predicate used in the readWords function to determine the allowed token types that can be read*/
         bool ReadWordsPredicate(epicr_token_type, bool, bool);
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
-        returns 1 if something went wrong, otherwise returns 0*/
+        if no seperator or next field is read, an error is thrown*/
         void ReadSeperatorOrWaitAtNextField(std::string);
 
         epicr_token ctoken;
@@ -297,10 +298,10 @@ namespace epicr
     std::string to_lower(std::string);
     /*returns a new string where all types of spaces to right is stripped from the input string */
     std::string strip_spaces_right(std::string);
+    /*converts a double to a string - also rounds to the nearest 2 decimals*/
     std::string double_to_string(double);
     /*return whether or not an ingredient with that name exists in the unordered map*/
     bool ingredient_exist_in_ingredient_map(std::string,std::unordered_map<std::string,ingredient>);
-
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
 
