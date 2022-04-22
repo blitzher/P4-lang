@@ -116,7 +116,7 @@
             padding-left: 10px;
             float: left;
         }
-        .collapseAllButton{
+        .restoreDefaultAmount, .collapseAllButton{
             float: right;
             margin-right: 10px;
             width: 100px;
@@ -141,7 +141,8 @@
     ~total-time~
     ~prep-time~
     ~cook-time~
-    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse </button>
+    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse All </button>
+    <button class = restoreDefaultAmount onclick="restoreDefaultAmount()" > Reset Amount </button>
 </div>
 <hr>
 <div class="wrapper">
@@ -178,11 +179,16 @@
         ~instructions~
     
         <script>
-            collapsed = false;
+            let collapsed = false;
             const allHeaders = document.getElementsByClassName("collapsible-wrapper");
             const allSteps = document.getElementsByClassName("collapsible-body");
             const allArrows = document.getElementsByClassName("arrow-down");
             const collapseAllButton = document.getElementsByClassName("collapseAllButton")[0];
+            const resetAmountButton = document.getElementsByClassName("restoreDefaultAmount")[0];
+            const allNumbers = document.getElementsByClassName("number");
+            let allDefaultNumbers = [];
+            const servingsField = document.getElementsByClassName("servings")[0];
+            let defaultAmount = servingsField.value;
 
             for (i = 0; i < allHeaders.length; i++) {
                 const header = allHeaders[i];
@@ -231,10 +237,10 @@
             }
 
             if(collapsed){
-                collapseAllButton.innerHTML = "Expand";
+                collapseAllButton.innerHTML = "Expand All";
             }
             else {
-                collapseAllButton.innerHTML = "Collapse";
+                collapseAllButton.innerHTML = "Collapse All";
             }
         }
 
@@ -264,15 +270,15 @@
             }
         }
 
-        function truncate(inputField){
-            value = parseInt(inputField.value);
-            max = parseInt(inputField.max);
-            min = parseInt(inputField.min);
+        function truncate(){
+            value = parseInt(servingsField.value);
+            max = parseInt(servingsField.max);
+            min = parseInt(servingsField.min);
             if(value > max){
-                inputField.value = inputField.max;
+                servingsField.value = inservingsFieldputField.max;
             }
             else if(value < min){
-                inputField.value = inputField.min;
+                servingsField.value = servingsField.min;
             }
         }
 
@@ -283,16 +289,35 @@
         ","
         ];
 
-        document.getElementsByClassName("servings")[0].addEventListener("keydown", e => {
+        servingsField.addEventListener("keydown", e => {
         if (invalidChars.includes(e.key)) {
             e.preventDefault();
         }
         })
 
-        function checkNaN(inputField){
-            if(inputField.value == ""){
-                inputField.value = inputField.min;
+        function updateNumbers(){
+            truncate();
+
+            if (servingsField.value != ""){
+                for (i = 0; i < allNumbers.length; i++) {
+                    let newNumber = (allDefaultNumbers[i] * parseFloat(servingsField.value));
+                    newNumber = Math.round((newNumber + Number.EPSILON)* 100.0) / 100.0;
+                    allNumbers[i].innerHTML = newNumber.toString();
+                }
             }
+        }
+
+        function saveStartValues(){
+            for (i = 0; i < allNumbers.length; i++) {
+                let defaultNumber = parseFloat(allNumbers[i].innerHTML) / defaultAmount;
+                allDefaultNumbers.push(defaultNumber);
+            }
+        }
+        saveStartValues();
+
+        function restoreDefaultAmount(){
+            servingsField.value = defaultAmount.toString();
+            updateNumbers(servingsField);
         }
 
         </script>

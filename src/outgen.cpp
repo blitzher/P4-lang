@@ -70,7 +70,7 @@ namespace epicr
 		string result = "";
 		if (servings.count == 0)
 			return result;
-        result.insert(0, "<input type='number' class='servings' max='999' min='1' oninput='truncate(this)' onfocusout='checkNaN(this)' value=");
+        result.insert(0, "<input type='number' class='servings' max='999' min='1' oninput='updateNumbers()' onfocusout='updateNumbers(this)' value=");
         result.append(std::to_string(servings.count));
         result.append(">");
 		result += " " + servings.descriptor;
@@ -119,9 +119,19 @@ namespace epicr
 			{
 				result += "<li>";
 			}
-			result += fields[i].name;
-			if (!fields[i].amount.isUncountable)
-				result += insertAmount(fields[i].amount);
+			result += fields[i].name + " ";
+			if (!fields[i].amount.isUncountable){
+                std::string number = epicr::double_to_string(fields[i].amount.number);
+                std::string unit = fields[i].amount.unit;
+                result.append("(");
+                result.append("<text class='number'>");
+                result.append(number.c_str());
+                result.append("</text>");
+                if (fields[i].amount.unit != ""){
+                    result.append(" ").append(unit);
+                }
+                result.append(")"); 
+            }
 			if (!isInInstruction)
 			{
 				result += "</li>";
@@ -192,7 +202,7 @@ namespace epicr
 			replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
-
+        
 		// format final HTML strings
 		string servings = insertServings(rcp.servings);
 		string tags = insertStringFields("Tags: ", rcp.tags);
