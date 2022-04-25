@@ -157,7 +157,8 @@ namespace epicr
 		while (utoken.type != E_TT_COLON)
 		{
 			ingredient nutrient = ReadIngredient(0);
-
+			if (error)
+				return;
 			if (nutrient.amount.unit != "kcal" && nutrient.amount.unit != "cal" && nutrient.amount.unit != "g")
 				ERR_VOID("Invalid unit after nutrient", ctoken);
 
@@ -183,11 +184,6 @@ namespace epicr
 	void Parser::ParseTags(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
-
-		if (utoken.type == E_TT_COLON || utoken.type == E_TT_EOF)
-		{
-			ERR_VOID("No tags where found!", ctoken);
-		}
 
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
@@ -223,8 +219,9 @@ namespace epicr
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
 			// ADV_NON_BLANK(1);
-			// ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
 			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
+			if (error)
+				return;
 			rcp->ingredients.push_back(ingr);
 			ReadSeperatorOrWaitAtNextField("ingredients");
 		}
@@ -241,11 +238,15 @@ namespace epicr
 			{
 				ADV_NON_BLANK(1)
 				ParseInstructionHeaderWith(&singleInstruction);
+				if (error)
+					return;
 			}
 			if (to_lower(ctoken.word) == "using")
 			{
 				ADV_NON_BLANK(1)
 				ParseInstructionHeaderUsing(&singleInstruction);
+				if (error)
+					return;
 			}
 			if (ctoken.type != E_TT_COLON)
 			{
@@ -272,6 +273,8 @@ namespace epicr
 		{
 			ADV_NON_BLANK(1);
 			ingredient currentIngredient = ReadIngredient(ASSUME_REST);
+			if (error)
+				return;
 			if (ctoken.type != E_TT_COMMA && ctoken.type != E_TT_PARENS_CLOSE)
 			{
 				ERR_VOID("Expected a ',' as seperator between ingredient or a closing parenthesis for the 'with'", ctoken);
@@ -288,13 +291,10 @@ namespace epicr
 		while (ctoken.type != E_TT_PARENS_CLOSE) /*reads every kitchenware in the "using"*/
 		{
 			ADV_NON_BLANK(1);
-			if (ctoken.type != E_TT_WORD && ctoken.type != E_TT_NUMBER)
-				ERR_VOID("expected a kitchenware", ctoken);
-
 			std::string currentKitchenware = ReadWords(true, false);
 			if (ctoken.type != E_TT_COMMA && ctoken.type != E_TT_PARENS_CLOSE)
 			{
-				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing bracket for the 'using'", ctoken);
+				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing parenthesis for the 'using'", ctoken);
 			}
 			singleInstruction->kitchenware.push_back(currentKitchenware);
 		}
@@ -349,6 +349,8 @@ namespace epicr
 			if (ctoken.type == E_TT_EOF)
 				break;
 			ingredient currentYield = ReadIngredient(HAS_PLUS | ASSUME_1_NUM);
+			if (error)
+				return;
 			singleInstruction->yields.push_back(currentYield);
 		} while (ctoken.type == E_TT_COMMA);
 	}
@@ -362,6 +364,7 @@ namespace epicr
 		if (ctoken.type != E_TT_WORD && ctoken.type != E_TT_NUMBER)
 		{
 			ERR("Expected ingredient name", ctoken);
+			return currentIngredient;
 		}
 		currentIngredient.name = ReadWords(true, false);
 
@@ -380,6 +383,7 @@ namespace epicr
 				} // should be a warning
 				currentIngredient.isIngredientRef = true;
 			}
+			
 			if (ctoken.type == E_TT_QUESTION_MARK)
 			{
 				if (!canHaveQmark)
@@ -403,18 +407,12 @@ namespace epicr
 
 	amount Parser::ReadAmount(ingredient_arg arg)
 	{
-		bool canHavePlus = (arg & HAS_PLUS);
 		bool assume_1_num = (arg & ASSUME_1_NUM) >> 3;
 		bool assume_rest = (arg & ASSUME_REST) >> 4;
 		amount amnt = amount();
 
 		if (ctoken.type == E_TT_PLUS)
 		{
-			if (!canHavePlus)
-			{
-				ERR("Disallowed plus in amount", ctoken);
-				return amnt;
-			}
 			amnt.isUncountable = true;
 			amnt.number = std::numeric_limits<double>::infinity();
 			ADV_NON_BLANK(1);

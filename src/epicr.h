@@ -10,6 +10,7 @@
 #include <map>
 #include <limits>
 #include <cmath>
+#include <sstream>
 
 #pragma region Debug macros
 
@@ -319,6 +320,7 @@ namespace epicr
     parse_ret parse_recipe(std::string filename);
     parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
+    parse_ret parse_string_silent(std::string str);
 
     /* Command line argument related declarations */
     void parse_cmd_args(int argc, char **argv);

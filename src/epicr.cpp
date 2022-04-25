@@ -153,6 +153,18 @@ namespace epicr
 		parse_ret ret = {rcp, parser.error, parser.error_message};
 		return ret;
 	}
+	
+	parse_ret parse_string_silent(std::string recipeExcerpt)
+	{
+		std::istringstream test_string(recipeExcerpt);
+		Lexer lexer(test_string);
+		Parser parser(&lexer);
+		parser.silence(true);
+		recipe rcp = parser.Parse();
+
+		parse_ret ret = {rcp, parser.error, parser.error_message};
+		return ret;
+	}
 
 	epicr::html_style parse_style(std::string argv)
 	{
