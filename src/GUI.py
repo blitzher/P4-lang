@@ -22,7 +22,7 @@ class App(tk.Frame):
         self.output_dir_button = tk.Button(
             self,
             command=lambda: self.open_dir(self.out_dir),
-            text="Open output dir",
+            text="Choose output dir",
             height=1,
             width=15,
         )
@@ -65,7 +65,7 @@ class App(tk.Frame):
         ).pack(anchor=W)
         tk.Radiobutton(
             self,
-            text="No conversion of unit system desired",
+            text="No conversion of unit system",
             variable=self.var2,
             value=3,
             command=self.select_system,
@@ -118,12 +118,12 @@ class App(tk.Frame):
             dest.set(self.format_fpath(dirpath))
 
     def compile(self):
-        
+
         if (os.name == "nt"):
             executable = os.path.join("bin", "main.exe")
         else:
             executable = os.path.join(".", "bin", "main")
-        
+
         clargs = "%s -o %s --%s --%s" % (
             self.input_fpath.get(),
             self.out_dir.get(),
