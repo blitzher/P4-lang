@@ -15,7 +15,7 @@ class App(tk.Frame):
         self.input_file_button = tk.Button(
             self,
             command=lambda: self.open_file(self.input_fpath),
-            text="Open file/Recipe",
+            text="Choose file/Recipe",
             height=1,
             width=15,
         )
