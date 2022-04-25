@@ -77,7 +77,7 @@ namespace epicr
 		string result = "";
 		if (servings.count == 0)
 			return result;
-        result.insert(0, "<input type='number' class='servings' max='999' min='1' oninput='updateNumbers()' onfocusout='updateNumbers(this)' value=");
+        result.insert(0, "<input type='number' class='servings' max='1000' min='1' oninput='updateNumbers()' onfocusout='updateNumbers(this)' value=");
         result.append(std::to_string(servings.count));
         result.append(">");
 		result += " " + servings.descriptor;
@@ -221,7 +221,7 @@ namespace epicr
                 
 			string kitchenware = insertStringFields("Kitchenware: ", inst.kitchenware, true, "input");
 			string body = insertInstructionBody(inst.body);
-			string yield = insertIngredientFields("-> ", inst.yields,true, false, "yield");
+			string yield = insertIngredientFields("<text class='arrow'> &#10230 <text>", inst.yields,true, false, "yield");
 			
 			string instruction_string = step_template;
 			

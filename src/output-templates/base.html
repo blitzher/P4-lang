@@ -133,6 +133,10 @@
             height: 2px;
             background: black;
         }
+        .arrow{
+            font-size: 22px;
+            line-height: 14px;
+        }
 	</style>
 </header>
 <div class="wrapper">
@@ -140,7 +144,7 @@
         ~title~
     </h1>
     <div id="servingsDiv">
-        <button class = resetAmount onclick="resetAmount()" > Reset Amount </button>
+        <button class = resetAmount disabled="false" onclick="resetAmount()" > Reset Amount </button>
     ~servings~
     </div>
 </div>
@@ -283,7 +287,7 @@
             max = parseInt(servingsField.max);
             min = parseInt(servingsField.min);
             if(value > max){
-                servingsField.value = inservingsFieldputField.max;
+                servingsField.value = servingsField.max;
             }
             else if(value < min){
                 servingsField.value = servingsField.min;
@@ -312,6 +316,14 @@
                     newNumber = Math.round((newNumber + Number.EPSILON)* 100.0) / 100.0;
                     allNumbers[i].innerHTML = newNumber.toString();
                 }
+            }
+
+            if (servingsField.value == defaultAmount){
+                console.log("test");
+                resetAmountButton.disabled = true;
+            }
+            else {
+                resetAmountButton.disabled = false;
             }
         }
 
