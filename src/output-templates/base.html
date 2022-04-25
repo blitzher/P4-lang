@@ -16,7 +16,7 @@
 			border-radius: 5px;
 			min-height: 10px;
             background-color: #faf3ee;
-            padding: 10px 15px 5px 10px;
+            padding: 5px 15px 5px 10px;
 		}
  
 		h5 {
@@ -27,13 +27,16 @@
 
 		h3{
             margin-bottom: 5px;
-            margin-top: 35px;
+            margin-top: 30px;
+        }
+        h3:first-of-type{
+            margin: 10px 0 5px 0;   
         }
 		h4{
             margin: 5px 0 5px 0;
         }
 
-        h3:first-of-type{
+        .topField, .collapsible:first-of-type{
             margin: 10px 0 5px 0;
         }
 
@@ -73,9 +76,8 @@
             margin-left: 10px;
         }
         #servingsDiv{
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+            float: right;
+            margin-right: 10px;
         }
         .leftHalf{
             float: left;
@@ -95,6 +97,12 @@
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
             border-top: 10px solid #d7d7d7;
+            margin-bottom: -8px;
+        }
+        .radioButton:hover{
+            background: #ececec;
+            border-radius: 5px;
+            cursor: pointer;
         }
         .collapsible-wrapper:hover>.arrow-down{
             border-top-color: #898989;
@@ -106,20 +114,19 @@
             user-select: none;
         }
         .collapsible-body{
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         #description{
             padding-left: 10px;
             float: left;
         }
         .collapseAllButton{
-            float: right;
-            margin-right: 10px;
-            width: 100px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
         }
         .resetAmount{
-            margin-right: 10px;
-            width: 100px;
+            width: 50px;
         }
         .servings{
             width: 50px;
@@ -137,39 +144,49 @@
             font-size: 22px;
             line-height: 14px;
         }
+        .measurementSystem{
+            float: right;
+            margin-right: 15px;
+        }
 	</style>
 </header>
 <div class="wrapper">
     <h1 id="titleDiv">
         ~title~
     </h1>
-    <div id="servingsDiv">
-        <button class = resetAmount disabled="false" onclick="resetAmount()" > Reset Amount </button>
-    ~servings~
-    </div>
+    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse All </button>
 </div>
 <hr>
 <div class="wrapper">
     ~total-time~
     ~prep-time~
     ~cook-time~
-    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse All </button>
+    <div id="servingsDiv">
+        <button class = resetAmount disabled="false" onclick="resetAmount()" > Reset </button>
+        ~servings~
+    </div>
+    <select class="measurementSystem">
+        <option hidden value="convertUnits">Convert Units</option>
+        <option value="original">Original</option>
+        <option value="metric">Metric</option>
+        <option value="imperial">Imperial</option>
+    </select>
 </div>
 <hr>
 <div class="wrapper">
     <div class="leftHalf">
+        <!--
         <div>
-            <!--
-            <form>
-                <input type="radio" id="original" name="measurementSysten" value="original">
-                <label for="html">Original</label><br>
-                <input type="radio" id="metric" name="measurementSysten" value="metric">
-                <label for="css">Metric</label><br>
-                <input type="radio" id="imperial" name="measurementSysten" value="imperial">
-                <label for="javascript">Imperial</label>
+            <h3 class="topField">
+                <strong>Convert Units</strong>
+            </h3>
+            <form class="">
+                <label class="radioButton"><input type="radio" id="java" id="original" name="measurementSystem" value="original" onclick="convertUnits(value)" checked> Original &nbsp </label><br>
+                <label class="radioButton"><input type="radio" id="metric" name="measurementSystem" value="metric" onclick="convertUnits(value)"> Metric &nbsp </label><br>
+                <label class="radioButton"><input type="radio" id="imperial" name="measurementSystem" value="imperial" onclick="convertUnits(value)"> Imperial &nbsp </label>
             </form>
-            -->
         </div>  
+        -->
         ~ingredients~
 		~optionalIngredients~
         ~kitchenware~
@@ -191,21 +208,53 @@
         ~instructions~
     
         <script>
-            let collapsed = false;
-            const allHeaders = document.getElementsByClassName("collapsible-wrapper");
-            const allSteps = document.getElementsByClassName("collapsible-body");
-            const allArrows = document.getElementsByClassName("arrow-down");
+            const headers = document.getElementsByClassName("collapsible-wrapper");
+            const steps = document.getElementsByClassName("collapsible-body");
+            const arrows = document.getElementsByClassName("arrow-down");
+            const numbers = document.getElementsByClassName("number");
+            const units = document.getElementsByClassName("unit");
+
             const collapseAllButton = document.getElementsByClassName("collapseAllButton")[0];
             const resetAmountButton = document.getElementsByClassName("resetAmount")[0];
-            const allNumbers = document.getElementsByClassName("number");
-            let allDefaultNumbers = [];
             const servingsField = document.getElementsByClassName("servings")[0];
-            let defaultAmount = servingsField.value;
 
-            for (i = 0; i < allHeaders.length; i++) {
-                const header = allHeaders[i];
-                const step = allSteps[i];
-                const arrow = allArrows[i];
+            let collapsed = false;
+            let defaultAmount = servingsField.value;
+            let measurementSystem = "original";
+            let currentNumbers = [];
+            let defaultNumbers = [];
+            let metricNumbers = [];
+            let imperialNumbers = [];
+            let defaultUnits = [];
+            let metricUnits = [];
+            let imperialUnits = [];
+            
+            const measurementSystemDropDown = document.getElementsByClassName("measurementSystem")[0];
+            measurementSystemDropDown.addEventListener("change", convertUnits);
+
+            /* Dublicate code, can we include it from the h_file? */
+            const G_TO_OZ = 0.035;
+            const KG_TO_LBS = 2.2046;
+            const L_TO_QT = 1.057;
+            const ML_TO_FLOZ = 0.0338;
+            const DL_TO_FLOZ = 3.38;
+            const M_TO_FEET = 3.28;
+            const CM_TO_INCH = 0.39370079;
+            const MM_TO_INCH = 0.039;
+
+            function C_TO_F(deg)
+            {
+                return deg * 9 / 5 + 32;
+            }
+            function F_TO_C(deg)
+            {
+                return (deg - 32) * 5 / 9;
+            }
+
+            for (i = 0; i < headers.length; i++) {
+                const header = headers[i];
+                const step = steps[i];
+                const arrow = arrows[i];
 
                 header.addEventListener("click", (ev) => {
                     if(step.style.display == "none"){
@@ -235,8 +284,8 @@
 
         function checkCollapseStatus(){
             oneIsNotCollapsed = false;
-            for (j = 0; j < allHeaders.length; j++) {
-                if (allSteps[j].style.display == "block"){
+            for (j = 0; j < headers.length; j++) {
+                if (steps[j].style.display == "block"){
                     oneIsNotCollapsed = true;
                 }
             }
@@ -259,10 +308,10 @@
         function collapseAll(){
             collapsed = true;
 
-            for (i = 0; i < allHeaders.length; i++) {
-                const header = allHeaders[i];
-                const step = allSteps[i];
-                const arrow = allArrows[i];
+            for (i = 0; i < headers.length; i++) {
+                const header = headers[i];
+                const step = steps[i];
+                const arrow = arrows[i];
 
                 step.style.display = "none";
                 arrow.style.transform = "rotate(-90deg)";
@@ -272,10 +321,10 @@
         function expandAll(){
             collapsed = false;
             
-            for (i = 0; i < allHeaders.length; i++) {
-                const header = allHeaders[i];
-                const step = allSteps[i];
-                const arrow = allArrows[i];
+            for (i = 0; i < headers.length; i++) {
+                const header = headers[i];
+                const step = steps[i];
+                const arrow = arrows[i];
 
                 step.style.display = "block";
                 arrow.style.transform = "rotate(0deg)";
@@ -295,10 +344,10 @@
         }
 
         invalidChars = [
-        "-",
-        "+",
-        "e",
-        ","
+            "-",
+            "+",
+            "e",
+            ","
         ];
 
         servingsField.addEventListener("keydown", e => {
@@ -309,17 +358,36 @@
 
         function updateNumbers(){
             truncate();
+            if (measurementSystem == "imperial"){
+                for (i = 0; i < numbers.length; i++) {
+                    currentNumbers[i] = imperialNumbers[i];
+                    units[i].innerHTML = imperialUnits[i];
+                }
+            }
+            else if (measurementSystem == "metric"){
+                for (i = 0; i < numbers.length; i++) {
+                    currentNumbers[i] = metricNumbers[i];
+                    units[i].innerHTML = metricUnits[i];
+                }
+                
+            }
+            else {
+                for (i = 0; i < numbers.length; i++) {
+                    currentNumbers[i] = defaultNumbers[i];      
+                    units[i].innerHTML = defaultUnits[i];      
+                }
+            }
+
 
             if (servingsField.value != ""){
-                for (i = 0; i < allNumbers.length; i++) {
-                    let newNumber = (allDefaultNumbers[i] * parseFloat(servingsField.value));
+                for (i = 0; i < numbers.length; i++) {
+                    let newNumber = (currentNumbers[i] * parseFloat(servingsField.value));
                     newNumber = Math.round((newNumber + Number.EPSILON)* 100.0) / 100.0;
-                    allNumbers[i].innerHTML = newNumber.toString();
+                    numbers[i].innerHTML = newNumber.toString();
                 }
             }
 
             if (servingsField.value == defaultAmount){
-                console.log("test");
                 resetAmountButton.disabled = true;
             }
             else {
@@ -328,9 +396,29 @@
         }
 
         function saveStartValues(){
-            for (i = 0; i < allNumbers.length; i++) {
-                let defaultNumber = parseFloat(allNumbers[i].innerHTML) / defaultAmount;
-                allDefaultNumbers.push(defaultNumber);
+            for (i = 0; i < numbers.length; i++) {
+                let number = parseFloat(numbers[i].innerHTML);
+                let defaultNumber = number / defaultAmount;
+                defaultNumbers.push(defaultNumber);
+                metricNumbers.push(defaultNumber);
+                imperialNumbers.push(defaultNumber);
+                defaultUnits.push(units[i].innerHTML);
+                metricUnits.push(units[i].innerHTML);
+                imperialUnits.push(units[i].innerHTML);
+                let unit = units[i].innerHTML;
+
+                if(isMetric(unit)){
+                    var [imperialNumber, imperialUnit] = getMetricToImperial(number, unit); 
+                    metricNumbers[i] = (number / defaultAmount);
+                    imperialNumbers[i] = (imperialNumber / defaultAmount);
+                    imperialUnits[i] = imperialUnit;
+                }
+                else{
+                    var [metricNumber, metricUnit] = getImperialToMetric(number, unit); 
+                    metricNumbers[i] = metricNumber / defaultAmount;
+                    imperialNumbers[i] = (number / defaultAmount);
+                    metricUnits[i] = metricUnit;
+                }
             }
         }
         saveStartValues();
@@ -338,6 +426,59 @@
         function resetAmount(){
             servingsField.value = defaultAmount.toString();
             updateNumbers(servingsField);
+        }
+
+        function isMetric(unit){
+            switch(unit){
+                case "g":     
+                case "kg":    
+                case "ml":    
+                case "dl":    
+                case "l":     
+                case "mm":    
+                case "cm":    
+                case "c":   return true;
+            }
+            return false;
+        }
+
+        // Should we not scale cups, gals and kcal?
+
+        function getMetricToImperial(number, unit){
+            let scaledNumber = number;
+            let newUnit = unit;
+            switch(unit){
+                case "g":     scaledNumber *= G_TO_OZ;          newUnit = "oz";     break;
+                case "kg":    scaledNumber *= KG_TO_LBS;        newUnit = "lbs";    break;
+                case "ml":    scaledNumber *= ML_TO_FLOZ;       newUnit = "fl-oz";  break;
+                case "dl":    scaledNumber *= DL_TO_FLOZ;       newUnit = "fl-oz";  break;
+                case "l":     scaledNumber *= L_TO_QT;          newUnit = "qt";     break;
+                case "mm":    scaledNumber *= MM_TO_INCH;       newUnit = "in";     break;
+                case "cm":    scaledNumber *= CM_TO_INCH;       newUnit = "in";     break;
+                case "c":     scaledNumber *= C_TO_F(number);   newUnit = "f";      break;
+            }
+            return [scaledNumber, newUnit];
+        }
+
+        function getImperialToMetric(number, unit){
+            let scaledNumber = number;
+            let newUnit = unit;
+            switch(unit){
+                case "oz":      scaledNumber /= G_TO_OZ;          newUnit = "g";    break;
+                case "lbs":     scaledNumber /= KG_TO_LBS;        newUnit = "kg";   break;
+                case "fl-oz":   scaledNumber /= ML_TO_FLOZ;       newUnit = "ml";   break;
+                case "qt":      scaledNumber /= L_TO_QT;          newUnit = "l";    break;
+                case "in":      scaledNumber /= CM_TO_INCH;       newUnit = "cm";   break;
+                case "ft":      scaledNumber /= M_TO_FEET;        newUnit = "m";    break;
+                case "f":       scaledNumber = F_TO_C(number);    newUnit = "c";    break;
+            }
+            return [scaledNumber, newUnit];
+        }
+
+        function convertUnits(){
+            console.log(measurementSystemDropDown.value);
+            measurementSystem = measurementSystemDropDown.value;
+            updateNumbers();
         }
 
         </script>

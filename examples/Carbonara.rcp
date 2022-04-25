@@ -10,7 +10,7 @@ total-time: 20 min
 tags: pasta, easy to make, under 30 min, pork
 
 nutrients:
-    calories [100 cal],
+    calories [10 g],
     protein [10 g],
     fat [10 g],
     carbs [10 g]
@@ -20,7 +20,7 @@ kitchenware:
     pan
 
 ingredients:
-    bacon [100 g],
+    bacon [3 oz],
     butter [1 tsp],     
     onion [1],
     cream [1 dl],      
@@ -41,7 +41,7 @@ instructions:
         Fry the bacon using the airfryer
 
         yield:
-            bacon [100 g],
+            bacon [10 oz],
             bacon fat
 
     with(butter, onion, bacon fat) using(pan):

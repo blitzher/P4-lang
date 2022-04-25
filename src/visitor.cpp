@@ -357,7 +357,7 @@ namespace epicr::visitor
                 amnt->number = amnt->number / ML_TO_FLOZ;
                 amnt->unit = "ml";
             }
-            else if (standardized == "fl-oz")
+            else if (standardized == "fl-oz") /* This if is never entered */
             {
                 amnt->number = amnt->number / DL_TO_FLOZ;
                 amnt->unit = "dl";
@@ -377,7 +377,7 @@ namespace epicr::visitor
                 amnt->number = amnt->number / CM_TO_INCH;
                 amnt->unit = "cm";
             }
-            else if (standardized == "in")
+            else if (standardized == "in") /* This if is never entered */
             {
                 amnt->number = amnt->number / MM_TO_INCH;
                 amnt->unit = "mm";
