@@ -36,7 +36,8 @@ RM         = rm -rf
 MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
-TARGET       := main$(BIN_EXT)
+TARGET       = main
+
 
 $(T_TARGETS):: $(T_OBJECTS) $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
