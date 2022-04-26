@@ -1,0 +1,54 @@
+title: bread
+
+ingredients:
+    flour [400 g],
+    water [2 dl],
+    salt [10 g],
+    yeast [5 g],
+    sugar [20 g]
+    
+kitchenware:
+    bowl,
+    whisk,
+    tea towel,
+    oven
+    
+instructions:
+    with(water) using(bowl):
+        pour the water into the bowl
+        
+    with(flour[half]) using(bowl,whisk):
+        take half of the flour and apply to the bowl, then whisk thoroughly until the content is smooth
+        
+    with(flour[half]) using(bowl,whisk):
+        take half of the remaining flour and apply to the bowl, then whisk thoroughly until the content is smooth
+    
+    with(flour[half]) using(bowl,whisk):
+        take half of the remaining flour and apply to the bowl, then whisk thoroughly until the content is smooth
+    
+    with(flour[half]) using(bowl,whisk):
+        take half of the remaining flour and apply to the bowl, then whisk thoroughly until the content is a dough
+    
+    with(salt,sugar,yeast) using(bowl):
+        add the salt, sugar, and yeast to the dough, and knead it nicely. 
+    
+    with(flour[rest]):
+        sprinkle the remaining flour on the table
+        
+    with():
+        take the dough out of the bowl, and put it on the table
+        yield:
+            dough
+    
+    with(dough) using(bowl, tea towel):
+        knead the dough for a until non-sticky, and put it back in the bowl and cover it with a tea towel
+        then wait 2-3 hours for it to rise
+        
+    using(oven):
+        preheat the oven to [200 C]
+        
+    with(dough) using(oven):
+        heat the dough in the oven for 30 minutes
+        
+        yield:
+            bread   
