@@ -35,10 +35,6 @@ T_LIBOBJS	:= $(filter-out %.test.o, $(T_OBJECTS))
 RM         = rm -rf
 MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 
-ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
-    BIN_EXT :=.exe
-endif
-
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
 TARGET       := main$(BIN_EXT)
 
@@ -51,6 +47,7 @@ $(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LD) $@$(BIN_EXT) $(LDFLAGS) $(OBJECTS)
+	@cp $@ $@.exe
 	@echo "Linking complete!"
 
 $(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
