@@ -11,6 +11,7 @@
 #include <limits>
 #include <cmath>
 #include <sstream>
+#include <filesystem>
 
 #pragma region Debug macros
 
@@ -302,7 +303,7 @@ namespace epicr
     /*converts a double to a string - also rounds to the nearest 2 decimals*/
     std::string double_to_string(double);
     /*return whether or not an ingredient with that name exists in the unordered map*/
-    bool ingredient_exist_in_ingredient_map(std::string,std::unordered_map<std::string,ingredient>);
+    bool ingredient_exist_in_ingredient_map(std::string, std::unordered_map<std::string, ingredient>);
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
 

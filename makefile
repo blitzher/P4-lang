@@ -33,7 +33,7 @@ T_OBJECTS   := $(T_SOURCES:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 T_LIBOBJS	:= $(filter-out %.test.o, $(T_OBJECTS))
 
 RM         = rm -rf
-MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
+MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR)
 
 ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
     BIN_EXT :=.exe
