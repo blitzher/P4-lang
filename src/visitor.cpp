@@ -222,7 +222,7 @@ namespace epicr::visitor
             }
         }
         if (!titleIngredientRemaining)
-            ERR("Title-ingredient muse remain after all instructions");
+            ERR("Title-ingredient must remain after all instructions have been executed");
     }
 
     bool IngredientVerifier::ingredients_compatible(ingredient a, ingredient b)

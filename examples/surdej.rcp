@@ -7,17 +7,15 @@ tags: surdej
 
 ingredients:
 Rugmel [30 g],
-Hvedemel [25 g]
-Vand [50 g]
+Hvedemel [25 g],
+Vand [50 g],
 Surdej[100 g]
 
 instructions:
     with(Rugmel, Hvedemel, Vand, Surdej [half]) :
         Bland alle ingredienserne sammen.
     yield:
-        Surdej
+        Surdej [120 g]
     
     with(Surdej [half]):
         Brug evt resten af surdejen til et brød eller du kan gemme det i fryseren.
-    yield
-        Surdej
