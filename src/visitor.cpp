@@ -196,16 +196,19 @@ namespace epicr::visitor
                     symbols[yield.name] = yield;
             }
         }
-
+        bool titleIngredientRemaining = false;
         for (auto KeyValuePair : symbols)
         {
             ingredient ingr = KeyValuePair.second;
-            if (ingr.amount.number != 0 && !ingr.amount.isUncountable && to_lower(ingr.name) != to_lower(a_rcp->title))
+            if (to_lower(ingr.name) == to_lower(a_rcp->title))
+                titleIngredientRemaining = true;
+            else if (ingr.amount.number != 0 && !ingr.amount.isUncountable)
             {
-                std::cout<<ingr.name<<ingr.amount.number<<a_rcp->title<<"\n";
                 ERR("Unused ingredient after instructions");
             }
         }
+        if (!titleIngredientRemaining)
+            ERR("Title-ingredient muse remain after all instructions");
     }
 
     bool IngredientVerifier::ingredients_compatible(ingredient a, ingredient b)
