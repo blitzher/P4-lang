@@ -32,25 +32,10 @@
         h3:first-of-type{
             margin: 10px 0 5px 0;   
         }
-		h4{
-            margin: 5px 0 5px 0;
-        }
 
         .topField, .collapsible:first-of-type{
             margin: 10px 0 5px 0;
         }
-
-		a {
-			font-style: normal
-		}
-
-		.colltext {
-			display: block;
-			color: darkslategray;  
-			margin: 5px 10px;
-			font-style: italic;
-			cursor: context-menu;
-		}
 
 		.collapsible {
             padding-left: 10px;
@@ -175,18 +160,6 @@
 <hr>
 <div class="wrapper">
     <div class="leftHalf">
-        <!--
-        <div>
-            <h3 class="topField">
-                <strong>Convert Units</strong>
-            </h3>
-            <form class="">
-                <label class="radioButton"><input type="radio" id="java" id="original" name="measurementSystem" value="original" onclick="convertUnits(value)" checked> Original &nbsp </label><br>
-                <label class="radioButton"><input type="radio" id="metric" name="measurementSystem" value="metric" onclick="convertUnits(value)"> Metric &nbsp </label><br>
-                <label class="radioButton"><input type="radio" id="imperial" name="measurementSystem" value="imperial" onclick="convertUnits(value)"> Imperial &nbsp </label>
-            </form>
-        </div>  
-        -->
         ~ingredients~
 		~optionalIngredients~
         ~kitchenware~
@@ -208,31 +181,55 @@
         ~instructions~
     
         <script>
+            /* arrays of HTML elements */
             const headers = document.getElementsByClassName("collapsible-wrapper");
             const steps = document.getElementsByClassName("collapsible-body");
             const arrows = document.getElementsByClassName("arrow-down");
             const numbers = document.getElementsByClassName("number");
             const units = document.getElementsByClassName("unit");
 
+            /* single HTML elements */
             const collapseAllButton = document.getElementsByClassName("collapseAllButton")[0];
             const resetAmountButton = document.getElementsByClassName("resetAmount")[0];
             const servingsField = document.getElementsByClassName("servings")[0];
-
-            let collapsed = false;
-            let defaultAmount = servingsField.value;
-            let measurementSystem = "original";
-            let currentNumbers = [];
-            let defaultNumbers = [];
-            let metricNumbers = [];
-            let imperialNumbers = [];
-            let defaultUnits = [];
-            let metricUnits = [];
-            let imperialUnits = [];
-            
             const measurementSystemDropDown = document.getElementsByClassName("measurementSystem")[0];
-            measurementSystemDropDown.addEventListener("change", convertUnits);
 
-            /* Dublicate code, can we include it from the h_file? */
+            /* amount arrays */
+            let currentAmounts = [];
+            let defaultAmounts = [];
+            let metricAmounts = [];
+            let imperialAmounts = [];
+
+            /* miscellaneous variables */
+            let allAreCollapsed = false;
+            let defaultNumberOfServings = servingsField.value;
+            let measurementSystem = "original";
+
+            metricUnits = [
+                "g",
+                "kg",
+                "ml",
+                "dl",
+                "l",
+                "mm",
+                "cm",
+                "c"
+            ];
+
+            invalidChars = [
+                "-",
+                "+",
+                "e",
+                ","
+            ];
+            
+            /* object constructor for amounts */
+            function Amount(number, unit) {
+                this.number = number;
+                this.unit = unit;
+            }
+
+            /* constants and functions for converting between metric and imperial */
             const G_TO_OZ = 0.035;
             const KG_TO_LBS = 2.2046;
             const L_TO_QT = 1.057;
@@ -251,6 +248,36 @@
                 return (deg - 32) * 5 / 9;
             }
 
+            /* initialize and assign final values to the arrays for holding amounts */
+            saveStartValues();
+            function saveStartValues(){
+                for (i = 0; i < numbers.length; i++) {
+                    let defaultNumber = parseFloat(numbers[i].innerHTML) / defaultNumberOfServings;
+                    let defaultUnit = units[i].innerHTML;
+                    var defaultAmount = new Amount(defaultNumber, defaultUnit);
+
+                    defaultAmounts.push(defaultAmount);
+                    metricAmounts.push(defaultAmount);
+                    imperialAmounts.push(defaultAmount);
+
+                    if(isMetric(defaultUnit)){ /* convert to imperial */ 
+                        metricAmounts[i] = defaultAmount;
+                        imperialAmounts[i] = getMetricToImperial(defaultAmount);
+                    }
+                    else { /* convert to metric */ 
+                        metricAmounts[i] = getImperialToMetric(defaultAmount);
+                        imperialAmounts[i] = defaultAmount;
+                    }
+                }
+            }
+
+            /* listen for changes on the dropdown menu */
+            measurementSystemDropDown.addEventListener("change", () => {
+                measurementSystem = measurementSystemDropDown.value;
+                updateNumbers();
+            });
+
+            /* listen for clicks on the dropdown arrows */
             for (i = 0; i < headers.length; i++) {
                 const header = headers[i];
                 const step = steps[i];
@@ -265,222 +292,186 @@
                         step.style.display = "none";
                         arrow.style.transform = "rotate(-90deg)";
                     }
-                        
                     checkCollapseStatus();
                 });
+            }
+
+
+            /* expand all segments if all are collapsed, else collapse all */
+            function collapseOrExpand(){
+                if (allAreCollapsed){
+                    collapseAll(false); /* expand */ 
+                }
+                else {
+                    collapseAll(true);  /* collapse */ 
+                }
+                checkCollapseStatus();
+            }
+
+            /* show/hide segments and rotate arrows */
+            function collapseAll(collapse){
+                allAreCollapsed = collapse;
+                let display = "block";
+                let rotation = "rotate(0deg)";
+                if (collapse){
+                    display = "none";
+                    rotation = "rotate(-90deg)";
+                }
                 
-                // check if all headers are collapsed
-            }
-
-        function collapseOrExpand(){
-            if (collapsed){
-                expandAll();
-            }
-            else {
-                collapseAll();
-            }
-            checkCollapseStatus();
-        }
-
-        function checkCollapseStatus(){
-            oneIsNotCollapsed = false;
-            for (j = 0; j < headers.length; j++) {
-                if (steps[j].style.display == "block"){
-                    oneIsNotCollapsed = true;
+                for (i = 0; i < headers.length; i++) {
+                    const step = steps[i];
+                    const arrow = arrows[i];
+                    step.style.display = display;
+                    arrow.style.transform = rotation;
                 }
             }
 
-            if(oneIsNotCollapsed){
-                collapsed = false;
-            }
-            else {
-                collapsed = true;
+            /* change collapse/expand button depending on whether all segments are collapsed/expanded */
+            function checkCollapseStatus(){
+                oneIsNotCollapsed = false;
+                for (j = 0; j < headers.length; j++) {
+                    if (steps[j].style.display == "block"){
+                        oneIsNotCollapsed = true;
+                    }
+                }
+
+                if(oneIsNotCollapsed){
+                    allAreCollapsed = false;
+                }
+                else {
+                    allAreCollapsed = true;
+                }
+
+                if(allAreCollapsed){
+                    collapseAllButton.innerHTML = "Expand All";
+                }
+                else {
+                    collapseAllButton.innerHTML = "Collapse All";
+                }
             }
 
-            if(collapsed){
-                collapseAllButton.innerHTML = "Expand All";
+            /* limit the range of numbers which can be written in the "servings" field */
+            function truncate(){
+                value = parseInt(servingsField.value);
+                max = parseInt(servingsField.max);
+                min = parseInt(servingsField.min);
+                if(value > max){
+                    servingsField.value = servingsField.max;
+                }
+                else if(value < min){
+                    servingsField.value = servingsField.min;
+                }
             }
-            else {
-                collapseAllButton.innerHTML = "Collapse All";
-            }
-        }
 
-        function collapseAll(){
-            collapsed = true;
-
-            for (i = 0; i < headers.length; i++) {
-                const header = headers[i];
-                const step = steps[i];
-                const arrow = arrows[i];
-
-                step.style.display = "none";
-                arrow.style.transform = "rotate(-90deg)";
-            }
-        }
-
-        function expandAll(){
-            collapsed = false;
+            /* prohibit writing illegal characters in the "servings" field */
+            servingsField.addEventListener("keydown", e => {
+                if (invalidChars.includes(e.key)) {
+                    e.preventDefault();
+                }
+            });
             
-            for (i = 0; i < headers.length; i++) {
-                const header = headers[i];
-                const step = steps[i];
-                const arrow = arrows[i];
+            /* change amounts according to which measurement system is chosen */
+            function updateNumbers(){
+                truncate();
+                changeMeasurementSystem();
 
-                step.style.display = "block";
-                arrow.style.transform = "rotate(0deg)";
-            }
-        }
-
-        function truncate(){
-            value = parseInt(servingsField.value);
-            max = parseInt(servingsField.max);
-            min = parseInt(servingsField.min);
-            if(value > max){
-                servingsField.value = servingsField.max;
-            }
-            else if(value < min){
-                servingsField.value = servingsField.min;
-            }
-        }
-
-        invalidChars = [
-            "-",
-            "+",
-            "e",
-            ","
-        ];
-
-        servingsField.addEventListener("keydown", e => {
-        if (invalidChars.includes(e.key)) {
-            e.preventDefault();
-        }
-        })
-
-        function updateNumbers(){
-            truncate();
-            if (measurementSystem == "imperial"){
-                for (i = 0; i < numbers.length; i++) {
-                    currentNumbers[i] = imperialNumbers[i];
-                    units[i].innerHTML = imperialUnits[i];
+                /* if no number is written in the servings field, don't do anything*/
+                if (servingsField.value != ""){ 
+                    for (i = 0; i < numbers.length; i++) {
+                        let newNumber = (currentAmounts[i].number * parseFloat(servingsField.value));
+                        newNumber = Math.round((newNumber + Number.EPSILON)* 100.0) / 100.0;
+                        numbers[i].innerHTML = newNumber.toString();
+                        units[i].innerHTML = currentAmounts[i].unit;  
+                    }
                 }
-            }
-            else if (measurementSystem == "metric"){
-                for (i = 0; i < numbers.length; i++) {
-                    currentNumbers[i] = metricNumbers[i];
-                    units[i].innerHTML = metricUnits[i];
+
+                /* disable reset button if the number of servings is already the default number */
+                if (servingsField.value == defaultNumberOfServings){
+                    resetAmountButton.disabled = true;
                 }
-                
-            }
-            else {
-                for (i = 0; i < numbers.length; i++) {
-                    currentNumbers[i] = defaultNumbers[i];      
-                    units[i].innerHTML = defaultUnits[i];      
+                else {
+                    resetAmountButton.disabled = false;
                 }
             }
 
+            /* reset servings amount to default */
+            function resetAmount(){
+                servingsField.value = defaultNumberOfServings.toString();
+                updateNumbers(servingsField);
+            }
 
-            if (servingsField.value != ""){
-                for (i = 0; i < numbers.length; i++) {
-                    let newNumber = (currentNumbers[i] * parseFloat(servingsField.value));
-                    newNumber = Math.round((newNumber + Number.EPSILON)* 100.0) / 100.0;
-                    numbers[i].innerHTML = newNumber.toString();
+            /* check if a unit is in the metric system */
+            function isMetric(unit){
+                if(metricUnits.includes(unit)){
+                    return true;
+                }
+                else return false;
+            }
+
+            /* convert metric amounts to imperial amounts */
+            function getMetricToImperial(metricAmount){
+                var imperialAmount = Object.assign({}, metricAmount); /* copy object */
+
+                switch(metricAmount.unit){
+                    case "g":     convertToImperial(imperialAmount, G_TO_OZ, "oz");                     break;
+                    case "kg":    convertToImperial(imperialAmount, KG_TO_LBS, "lbs");                  break;
+                    case "ml":    convertToImperial(imperialAmount, ML_TO_FLOZ, "fl-oz");               break;
+                    case "dl":    convertToImperial(imperialAmount, DL_TO_FLOZ, "fl-oz");               break;
+                    case "l":     convertToImperial(imperialAmount, L_TO_QT, "qt");                     break;
+                    case "mm":    convertToImperial(imperialAmount, MM_TO_INCH, "in");                  break;
+                    case "cm":    convertToImperial(imperialAmount, CM_TO_INCH, "in");                  break;
+                    case "c":     imperialAmount.number *= C_TO_F(number);   imperialAmount.unit = "f"; break;
+                    default:      /* unit is not in the metric system */
+                }
+                return imperialAmount;
+            }
+
+            /* convert imperial amounts to metric amounts */
+            function getImperialToMetric(imperialAmount){
+                var metricAmount = Object.assign({}, imperialAmount); /* copy object */
+                switch(imperialAmount.unit){
+                    case "oz":      convertToMetric(metricAmount, G_TO_OZ, "g");                   break;
+                    case "lbs":     convertToMetric(metricAmount, KG_TO_LBS, "kg");                break;
+                    case "fl-oz":   convertToMetric(metricAmount, ML_TO_FLOZ, "ml");               break;
+                    case "qt":      convertToMetric(metricAmount, L_TO_QT, "l");                   break;
+                    case "in":      convertToMetric(metricAmount, CM_TO_INCH, "cm");               break;
+                    case "ft":      convertToMetric(metricAmount, M_TO_FEET, "m");                 break;
+                    case "f":       metricAmount.number = F_TO_C(number);    metricAmount.unit = "c";   break;
+                    default:        /* unit is not in the imperial system */
+                }
+                return metricAmount;
+            }
+
+            /* update imperial amount with correct number and unit */
+            function convertToImperial(imperialAmount, conversionRate, newUnit){
+                imperialAmount.number *= conversionRate;
+                imperialAmount.unit = newUnit;
+            }
+
+            /* update metric amount with correct number and unit */
+            function convertToMetric(metricAmount, conversionRate, newUnit){
+                metricAmount.number /= conversionRate;
+                metricAmount.unit = newUnit;
+            }
+
+            /* change current amount to fit the selected measurement system */
+            function changeMeasurementSystem(){
+                if (measurementSystem == "imperial"){
+                    for (i = 0; i < numbers.length; i++) {
+                        currentAmounts[i] = imperialAmounts[i];
+                    }
+                }
+                else if (measurementSystem == "metric"){
+                    for (i = 0; i < numbers.length; i++) {
+                        currentAmounts[i] = metricAmounts[i];
+                    }
+                }
+                else { /* default amounts */
+                    for (i = 0; i < numbers.length; i++) {
+                        currentAmounts[i] = defaultAmounts[i];    
+                    }
                 }
             }
-
-            if (servingsField.value == defaultAmount){
-                resetAmountButton.disabled = true;
-            }
-            else {
-                resetAmountButton.disabled = false;
-            }
-        }
-
-        function saveStartValues(){
-            for (i = 0; i < numbers.length; i++) {
-                let number = parseFloat(numbers[i].innerHTML);
-                let defaultNumber = number / defaultAmount;
-                defaultNumbers.push(defaultNumber);
-                metricNumbers.push(defaultNumber);
-                imperialNumbers.push(defaultNumber);
-                defaultUnits.push(units[i].innerHTML);
-                metricUnits.push(units[i].innerHTML);
-                imperialUnits.push(units[i].innerHTML);
-                let unit = units[i].innerHTML;
-
-                if(isMetric(unit)){
-                    var [imperialNumber, imperialUnit] = getMetricToImperial(number, unit); 
-                    metricNumbers[i] = (number / defaultAmount);
-                    imperialNumbers[i] = (imperialNumber / defaultAmount);
-                    imperialUnits[i] = imperialUnit;
-                }
-                else{
-                    var [metricNumber, metricUnit] = getImperialToMetric(number, unit); 
-                    metricNumbers[i] = metricNumber / defaultAmount;
-                    imperialNumbers[i] = (number / defaultAmount);
-                    metricUnits[i] = metricUnit;
-                }
-            }
-        }
-        saveStartValues();
-
-        function resetAmount(){
-            servingsField.value = defaultAmount.toString();
-            updateNumbers(servingsField);
-        }
-
-        function isMetric(unit){
-            switch(unit){
-                case "g":     
-                case "kg":    
-                case "ml":    
-                case "dl":    
-                case "l":     
-                case "mm":    
-                case "cm":    
-                case "c":   return true;
-            }
-            return false;
-        }
-
-        // Should we not scale cups, gals and kcal?
-
-        function getMetricToImperial(number, unit){
-            let scaledNumber = number;
-            let newUnit = unit;
-            switch(unit){
-                case "g":     scaledNumber *= G_TO_OZ;          newUnit = "oz";     break;
-                case "kg":    scaledNumber *= KG_TO_LBS;        newUnit = "lbs";    break;
-                case "ml":    scaledNumber *= ML_TO_FLOZ;       newUnit = "fl-oz";  break;
-                case "dl":    scaledNumber *= DL_TO_FLOZ;       newUnit = "fl-oz";  break;
-                case "l":     scaledNumber *= L_TO_QT;          newUnit = "qt";     break;
-                case "mm":    scaledNumber *= MM_TO_INCH;       newUnit = "in";     break;
-                case "cm":    scaledNumber *= CM_TO_INCH;       newUnit = "in";     break;
-                case "c":     scaledNumber *= C_TO_F(number);   newUnit = "f";      break;
-            }
-            return [scaledNumber, newUnit];
-        }
-
-        function getImperialToMetric(number, unit){
-            let scaledNumber = number;
-            let newUnit = unit;
-            switch(unit){
-                case "oz":      scaledNumber /= G_TO_OZ;          newUnit = "g";    break;
-                case "lbs":     scaledNumber /= KG_TO_LBS;        newUnit = "kg";   break;
-                case "fl-oz":   scaledNumber /= ML_TO_FLOZ;       newUnit = "ml";   break;
-                case "qt":      scaledNumber /= L_TO_QT;          newUnit = "l";    break;
-                case "in":      scaledNumber /= CM_TO_INCH;       newUnit = "cm";   break;
-                case "ft":      scaledNumber /= M_TO_FEET;        newUnit = "m";    break;
-                case "f":       scaledNumber = F_TO_C(number);    newUnit = "c";    break;
-            }
-            return [scaledNumber, newUnit];
-        }
-
-        function convertUnits(){
-            console.log(measurementSystemDropDown.value);
-            measurementSystem = measurementSystemDropDown.value;
-            updateNumbers();
-        }
-
         </script>
     </div>
 </div>

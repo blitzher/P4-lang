@@ -35,12 +35,9 @@ T_LIBOBJS	:= $(filter-out %.test.o, $(T_OBJECTS))
 RM         = rm -rf
 MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
 
-ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
-    BIN_EXT :=.exe
-endif
-
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
-TARGET       := main$(BIN_EXT)
+TARGET       = main
+
 
 $(T_TARGETS):: $(T_OBJECTS) $(OBJECTS)
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
@@ -50,7 +47,7 @@ $(T_OBJECTS): $(OBJDIR)/%.o: $(TESTDIR)/%.cpp
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
-	@$(LD) $@$(BIN_EXT) $(LDFLAGS) $(OBJECTS)
+	@$(LD) $@ $(LDFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
 $(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
@@ -74,7 +71,7 @@ $(T_TARGETS)::
 
 # runnable targets 
 run: $(BINDIR)/$(TARGET)
-	./$<$ examples/Carbonara.rcp -o dist
+	./$< examples/Carbonara.rcp -o dist
 
 test::
 	@rm -rf $(BINDIR)/.tests
