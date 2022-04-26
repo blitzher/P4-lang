@@ -7,8 +7,7 @@ std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
 
 namespace epicr
 {
-
-	cmd_args clargs;
+	cmd_args clargs = {"", html_style_basic, "", E_US_NONE};
 
 	ifstream open_file(string filename)
 	{
@@ -155,7 +154,7 @@ namespace epicr
 		parse_ret ret = {rcp, parser.error, parser.error_message};
 		return ret;
 	}
-	
+
 	parse_ret parse_string_silent(std::string recipeExcerpt)
 	{
 		std::istringstream test_string(recipeExcerpt);

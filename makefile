@@ -74,7 +74,7 @@ $(T_TARGETS)::
 
 # runnable targets 
 run: $(BINDIR)/$(TARGET)
-	./$<$ examples/Carbonara.rcp -o dist
+	./$< examples/Carbonara.rcp -o dist
 
 test::
 	@rm -rf $(BINDIR)/.tests
