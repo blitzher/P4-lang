@@ -7,6 +7,11 @@
 			cout << val << " "; \
 	}
 
+#define IF_ERR_RETURN(obj) \
+	{                      \
+		if (obj.)          \
+	}
+
 using namespace std;
 
 /* Remove or outcomment when not debugging */
@@ -32,7 +37,7 @@ int main(int argc, char **argv)
 	epicr::Parser myParser = epicr::Parser(&myLexer);
 	epicr::recipe myRecipe = myParser.Parse();
 
-	cout << myParser.error << " Parser: " << myParser.error_message << endl;
+	cout << myParser.has_error << " Parser: " << myParser.error << endl;
 
 	auto ingrvisit = epicr::visitor::IngredientVerifier();
 	ingrvisit.visit(&myRecipe);
@@ -44,7 +49,7 @@ int main(int argc, char **argv)
 
 	std::cout << "clarg output filepath: " << epicr::clargs.output_filepath << std::endl;
 
-	if (!myParser.error)
+	if (!myParser.has_error)
 	{
 		string output_file = epicr::clargs.output_filepath;
 		output_file.append("/" + myRecipe.title + ".html");

@@ -24,7 +24,7 @@ namespace epicr
 		return file_content;
 	}
 	// elements are merely strings
-	string insertStringFields(string header, std::vector<string> elements,bool isInInstruction=false, string type="")
+	string insertStringFields(string header, std::vector<string> elements, bool isInInstruction = false, string type = "")
 	{
 		string result = "";
 		size_t elementsCount = elements.size();
@@ -32,9 +32,9 @@ namespace epicr
 			return result;
 		if (!isInInstruction)
 			result += "<h3>";
-        result.insert(0, "<strong>");
+		result.insert(0, "<strong>");
 		result += header;
-        result.append("</strong>");
+		result.append("</strong>");
 		if (!isInInstruction)
 			result += "</h3>";
 		for (size_t i = 0; i < elementsCount; i++)
@@ -51,9 +51,10 @@ namespace epicr
 			}
 		}
 
-        if(type == "input"){
-            result.append("<hr class='body-rule'>");
-        }
+		if (type == "input")
+		{
+			result.append("<hr class='body-rule'>");
+		}
 
 		return result;
 	}
@@ -77,9 +78,9 @@ namespace epicr
 		string result = "";
 		if (servings.count == 0)
 			return result;
-        result.insert(0, "<input type='number' class='servings' max='1000' min='1' oninput='updateNumbers()' onfocusout='updateNumbers(this)' value=");
-        result.append(std::to_string(servings.count));
-        result.append(">");
+		result.insert(0, "<input type='number' class='servings' max='1000' min='1' oninput='updateNumbers()' onfocusout='updateNumbers(this)' value=");
+		result.append(std::to_string(servings.count));
+		result.append(">");
 		result += " " + servings.descriptor;
 		return result;
 	}
@@ -95,7 +96,7 @@ namespace epicr
 	}
 
 	/*returns whether or not there are any optional ingredients or non-optioanl ingredients, respectively based on bool parameter*/
-	bool isAnyIngredients(bool ingredientsAreOptional,std::vector<ingredient> ingredients)
+	bool isAnyIngredients(bool ingredientsAreOptional, std::vector<ingredient> ingredients)
 	{
 		for (const ingredient &ingredient : ingredients)
 		{
@@ -106,18 +107,18 @@ namespace epicr
 	}
 
 	// fields are structs
-	string insertIngredientFields(string header, std::vector<ingredient> fields,bool isInInstruction=false,bool fieldIsOptional=false, string type ="")
+	string insertIngredientFields(string header, std::vector<ingredient> fields, bool isInInstruction = false, bool fieldIsOptional = false, string type = "")
 	{
-        string field = header;
+		string field = header;
 		string result = "";
 		size_t fieldCount = fields.size();
-		if (!isAnyIngredients(fieldIsOptional,fields))
+		if (!isAnyIngredients(fieldIsOptional, fields))
 			return result;
 		if (!isInInstruction)
 			result += "<h3 class='fieldHeader'>";
-        result.insert(0, "<strong>");
+		result.insert(0, "<strong>");
 		result += header;
-        result.append("</strong>");
+		result.append("</strong>");
 		if (!isInInstruction)
 			result += "</h3>";
 		for (size_t i = 0; i < fieldCount; i++)
@@ -130,30 +131,35 @@ namespace epicr
 				result += "<li>";
 			}
 			result += fields[i].name + " ";
-			if (!fields[i].amount.isUncountable){
-                std::string number = epicr::double_to_string(fields[i].amount.number);
-                std::string unit = fields[i].amount.unit;
-                result.append("(");
-                if (field != "Nutrients*"){
-                    result.append("<text class='number'>");
-                    result.append(number.c_str());
-                    result.append("</text>");
-                    if (fields[i].amount.unit != ""){
-                        result.append(" ");
-                        result.append("<text class='unit'>");
-                        result.append(unit);
-                        result.append("</text>");
-                    }
-                    else {
-                        result.append("<text class='unit'></text>");
-                    }
-                }
-                else {
-                    result.append(number.c_str());
-                    result.append(" " + unit);
-                }
-                result.append(")"); 
-            }
+			if (!fields[i].amount.isUncountable)
+			{
+				std::string number = epicr::double_to_string(fields[i].amount.number);
+				std::string unit = fields[i].amount.unit;
+				result.append("(");
+				if (field != "Nutrients*")
+				{
+					result.append("<text class='number'>");
+					result.append(number.c_str());
+					result.append("</text>");
+					if (fields[i].amount.unit != "")
+					{
+						result.append(" ");
+						result.append("<text class='unit'>");
+						result.append(unit);
+						result.append("</text>");
+					}
+					else
+					{
+						result.append("<text class='unit'></text>");
+					}
+				}
+				else
+				{
+					result.append(number.c_str());
+					result.append(" " + unit);
+				}
+				result.append(")");
+			}
 			if (!isInInstruction)
 			{
 				result += "</li>";
@@ -165,16 +171,19 @@ namespace epicr
 			}
 		}
 
-        if (field == "Nutrients*"){
-            result += "<text>*pr. 100 grams</text>";
-        }
+		if (field == "Nutrients*")
+		{
+			result += "<text>*pr. 100 grams</text>";
+		}
 
-        if(type == "input"){
-            result.append("<hr class='body-rule'>");
-        }
-        else if (type == "yield"){
-            result.insert(0, "<hr class='body-rule'>");
-        }
+		if (type == "input")
+		{
+			result.append("<hr class='body-rule'>");
+		}
+		else if (type == "yield")
+		{
+			result.insert(0, "<hr class='body-rule'>");
+		}
 
 		return result;
 	}
@@ -212,36 +221,41 @@ namespace epicr
 		string step_template_s = load_template("step");
 		const char *step_template = step_template_s.c_str();
 
+		std::filesystem::create_directory("dist");
+
 		std::ofstream file{filename};
 		if (!file.is_open())
 			return false;
 		int index = 0;
 		string instruction_strings;
-        bool lineUnderIngredients = false;
+		bool lineUnderIngredients = false;
 		for (auto inst : rcp.instructions)
 		{
 			index++;
 
-            lineUnderIngredients = false;
-            if(inst.kitchenware.size() == 0){
-                lineUnderIngredients = true;
-            }
+			lineUnderIngredients = false;
+			if (inst.kitchenware.size() == 0)
+			{
+				lineUnderIngredients = true;
+			}
 
 			string step_text = "Step " + std::to_string(index);
-            string ingredients = "";
-            if (lineUnderIngredients){
-                ingredients = insertIngredientFields("Ingredients: ", inst.ingredients, true, false, "input");
-            }
-            else {
-                ingredients = insertIngredientFields("Ingredients: ", inst.ingredients, true);
-            }
-                
+			string ingredients = "";
+			if (lineUnderIngredients)
+			{
+				ingredients = insertIngredientFields("Ingredients: ", inst.ingredients, true, false, "input");
+			}
+			else
+			{
+				ingredients = insertIngredientFields("Ingredients: ", inst.ingredients, true);
+			}
+
 			string kitchenware = insertStringFields("Kitchenware: ", inst.kitchenware, true, "input");
 			string body = insertInstructionBody(inst.body);
-			string yield = insertIngredientFields("<text class='arrow'> &#10230 <text>", inst.yields,true, false, "yield");
-			
+			string yield = insertIngredientFields("<text class='arrow'> &#10230 <text>", inst.yields, true, false, "yield");
+
 			string instruction_string = step_template;
-			
+
 			// replace placeholders with final HTML
 			replace(instruction_string, "~stepText~", step_text);
 			replace(instruction_string, "~instructionIngredients~", ingredients);
@@ -250,13 +264,13 @@ namespace epicr
 			replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
-        
+
 		// format final HTML strings
 		string servings = insertServings(rcp.servings);
 		string tags = insertStringFields("Tags: ", rcp.tags);
 		string kitchenware = insertStringFields("Kitchenware", rcp.kitchenware);
 		string ingredients = insertIngredientFields("Ingredients", rcp.ingredients);
-		string optionalIngredients = insertIngredientFields("Optional",rcp.ingredients,false,true);
+		string optionalIngredients = insertIngredientFields("Optional", rcp.ingredients, false, true);
 		string nutrients = insertIngredientFields("Nutrients*", rcp.nutrients);
 		string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
 		string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());

@@ -11,6 +11,8 @@
 #include <limits>
 #include <cmath>
 #include <sstream>
+#include <filesystem>
+#include <csetjmp>
 
 #pragma region Debug macros
 
@@ -226,9 +228,9 @@ namespace epicr
 
     public:
         bool DEBUG_MODE;
-        bool error;
+        bool has_error;
         std::string original_amount;
-        std::string error_message;
+        std::string error;
         epicr_token error_token;
         recipe Parse();
         void silence(bool);
@@ -302,7 +304,7 @@ namespace epicr
     /*converts a double to a string - also rounds to the nearest 2 decimals*/
     std::string double_to_string(double);
     /*return whether or not an ingredient with that name exists in the unordered map*/
-    bool ingredient_exist_in_ingredient_map(std::string,std::unordered_map<std::string,ingredient>);
+    bool ingredient_in_map(std::string, std::unordered_map<std::string, ingredient>);
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
 

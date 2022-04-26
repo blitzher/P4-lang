@@ -33,7 +33,7 @@ T_OBJECTS   := $(T_SOURCES:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 T_LIBOBJS	:= $(filter-out %.test.o, $(T_OBJECTS))
 
 RM         = rm -rf
-MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR) $(DISDIR)
+MKDIRS 	   = mkdir -p $(BINDIR) $(OBJDIR)
 
 T_TARGETS 	 := $(T_TARGET_SOURCES:$(TESTDIR)/%.test.cpp=$(BINDIR)/%.test)
 TARGET       = main
