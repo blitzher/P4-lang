@@ -7,7 +7,7 @@ void pasta_recipe_parses_without_error()
 	epicr::Lexer l = epicr::Lexer(f);
 	epicr::Parser p = epicr::Parser(&l);
 	epicr::recipe rcp = p.Parse();
-	test_lib::expect_equal_b(p.error, false);
+	test_lib::expect_equal_b(p.has_error, false);
 }
 
 void carbonara_recipe_parses_without_error()
@@ -17,7 +17,7 @@ void carbonara_recipe_parses_without_error()
 	epicr::Lexer l = epicr::Lexer(f);
 	epicr::Parser p = epicr::Parser(&l);
 	epicr::recipe rcp = p.Parse();
-	test_lib::expect_equal_b(p.error, false);
+	test_lib::expect_equal_b(p.has_error, false);
 }
 
 void parsed_title()
@@ -327,11 +327,11 @@ void parse_ingredients_with_non_ascii_chars()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/ingrWithNonAscii.rcp").recipe;
-	test_lib::expect_equal_s(rcp.ingredients[0].name,"æbleåø");
-	test_lib::expect_equal_s(rcp.ingredients[1].name,"rød ålborg");
-	test_lib::expect_equal_s(rcp.ingredients[2].name,"sorbét");
-	test_lib::expect_equal_s(rcp.ingredients[3].name,"驰");
-	test_lib::expect_equal_s(rcp.ingredients[4].name,"໙៨ᱷ꠷𑇩𑇰");
+	test_lib::expect_equal_s(rcp.ingredients[0].name, "æbleåø");
+	test_lib::expect_equal_s(rcp.ingredients[1].name, "rød ålborg");
+	test_lib::expect_equal_s(rcp.ingredients[2].name, "sorbét");
+	test_lib::expect_equal_s(rcp.ingredients[3].name, "驰");
+	test_lib::expect_equal_s(rcp.ingredients[4].name, "໙៨ᱷ꠷𑇩𑇰");
 }
 
 int main(void)

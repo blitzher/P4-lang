@@ -105,7 +105,7 @@ namespace epicr
 		return str.substr(0, seperatorPosition);
 	}
 
-	bool ingredient_exist_in_ingredient_map(
+	bool ingredient_in_map(
 		std::string ingredientName,
 		std::unordered_map<std::string, ingredient> ingredients)
 	{
@@ -133,7 +133,7 @@ namespace epicr
 		Parser parser(&lexer);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = {rcp, parser.error, parser.error_message};
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 
 		cached_recipes[clargs.input_filepath] = ret;
 
@@ -151,7 +151,7 @@ namespace epicr
 		parser.silence(true);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = {rcp, parser.error, parser.error_message};
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
 	}
 
@@ -163,7 +163,7 @@ namespace epicr
 		parser.silence(true);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = {rcp, parser.error, parser.error_message};
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
 	}
 

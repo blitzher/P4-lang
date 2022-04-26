@@ -127,17 +127,28 @@ namespace epicr::visitor
             /* consume */
             for (auto &ingr : inst.ingredients)
             {
+
+                if (!ingredient_in_map(ingr.name, symbols))
+                {
+                    /* err */
+                }
+
                 if (ingr.amount.isRelativeAmount)
                 {
+
+                    /* verify that ingredient exists in either */
+
+                    if (ingr.amount.relativeAmount == "rest" && !ingredient_in_map(ingr.name, original_symbols))
+                    {
+                        char *err = (char *)malloc(100);
+                        sprintf(err, "Ingredient %s used in instruction not found in ingredients list", ingr.name.c_str());
+                        ERR(err);
+                        return;
+                    }
+
                     switch (ingr.amount.relativeAmount[0])
                     {
                     case 'r': /* rest */
-                        if (!ingredient_exist_in_ingredient_map(ingr.name, symbols))
-                        {
-                            char *err = (char *)malloc(100);
-                            sprintf(err, "Ingredient %s used in instruction not found in ingredients list", ingr.name.c_str());
-                            ERR(err);
-                        }
                         ingr.amount = symbols[ingr.name].amount;
                         break;
                     case 'h': /* half */
@@ -193,7 +204,10 @@ namespace epicr::visitor
                 }
                 /* otherwise, add it to the symbol table */
                 else
+                {
                     symbols[yield.name] = yield;
+                    original_symbols[yield.name] = yield;
+                }
             }
         }
 
@@ -202,7 +216,6 @@ namespace epicr::visitor
             ingredient ingr = KeyValuePair.second;
             if (ingr.amount.number != 0 && !ingr.amount.isUncountable && to_lower(ingr.name) != to_lower(a_rcp->title))
             {
-                std::cout<<ingr.name<<ingr.amount.number<<a_rcp->title<<"\n";
                 ERR("Unused ingredient after instructions");
             }
         }

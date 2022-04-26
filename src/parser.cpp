@@ -4,8 +4,8 @@
 
 #define ERR(msg, token)                                    \
 	{                                                      \
-		error = true;                                      \
-		error_message = msg;                               \
+		has_error = true;                                  \
+		error = msg;                                       \
 		error_token = token;                               \
 		if (!silent)                                       \
 		{                                                  \
@@ -16,6 +16,7 @@
 			print_token(token);                            \
 			std::cout << std::endl;                        \
 		}                                                  \
+		longjmp(exit_jmp, 1);                              \
 	}
 
 #define ERR_VOID(msg, token) \
@@ -51,6 +52,9 @@ std::vector<std::string> optional_fields = {
 	"tags",
 	"time",
 };
+
+std::jmp_buf exit_jmp;
+
 namespace epicr
 {
 #pragma region Parser implementation
@@ -61,20 +65,19 @@ namespace epicr
 	}
 	recipe Parser::Parse()
 	{
-		error = 0;
-		error_message = "No error";
+		has_error = 0;
+		error = "No error";
 		recipe rcp = recipe();
 		ctoken = lexer->next_non_blank_token();
 		utoken = lexer->peek_non_blank_token();
 
 		/* Parse all fields */
-		while (ctoken.type != E_TT_EOF)
+		/* If an error occured during parsing,
+		 * return what was parsed so far */
+		setjmp(exit_jmp);
+		while (ctoken.type != E_TT_EOF && !has_error)
+		/* TODO: refactor x */
 		{
-			/* If an error occured during parsing,
-			 * return what was parsed so far */
-			if (error)
-				return rcp;
-			/* TODO: refactor x */
 			if (to_lower(ctoken.word) == "title")
 				ParseTitle(&rcp);
 			else if (to_lower(ctoken.word) == "description")
@@ -100,7 +103,6 @@ namespace epicr
 			else if (utoken.type == E_TT_COLON)
 			{
 				ERR("invalid field: No field with this name", ctoken);
-				return rcp;
 			}
 			else
 			{
@@ -157,7 +159,7 @@ namespace epicr
 		while (utoken.type != E_TT_COLON)
 		{
 			ingredient nutrient = ReadIngredient(0);
-			if (error)
+			if (has_error)
 				return;
 			if (nutrient.amount.unit != "kcal" && nutrient.amount.unit != "cal" && nutrient.amount.unit != "g")
 				ERR_VOID("Invalid unit after nutrient", ctoken);
@@ -175,7 +177,7 @@ namespace epicr
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
 			std::string kitchenware = ReadWords(true, false);
-			rcp->kitchenware.push_back(kitchenware);	
+			rcp->kitchenware.push_back(kitchenware);
 
 			ReadSeperatorOrWaitAtNextField("kitchenware");
 		}
@@ -220,7 +222,7 @@ namespace epicr
 		{
 			// ADV_NON_BLANK(1);
 			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
-			if (error)
+			if (has_error)
 				return;
 			rcp->ingredients.push_back(ingr);
 			ReadSeperatorOrWaitAtNextField("ingredients");
@@ -238,14 +240,14 @@ namespace epicr
 			{
 				ADV_NON_BLANK(1)
 				ParseInstructionHeaderWith(&singleInstruction);
-				if (error)
+				if (has_error)
 					return;
 			}
 			if (to_lower(ctoken.word) == "using")
 			{
 				ADV_NON_BLANK(1)
 				ParseInstructionHeaderUsing(&singleInstruction);
-				if (error)
+				if (has_error)
 					return;
 			}
 			if (ctoken.type != E_TT_COLON)
@@ -273,7 +275,7 @@ namespace epicr
 		{
 			ADV_NON_BLANK(1);
 			ingredient currentIngredient = ReadIngredient(ASSUME_REST);
-			if (error)
+			if (has_error)
 				return;
 			if (ctoken.type != E_TT_COMMA && ctoken.type != E_TT_PARENS_CLOSE)
 			{
@@ -349,7 +351,7 @@ namespace epicr
 			if (ctoken.type == E_TT_EOF)
 				break;
 			ingredient currentYield = ReadIngredient(HAS_PLUS | ASSUME_1_NUM);
-			if (error)
+			if (has_error)
 				return;
 			singleInstruction->yields.push_back(currentYield);
 		} while (ctoken.type == E_TT_COMMA);
@@ -383,7 +385,7 @@ namespace epicr
 				} // should be a warning
 				currentIngredient.isIngredientRef = true;
 			}
-			
+
 			if (ctoken.type == E_TT_QUESTION_MARK)
 			{
 				if (!canHaveQmark)
@@ -469,9 +471,12 @@ namespace epicr
 		else
 		{
 			ERR("Did not find number or word in amount", ctoken);
-			return amnt;
 		}
 
+		if (ctoken.type != E_TT_BRACKET_CLOSE)
+		{
+			ERR("Expected closing square bracket after amount", ctoken);
+		}
 		ADV_NON_BLANK(1);
 
 		return amnt;
