@@ -230,7 +230,7 @@ namespace test_lib
 
 	/* Get the success state of all tests run.
 	 * Should be returned at the end of each test file */
-	int was_success()
+	int result()
 	{
 		std::ifstream file;
 		file.open("./bin/.tests", std::ios_base::in);

@@ -368,7 +368,7 @@ int main(void)
 	parse_recipe_with_random_casing();
 	parse_ingredients_with_non_ascii_chars();
 	test_lib::print_recap();
-	return test_lib::was_success();
+	return test_lib::result();
 }
 
 // mangler test for [amounts i with]

@@ -91,17 +91,17 @@ void parse_expected_end_parenthesis_after_using_exception()
 void parse_read_ingredients_expects_ingredient_name_first_exception()
 {
     test_lib::REGISTER;
-	std::string incorrectIngredientString = "ingredients: [12] æbler";
+    std::string incorrectIngredientString = "ingredients: [12] æbler";
     auto rcp = epicr::parse_string_silent(incorrectIngredientString);
-	test_lib::expect_exception(rcp,"Expected ingredient name");
+    test_lib::expect_exception(rcp, "Expected ingredient name");
 }
 
 void parse_nutrients_cannot_use_asterix_exception()
 {
     test_lib::REGISTER;
-	std::string incorrectNutrientString = "nutrients: calories* [12 cal]";
+    std::string incorrectNutrientString = "nutrients: calories* [12 cal]";
     auto rcp = epicr::parse_string_silent(incorrectNutrientString);
-	test_lib::expect_exception(rcp,"An asterix is not valid in the given context");
+    test_lib::expect_exception(rcp, "An asterix is not valid in the given context");
 }
 
 void parse_double_asterix_exception()
@@ -115,9 +115,9 @@ void parse_double_asterix_exception()
 void parse_nutrients_cannot_use_question_mark_exception()
 {
     test_lib::REGISTER;
-	std::string incorrectNutrientString = "nutrients: calories? [12 cal]";
+    std::string incorrectNutrientString = "nutrients: calories? [12 cal]";
     auto rcp = epicr::parse_string_silent(incorrectNutrientString);
-	test_lib::expect_exception(rcp,"A question mark is not valid in the given context");
+    test_lib::expect_exception(rcp, "A question mark is not valid in the given context");
 }
 
 void parse_double_question_mark_exception()
@@ -153,10 +153,6 @@ void parse_no_comma_as_seperator_for_tags_exception()
     test_lib::expect_exception(rcp, "expected a comma as a seperator between " + fieldName);
 }
 
-
-
-
-
 int main()
 {
     parse_incorrect_field_exception();
@@ -177,5 +173,5 @@ int main()
     parse_invalid_relative_amount_exception();
     parse_invalid_type_of_amount_exception();
     test_lib::print_recap();
-    return test_lib::was_success();
+    return test_lib::result();
 }
