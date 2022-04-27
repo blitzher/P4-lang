@@ -173,6 +173,7 @@ namespace epicr{
 		return true;
 	}
 
+    /* generate HTML strings and replace placeholders */
 	bool generate_html(recipe rcp, string filename){
 		string base_template_s = load_template("base");
 		const char *base_template = base_template_s.c_str();
@@ -186,36 +187,31 @@ namespace epicr{
 			return false;
 		int index = 0;
 		string instruction_strings;
-		for (auto inst : rcp.instructions)
-		{
+
+        /* format final HTML strings for instructions*/
+		for (auto inst : rcp.instructions){
 			index++;
-
+            string instruction_string = step_template;
 			string step_text = "Step " + std::to_string(index);
-
             string instructionIngredients = "";
             string instructionKitchenware = "";
             string body = "";
             string yield = "";
 
-            if (inst.ingredients.size() > 0){
+            if (inst.ingredients.size() > 0)
                 instructionIngredients = insertInstructionIngredients("Ingredients: ", inst.ingredients);
-            }
-            if(inst.kitchenware.size() == 0){
+            if(inst.kitchenware.size() == 0)
                 instructionIngredients += "<hr class='body-rule'>";
-            }
-            else {
+            else 
                 instructionKitchenware += insert_instruction_kitchenware("Kitchenware: ", inst.kitchenware);
-            }
-            if(inst.body.size() > 0){
+            if(inst.body.size() > 0)
                 body += insert_instruction_body(inst.body);
-            }
 			if(inst.yields.size() > 0){
                 yield += "<hr class='body-rule'>";
                 yield += insert_yield_ingredients("<text class='arrow'> &#10230 <text>", inst.yields);
-            }		
-			string instruction_string = step_template;
+            }
 
-			// replace placeholders with final HTML
+			/* replace step placeholders with final HTML */
 			replace(instruction_string, "~stepText~", step_text);
 			replace(instruction_string, "~instructionIngredients~", instructionIngredients);
 			replace(instruction_string, "~instructionKitchenware~", instructionKitchenware);
@@ -224,7 +220,7 @@ namespace epicr{
 			instruction_strings += instruction_string;
 		}
 
-		// format final HTML strings
+		/* format final HTML strings */
 		string servings = insert_servings(rcp.servings);
 		string tags = insert_text_in_list("Tags: ", rcp.tags);
 		string kitchenware = insert_text_in_list("Kitchenware", rcp.kitchenware);
@@ -237,7 +233,7 @@ namespace epicr{
 
 		string output_string = base_template; // convert base template to string
 
-		// replace placeholders with final HTML
+		/* replace placeholders with final HTML */
 		replace(output_string, "~title~", rcp.title.c_str());
 		replace(output_string, "~servings~", servings);
 		replace(output_string, "~description~", rcp.description.c_str());
