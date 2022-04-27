@@ -9,8 +9,8 @@ class App(tk.Frame):
         super().__init__(master)
         root.geometry("550x210")
         root.title("epicR - A recipe specification language")
-        self.var = IntVar()
-        self.var2 = IntVar()
+        self.html_buttons = IntVar()
+        self, unit_buttons = IntVar()
         self.grid_configure(column=10, row=10)
         self.input_file_button = tk.Button(
             self,
@@ -38,35 +38,35 @@ class App(tk.Frame):
         tk.Radiobutton(
             self,
             text="Fancy HTML style",
-            variable=self.var,
+            variable=self.html_buttons,
             value=1,
             command=self.select_style,
         ).pack(anchor=W)
         tk.Radiobutton(
             self,
             text="Basic HTML style",
-            variable=self.var,
+            variable=self.html_buttons,
             value=2,
             command=self.select_style,
         ).pack(anchor=W)
         tk.Radiobutton(
             self,
             text="Imperial system",
-            variable=self.var2,
+            variable=self.unit_buttons,
             value=1,
             command=self.select_system,
         ).pack(anchor=W)
         tk.Radiobutton(
             self,
             text="Metric system",
-            variable=self.var2,
+            variable=self.unit_buttons,
             value=2,
             command=self.select_system,
         ).pack(anchor=W)
         tk.Radiobutton(
             self,
             text="No conversion of unit system",
-            variable=self.var2,
+            variable=self.unit_buttons,
             value=3,
             command=self.select_system,
         ).pack(anchor=W)
