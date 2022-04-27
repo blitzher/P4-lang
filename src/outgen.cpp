@@ -117,7 +117,7 @@ namespace epicr{
 	}
 
     /* construct HTML string for kitchenware field in instructions */
-    string insertInstructionKitchenware(string header, std::vector<string> kitchenware){
+    string insert_instruction_kitchenware(string header, std::vector<string> kitchenware){
 		if (kitchenware.size() == 0)
 			return "";
         string result = "<strong>" + header + "</strong>";
@@ -178,6 +178,8 @@ namespace epicr{
 		string step_template_s = load_template("step");
 		const char *step_template = step_template_s.c_str();
 
+		std::filesystem::create_directory("dist");
+
 		std::ofstream file{filename};
 		if (!file.is_open())
 			return false;
@@ -201,7 +203,7 @@ namespace epicr{
                 instructionIngredients += "<hr class='body-rule'>";
             }
             else {
-                instructionKitchenware += insertInstructionKitchenware("Kitchenware: ", inst.kitchenware);
+                instructionKitchenware += insert_instruction_kitchenware("Kitchenware: ", inst.kitchenware);
             }
             if(inst.body.size() > 0){
                 body += insert_instruction_body(inst.body);
@@ -211,7 +213,7 @@ namespace epicr{
                 yield += insert_yield_ingredients("<text class='arrow'> &#10230 <text>", inst.yields);
             }		
 			string instruction_string = step_template;
-			
+
 			// replace placeholders with final HTML
 			replace(instruction_string, "~stepText~", step_text);
 			replace(instruction_string, "~instructionIngredients~", instructionIngredients);
@@ -220,7 +222,7 @@ namespace epicr{
 			replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
-        
+
 		// format final HTML strings
 		string servings = insert_servings(rcp.servings);
 		string tags = insert_text_in_list("Tags: ", rcp.tags);
@@ -238,12 +240,12 @@ namespace epicr{
 		replace(output_string, "~title~", rcp.title.c_str());
 		replace(output_string, "~servings~", servings);
 		replace(output_string, "~description~", rcp.description.c_str());
-		replace(output_string, "~total-time~", totalTime);
-		replace(output_string, "~prep-time~", prepTime);
-		replace(output_string, "~cook-time~", cookTime);
+		replace(output_string, "~total-time~", total_time);
+		replace(output_string, "~prep-time~", prep_time);
+		replace(output_string, "~cook-time~", cook_time);
 		replace(output_string, "~tags~", tags.c_str());
 		replace(output_string, "~ingredients~", ingredients.c_str());
-		replace(output_string, "~optionalIngredients~", optionalIngredients.c_str());
+		replace(output_string, "~optionalIngredients~", optional_ingredients.c_str());
 		replace(output_string, "~kitchenware~", kitchenware.c_str());
 		replace(output_string, "~nutrients~", nutrients.c_str());
 		replace(output_string, "~instructions~", instruction_strings.c_str());

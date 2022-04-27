@@ -11,6 +11,8 @@
 #include <limits>
 #include <cmath>
 #include <sstream>
+#include <filesystem>
+#include <csetjmp>
 
 #pragma region Debug macros
 
@@ -29,27 +31,27 @@ namespace epicr
     typedef unsigned int uint;
 #pragma region Recipe Data
 
-    typedef enum html_style_e
+    typedef enum epicr_html_style
     {
-        html_style_basic,
-        html_style_fancy
-    } html_style;
+        E_HTML_BASIC,
+        E_HTML_FANCY
+    } epicr_html_style;
 
     typedef struct amount_s
     {
         double number;
-        bool isRelativeAmount;
-        std::string relativeAmount;
+        bool is_relative_amount;
+        std::string relative_amount;
         std::string unit;
-        bool isUncountable;
+        bool is_uncountable;
     } amount;
 
     typedef struct ingredient_s
     {
         std::string name;
         amount amount;
-        bool isIngredientRef;
-        bool isOptional;
+        bool is_ingredient_ref;
+        bool is_optional;
     } ingredient;
 
     typedef struct instruction_word_s
@@ -130,7 +132,7 @@ namespace epicr
     typedef struct cmd_args_s
     {
         std::string input_filepath;
-        html_style choosen_style;
+        epicr_html_style choosen_style;
         std::string output_filepath;
         epicr_unit_system unit_system;
 
@@ -204,10 +206,10 @@ namespace epicr
         void ParseTags(recipe *);
         void ParseTime(recipe *);
         void ParseInstructions(recipe *);
-        void ParseInstructionHeaderWith(instruction *singleInstruction);
-        void ParseInstructionHeaderUsing(instruction *singleInstruction);
-        void ParseInstructionBody(instruction *currentInstruction);
-        void ParseInstructionYield(instruction *singleInstruction);
+        void ParseInstructionHeaderWith(instruction *single_instruction);
+        void ParseInstructionHeaderUsing(instruction *single_instruction);
+        void ParseInstructionBody(instruction *current_instruction);
+        void ParseInstructionYield(instruction *single_instruction);
         /* Read an ingredient from the current position */
         ingredient ReadIngredient(ingredient_arg);
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
@@ -226,9 +228,9 @@ namespace epicr
 
     public:
         bool DEBUG_MODE;
-        bool error;
+        bool has_error;
         std::string original_amount;
-        std::string error_message;
+        std::string error;
         epicr_token error_token;
         recipe Parse();
         void silence(bool);
@@ -299,10 +301,12 @@ namespace epicr
     std::string to_lower(std::string);
     /*returns a new string where all types of spaces to right is stripped from the input string */
     std::string strip_spaces_right(std::string);
-    /*converts a double to a string - also rounds to the nearest 2 decimals*/
+    /* converts a double to a string - also rounds to the nearest 2 decimals */
     std::string double_to_string(double);
+    /* converts an amount to a printable string */
+    std::string amount_to_string(amount);
     /*return whether or not an ingredient with that name exists in the unordered map*/
-    bool ingredient_exist_in_ingredient_map(std::string,std::unordered_map<std::string,ingredient>);
+    bool ingredient_in_map(std::string, std::unordered_map<std::string, ingredient>);
     /* Print the contents of a token to stdout */
     void print_token(epicr_token);
 

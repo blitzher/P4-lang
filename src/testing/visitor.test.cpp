@@ -95,5 +95,5 @@ int main(void)
 	// metric_to_imperial_values_conversions();
 
 	test_lib::print_recap();
-	return test_lib::was_success();
+	return test_lib::result();
 }

@@ -7,7 +7,7 @@ std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
 
 namespace epicr
 {
-	cmd_args clargs = {"", html_style_basic, "", E_US_NONE};
+	cmd_args clargs = {"", E_HTML_BASIC, "dist", E_US_NONE};
 
 	ifstream open_file(string filename)
 	{
@@ -105,7 +105,17 @@ namespace epicr
 		return str.substr(0, seperatorPosition);
 	}
 
-	bool ingredient_exist_in_ingredient_map(
+	string amount_to_string(amount amount)
+	{
+		string result = " (";
+		result += epicr::double_to_string(amount.number);
+		if (!(amount.unit == ""))
+			result += " " + amount.unit;
+		result += ")";
+		return result;
+	}
+
+	bool ingredient_in_map(
 		std::string ingredientName,
 		std::unordered_map<std::string, ingredient> ingredients)
 	{
@@ -119,7 +129,7 @@ namespace epicr
 
 	parse_ret parse_recipe(std::string filename)
 	{
-		cmd_args args = {filename, html_style_basic, "dist", E_US_NONE};
+		cmd_args args = {filename, E_HTML_BASIC, "dist", E_US_NONE};
 		return parse_recipe(args);
 	}
 
@@ -133,7 +143,7 @@ namespace epicr
 		Parser parser(&lexer);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = {rcp, parser.error, parser.error_message};
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 
 		cached_recipes[clargs.input_filepath] = ret;
 
@@ -151,7 +161,7 @@ namespace epicr
 		parser.silence(true);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = {rcp, parser.error, parser.error_message};
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
 	}
 
@@ -163,20 +173,20 @@ namespace epicr
 		parser.silence(true);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = {rcp, parser.error, parser.error_message};
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
 	}
 
-	epicr::html_style parse_style(std::string argv)
+	epicr::epicr_html_style parse_style(std::string argv)
 	{
-		epicr::html_style choosen_style = epicr::html_style_basic;
+		epicr::epicr_html_style choosen_style = epicr::E_HTML_BASIC;
 		if (argv == "--basic" || argv == "-b")
 		{
-			choosen_style = epicr::html_style_basic;
+			choosen_style = epicr::E_HTML_BASIC;
 		}
 		else if (argv == "--fancy" || argv == "-f")
 		{
-			choosen_style = epicr::html_style_fancy;
+			choosen_style = epicr::E_HTML_FANCY;
 		}
 		return choosen_style;
 	}

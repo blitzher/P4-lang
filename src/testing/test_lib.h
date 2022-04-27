@@ -49,7 +49,7 @@ namespace test_lib
 	void print_recap();
 	// ---^^^---vvvv---:>~
 
-	int was_success();
+	int result();
 }
 
 bool ends_with(std::string const &value, std::string const &ending);

@@ -139,5 +139,5 @@ int main(void)
 	carriage_return();
 	blank_runs();
 	test_lib::print_recap();
-	return test_lib::was_success();
+	return test_lib::result();
 }
