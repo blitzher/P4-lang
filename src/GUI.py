@@ -10,7 +10,7 @@ class App(tk.Frame):
         root.geometry("550x210")
         root.title("epicR - A recipe specification language")
         self.html_buttons = IntVar()
-        self, unit_buttons = IntVar()
+        self.unit_buttons = IntVar()
         self.grid_configure(column=10, row=10)
         self.input_file_button = tk.Button(
             self,
@@ -49,6 +49,10 @@ class App(tk.Frame):
             value=2,
             command=self.select_style,
         ).pack(anchor=W)
+
+        separator = ttk.Separator(self, orient='horizontal')
+        separator.pack(fill='x')
+
         tk.Radiobutton(
             self,
             text="Imperial system",
