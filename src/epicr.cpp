@@ -7,7 +7,8 @@ std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
 
 namespace epicr
 {
-	cmd_args clargs = {"", html_style_basic, "", E_US_NONE};
+	/* The default values assigned on initialization */
+	cmd_args clargs = {"", html_style_fancy, "dist", E_US_NONE};
 
 	ifstream open_file(string filename)
 	{
