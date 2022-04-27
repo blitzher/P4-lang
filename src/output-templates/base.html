@@ -30,7 +30,7 @@
             margin-top: 30px;
         }
 
-        .ingredientsHeader, .collapsible:first-of-type{
+        .ingredients-header, .collapsible:first-of-type{
             margin: 10px 0 5px 0;
         }
 
@@ -52,22 +52,22 @@
             float: left; 
             margin-right: 20px;
         }
-        #titleDiv{
+        #title-div{
             float:left; 
             margin-bottom: 10px;
             margin-left: 10px;
         }
-        #servingsDiv{
+        #servings-div{
             float: right;
             margin-right: 10px;
         }
-        .leftHalf{
+        .left-half{
             float: left;
             margin-right: 5%;
             width: calc(15% - 10px);
             margin-left: 10px;
         }
-        .rightHalf{
+        .right-half{
             float: left;
             width: calc(80% - 10px);
             margin-right: 10px;
@@ -80,11 +80,6 @@
             border-right: 10px solid transparent;
             border-top: 10px solid #d7d7d7;
             margin-bottom: -8px;
-        }
-        .radioButton:hover{
-            background: #ececec;
-            border-radius: 5px;
-            cursor: pointer;
         }
         .collapsible-wrapper:hover>.arrow-down{
             border-top-color: #898989;
@@ -102,18 +97,18 @@
             padding-left: 10px;
             float: left;
         }
-        .collapseAllButton{
+        .collapse-all-button{
             position: absolute;
             bottom: 10px;
             right: 10px;
         }
-        .resetAmount{
+        .reset-amount{
             width: 50px;
         }
         .servings{
             width: 50px;
         }
-        .instructionBody{
+        .instruction-body{
             margin-top: 0px;
             margin-bottom: 0px;
         }
@@ -128,28 +123,28 @@
             font-size: 22px;
             line-height: 14px;
         }
-        .measurementSystem{
+        .measurement-system{
             float: right;
             margin-right: 15px;
         }
 	</style>
 </header>
 <div class="wrapper">
-    <h1 id="titleDiv">
+    <h1 id="title-div">
         ~title~
     </h1>
-    <button class = collapseAllButton onclick="collapseOrExpand()" > Collapse All </button>
+    <button class = collapse-all-button onclick="collapse_or_expand()" > Collapse All </button>
 </div>
 <hr>
 <div class="wrapper">
     ~total-time~
     ~prep-time~
     ~cook-time~
-    <div id="servingsDiv">
-        <button class = resetAmount disabled="false" onclick="resetAmount()" > Reset </button>
+    <div id="servings-div">
+        <button class = reset-amount disabled="false" onclick="reset_amount()" > Reset </button>
         ~servings~
     </div>
-    <select class="measurementSystem">
+    <select class="measurement-system">
         <option hidden value="convertUnits">Convert Units</option>
         <option value="original">Original</option>
         <option value="metric">Metric</option>
@@ -158,14 +153,14 @@
 </div>
 <hr>
 <div class="wrapper">
-    <div class="leftHalf">
+    <div class="left-half">
         ~ingredients~
 		~optionalIngredients~
         ~kitchenware~
         ~nutrients~
         ~tags~
     </div>
-    <div class="rightHalf">
+    <div class="right-half">
         <div class="collapsible-wrapper">
             <div class="arrow-down"></div>
             <h3 class="collapsible">
@@ -188,23 +183,23 @@
             const units = document.getElementsByClassName("unit");
 
             /* single HTML elements */
-            const collapseAllButton = document.getElementsByClassName("collapseAllButton")[0];
-            const resetAmountButton = document.getElementsByClassName("resetAmount")[0];
-            const servingsField = document.getElementsByClassName("servings")[0];
-            const measurementSystemDropDown = document.getElementsByClassName("measurementSystem")[0];
+            const collapse_all_button = document.getElementsByClassName("collapse-all-button")[0];
+            const reset_amount_button = document.getElementsByClassName("reset-amount")[0];
+            const servings_field = document.getElementsByClassName("servings")[0];
+            const measurement_system_dropdown = document.getElementsByClassName("measurement-system")[0];
 
             /* amount arrays */
-            let currentAmounts = [];
-            let defaultAmounts = [];
+            let current_amounts = [];
+            let default_amounts = [];
             let metricAmounts = [];
-            let imperialAmounts = [];
+            let imperial_amounts = [];
 
             /* miscellaneous variables */
-            let allAreCollapsed = false;
-            let defaultNumberOfServings = servingsField.value;
-            let measurementSystem = "original";
+            let all_are_collapsed = false;
+            let default_number_of_servings = servings_field.value;
+            let measurement_system = "original";
 
-            metricUnits = [
+            metric_units = [
                 "g",
                 "kg",
                 "ml",
@@ -215,7 +210,7 @@
                 "c"
             ];
 
-            invalidChars = [
+            invalid_chars = [
                 "-",
                 "+",
                 "e",
@@ -248,32 +243,32 @@
             }
 
             /* initialize and assign final values to the arrays for holding amounts */
-            saveStartValues();
-            function saveStartValues(){
+            save_start_values();
+            function save_start_values(){
                 for (i = 0; i < numbers.length; i++) {
-                    let defaultNumber = parseFloat(numbers[i].innerHTML) / defaultNumberOfServings;
-                    let defaultUnit = units[i].innerHTML;
-                    var defaultAmount = new Amount(defaultNumber, defaultUnit);
+                    let default_number = parseFloat(numbers[i].innerHTML) / default_number_of_servings;
+                    let default_unit = units[i].innerHTML;
+                    var default_amount = new Amount(default_number, default_unit);
 
-                    defaultAmounts.push(defaultAmount);
-                    metricAmounts.push(defaultAmount);
-                    imperialAmounts.push(defaultAmount);
+                    default_amounts.push(default_amount);
+                    metric_amounts.push(default_amount);
+                    imperial_amounts.push(default_amount);
 
-                    if(isMetric(defaultUnit)){ /* convert to imperial */ 
-                        metricAmounts[i] = defaultAmount;
-                        imperialAmounts[i] = getMetricToImperial(defaultAmount);
+                    if(is_metric(default_unit)){ /* convert to imperial */ 
+                        metric_amounts[i] = default_amount;
+                        imperial_amounts[i] = get_metric_to_imperial(default_amount);
                     }
                     else { /* convert to metric */ 
-                        metricAmounts[i] = getImperialToMetric(defaultAmount);
-                        imperialAmounts[i] = defaultAmount;
+                        metric_amounts[i] = get_imperial_to_metric(default_amount);
+                        imperial_amounts[i] = default_amount;
                     }
                 }
             }
 
             /* listen for changes on the dropdown menu */
-            measurementSystemDropDown.addEventListener("change", () => {
-                measurementSystem = measurementSystemDropDown.value;
-                updateNumbers();
+            measurement_system_dropdown.addEventListener("change", () => {
+                measurement_system = measurement_system_dropdown.value;
+                update_numbers();
             });
 
             /* listen for clicks on the dropdown arrows */
@@ -291,25 +286,25 @@
                         step.style.display = "none";
                         arrow.style.transform = "rotate(-90deg)";
                     }
-                    checkCollapseStatus();
+                    check_collapse_status();
                 });
             }
 
 
             /* expand all segments if all are collapsed, else collapse all */
-            function collapseOrExpand(){
-                if (allAreCollapsed){
-                    collapseAll(false); /* expand */ 
+            function collapse_or_expand(){
+                if (all_are_collapsed){
+                    collapse_all(false); /* expand */ 
                 }
                 else {
-                    collapseAll(true);  /* collapse */ 
+                    collapse_all(true);  /* collapse */ 
                 }
-                checkCollapseStatus();
+                check_collapse_status();
             }
 
             /* show/hide segments and rotate arrows */
-            function collapseAll(collapse){
-                allAreCollapsed = collapse;
+            function collapse_all(collapse){
+                all_are_collapsed = collapse;
                 let display = "block";
                 let rotation = "rotate(0deg)";
                 if (collapse){
@@ -326,7 +321,7 @@
             }
 
             /* change collapse/expand button depending on whether all segments are collapsed/expanded */
-            function checkCollapseStatus(){
+            function check_collapse_status(){
                 oneIsNotCollapsed = false;
                 for (j = 0; j < headers.length; j++) {
                     if (steps[j].style.display == "block"){
@@ -335,90 +330,90 @@
                 }
 
                 if(oneIsNotCollapsed){
-                    allAreCollapsed = false;
+                    all_are_collapsed = false;
                 }
                 else {
-                    allAreCollapsed = true;
+                    all_are_collapsed = true;
                 }
 
-                if(allAreCollapsed){
-                    collapseAllButton.innerHTML = "Expand All";
+                if(all_are_collapsed){
+                    collapse_all_button.innerHTML = "Expand All";
                 }
                 else {
-                    collapseAllButton.innerHTML = "Collapse All";
+                    collapse_all_button.innerHTML = "Collapse All";
                 }
             }
 
             /* limit the range of numbers which can be written in the "servings" field */
             function truncate(){
-                value = parseInt(servingsField.value);
-                max = parseInt(servingsField.max);
-                min = parseInt(servingsField.min);
+                value = parseInt(servings_field.value);
+                max = parseInt(servings_field.max);
+                min = parseInt(servings_field.min);
                 if(value > max){
-                    servingsField.value = servingsField.max;
+                    servings_field.value = servings_field.max;
                 }
                 else if(value < min){
-                    servingsField.value = servingsField.min;
+                    servings_field.value = servings_field.min;
                 }
             }
 
             /* prohibit writing illegal characters in the "servings" field */
-            servingsField.addEventListener("keydown", e => {
-                if (invalidChars.includes(e.key)) {
+            servings_field.addEventListener("keydown", e => {
+                if (invalid_chars.includes(e.key)) {
                     e.preventDefault();
                 }
             });
             
             /* change amounts according to which measurement system is chosen */
-            function updateNumbers(){
+            function update_numbers(){
                 truncate();
-                changeMeasurementSystem();
+                change_measurement_system();
 
                 /* if no number is written in the servings field, don't do anything*/
-                if (servingsField.value != ""){ 
+                if (servings_field.value != ""){ 
                     for (i = 0; i < numbers.length; i++) {
-                        let newNumber = (currentAmounts[i].number * parseFloat(servingsField.value));
-                        newNumber = Math.round((newNumber + Number.EPSILON)* 100.0) / 100.0;
-                        numbers[i].innerHTML = newNumber.toString();
-                        units[i].innerHTML = currentAmounts[i].unit;  
+                        let new_number = (current_amounts[i].number * parseFloat(servings_field.value));
+                        new_number = Math.round((new_number + Number.EPSILON)* 100.0) / 100.0;
+                        numbers[i].innerHTML = new_number.toString();
+                        units[i].innerHTML = current_amounts[i].unit;  
                     }
                 }
 
                 /* disable reset button if the number of servings is already the default number */
-                if (servingsField.value == defaultNumberOfServings){
-                    resetAmountButton.disabled = true;
+                if (servings_field.value == default_number_of_servings){
+                    reset_amount_button.disabled = true;
                 }
                 else {
-                    resetAmountButton.disabled = false;
+                    reset_amount_button.disabled = false;
                 }
             }
 
             /* reset servings amount to default */
-            function resetAmount(){
-                servingsField.value = defaultNumberOfServings.toString();
-                updateNumbers(servingsField);
+            function reset_amount(){
+                servings_field.value = default_number_of_servings.toString();
+                update_numbers(servings_field);
             }
 
             /* check if a unit is in the metric system */
-            function isMetric(unit){
-                if(metricUnits.includes(unit)){
+            function is_metric(unit){
+                if(metric_units.includes(unit)){
                     return true;
                 }
                 else return false;
             }
 
             /* convert metric amounts to imperial amounts */
-            function getMetricToImperial(metricAmount){
+            function get_metric_to_imperial(metricAmount){
                 var imperialAmount = Object.assign({}, metricAmount); /* copy object */
 
                 switch(metricAmount.unit){
-                    case "g":     convertToImperial(imperialAmount, G_TO_OZ, "oz");                     break;
-                    case "kg":    convertToImperial(imperialAmount, KG_TO_LBS, "lbs");                  break;
-                    case "ml":    convertToImperial(imperialAmount, ML_TO_FLOZ, "fl-oz");               break;
-                    case "dl":    convertToImperial(imperialAmount, DL_TO_FLOZ, "fl-oz");               break;
-                    case "l":     convertToImperial(imperialAmount, L_TO_QT, "qt");                     break;
-                    case "mm":    convertToImperial(imperialAmount, MM_TO_INCH, "in");                  break;
-                    case "cm":    convertToImperial(imperialAmount, CM_TO_INCH, "in");                  break;
+                    case "g":     convert_to_imperial(imperialAmount, G_TO_OZ, "oz");                     break;
+                    case "kg":    convert_to_imperial(imperialAmount, KG_TO_LBS, "lbs");                  break;
+                    case "ml":    convert_to_imperial(imperialAmount, ML_TO_FLOZ, "fl-oz");               break;
+                    case "dl":    convert_to_imperial(imperialAmount, DL_TO_FLOZ, "fl-oz");               break;
+                    case "l":     convert_to_imperial(imperialAmount, L_TO_QT, "qt");                     break;
+                    case "mm":    convert_to_imperial(imperialAmount, MM_TO_INCH, "in");                  break;
+                    case "cm":    convert_to_imperial(imperialAmount, CM_TO_INCH, "in");                  break;
                     case "c":     imperialAmount.number *= C_TO_F(number);   imperialAmount.unit = "f"; break;
                     default:      /* unit is not in the metric system */
                 }
@@ -426,7 +421,7 @@
             }
 
             /* convert imperial amounts to metric amounts */
-            function getImperialToMetric(imperialAmount){
+            function get_imperial_to_metric(imperialAmount){
                 var metricAmount = Object.assign({}, imperialAmount); /* copy object */
                 switch(imperialAmount.unit){
                     case "oz":      convertToMetric(metricAmount, G_TO_OZ, "g");                   break;
@@ -442,7 +437,7 @@
             }
 
             /* update imperial amount with correct number and unit */
-            function convertToImperial(imperialAmount, conversionRate, newUnit){
+            function convert_to_imperial(imperialAmount, conversionRate, newUnit){
                 imperialAmount.number *= conversionRate;
                 imperialAmount.unit = newUnit;
             }
@@ -454,20 +449,20 @@
             }
 
             /* change current amount to fit the selected measurement system */
-            function changeMeasurementSystem(){
-                if (measurementSystem == "imperial"){
+            function change_measurement_system(){
+                if (measurement_system == "imperial"){
                     for (i = 0; i < numbers.length; i++) {
-                        currentAmounts[i] = imperialAmounts[i];
+                        current_amounts[i] = imperial_amounts[i];
                     }
                 }
-                else if (measurementSystem == "metric"){
+                else if (measurement_system == "metric"){
                     for (i = 0; i < numbers.length; i++) {
-                        currentAmounts[i] = metricAmounts[i];
+                        current_amounts[i] = metric_amounts[i];
                     }
                 }
                 else { /* default amounts */
                     for (i = 0; i < numbers.length; i++) {
-                        currentAmounts[i] = defaultAmounts[i];    
+                        current_amounts[i] = default_amounts[i];    
                     }
                 }
             }

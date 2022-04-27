@@ -22,17 +22,17 @@ namespace epicr{
 	}
 
     /* construct HTML string for time fields */
-    string insertTime(string header, string time){
+    string insert_time(string header, string time){
 		if (time == "")
 			return "";
         return "<div class=time-header>" + header + "</div><div class=time-content>" + time + "</div>";
 	}
 
     /* construct HTML string for servings field */
-    string insertServings(servings servings){
+    string insert_servings(servings servings){
 		if (servings.count == 0)
 			return "";
-        string result = "<input type='number' class='servings' max='1000' min='1' oninput='updateNumbers()'";
+        string result = "<input type='number' class='servings' max='1000' min='1' oninput='update_numbers()'";
         result += "onfocusout='updateNumbers(this)' value=" + std::to_string(servings.count) + "> " + servings.descriptor;
 		return result;
 	}
@@ -52,8 +52,8 @@ namespace epicr{
     }
 
     /* construct HTML string for ingredients listing */
-	string insertDeclarationIngredients(string header, std::vector<ingredient> ingredients){
-		string result = "<h3 class=ingredientsHeader><strong>" + header + "</strong></h3>";
+	string insert_declaration_ingredients(string header, std::vector<ingredient> ingredients){
+		string result = "<h3 class=ingredients-header><strong>" + header + "</strong></h3>";
 		for (size_t i = 0; i < ingredients.size(); i++){
 			if (ingredients[i].isOptional)
 				continue;
@@ -63,8 +63,8 @@ namespace epicr{
     }
     
     /* construct HTML string for optional ingredients listings */
-    string insertOptionalIngredients(string header, std::vector<ingredient> ingredients){
-		string result = "<h3 class=fieldHeader><strong>" + header + "</strong></h3>";
+    string insert_optional_ingredients(string header, std::vector<ingredient> ingredients){
+		string result = "<h3 class=field-header><strong>" + header + "</strong></h3>";
 		for (size_t i = 0; i < ingredients.size(); i++){
 			if (!ingredients[i].isOptional) 
 				continue;
@@ -74,7 +74,7 @@ namespace epicr{
     }
 
     /* construct HTML string for a list -> used for tags and kitchenware */
-    string insertTextInList(string header, std::vector<string> listElements){
+    string insert_text_in_list(string header, std::vector<string> listElements){
         if (listElements.size() == 0)
 			return "";
         string result = "<h3>" + header + "</h3>";
@@ -85,27 +85,27 @@ namespace epicr{
     }
 
     /* construct HTML string for nutrients listing */
-    string insertNutrients(string header, std::vector<ingredient> fields){
-		string result = "<h3 class='fieldHeader'><strong>" + header + "</strong></h3>";
-		for (size_t i = 0; i < fields.size(); i++){
-            std::string number = epicr::double_to_string(fields[i].amount.number);
-            std::string unit = fields[i].amount.unit;
-			result += "<li>" + fields[i].name + " (" + number + " " + unit + ")</li>";
+    string insert_nutrients(string header, std::vector<ingredient> nutrients){
+		string result = "<h3 class='field-header'><strong>" + header + "</strong></h3>";
+		for (size_t i = 0; i < nutrients.size(); i++){
+            std::string number = epicr::double_to_string(nutrients[i].amount.number);
+            std::string unit = nutrients[i].amount.unit;
+			result += "<li>" + nutrients[i].name + " (" + number + " " + unit + ")</li>";
 		}
         result += "<text>*pr. 100 grams</text>";
 		return result;
     }
 
     /* construct HTML string for ingredient field in instructions */
-    string insertInstructionIngredients(string header, std::vector<ingredient> fields){
+    string insertInstructionIngredients(string header, std::vector<ingredient> ingredients){
         string result = "<h5><strong>" + header + "</strong>";
-		for (size_t i = 0; i < fields.size(); i++){
+		for (size_t i = 0; i < ingredients.size(); i++){
             if (i != 0)
                 result += ", ";
-			result += fields[i].name + " ";
-			if (!fields[i].amount.isUncountable){
-                std::string number = epicr::double_to_string(fields[i].amount.number);
-                std::string unit = fields[i].amount.unit;
+			result += ingredients[i].name + " ";
+			if (!ingredients[i].amount.isUncountable){
+                std::string number = epicr::double_to_string(ingredients[i].amount.number);
+                std::string unit = ingredients[i].amount.unit;
                 result += "(<text class='number'>" + number + "</text><text class='unit'>";
                 if (unit != "")
                     result += " " + unit;
@@ -131,8 +131,8 @@ namespace epicr{
 	}
 
     /* construct HTML string for instructions body */
-	string insertInstructionBody(std::vector<instruction_word> body){
-		string result = "<p class='instructionBody'>";
+	string insert_instruction_body(std::vector<instruction_word> body){
+		string result = "<p class='instruction-body'>";
 		for (size_t i = 0; i < body.size(); i++){
 			result += body[i].spelling;
 			if (body[i].is_amount == true)
@@ -143,16 +143,16 @@ namespace epicr{
 	}
 
     /* construct HTML string for yield field in instructions */
-    string insertYieldIngredients(string header, std::vector<ingredient> fields){
+    string insert_yield_ingredients(string header, std::vector<ingredient> ingredients){
 		string result = "<h5><strong>" + header + "</strong>";
-		for (size_t i = 0; i < fields.size(); i++)
+		for (size_t i = 0; i < ingredients.size(); i++)
 		{
             if (i != 0)
                 result += ", ";
-			result += fields[i].name + " ";
-			if (!fields[i].amount.isUncountable){
-                std::string number = epicr::double_to_string(fields[i].amount.number);
-                std::string unit = fields[i].amount.unit;
+			result += ingredients[i].name + " ";
+			if (!ingredients[i].amount.isUncountable){
+                std::string number = epicr::double_to_string(ingredients[i].amount.number);
+                std::string unit = ingredients[i].amount.unit;
                 result += "(<text class='number'>" + number + "</text><text class='unit'>";
                 if (unit != "")
                     result += " " + unit;
@@ -204,11 +204,11 @@ namespace epicr{
                 instructionKitchenware += insertInstructionKitchenware("Kitchenware: ", inst.kitchenware);
             }
             if(inst.body.size() > 0){
-                body += insertInstructionBody(inst.body);
+                body += insert_instruction_body(inst.body);
             }
 			if(inst.yields.size() > 0){
                 yield += "<hr class='body-rule'>";
-                yield += insertYieldIngredients("<text class='arrow'> &#10230 <text>", inst.yields);
+                yield += insert_yield_ingredients("<text class='arrow'> &#10230 <text>", inst.yields);
             }		
 			string instruction_string = step_template;
 			
@@ -222,15 +222,15 @@ namespace epicr{
 		}
         
 		// format final HTML strings
-		string servings = insertServings(rcp.servings);
-		string tags = insertTextInList("Tags: ", rcp.tags);
-		string kitchenware = insertTextInList("Kitchenware", rcp.kitchenware);
-		string ingredients = insertDeclarationIngredients("Ingredients", rcp.ingredients);
-		string optionalIngredients = insertOptionalIngredients("Optional",rcp.ingredients);
-		string nutrients = insertNutrients("Nutrients*", rcp.nutrients);
-		string totalTime = insertTime("Total time: ", rcp.time.total_time.c_str());
-		string prepTime = insertTime("Prep time: ", rcp.time.prep_time.c_str());
-		string cookTime = insertTime("Cook time: ", rcp.time.cook_time.c_str());
+		string servings = insert_servings(rcp.servings);
+		string tags = insert_text_in_list("Tags: ", rcp.tags);
+		string kitchenware = insert_text_in_list("Kitchenware", rcp.kitchenware);
+		string ingredients = insert_declaration_ingredients("Ingredients", rcp.ingredients);
+		string optionalIngredients = insert_optional_ingredients("Optional",rcp.ingredients);
+		string nutrients = insert_nutrients("Nutrients*", rcp.nutrients);
+		string totalTime = insert_time("Total time: ", rcp.time.total_time.c_str());
+		string prepTime = insert_time("Prep time: ", rcp.time.prep_time.c_str());
+		string cookTime = insert_time("Cook time: ", rcp.time.cook_time.c_str());
 
 		string output_string = base_template; // convert base template to string
 
