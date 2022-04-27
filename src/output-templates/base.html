@@ -191,7 +191,7 @@
             /* amount arrays */
             let current_amounts = [];
             let default_amounts = [];
-            let metricAmounts = [];
+            let metric_amounts = [];
             let imperial_amounts = [];
 
             /* miscellaneous variables */
@@ -199,7 +199,7 @@
             let default_number_of_servings = servings_field.value;
             let measurement_system = "original";
 
-            metric_units = [
+            const metric_units = [
                 "g",
                 "kg",
                 "ml",
@@ -210,7 +210,7 @@
                 "c"
             ];
 
-            invalid_chars = [
+            const invalid_chars = [
                 "-",
                 "+",
                 "e",
@@ -396,56 +396,55 @@
 
             /* check if a unit is in the metric system */
             function is_metric(unit){
-                if(metric_units.includes(unit)){
+                if(metric_units.includes(unit))
                     return true;
-                }
-                else return false;
+                return false;
             }
 
             /* convert metric amounts to imperial amounts */
-            function get_metric_to_imperial(metricAmount){
-                var imperialAmount = Object.assign({}, metricAmount); /* copy object */
+            function get_metric_to_imperial(metric_amount){
+                var imperial_amount = Object.assign({}, metric_amount); /* copy object */
 
-                switch(metricAmount.unit){
-                    case "g":     convert_to_imperial(imperialAmount, G_TO_OZ, "oz");                     break;
-                    case "kg":    convert_to_imperial(imperialAmount, KG_TO_LBS, "lbs");                  break;
-                    case "ml":    convert_to_imperial(imperialAmount, ML_TO_FLOZ, "fl-oz");               break;
-                    case "dl":    convert_to_imperial(imperialAmount, DL_TO_FLOZ, "fl-oz");               break;
-                    case "l":     convert_to_imperial(imperialAmount, L_TO_QT, "qt");                     break;
-                    case "mm":    convert_to_imperial(imperialAmount, MM_TO_INCH, "in");                  break;
-                    case "cm":    convert_to_imperial(imperialAmount, CM_TO_INCH, "in");                  break;
-                    case "c":     imperialAmount.number *= C_TO_F(number);   imperialAmount.unit = "f"; break;
+                switch(metric_amount.unit){
+                    case "g":     convert_to_imperial(imperial_amount, G_TO_OZ, "oz");                      break;
+                    case "kg":    convert_to_imperial(imperial_amount, KG_TO_LBS, "lbs");                   break;
+                    case "ml":    convert_to_imperial(imperial_amount, ML_TO_FLOZ, "fl-oz");                break;
+                    case "dl":    convert_to_imperial(imperial_amount, DL_TO_FLOZ, "fl-oz");                break;
+                    case "l":     convert_to_imperial(imperial_amount, L_TO_QT, "qt");                      break;
+                    case "mm":    convert_to_imperial(imperial_amount, MM_TO_INCH, "in");                   break;
+                    case "cm":    convert_to_imperial(imperial_amount, CM_TO_INCH, "in");                   break;
+                    case "c":     imperial_amount.number *= C_TO_F(number);   imperial_amount.unit = "f";   break;
                     default:      /* unit is not in the metric system */
                 }
-                return imperialAmount;
+                return imperial_amount;
             }
 
             /* convert imperial amounts to metric amounts */
-            function get_imperial_to_metric(imperialAmount){
-                var metricAmount = Object.assign({}, imperialAmount); /* copy object */
-                switch(imperialAmount.unit){
-                    case "oz":      convertToMetric(metricAmount, G_TO_OZ, "g");                   break;
-                    case "lbs":     convertToMetric(metricAmount, KG_TO_LBS, "kg");                break;
-                    case "fl-oz":   convertToMetric(metricAmount, ML_TO_FLOZ, "ml");               break;
-                    case "qt":      convertToMetric(metricAmount, L_TO_QT, "l");                   break;
-                    case "in":      convertToMetric(metricAmount, CM_TO_INCH, "cm");               break;
-                    case "ft":      convertToMetric(metricAmount, M_TO_FEET, "m");                 break;
-                    case "f":       metricAmount.number = F_TO_C(number);    metricAmount.unit = "c";   break;
+            function get_imperial_to_metric(imperial_amount){
+                var metric_amount = Object.assign({}, imperial_amount); /* copy object */
+                switch(imperial_amount.unit){
+                    case "oz":      convertToMetric(metric_amount, G_TO_OZ, "g");                   break;
+                    case "lbs":     convertToMetric(metric_amount, KG_TO_LBS, "kg");                break;
+                    case "fl-oz":   convertToMetric(metric_amount, ML_TO_FLOZ, "ml");               break;
+                    case "qt":      convertToMetric(metric_amount, L_TO_QT, "l");                   break;
+                    case "in":      convertToMetric(metric_amount, CM_TO_INCH, "cm");               break;
+                    case "ft":      convertToMetric(metric_amount, M_TO_FEET, "m");                 break;
+                    case "f":       metric_amount.number = F_TO_C(number);    metric_amount.unit = "c";   break;
                     default:        /* unit is not in the imperial system */
                 }
-                return metricAmount;
+                return metric_amount;
             }
 
             /* update imperial amount with correct number and unit */
-            function convert_to_imperial(imperialAmount, conversionRate, newUnit){
-                imperialAmount.number *= conversionRate;
-                imperialAmount.unit = newUnit;
+            function convert_to_imperial(imperial_amount, conversion_rate, new_unit){
+                imperial_amount.number *= conversion_rate;
+                imperial_amount.unit = new_unit;
             }
 
             /* update metric amount with correct number and unit */
-            function convertToMetric(metricAmount, conversionRate, newUnit){
-                metricAmount.number /= conversionRate;
-                metricAmount.unit = newUnit;
+            function convertToMetric(metric_amount, conversion_rate, new_unit){
+                metric_amount.number /= conversion_rate;
+                metric_amount.unit = new_unit;
             }
 
             /* change current amount to fit the selected measurement system */

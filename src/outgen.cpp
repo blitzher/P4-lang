@@ -33,19 +33,20 @@ namespace epicr{
 		if (servings.count == 0)
 			return "";
         string result = "<input type='number' class='servings' max='1000' min='1' oninput='update_numbers()'";
-        result += "onfocusout='updateNumbers(this)' value=" + std::to_string(servings.count) + "> " + servings.descriptor;
+        result += "onfocusout='update_numbers(this)' value=" + std::to_string(servings.count) + "> " + servings.descriptor;
 		return result;
 	}
 
     /* construct HTML string for ingredient list item */
     string insertIngredient(std::vector<ingredient> ingredients, size_t i){
         string result = "<li>" + ingredients[i].name + " ";
-        if (!ingredients[i].amount.isUncountable){
+        if (!ingredients[i].amount.is_uncountable){
             std::string number = epicr::double_to_string(ingredients[i].amount.number);
             std::string unit = ingredients[i].amount.unit;
-            result += "(<text class='number'>" + number + "</text><text class='unit'>";
+            result += "(<text class='number'>" + number + "</text>";
             if (unit != "")
-                result += " " + unit;
+                result += " <text class='unit'>" + unit;
+            else result += "<text class='unit'>";
             result += "</text>)"; 
         }
         return result;
@@ -55,7 +56,7 @@ namespace epicr{
 	string insert_declaration_ingredients(string header, std::vector<ingredient> ingredients){
 		string result = "<h3 class=ingredients-header><strong>" + header + "</strong></h3>";
 		for (size_t i = 0; i < ingredients.size(); i++){
-			if (ingredients[i].isOptional)
+			if (ingredients[i].is_optional)
 				continue;
 			result += insertIngredient(ingredients, i);
 		}
@@ -66,7 +67,7 @@ namespace epicr{
     string insert_optional_ingredients(string header, std::vector<ingredient> ingredients){
 		string result = "<h3 class=field-header><strong>" + header + "</strong></h3>";
 		for (size_t i = 0; i < ingredients.size(); i++){
-			if (!ingredients[i].isOptional) 
+			if (!ingredients[i].is_optional) 
 				continue;
             result += insertIngredient(ingredients, i);
 		}
@@ -103,7 +104,7 @@ namespace epicr{
             if (i != 0)
                 result += ", ";
 			result += ingredients[i].name + " ";
-			if (!ingredients[i].amount.isUncountable){
+			if (!ingredients[i].amount.is_uncountable){
                 std::string number = epicr::double_to_string(ingredients[i].amount.number);
                 std::string unit = ingredients[i].amount.unit;
                 result += "(<text class='number'>" + number + "</text><text class='unit'>";
@@ -150,7 +151,7 @@ namespace epicr{
             if (i != 0)
                 result += ", ";
 			result += ingredients[i].name + " ";
-			if (!ingredients[i].amount.isUncountable){
+			if (!ingredients[i].amount.is_uncountable){
                 std::string number = epicr::double_to_string(ingredients[i].amount.number);
                 std::string unit = ingredients[i].amount.unit;
                 result += "(<text class='number'>" + number + "</text><text class='unit'>";
@@ -228,11 +229,11 @@ namespace epicr{
 		string tags = insert_text_in_list("Tags: ", rcp.tags);
 		string kitchenware = insert_text_in_list("Kitchenware", rcp.kitchenware);
 		string ingredients = insert_declaration_ingredients("Ingredients", rcp.ingredients);
-		string optionalIngredients = insert_optional_ingredients("Optional",rcp.ingredients);
+		string optional_ingredients = insert_optional_ingredients("Optional",rcp.ingredients);
 		string nutrients = insert_nutrients("Nutrients*", rcp.nutrients);
-		string totalTime = insert_time("Total time: ", rcp.time.total_time.c_str());
-		string prepTime = insert_time("Prep time: ", rcp.time.prep_time.c_str());
-		string cookTime = insert_time("Cook time: ", rcp.time.cook_time.c_str());
+		string total_time = insert_time("Total time: ", rcp.time.total_time.c_str());
+		string prep_time = insert_time("Prep time: ", rcp.time.prep_time.c_str());
+		string cook_time = insert_time("Cook time: ", rcp.time.cook_time.c_str());
 
 		string output_string = base_template; // convert base template to string
 
