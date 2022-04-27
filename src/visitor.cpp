@@ -9,9 +9,9 @@
 /* Check if something exits in the map. E.g checks if an ingredient is in the ingredient list */
 bool map_contains(std::unordered_map<std::string, epicr::ingredient> m, std::string k)
 {
-    for (auto KeyValuePair : m)
+    for (auto key_value_pair : m)
     {
-        if (KeyValuePair.first == k)
+        if (key_value_pair.first == k)
             return true;
     }
     return false;
@@ -130,15 +130,18 @@ namespace epicr::visitor
 
                 if (!ingredient_in_map(ingr.name, symbols))
                 {
-                    /* err */
+                    char *err = (char *)malloc(100);
+                    sprintf(err, "Ingredient %s used in instruction not found in ingredients list", ingr.name.c_str());
+                    ERR(err);
+                    return;
                 }
 
-                if (ingr.amount.isRelativeAmount)
+                if (ingr.amount.is_relative_amount)
                 {
 
                     /* verify that ingredient exists in either */
 
-                    if (ingr.amount.relativeAmount == "rest" && !ingredient_in_map(ingr.name, original_symbols))
+                    if (ingr.amount.relative_amount == "rest" && !ingredient_in_map(ingr.name, original_symbols))
                     {
                         char *err = (char *)malloc(100);
                         sprintf(err, "Ingredient %s used in instruction not found in ingredients list", ingr.name.c_str());
@@ -146,7 +149,7 @@ namespace epicr::visitor
                         return;
                     }
 
-                    switch (ingr.amount.relativeAmount[0])
+                    switch (ingr.amount.relative_amount[0])
                     {
                     case 'r': /* rest */
                         ingr.amount = symbols[ingr.name].amount;
@@ -164,7 +167,7 @@ namespace epicr::visitor
                         break;
                     default:
                         char *err = (char *)malloc(100);
-                        sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relativeAmount.c_str(), ingr.name.c_str());
+                        sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relative_amount.c_str(), ingr.name.c_str());
                         ERR(err);
                         return;
                     }
@@ -195,7 +198,7 @@ namespace epicr::visitor
                     {
                         char *err_msg = (char *)malloc(200);
                         sprintf(err_msg, "Differing unit types for yield\
-\nIn list: %s\nIn yield: %s\nFor ingredient '%s' in instruction #%i\n",
+\nIn list: %s\n_in yield: %s\nFor ingredient '%s' in instruction #%i\n",
                                 symbols[yield.name].amount.unit.c_str(), yield.amount.unit.c_str(), yield.name.c_str(), instruction_count);
                         ERR(err_msg);
                         return;
@@ -210,13 +213,13 @@ namespace epicr::visitor
                 }
             }
         }
-        bool titleIngredientRemaining = false;
-        for (auto KeyValuePair : symbols)
+        bool title_ingredient_remaining = false;
+        for (auto key_value_pair : symbols)
         {
-            ingredient ingr = KeyValuePair.second;
+            ingredient ingr = key_value_pair.second;
             if (to_lower(ingr.name) == to_lower(a_rcp->title))
-                titleIngredientRemaining = true;
-            else if (ingr.amount.number != 0 && !ingr.amount.isUncountable)
+                title_ingredient_remaining = true;
+            else if (ingr.amount.number != 0 && !ingr.amount.is_uncountable)
             {
                 char *err_msg = (char *)malloc(200);
                 sprintf(err_msg, "Unused ingredient: %s%s",
@@ -224,7 +227,7 @@ namespace epicr::visitor
                 ERR(err_msg);
             }
         }
-        if (!titleIngredientRemaining)
+        if (!title_ingredient_remaining)
             ERR("Title-ingredient must remain after all instructions have been executed");
     }
 

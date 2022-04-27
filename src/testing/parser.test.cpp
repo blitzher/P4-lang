@@ -107,11 +107,11 @@ void parsed_ingredients()
 	}
 
 	test_lib::expect_equal_s(rcp.ingredients[4].name, "extra wheatflour");
-	if (!rcp.ingredients[4].isOptional)
+	if (!rcp.ingredients[4].is_optional)
 	{
 		test_lib::deny("Expected ingredient extra wheatflour to be optional");
 	}
-	if (!rcp.ingredients[4].amount.isUncountable)
+	if (!rcp.ingredients[4].amount.is_uncountable)
 	{
 		test_lib::deny("Expected ingredient extra wheatflour to be uncountable");
 	}
@@ -142,8 +142,8 @@ void instruction_has_correct_ingredients_name()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
 	std::vector<std::string> ingredients = {"wheatflour", "egg", "salt", "water"};
-	size_t ingredientSize = ingredients.size();
-	for (size_t i = 0; i < ingredientSize; i++)
+	size_t ingredient_size = ingredients.size();
+	for (size_t i = 0; i < ingredient_size; i++)
 	{
 		test_lib::expect_equal_s(rcp.instructions[0].ingredients[i].name, ingredients[i]);
 	}
@@ -158,13 +158,13 @@ void ingredient_in_instruction_has_correct_amount()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
 	/* First ingredient */
-	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.isRelativeAmount, false); // this one fails
+	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.is_relative_amount, false); // this one fails
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.number, 300);
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "g");
 
 	/* Second ingredient */
-	test_lib::expect_equal_b(rcp.instructions[0].ingredients[1].amount.isRelativeAmount, true);
-	test_lib::expect_equal_s(rcp.instructions[0].ingredients[1].amount.relativeAmount, "all");
+	test_lib::expect_equal_b(rcp.instructions[0].ingredients[1].amount.is_relative_amount, true);
+	test_lib::expect_equal_s(rcp.instructions[0].ingredients[1].amount.relative_amount, "all");
 }
 
 void ingredient_in_instruction_without_amount_has_correct_amount()
@@ -173,10 +173,10 @@ void ingredient_in_instruction_without_amount_has_correct_amount()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
 	epicr::amount amnt = rcp.instructions[2].ingredients[0].amount;
-	test_lib::expect_equal_b(amnt.isRelativeAmount, true);
-	test_lib::expect_equal_b(amnt.isUncountable, false);
+	test_lib::expect_equal_b(amnt.is_relative_amount, true);
+	test_lib::expect_equal_b(amnt.is_uncountable, false);
 	test_lib::expect_equal_s(amnt.unit, "");
-	test_lib::expect_equal_s(amnt.relativeAmount, "rest");
+	test_lib::expect_equal_s(amnt.relative_amount, "rest");
 	test_lib::expect_equal_i(amnt.number, 0);
 }
 
@@ -228,24 +228,24 @@ void instruction_body_text_is_parsed_correctly()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	size_t actualInstructionBodySize = rcp.instructions[0].body.size();
-	std::string expectedInstructionBody = std::string("Put the 300 g wheatflour on the table and make a cavity in the middle.\n") +
-										  std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
-										  std::string("Start mixing the eggs into the wheatflour.\n") +
-										  std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
-										  std::string("Knead the dough thoroughly.\n");
-	std::string actualInstructionBody = "";
-	for (size_t i = 0; i < actualInstructionBodySize; i++)
+	size_t actual_instruction_body_size = rcp.instructions[0].body.size();
+	std::string expected_instruction_body = std::string("Put the 300 g wheatflour on the table and make a cavity in the middle.\n") +
+											std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
+											std::string("Start mixing the eggs into the wheatflour.\n") +
+											std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
+											std::string("Knead the dough thoroughly.\n");
+	std::string actual_instruction_body = "";
+	for (size_t i = 0; i < actual_instruction_body_size; i++)
 	{
-		actualInstructionBody += rcp.instructions[0].body[i].spelling;
+		actual_instruction_body += rcp.instructions[0].body[i].spelling;
 		if (rcp.instructions[0].body[i].is_amount)
 		{
-			actualInstructionBody += epicr::double_to_string(rcp.instructions[0].body[i].value.number) + " ";
+			actual_instruction_body += epicr::double_to_string(rcp.instructions[0].body[i].value.number) + " ";
 			if (rcp.instructions[0].body[i].value.unit != "")
-				actualInstructionBody += rcp.instructions[0].body[i].value.unit + " ";
+				actual_instruction_body += rcp.instructions[0].body[i].value.unit + " ";
 		}
 	}
-	test_lib::expect_equal_s(expectedInstructionBody, actualInstructionBody);
+	test_lib::expect_equal_s(expected_instruction_body, actual_instruction_body);
 	/* TODO: Take stance on how to deal with instructions words that are amounts
 	works now, but the 0's after the decimal-seperator should be omitted*/
 }

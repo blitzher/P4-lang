@@ -33,27 +33,27 @@ int main(int argc, char **argv)
 
 	cout << "Compiling " << epicr::clargs.input_filepath << endl;
 
-	epicr::Lexer myLexer = epicr::Lexer(file);
-	epicr::Parser myParser = epicr::Parser(&myLexer);
-	epicr::recipe myRecipe = myParser.Parse();
+	epicr::Lexer my_lexer = epicr::Lexer(file);
+	epicr::Parser my_parser = epicr::Parser(&my_lexer);
+	epicr::recipe my_recipe = my_parser.Parse();
 
-	cout << myParser.has_error << " Parser: " << myParser.error << endl;
+	cout << my_parser.has_error << " Parser: " << my_parser.error << endl;
 
 	auto ingrvisit = epicr::visitor::IngredientVerifier();
-	ingrvisit.visit(&myRecipe);
+	ingrvisit.visit(&my_recipe);
 	cout << ingrvisit.has_error << " IngVis: " << ingrvisit.error << endl;
 
 	auto amntconve = epicr::visitor::AmountConverter();
-	amntconve.visit(&myRecipe);
+	amntconve.visit(&my_recipe);
 	cout << amntconve.has_error << " AmtCon: " << amntconve.error << endl;
 
 	std::cout << "clarg output filepath: " << epicr::clargs.output_filepath << std::endl;
 
-	if (!myParser.has_error)
+	if (!my_parser.has_error)
 	{
 		string output_file = epicr::clargs.output_filepath;
-		output_file.append("/" + myRecipe.title + ".html");
-		epicr::generate_html(myRecipe, output_file);
+		output_file.append("/" + my_recipe.title + ".html");
+		epicr::generate_html(my_recipe, output_file);
 		printf("Wrote file: %s\n", output_file.c_str());
 	}
 
