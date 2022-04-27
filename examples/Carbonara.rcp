@@ -35,7 +35,6 @@ ingredients:
 instructions:
     using(airfryer):
         Preheat your airfryer to [200 C]
-            
     
     with(bacon) using(airfryer):
         Fry the bacon using the airfryer
@@ -44,7 +43,7 @@ instructions:
             bacon [10 oz],
             bacon fat
 
-    with(butter, onion, bacon fat) using(pan):
+    with(onion, bacon fat) using(pan):
         Put butter on the pan with bacon fat and sauté the onions until soft and clear.
 
         yield:
