@@ -71,10 +71,10 @@ namespace epicr
 		ctoken = lexer->next_non_blank_token();
 		utoken = lexer->peek_non_blank_token();
 
-		/* Parse all fields */
 		/* If an error occured during parsing,
 		 * return what was parsed so far */
 		setjmp(exit_jmp);
+		/* Parse all fields */
 		while (ctoken.type != E_TT_EOF && !has_error)
 		/* TODO: refactor x */
 		{

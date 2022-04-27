@@ -85,16 +85,6 @@ namespace epicr
 		return result;
 	}
 
-	string insertAmount(amount amount)
-	{
-		string result = " (";
-		result += epicr::double_to_string(amount.number);
-		if (!(amount.unit == ""))
-			result += " " + amount.unit;
-		result += ")";
-		return result;
-	}
-
 	/*returns whether or not there are any optional ingredients or non-optioanl ingredients, respectively based on bool parameter*/
 	bool isAnyIngredients(bool ingredientsAreOptional, std::vector<ingredient> ingredients)
 	{

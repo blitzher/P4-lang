@@ -30,7 +30,7 @@ ingredients:
     red/white wine vinegar [1 tablespoon],
     sugar [1 tablespoon],
     dry lasagna noodles [0.5 pound],
-    Salt+
+    salt+,
     ricotta cheese [25 ounces],
     mozzarella cheese grated [24 ounces],
     grated Parmesan cheese [4 ounces]
@@ -88,7 +88,7 @@ instructions:
     using(oven):
         Heat the oven to [375 F]
 
-    with(lasagna stuffing[quater], lasagna noodles[quater], ricotta cheese[half], mozzarella cheese grated[quater], grated Parmesan cheese[half]) using(9x13 inch casserole):
+    with(lasagna stuffing[quarter], lasagna noodles[quarter], ricotta cheese[half], mozzarella cheese grated[quarter], grated Parmesan cheese[half]) using(9x13 inch casserole):
         In a 9x13-inch casserole or lasagna dish, ladle a cup of sauce and spread it over the bottom of the dish. Arrange one layer of lasagna noodles lengthwise (about 3 long noodles, edge may overlap, depending on your pan) over the sauce. 
         Ladle a fourth of the remaining sauce over the noodles.
 
@@ -97,11 +97,11 @@ instructions:
         yield:
             udisessembled lasagna
 
-    with(udisessembled lasagna, lasagna stuffing[quater], lasagna noodles[quater], ricotta cheese[quater], grated Parmesan cheese[quater]) using(9x13 inch casserole):
-        Apply second layer of noodles, top it with half of the remaining sauce. Add quater of the remaining Mozzarella, the remaining ricotta cheese, and another the remaining Parmesan.
+    with(udisessembled lasagna, lasagna stuffing[quarter], lasagna noodles[quarter], ricotta cheese[quarter], grated Parmesan cheese[quarter]) using(9x13 inch casserole):
+        Apply second layer of noodles, top it with half of the remaining sauce. Add quarter of the remaining Mozzarella, the remaining ricotta cheese, and another the remaining Parmesan.
         yield:
             udisessembled lasagna
-    with(udisessembled lasagna, lasagna stuffing[quater], lasagna noodles[quater], ricotta cheese[rest], mozzarella cheese grated, grated Parmesan cheese[rest]) using(9x13 inch casserole):
+    with(udisessembled lasagna, lasagna stuffing[quarter], lasagna noodles[quarter], ricotta cheese[rest], mozzarella cheese grated, grated Parmesan cheese[rest]) using(9x13 inch casserole):
         Apply third layer of noodles, top it with half of the remaining sauce. Add half of the remaining Mozzarella, the remaining ricotta cheese, and another the remaining Parmesan.
         yield:
             udisessembled lasagna

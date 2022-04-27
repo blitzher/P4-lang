@@ -105,6 +105,16 @@ namespace epicr
 		return str.substr(0, seperatorPosition);
 	}
 
+	string amount_to_string(amount amount)
+	{
+		string result = " (";
+		result += epicr::double_to_string(amount.number);
+		if (!(amount.unit == ""))
+			result += " " + amount.unit;
+		result += ")";
+		return result;
+	}
+
 	bool ingredient_in_map(
 		std::string ingredientName,
 		std::unordered_map<std::string, ingredient> ingredients)

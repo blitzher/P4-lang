@@ -301,8 +301,10 @@ namespace epicr
     std::string to_lower(std::string);
     /*returns a new string where all types of spaces to right is stripped from the input string */
     std::string strip_spaces_right(std::string);
-    /*converts a double to a string - also rounds to the nearest 2 decimals*/
+    /* converts a double to a string - also rounds to the nearest 2 decimals */
     std::string double_to_string(double);
+    /* converts an amount to a printable string */
+    std::string amount_to_string(amount);
     /*return whether or not an ingredient with that name exists in the unordered map*/
     bool ingredient_in_map(std::string, std::unordered_map<std::string, ingredient>);
     /* Print the contents of a token to stdout */

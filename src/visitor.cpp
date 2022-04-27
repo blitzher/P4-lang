@@ -218,7 +218,10 @@ namespace epicr::visitor
                 titleIngredientRemaining = true;
             else if (ingr.amount.number != 0 && !ingr.amount.isUncountable)
             {
-                ERR("Unused ingredient after instructions");
+                char *err_msg = (char *)malloc(200);
+                sprintf(err_msg, "Unused ingredient: %s%s",
+                        ingr.name.c_str(), amount_to_string(ingr.amount).c_str());
+                ERR(err_msg);
             }
         }
         if (!titleIngredientRemaining)
