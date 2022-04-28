@@ -114,7 +114,7 @@ namespace epicr
 
 	std::string amount_to_string(amount amount)
 	{
-		std::string result = " (";
+		std::string result = "(";
 		result += epicr::double_to_string(amount.number);
 		if (!(amount.unit == ""))
 			result += " " + amount.unit;
