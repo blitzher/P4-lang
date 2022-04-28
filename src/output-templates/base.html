@@ -164,15 +164,7 @@
         ~tags~
     </div>
     <div class="right-half">
-        <div class="collapsible-wrapper">
-            <div class="arrow-down"></div>
-            <h3 class="collapsible">
-                Description
-            </h3>
-        </div>
-        <div class="collapsible-body">
-            ~description~
-        </div>
+        ~description~
     
         <!-- steps -->
         ~instructions~
@@ -269,6 +261,7 @@
                         imperial_amounts[i] = original_amount;
                     }
                 }
+                change_measurement_system();
             }
 
             /* listen for changes on the dropdown menu */
@@ -356,14 +349,25 @@
                     servings_field.value = servings_field.max;
                 }
                 else if(value < min){
-                    servings_field.value = servings_field.min;
+                    servings_field.value = value = servings_field.min;
                 }
+                if (servings_field.value.includes(".")){
+                    servings_field.value = truncateString(servings_field.value, 4);
+                }
+            }
+
+            function truncateString(str, num) {
+            if (str.length > num) {
+                return str.slice(0, num);
+            } else {
+                return str;
+            }
             }
 
             /* prohibit writing illegal characters in the "servings" field */
             servings_field.addEventListener("keydown", e => {
                 if (invalid_chars.includes(e.key)) {
-                    e.preventoriginal();
+                    e.preventDefault();
                 }
             });
             
