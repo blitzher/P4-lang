@@ -7,7 +7,7 @@ std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
 
 namespace epicr
 {
-	cmd_args clargs = {"", E_HTML_BASIC, "dist", E_US_NONE};
+	cmd_args clargs = {"", E_HS_BASIC, "dist", E_US_NONE};
 
 	ifstream open_file(string filename)
 	{
@@ -129,7 +129,7 @@ namespace epicr
 
 	parse_ret parse_recipe(std::string filename)
 	{
-		cmd_args args = {filename, E_HTML_BASIC, "dist", E_US_NONE};
+		cmd_args args = {filename, E_HS_BASIC, "dist", E_US_NONE};
 		return parse_recipe(args);
 	}
 
@@ -179,14 +179,14 @@ namespace epicr
 
 	epicr::epicr_html_style parse_style(std::string argv)
 	{
-		epicr::epicr_html_style choosen_style = epicr::E_HTML_BASIC;
+		epicr::epicr_html_style choosen_style = epicr::E_HS_BASIC;
 		if (argv == "--basic" || argv == "-b")
 		{
-			choosen_style = epicr::E_HTML_BASIC;
+			choosen_style = epicr::E_HS_BASIC;
 		}
 		else if (argv == "--fancy" || argv == "-f")
 		{
-			choosen_style = epicr::E_HTML_FANCY;
+			choosen_style = epicr::E_HS_FANCY;
 		}
 		return choosen_style;
 	}
