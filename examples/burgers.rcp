@@ -1,0 +1,12 @@
+title: Burgers
+
+ingredients:
+    meat [100g],
+    burgerBuns*
+
+instructions:
+    with(meat, Burger buns):
+        put the meat in the buns
+
+    yield:
+        Burgers
