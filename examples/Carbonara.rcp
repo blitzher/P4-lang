@@ -43,7 +43,7 @@ instructions:
             bacon [10 oz],
             bacon fat
 
-    with(onion, bacon fat) using(pan):
+    with(onion, bacon fat, butter) using(pan):
         Put butter on the pan with bacon fat and sauté the onions until soft and clear.
 
         yield:

@@ -179,6 +179,7 @@ namespace epicr
 
 	epicr::epicr_html_style parse_style(std::string argv)
 	{
+		size_t something;
 		epicr::epicr_html_style choosen_style = epicr::E_HTML_BASIC;
 		if (argv == "--basic" || argv == "-b")
 		{

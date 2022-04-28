@@ -2,9 +2,15 @@
 
 void expect_token_type(epicr::epicr_token actual, epicr::epicr_token_type expected)
 {
-	test_lib::expect_equal_s(
-		epicr::token_to_string(actual.type),
-		epicr::token_to_string(expected));
+	if (actual.type != expected)
+	{
+		char *err_msg = (char *)malloc(100);
+		sprintf(err_msg, "\nActual  : %s (%s)\nExpected: %s",
+				epicr::token_to_string(actual.type).c_str(), actual.word.c_str(),
+				epicr::token_to_string(expected).c_str());
+		test_lib::deny(err_msg);
+	}
+	test_lib::accept();
 }
 
 void basic_test()
@@ -129,6 +135,20 @@ void blank_runs()
 	expect_token_type(tokens[4], epicr::E_TT_EOF);
 }
 
+void valid_and_invalid_numbers()
+{
+	test_lib::REGISTER;
+
+	std::istringstream test_string("0\n0.0\n0.\n0.0.0\n.0");
+	epicr::Lexer lexer(test_string);
+	std::vector<epicr::epicr_token> tokens = lexer.next_token(10);
+	expect_token_type(tokens[0], epicr::E_TT_NUMBER);
+	expect_token_type(tokens[2], epicr::E_TT_NUMBER);
+	expect_token_type(tokens[4], epicr::E_TT_NUMBER);
+	expect_token_type(tokens[6], epicr::E_TT_WORD);
+	expect_token_type(tokens[8], epicr::E_TT_NUMBER);
+}
+
 int main(void)
 {
 	basic_test();
@@ -138,6 +158,7 @@ int main(void)
 	special_characters_non_token_breakers();
 	carriage_return();
 	blank_runs();
+	valid_and_invalid_numbers();
 	test_lib::print_recap();
 	return test_lib::result();
 }

@@ -86,8 +86,8 @@ class App(tk.Frame):
         self.html_style = ""
         self.unit_system = ""
 
-        self.input_fpath_label.place(x=150, y=3)
-        self.output_fpath_label.place(x=150, y=33)
+        self.input_fpath_label.place(x=175, y=3)
+        self.output_fpath_label.place(x=175, y=33)
 
     def open_file(self, dest):
         file = fd.askopenfile(filetypes=[("epicR Files", "*.rcp")])
