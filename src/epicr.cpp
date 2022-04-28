@@ -13,7 +13,7 @@ namespace epicr
 		fs::path output_dir = p;
 		fs::path dist_dir = ("dist");
 		fs::path full_path = output_dir / dist_dir;
-		return full_path;
+		return full_path.string();
 	}
 	cmd_args clargs;
 	std::ifstream open_file(std::string filename)
@@ -114,7 +114,7 @@ namespace epicr
 
 	std::string amount_to_string(amount amount)
 	{
-		std::string result = " (";
+		std::string result = "(";
 		result += epicr::double_to_string(amount.number);
 		if (!(amount.unit == ""))
 			result += " " + amount.unit;
