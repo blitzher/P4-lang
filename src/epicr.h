@@ -285,6 +285,8 @@ namespace epicr
         const double M_TO_FEET = 3.28;
         const double CM_TO_INCH = 0.39370079;
         const double MM_TO_INCH = 0.039;
+        const double L_TO_GAL = 0.264172;
+        const double DL_TO_CUP = 0.422675;
 
         inline double C_TO_F(double deg)
         {
@@ -322,21 +324,20 @@ namespace epicr
         bool has_err;
         std::string err;
     } parse_ret;
-    
+
     typedef struct rcp_ret_s
     {
         recipe *recipe;
         bool has_err;
         std::string err;
     } rcp_ret;
-    
 
     parse_ret parse_recipe(std::string filename);
     parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
     parse_ret parse_string(std::string recipeExcerpt);
     parse_ret parse_string_silent(std::string str);
-    
+
     rcp_ret ingredient_verify_recipe(recipe *);
 
     /* Command line argument related declarations */

@@ -84,6 +84,8 @@ void imperial_to_metric_values_conversions()
 	test_lib::expect_equal_d(rcp.ingredients[1].amount.number, 0.453592);
 	test_lib::expect_equal_d(rcp.ingredients[2].amount.number, 29.5735);
 	test_lib::expect_equal_d(rcp.ingredients[3].amount.number, 2.564103);
+	test_lib::expect_equal_d(rcp.ingredients[4].amount.number, 3.78541f);
+	test_lib::expect_equal_d(rcp.ingredients[5].amount.number, 2.36588f);
 }
 int main(void)
 {
