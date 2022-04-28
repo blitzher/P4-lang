@@ -63,15 +63,15 @@ namespace epicr
         unit_aliases["oz"] = {"oz", "ounce", "ounces"};
         unit_aliases["lbs"] = {"lbs", "pounds"};
 
-        unit_aliases["ml"] = {"ml", "mili liter"};
-        unit_aliases["dl"] = {"dl", "deci liter"};
+        unit_aliases["ml"] = {"ml", "milliliter"};
+        unit_aliases["dl"] = {"dl", "deciliter"};
         unit_aliases["l"] = {"l", "liter"};
         unit_aliases["fl-oz"] = {"fl-oz", "fluid ounce"};
         unit_aliases["cup"] = {"cup", "cups"};
         unit_aliases["qt"] = {"qt", "quarts"};
         unit_aliases["gal"] = {"gal", "gallon", "gallons"};
 
-        unit_aliases["mm"] = {"mm", "milimeter", "milimeters"};
+        unit_aliases["mm"] = {"mm", "millimeter", "millimeters"};
         unit_aliases["cm"] = {"cm", "centimeter", "centimeters"};
         unit_aliases["in"] = {"in", "inch", "inches"};
         unit_aliases["ft"] = {"ft", "feet"};
