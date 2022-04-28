@@ -205,9 +205,24 @@ void instruction_has_correct_kitchenware_name()
 {
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-
 	test_lib::expect_equal_s(rcp.instructions[1].kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.instructions[2].kitchenware[0], "kitchenroller");
+}
+
+void instruction_with_can_be_empty()
+{
+	test_lib::REGISTER;
+	epicr::parse_ret parse_return = epicr::parse_string("instructions: with(): get some water from the tap yield: water");
+	test_lib::expect_equal_b(parse_return.has_err,false);
+	test_lib::expect_equal_i(parse_return.recipe.instructions[0].ingredients.size(), 0);
+}
+
+void instruction_using_can_be_empty()
+{
+	test_lib::REGISTER;
+	epicr::parse_ret parse_return = epicr::parse_string("instructions: using(): Wash your hands thoroughly");
+	test_lib::expect_equal_b(parse_return.has_err,false);
+	test_lib::expect_equal_i(parse_return.recipe.instructions[0].kitchenware.size(), 0);
 }
 
 void parsed_instruction_body()
@@ -356,6 +371,8 @@ int main(void)
 	first_instruction_has_no_kitchenware();
 	instruction_has_correct_amount_of_kitchenware();
 	instruction_has_correct_kitchenware_name();
+	instruction_with_can_be_empty();
+	instruction_using_can_be_empty();
 	parsed_instruction_body();
 	instruction_body_text_is_parsed_correctly();
 	instruction_body_amounts_have_is_amount_set_to_true();
@@ -370,5 +387,3 @@ int main(void)
 	test_lib::print_recap();
 	return test_lib::result();
 }
-
-// mangler test for [amounts i with]

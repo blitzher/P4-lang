@@ -1,0 +1,18 @@
+title: c
+
+ingredients:
+    a
+
+instructions:
+
+with(a):
+    make b
+    
+    yield:
+        b[100 g]
+        
+with(b[all]):
+    make c
+    
+    yield:
+        c

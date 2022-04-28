@@ -98,6 +98,7 @@ namespace epicr::visitor
     {
         symbols = std::unordered_map<std::string, ingredient>();
         original_symbols = std::unordered_map<std::string, ingredient>();
+        uniqueIngredients = std::unordered_set<std::string>();
         has_error = false;
         error = "No error";
     };
@@ -108,11 +109,20 @@ namespace epicr::visitor
         /* shallow copy of input recipe */
         // recipe rcp = a_rcp;
 
-        /* fill the symbol table */
+        /* fill the symbol table and check for duplicate ingredients*/
         for (auto ingr : a_rcp->ingredients)
         {
             symbols[ingr.name] = ingr;          // used to check correspondance between ingredient list and instructions
             original_symbols[ingr.name] = ingr; // copy of ingredients
+            
+            /*duplicate ingredients check*/
+            size_t ingredients_count = uniqueIngredients.size();
+            uniqueIngredients.insert(ingr.name);
+            if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */ 
+            {
+                ERR("duplicate ingredient found: "+ingr.name);
+                return;
+            }
         }
 
         /* check the flow of the instructions are reasonable
@@ -138,17 +148,12 @@ namespace epicr::visitor
 
                 if (ingr.amount.is_relative_amount)
                 {
-
-                    /* verify that ingredient exists in either */
-
-                    if (ingr.amount.relative_amount == "rest" && !ingredient_in_map(ingr.name, original_symbols))
+                    if (!ingredient_in_map(ingr.name,original_symbols) && !(ingr.amount.relative_amount == "rest"))
                     {
-                        char *err = (char *)malloc(100);
-                        sprintf(err, "Ingredient %s used in instruction not found in ingredients list", ingr.name.c_str());
-                        ERR(err);
+                        ERR("relative amounts can only be used for ingredients in the ingredient list. " + ingr.name + " is not in the ingredient list");
                         return;
                     }
-
+                    
                     switch (ingr.amount.relative_amount[0])
                     {
                     case 'r': /* rest */
@@ -209,7 +214,6 @@ namespace epicr::visitor
                 else
                 {
                     symbols[yield.name] = yield;
-                    original_symbols[yield.name] = yield;
                 }
             }
         }

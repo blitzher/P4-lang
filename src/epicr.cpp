@@ -171,6 +171,17 @@ namespace epicr
 		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
 	}
+	
+	parse_ret parse_string(std::string recipeExcerpt)
+	{
+		std::istringstream test_string(recipeExcerpt);
+		Lexer lexer(test_string);
+		Parser parser(&lexer);
+		recipe rcp = parser.Parse();
+
+		parse_ret ret = {rcp, parser.has_error, parser.error};
+		return ret;
+	}
 
 	parse_ret parse_string_silent(std::string recipeExcerpt)
 	{
@@ -181,6 +192,14 @@ namespace epicr
 		recipe rcp = parser.Parse();
 
 		parse_ret ret = {rcp, parser.has_error, parser.error};
+		return ret;
+	}
+	
+	rcp_ret ingredient_verify_recipe(recipe *recipe)
+	{
+		auto ingrvisit = epicr::visitor::IngredientVerifier();
+		ingrvisit.visit(recipe);
+		rcp_ret ret = {recipe, ingrvisit.has_error, ingrvisit.error};
 		return ret;
 	}
 

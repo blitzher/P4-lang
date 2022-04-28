@@ -102,7 +102,8 @@
     "stop_token": "cpp",
     "thread": "cpp",
     "__tree": "cpp",
-    "csetjmp": "cpp"
+    "csetjmp": "cpp",
+    "unordered_set": "cpp"
   },
   "editor.tabSize": 4,
   "C_Cpp.default.cppStandard": "c++17",
