@@ -233,7 +233,7 @@ namespace epicr
 				std::filesystem::path fpath = std::filesystem::absolute(clargs.input_filepath);
 				std::filesystem::path ppath = fpath.parent_path();
 
-				auto rcp = parse_recipe((std::string)(ppath / ingr.name) + ".rcp");
+				auto rcp = parse_recipe((ppath / ingr.name).string() + ".rcp");
 				if (rcp.has_err)
 				{
 					char *err = (char *)malloc(100);
@@ -242,7 +242,7 @@ namespace epicr
 					longjmp(exit_jmp, 1);
 				}
 				ingr.name = rcp.recipe.title;
-				generate_html(rcp.recipe, (std::string)((std::filesystem::path)clargs.output_filepath / rcp.recipe.title) + ".html");
+				generate_html(rcp.recipe, ((std::filesystem::path)clargs.output_filepath / rcp.recipe.title).string() + ".html");
 			}
 
 			rcp->ingredients.push_back(ingr);
