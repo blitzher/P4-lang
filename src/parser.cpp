@@ -224,6 +224,27 @@ namespace epicr
 			ingredient ingr = ReadIngredient(HAS_PLUS | HAS_ASTERIX | HAS_QMARK | ASSUME_1_NUM);
 			if (has_error)
 				return;
+
+			if (ingr.is_ingredient_ref)
+			{
+				std::string cwd = std::filesystem::current_path();
+				std::cout << cwd << std::endl;
+
+				std::filesystem::path fpath = std::filesystem::absolute(clargs.input_filepath);
+				std::filesystem::path ppath = fpath.parent_path();
+
+				auto rcp = parse_recipe((std::string)(ppath / ingr.name) + ".rcp");
+				if (rcp.has_err)
+				{
+					char *err = (char *)malloc(100);
+					sprintf(err, "In %s: %s", ingr.name.c_str(), rcp.err.c_str());
+					error = err;
+					longjmp(exit_jmp, 1);
+				}
+				ingr.name = rcp.recipe.title;
+				generate_html(rcp.recipe, (std::string)((std::filesystem::path)clargs.output_filepath / rcp.recipe.title) + ".html");
+			}
+
 			rcp->ingredients.push_back(ingr);
 			ReadSeperatorOrWaitAtNextField("ingredients");
 		}
