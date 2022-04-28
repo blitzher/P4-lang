@@ -37,17 +37,21 @@ namespace epicr{
 		return result;
 	}
 
+    string generate_ingredient_html(string number, string unit){
+        string result = "(<text class='number' name='is_not_scalable'>" + number + "</text>";
+        if (unit != "")
+            result += " <text class='unit'>" + unit;
+        else 
+            result += "<text class='unit'>";
+        result += "</text>)"; 
+        return result;
+    }
+
     /* construct HTML string for ingredient list item */
-    string insertIngredient(std::vector<ingredient> ingredients, size_t i){
+    string insert_ingredient(std::vector<ingredient> ingredients, size_t i){
         string result = "<li>" + ingredients[i].name + " ";
         if (!ingredients[i].amount.is_uncountable){
-            std::string number = epicr::double_to_string(ingredients[i].amount.number);
-            std::string unit = ingredients[i].amount.unit;
-            result += "(<text class='number'>" + number + "</text>";
-            if (unit != "")
-                result += " <text class='unit'>" + unit;
-            else result += "<text class='unit'>";
-            result += "</text>)"; 
+            result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
         }
         return result;
     }
@@ -58,7 +62,7 @@ namespace epicr{
 		for (size_t i = 0; i < ingredients.size(); i++){
 			if (ingredients[i].is_optional)
 				continue;
-			result += insertIngredient(ingredients, i);
+			result += insert_ingredient(ingredients, i);
 		}
 		return result;
     }
@@ -69,7 +73,7 @@ namespace epicr{
 		for (size_t i = 0; i < ingredients.size(); i++){
 			if (!ingredients[i].is_optional) 
 				continue;
-            result += insertIngredient(ingredients, i);
+            result += insert_ingredient(ingredients, i);
 		}
 		return result;
     }
@@ -98,19 +102,14 @@ namespace epicr{
     }
 
     /* construct HTML string for ingredient field in instructions */
-    string insertInstructionIngredients(string header, std::vector<ingredient> ingredients){
+    string insert_instruction_ingredients(string header, std::vector<ingredient> ingredients){
         string result = "<h5><strong>" + header + "</strong>";
 		for (size_t i = 0; i < ingredients.size(); i++){
             if (i != 0)
                 result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable){
-                std::string number = epicr::double_to_string(ingredients[i].amount.number);
-                std::string unit = ingredients[i].amount.unit;
-                result += "(<text class='number'>" + number + "</text><text class='unit'>";
-                if (unit != "")
-                    result += " " + unit;
-                result += "</text>)"; 
+                result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
             }
 		}
         result += "</h5>";
@@ -136,8 +135,10 @@ namespace epicr{
 		string result = "<p class='instruction-body'>";
 		for (size_t i = 0; i < body.size(); i++){
 			result += body[i].spelling;
-			if (body[i].is_amount == true)
-				result += epicr::double_to_string(body[i].value.number) + " " + body[i].value.unit;
+			if (body[i].is_amount == true){
+                result += "<text class='number' name='is_not_scalable'>" + epicr::double_to_string(body[i].value.number) + "</text>";
+                result += " <text class='unit'>" + body[i].value.unit + "</text>";
+            }
 		}
         result += "</p>";
 		return result;
@@ -151,14 +152,8 @@ namespace epicr{
             if (i != 0)
                 result += ", ";
 			result += ingredients[i].name + " ";
-			if (!ingredients[i].amount.is_uncountable){
-                std::string number = epicr::double_to_string(ingredients[i].amount.number);
-                std::string unit = ingredients[i].amount.unit;
-                result += "(<text class='number'>" + number + "</text><text class='unit'>";
-                if (unit != "")
-                    result += " " + unit;
-                result += "</text>)"; 
-            }
+			if (!ingredients[i].amount.is_uncountable)
+               result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
         result += "</h5>";
 		return result;
@@ -181,7 +176,7 @@ namespace epicr{
 		const char *step_template = step_template_s.c_str();
 
 		std::filesystem::create_directory("dist");
-
+        
 		std::ofstream file{filename};
 		if (!file.is_open())
 			return false;
@@ -199,13 +194,16 @@ namespace epicr{
             string yield = "";
 
             if (inst.ingredients.size() > 0)
-                instructionIngredients = insertInstructionIngredients("Ingredients: ", inst.ingredients);
+                instructionIngredients = insert_instruction_ingredients("Ingredients: ", inst.ingredients);
+
             if(inst.kitchenware.size() == 0)
                 instructionIngredients += "<hr class='body-rule'>";
             else 
                 instructionKitchenware += insert_instruction_kitchenware("Kitchenware: ", inst.kitchenware);
+                
             if(inst.body.size() > 0)
                 body += insert_instruction_body(inst.body);
+                
 			if(inst.yields.size() > 0){
                 yield += "<hr class='body-rule'>";
                 yield += insert_yield_ingredients("<text class='arrow'> &#10230 <text>", inst.yields);

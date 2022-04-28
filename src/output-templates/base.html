@@ -104,6 +104,8 @@
         }
         .reset-amount{
             width: 50px;
+            float: right;
+            margin-right: 10px;
         }
         .servings{
             width: 50px;
@@ -125,7 +127,8 @@
         }
         .measurement-system{
             float: right;
-            margin-right: 15px;
+            margin-right: 10px;
+            height: 24px;
         }
 	</style>
 </header>
@@ -141,7 +144,6 @@
     ~prep-time~
     ~cook-time~
     <div id="servings-div">
-        <button class = reset-amount disabled="false" onclick="reset_amount()" > Reset </button>
         ~servings~
     </div>
     <select class="measurement-system">
@@ -150,6 +152,7 @@
         <option value="metric">Metric</option>
         <option value="imperial">Imperial</option>
     </select>
+    <button class = reset-amount disabled="false" onclick="reset_amount()" > Reset </button>
 </div>
 <hr>
 <div class="wrapper">
@@ -190,14 +193,13 @@
 
             /* amount arrays */
             let current_amounts = [];
-            let default_amounts = [];
+            let original_amounts = [];
             let metric_amounts = [];
             let imperial_amounts = [];
 
             /* miscellaneous variables */
             let all_are_collapsed = false;
-            let default_number_of_servings = servings_field.value;
-            let measurement_system = "original";
+            let original_number_of_servings = servings_field.value;
 
             const metric_units = [
                 "g",
@@ -207,7 +209,7 @@
                 "l",
                 "mm",
                 "cm",
-                "c"
+                "C"
             ];
 
             const invalid_chars = [
@@ -245,31 +247,33 @@
             /* initialize and assign final values to the arrays for holding amounts */
             save_start_values();
             function save_start_values(){
+                console.log(numbers.length);
                 for (i = 0; i < numbers.length; i++) {
-                    let default_number = parseFloat(numbers[i].innerHTML) / default_number_of_servings;
-                    let default_unit = units[i].innerHTML;
-                    var default_amount = new Amount(default_number, default_unit);
+                    let original_unit = units[i].innerHTML;
+                    let original_number;
+                    if (original_unit == "C" || original_unit == "F")
+                        original_number = parseFloat(numbers[i].innerHTML);
+                    else 
+                        original_number = parseFloat(numbers[i].innerHTML) / original_number_of_servings;
+                    var original_amount = new Amount(original_number, original_unit);
 
-                    default_amounts.push(default_amount);
-                    metric_amounts.push(default_amount);
-                    imperial_amounts.push(default_amount);
+                    original_amounts.push(original_amount);
+                    metric_amounts.push(original_amount);
+                    imperial_amounts.push(original_amount);
 
-                    if(is_metric(default_unit)){ /* convert to imperial */ 
-                        metric_amounts[i] = default_amount;
-                        imperial_amounts[i] = get_metric_to_imperial(default_amount);
+                    if(is_metric(original_unit)){ /* convert to imperial */ 
+                        metric_amounts[i] = original_amount;
+                        imperial_amounts[i] = get_metric_to_imperial(original_amount);
                     }
                     else { /* convert to metric */ 
-                        metric_amounts[i] = get_imperial_to_metric(default_amount);
-                        imperial_amounts[i] = default_amount;
+                        metric_amounts[i] = get_imperial_to_metric(original_amount);
+                        imperial_amounts[i] = original_amount;
                     }
                 }
             }
 
             /* listen for changes on the dropdown menu */
-            measurement_system_dropdown.addEventListener("change", () => {
-                measurement_system = measurement_system_dropdown.value;
-                update_numbers();
-            });
+            measurement_system_dropdown.addEventListener("change", change_measurement_system);
 
             /* listen for clicks on the dropdown arrows */
             for (i = 0; i < headers.length; i++) {
@@ -360,27 +364,32 @@
             /* prohibit writing illegal characters in the "servings" field */
             servings_field.addEventListener("keydown", e => {
                 if (invalid_chars.includes(e.key)) {
-                    e.preventDefault();
+                    e.preventoriginal();
                 }
             });
             
             /* change amounts according to which measurement system is chosen */
             function update_numbers(){
                 truncate();
-                change_measurement_system();
 
                 /* if no number is written in the servings field, don't do anything*/
                 if (servings_field.value != ""){ 
                     for (i = 0; i < numbers.length; i++) {
-                        let new_number = (current_amounts[i].number * parseFloat(servings_field.value));
+                        let new_number;
+                        if (units[i].innerHTML == "C" || units[i].innerHTML == "F"){
+                            new_number = current_amounts[i].number; 
+                            console.log("moawdk");
+                        }
+                        else 
+                            new_number = (current_amounts[i].number * parseFloat(servings_field.value));
                         new_number = Math.round((new_number + Number.EPSILON)* 100.0) / 100.0;
                         numbers[i].innerHTML = new_number.toString();
                         units[i].innerHTML = current_amounts[i].unit;  
                     }
                 }
 
-                /* disable reset button if the number of servings is already the default number */
-                if (servings_field.value == default_number_of_servings){
+                /* disable reset button if the number of servings is already the original number */
+                if ((servings_field.value == original_number_of_servings) && (measurement_system_dropdown.value == "original")){
                     reset_amount_button.disabled = true;
                 }
                 else {
@@ -388,9 +397,11 @@
                 }
             }
 
-            /* reset servings amount to default */
+            /* reset servings amount to original */
             function reset_amount(){
-                servings_field.value = default_number_of_servings.toString();
+                servings_field.value = original_number_of_servings.toString();
+                measurement_system_dropdown.value = "original";
+                change_measurement_system();
                 update_numbers(servings_field);
             }
 
@@ -413,7 +424,8 @@
                     case "l":     convert_to_imperial(imperial_amount, L_TO_QT, "qt");                      break;
                     case "mm":    convert_to_imperial(imperial_amount, MM_TO_INCH, "in");                   break;
                     case "cm":    convert_to_imperial(imperial_amount, CM_TO_INCH, "in");                   break;
-                    case "c":     imperial_amount.number *= C_TO_F(number);   imperial_amount.unit = "f";   break;
+                    case "C":     imperial_amount.number = C_TO_F(imperial_amount.number);   
+                                  imperial_amount.unit = "F";                                               break;
                     default:      /* unit is not in the metric system */
                 }
                 return imperial_amount;
@@ -423,13 +435,14 @@
             function get_imperial_to_metric(imperial_amount){
                 var metric_amount = Object.assign({}, imperial_amount); /* copy object */
                 switch(imperial_amount.unit){
-                    case "oz":      convertToMetric(metric_amount, G_TO_OZ, "g");                   break;
-                    case "lbs":     convertToMetric(metric_amount, KG_TO_LBS, "kg");                break;
-                    case "fl-oz":   convertToMetric(metric_amount, ML_TO_FLOZ, "ml");               break;
-                    case "qt":      convertToMetric(metric_amount, L_TO_QT, "l");                   break;
-                    case "in":      convertToMetric(metric_amount, CM_TO_INCH, "cm");               break;
-                    case "ft":      convertToMetric(metric_amount, M_TO_FEET, "m");                 break;
-                    case "f":       metric_amount.number = F_TO_C(number);    metric_amount.unit = "c";   break;
+                    case "oz":      convertToMetric(metric_amount, G_TO_OZ, "g");                       break;
+                    case "lbs":     convertToMetric(metric_amount, KG_TO_LBS, "kg");                    break;
+                    case "fl-oz":   convertToMetric(metric_amount, ML_TO_FLOZ, "ml");                   break;
+                    case "qt":      convertToMetric(metric_amount, L_TO_QT, "l");                       break;
+                    case "in":      convertToMetric(metric_amount, CM_TO_INCH, "cm");                   break;
+                    case "ft":      convertToMetric(metric_amount, M_TO_FEET, "m");                     break;
+                    case "F":       metric_amount.number = F_TO_C(metric_amount.number);    
+                                    metric_amount.unit = "C";                                           break;
                     default:        /* unit is not in the imperial system */
                 }
                 return metric_amount;
@@ -449,21 +462,22 @@
 
             /* change current amount to fit the selected measurement system */
             function change_measurement_system(){
-                if (measurement_system == "imperial"){
+                if (measurement_system_dropdown.value == "imperial"){
                     for (i = 0; i < numbers.length; i++) {
                         current_amounts[i] = imperial_amounts[i];
                     }
                 }
-                else if (measurement_system == "metric"){
+                else if (measurement_system_dropdown.value == "metric"){
                     for (i = 0; i < numbers.length; i++) {
                         current_amounts[i] = metric_amounts[i];
                     }
                 }
-                else { /* default amounts */
+                else { /* original amounts */
                     for (i = 0; i < numbers.length; i++) {
-                        current_amounts[i] = default_amounts[i];    
+                        current_amounts[i] = original_amounts[i];    
                     }
                 }
+                update_numbers();
             }
         </script>
     </div>
