@@ -114,13 +114,13 @@ namespace epicr::visitor
         {
             symbols[ingr.name] = ingr;          // used to check correspondance between ingredient list and instructions
             original_symbols[ingr.name] = ingr; // copy of ingredients
-            
+
             /*duplicate ingredients check*/
             size_t ingredients_count = uniqueIngredients.size();
             uniqueIngredients.insert(ingr.name);
-            if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */ 
+            if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */
             {
-                ERR("duplicate ingredient found: "+ingr.name);
+                ERR("duplicate ingredient found: " + ingr.name);
                 return;
             }
         }
@@ -148,12 +148,12 @@ namespace epicr::visitor
 
                 if (ingr.amount.is_relative_amount)
                 {
-                    if (!ingredient_in_map(ingr.name,original_symbols) && !(ingr.amount.relative_amount == "rest"))
+                    if (!ingredient_in_map(ingr.name, original_symbols) && !(ingr.amount.relative_amount == "rest"))
                     {
                         ERR("relative amounts can only be used for ingredients in the ingredient list. " + ingr.name + " is not in the ingredient list");
                         return;
                     }
-                    
+
                     switch (ingr.amount.relative_amount[0])
                     {
                     case 'r': /* rest */
@@ -378,6 +378,16 @@ namespace epicr::visitor
             {
                 amnt->number = amnt->number / KG_TO_LBS;
                 amnt->unit = "kg";
+            }
+            else if (standardized == "gal")
+            {
+                amnt->number = amnt->number / L_TO_GAL;
+                amnt->unit = "L";
+            }
+            else if (standardized == "cup")
+            {
+                amnt->number = amnt->number / DL_TO_CUP;
+                amnt->unit = "dl";
             }
             else if (standardized == "fl-oz")
             {

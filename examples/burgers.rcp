@@ -2,7 +2,7 @@ title: Burgers
 
 ingredients:
     meat [100g],
-    burgerBuns*
+    burgerBuns* [5 dl]
 
 instructions:
     with(meat, Burger buns):
