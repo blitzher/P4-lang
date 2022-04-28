@@ -153,6 +153,14 @@ void parse_no_comma_as_seperator_for_tags_exception()
     test_lib::expect_exception(rcp, "expected a comma as a seperator between " + field_name);
 }
 
+void parse_body_cannot_be_empty_exception()
+{
+    test_lib::REGISTER;
+    std::string incorrect_instruction = "instructions: with(egg): yield: scrambled eggs";
+    auto rcp = epicr::parse_string_silent(incorrect_instruction);
+    test_lib::expect_exception(rcp, "Instruction body cannot be empty");
+}
+
 void visit_no_repeating_ingredients_exception()
 {
     test_lib::REGISTER;
@@ -181,6 +189,7 @@ int main()
     parse_double_question_mark_exception();
     parse_invalid_relative_amount_exception();
     parse_invalid_type_of_amount_exception();
+    parse_body_cannot_be_empty_exception();
     visit_no_repeating_ingredients_exception();
     test_lib::print_recap();
     return test_lib::result();

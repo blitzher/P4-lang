@@ -334,6 +334,7 @@ namespace epicr
     parse_ret parse_recipe(std::string filename);
     parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
+    parse_ret parse_string(std::string recipeExcerpt);
     parse_ret parse_string_silent(std::string str);
     
     rcp_ret ingredient_verify_recipe(recipe *);

@@ -109,22 +109,20 @@ namespace epicr::visitor
         /* shallow copy of input recipe */
         // recipe rcp = a_rcp;
 
-        /* fill the symbol table and check for repeating ingredients*/
+        /* fill the symbol table and check for duplicate ingredients*/
         for (auto ingr : a_rcp->ingredients)
         {
             symbols[ingr.name] = ingr;          // used to check correspondance between ingredient list and instructions
             original_symbols[ingr.name] = ingr; // copy of ingredients
             
-            /*repeating ingredients check*/
+            /*duplicate ingredients check*/
             size_t ingredients_count = uniqueIngredients.size();
             uniqueIngredients.insert(ingr.name);
-            if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been defined */ 
+            if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */ 
             {
                 ERR("duplicate ingredient found: "+ingr.name);
                 return;
             }
-
-
         }
 
         /* check the flow of the instructions are reasonable
