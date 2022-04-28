@@ -21,7 +21,7 @@ class App(tk.Frame):
         )
         self.output_dir_button = tk.Button(
             self,
-            command=lambda: self.open_dir(self.out_dir),
+            command=lambda: self.open_dir(self.out_dir_label),
             text="Choose output dir",
             height=1,
             width=15,
@@ -80,12 +80,15 @@ class App(tk.Frame):
         self.input_fpath_label = tk.Label()
         self.input_fpath_label["textvariable"] = self.input_fpath
         self.output_fpath_label = tk.Label()
-        self.out_dir = tk.StringVar()
-        self.out_dir.set("No directory selected")
-        self.output_fpath_label["textvariable"] = self.out_dir
+        self.out_dir_label = tk.StringVar()
+        self.out_dir_label.set("No directory selected")
+        self.output_fpath_label["textvariable"] = self.out_dir_label
         self.html_style = ""
         self.unit_system = ""
-
+        self.directory = tk.StringVar()
+        self.directory.set("")
+        self.output_dir_clarg = tk.StringVar()
+        self.output_dir_clarg.set("-o ")
         self.input_fpath_label.place(x=175, y=3)
         self.output_fpath_label.place(x=175, y=33)
 
@@ -97,7 +100,7 @@ class App(tk.Frame):
             dest.set(self.format_fpath(filepath))
 
     def select_style(self):
-        value = self.var.get()
+        value = self.html_buttons.get()
 
         if value == 1:
             self.html_style = "Fancy"
@@ -105,7 +108,7 @@ class App(tk.Frame):
             self.html_style = "Basic"
 
     def select_system(self):
-        value = self.var2.get()
+        value = self.unit_buttons.get()
 
         if value == 1:
             self.unit_system = "Imperial"
@@ -120,6 +123,8 @@ class App(tk.Frame):
         if _dir:
             dirpath = os.path.abspath(_dir)
             dest.set(self.format_fpath(dirpath))
+            self.directory.set(
+                self.output_dir_clarg.get() + self.out_dir_label.get())
 
     def compile(self):
 
@@ -128,13 +133,12 @@ class App(tk.Frame):
         else:
             executable = os.path.join(".", "bin", "main")
 
-        clargs = "%s -o %s --%s --%s" % (
+        clargs = "%s %s --%s --%s" % (
             self.input_fpath.get(),
-            self.out_dir.get(),
+            self.directory.get(),
             self.html_style,
             self.unit_system,
         )
-
         os.system("%s %s" % (executable, clargs))
 
     def format_fpath(self, s):

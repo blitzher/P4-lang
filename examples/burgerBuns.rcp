@@ -2,14 +2,14 @@ title: Burger buns
 servings: 10-12 buns
 
 ingredients:
-    luke warm water [400 g]
-    fresh yeast [25 g]
-    wheat flour [700 g]
-    sugar [50 g]
-    softened butter [50 g]
-    salt [10 g]
-    egg [1]
-    sesame seeds+
+    luke warm water [400 g],
+    fresh yeast [25 g],
+    wheat flour [700 g],
+    sugar [50 g],
+    softened butter [50 g],
+    salt [10 g],
+    egg [1],
+    sesame seeds+,
     extra wheat flour+
 
 kitchenware:
@@ -46,7 +46,7 @@ instructions:
         yield:
             dough piece [10]
     
-    with(dough piece [all]):
+    with(dough piece):
         Shape each dough piece into a bun by folding the sides over each other 
         all the way around.
         yield:
@@ -55,28 +55,33 @@ instructions:
     with(burger buns):
         Place the burger buns with the folds facing down on a baking sheet lined 
         with parchment paper.
-    yield:
-        burger buns
+
+        yield:
+            burger buns
     
     with(burger buns):
         Let the burger buns rise for 15 minutes. Press the buns flat with the 
         palm of your hand to the desired size.
+
         yield:
             burger buns
     
     with(burger buns):
         Let the buns prove for another 45-60 minutes.
+
         yield:
             burger buns
     
     with(egg, sesame seeds, burger buns):
-        Whisk an [egg] together and brush the [burger buns], and sprinkle with 
+        Whisk an egg together and brush the burger buns, and sprinkle with 
         sesame seeds.
+
         yield: 
             burger buns
 
     with(burger buns):
-        Bake the [burger buns] at {200 C} over/under heat for approx. 15 minutes.
+        Bake the burger buns at [200 C] over/under heat for approx. 15 minutes.
+
         yield: 
             burger buns
 

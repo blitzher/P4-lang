@@ -1,25 +1,32 @@
 #include "./epicr.h"
 #include <cmath>
 
-using namespace std;
-
 std::unordered_map<std::string, epicr::parse_ret> cached_recipes;
+namespace fs = std::filesystem;
 
 namespace epicr
 {
-	cmd_args clargs = {"", E_HTML_BASIC, "dist", E_US_NONE};
 
-	ifstream open_file(string filename)
+	std::string concat_output_dir()
 	{
-		ifstream file{filename, ios_base::binary};
+		fs::path p = fs::current_path();
+		fs::path output_dir = p;
+		fs::path dist_dir = ("dist");
+		fs::path full_path = output_dir / dist_dir;
+		return full_path.string();
+	}
+	cmd_args clargs;
+	std::ifstream open_file(std::string filename)
+	{
+		std::ifstream file{filename, std::ios_base::binary};
 
 		if (!file.is_open())
-			cout << "File " << filename << " could not be opened!" << endl;
+			std::cout << "File " << filename << " could not be opened!" << std::endl;
 
 		return file;
 	}
 
-	string token_to_string(epicr_token_type type)
+	std::string token_to_string(epicr_token_type type)
 	{
 		switch (type)
 		{
@@ -58,7 +65,7 @@ namespace epicr
 
 	void print_token(epicr_token token)
 	{
-		string type = token_to_string(token.type);
+		std::string type = token_to_string(token.type);
 
 		if (token.type != E_TT_BLANK && token.type != E_TT_NEWLINE)
 			printf("%-18s-> %-10s uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.uid, token.line);
@@ -74,9 +81,9 @@ namespace epicr
 		return ch;
 	}
 
-	string to_lower(std::string str)
+	std::string to_lower(std::string str)
 	{
-		string lowered;
+		std::string lowered;
 		size_t str_size = str.size();
 		for (size_t i = 0; i < str_size; i++)
 			lowered.push_back(char_to_lower(str[i]));
@@ -105,9 +112,9 @@ namespace epicr
 		return str.substr(0, seperatorPosition);
 	}
 
-	string amount_to_string(amount amount)
+	std::string amount_to_string(amount amount)
 	{
-		string result = " (";
+		std::string result = "(";
 		result += epicr::double_to_string(amount.number);
 		if (!(amount.unit == ""))
 			result += " " + amount.unit;
@@ -129,7 +136,7 @@ namespace epicr
 
 	parse_ret parse_recipe(std::string filename)
 	{
-		cmd_args args = {filename, E_HTML_BASIC, "dist", E_US_NONE};
+		cmd_args args = {filename, E_HS_BASIC, "dist", E_US_NONE};
 		return parse_recipe(args);
 	}
 
@@ -198,14 +205,14 @@ namespace epicr
 
 	epicr::epicr_html_style parse_style(std::string argv)
 	{
-		epicr::epicr_html_style choosen_style = epicr::E_HTML_BASIC;
+		epicr::epicr_html_style choosen_style = epicr::E_HS_BASIC;
 		if (argv == "--basic" || argv == "-b")
 		{
-			choosen_style = epicr::E_HTML_BASIC;
+			choosen_style = epicr::E_HS_BASIC;
 		}
 		else if (argv == "--fancy" || argv == "-f")
 		{
-			choosen_style = epicr::E_HTML_FANCY;
+			choosen_style = epicr::E_HS_FANCY;
 		}
 		return choosen_style;
 	}
@@ -231,7 +238,7 @@ namespace epicr
 			argv_s.push_back(std::string(argv[i]));
 		}
 
-		epicr::cmd_args CMD_ARGS;
+		epicr::cmd_args CMD_ARGS = {"", E_HS_BASIC, concat_output_dir(), E_US_NONE};
 		for (int i = 0; i < argc; i++)
 		{
 			std::string arg = to_lower(argv_s[i]);
