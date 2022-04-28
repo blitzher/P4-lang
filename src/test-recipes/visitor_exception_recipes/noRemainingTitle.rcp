@@ -1,0 +1,16 @@
+title: saltwater
+
+ingredients:
+    salt
+    water
+    
+instructions:
+
+with(salt,water):
+    mix salt and water
+    
+    yield:
+        saltwater
+    
+with(saltwater):
+    pour the saltwater in the ocean
