@@ -107,7 +107,7 @@ namespace epicr
 
 	string amount_to_string(amount amount)
 	{
-		string result = " (";
+		string result = "(";
 		result += epicr::double_to_string(amount.number);
 		if (!(amount.unit == ""))
 			result += " " + amount.unit;

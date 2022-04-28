@@ -34,12 +34,26 @@ void double_to_string()
     test_lib::expect_equal_s(epicr::double_to_string(2.5f), "2.50");
 }
 
+void amount_to_string()
+{
+    test_lib::REGISTER;
+
+    /* double number;
+    bool is_relative_amount;
+    std::string relative_amount;
+    std::string unit;
+    bool is_uncountable; */
+    epicr::amount amnt = {10.22, false, "", "grams", false};
+    test_lib::expect_equal_s(epicr::amount_to_string(amnt), "(10.22 grams)");
+}
+
 int main()
 {
     token_type_to_string();
     to_lower();
     strip_spaces_right();
     double_to_string();
+    amount_to_string();
 
     test_lib::print_recap();
     return test_lib::result();
