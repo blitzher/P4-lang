@@ -98,6 +98,7 @@ namespace epicr::visitor
     {
         symbols = std::unordered_map<std::string, ingredient>();
         original_symbols = std::unordered_map<std::string, ingredient>();
+        uniqueIngredients = std::unordered_set<std::string>();
         has_error = false;
         error = "No error";
     };
@@ -108,11 +109,22 @@ namespace epicr::visitor
         /* shallow copy of input recipe */
         // recipe rcp = a_rcp;
 
-        /* fill the symbol table */
+        /* fill the symbol table and check for repeating ingredients*/
         for (auto ingr : a_rcp->ingredients)
         {
             symbols[ingr.name] = ingr;          // used to check correspondance between ingredient list and instructions
             original_symbols[ingr.name] = ingr; // copy of ingredients
+            
+            /*repeating ingredients check*/
+            size_t ingredients_count = uniqueIngredients.size();
+            uniqueIngredients.insert(ingr.name);
+            if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been defined */ 
+            {
+                ERR("duplicate ingredient found: "+ingr.name);
+                return;
+            }
+
+
         }
 
         /* check the flow of the instructions are reasonable

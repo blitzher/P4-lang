@@ -13,6 +13,7 @@
 #include <sstream>
 #include <filesystem>
 #include <csetjmp>
+#include <unordered_set>
 
 #pragma region Debug macros
 
@@ -256,6 +257,7 @@ namespace epicr
         private:
             std::unordered_map<std::string, ingredient> symbols;
             std::unordered_map<std::string, ingredient> original_symbols;
+            std::unordered_set<std::string> uniqueIngredients;
             bool ingredients_compatible(ingredient a, ingredient b);
 
         public:
@@ -320,11 +322,21 @@ namespace epicr
         bool has_err;
         std::string err;
     } parse_ret;
+    
+    typedef struct rcp_ret_s
+    {
+        recipe *recipe;
+        bool has_err;
+        std::string err;
+    } rcp_ret;
+    
 
     parse_ret parse_recipe(std::string filename);
     parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
     parse_ret parse_string_silent(std::string str);
+    
+    rcp_ret ingredient_verify_recipe(recipe *);
 
     /* Command line argument related declarations */
     void parse_cmd_args(int argc, char **argv);

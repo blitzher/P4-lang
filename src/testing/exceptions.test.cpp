@@ -153,6 +153,15 @@ void parse_no_comma_as_seperator_for_tags_exception()
     test_lib::expect_exception(rcp, "expected a comma as a seperator between " + field_name);
 }
 
+void visit_no_repeating_ingredients_exception()
+{
+    test_lib::REGISTER;
+    epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/visitor_exception_recipes/duplicateIngredient.rcp").recipe;
+    auto ingrvisit = epicr::visitor::IngredientVerifier();
+    auto final_rcp = epicr::ingredient_verify_recipe(&rcp);
+    test_lib::expect_exception(final_rcp, "duplicate ingredient found: egg");
+}
+
 int main()
 {
     parse_incorrect_field_exception();
@@ -172,6 +181,7 @@ int main()
     parse_double_question_mark_exception();
     parse_invalid_relative_amount_exception();
     parse_invalid_type_of_amount_exception();
+    visit_no_repeating_ingredients_exception();
     test_lib::print_recap();
     return test_lib::result();
 }

@@ -1,0 +1,13 @@
+title: apple-egg   
+ingredients: 
+    egg[2],
+    apple,
+    egg[2]    
+instructions: 
+    with(egg[2],apple): 
+    make apple-egg 
+    
+    yield: 
+        apple-egg
+    
+    

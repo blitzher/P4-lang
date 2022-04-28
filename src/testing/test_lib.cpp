@@ -195,6 +195,14 @@ namespace test_lib
 		else
 			test_lib::expect_equal_s(parse_ret.err, err_message);
 	}
+	
+	void expect_exception(epicr::rcp_ret rcp_ret, std::string err_message)
+	{
+		if (!rcp_ret.has_err)
+			test_lib::deny("Parser did not throw an error");
+		else
+			test_lib::expect_equal_s(rcp_ret.err, err_message);
+	}
 
 	/* Print the results of the tests */
 	void print_recap()
