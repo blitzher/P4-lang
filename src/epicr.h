@@ -270,7 +270,7 @@ namespace epicr
         private:
             bool is_convertable(std::string);
             std::string standardize(std::string);
-            void scale_amount(amount *amnt, epicr_unit_system system);
+            void convert_amount(amount *amnt, epicr_unit_system system);
 
         public:
             void visit(recipe *);
