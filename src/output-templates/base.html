@@ -247,7 +247,6 @@
             /* initialize and assign final values to the arrays for holding amounts */
             save_start_values();
             function save_start_values(){
-                console.log(numbers.length);
                 for (i = 0; i < numbers.length; i++) {
                     let original_unit = units[i].innerHTML;
                     let original_number;
@@ -378,7 +377,6 @@
                         let new_number;
                         if (units[i].innerHTML == "C" || units[i].innerHTML == "F"){
                             new_number = current_amounts[i].number; 
-                            console.log("moawdk");
                         }
                         else 
                             new_number = (current_amounts[i].number * parseFloat(servings_field.value));
