@@ -38,10 +38,11 @@ namespace epicr{
 	}
 
     string generate_ingredient_html(string number, string unit){
-        string result = "(<text class='number'>" + number + "</text>";
+        string result = "(<text class='number' name='is_not_scalable'>" + number + "</text>";
         if (unit != "")
             result += " <text class='unit'>" + unit;
-        else result += "<text class='unit'>";
+        else 
+            result += "<text class='unit'>";
         result += "</text>)"; 
         return result;
     }
@@ -134,8 +135,10 @@ namespace epicr{
 		string result = "<p class='instruction-body'>";
 		for (size_t i = 0; i < body.size(); i++){
 			result += body[i].spelling;
-			if (body[i].is_amount == true)
-				result += epicr::double_to_string(body[i].value.number) + " " + body[i].value.unit;
+			if (body[i].is_amount == true){
+                result += "<text class='number' name='is_not_scalable'>" + epicr::double_to_string(body[i].value.number) + "</text>";
+                result += " <text class='unit'>" + body[i].value.unit + "</text>";
+            }
 		}
         result += "</p>";
 		return result;
@@ -149,9 +152,8 @@ namespace epicr{
             if (i != 0)
                 result += ", ";
 			result += ingredients[i].name + " ";
-			if (!ingredients[i].amount.is_uncountable){
+			if (!ingredients[i].amount.is_uncountable)
                result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
-            }
 		}
         result += "</h5>";
 		return result;
@@ -174,7 +176,7 @@ namespace epicr{
 		const char *step_template = step_template_s.c_str();
 
 		std::filesystem::create_directory("dist");
-
+        
 		std::ofstream file{filename};
 		if (!file.is_open())
 			return false;
