@@ -230,16 +230,27 @@ namespace epicr
 				std::filesystem::path fpath = std::filesystem::absolute(clargs.input_filepath);
 				std::filesystem::path ppath = fpath.parent_path();
 
-				auto rcp = parse_recipe((ppath / ingr.name).string() + ".rcp");
-				if (rcp.has_err)
+				auto rcp_ret = parse_recipe((ppath / ingr.name).string() + ".rcp");
+				if (rcp_ret.has_err)
 				{
 					char *err = (char *)malloc(100);
-					sprintf(err, "In %s: %s", ingr.name.c_str(), rcp.err.c_str());
+					sprintf(err, "In %s: %s", ingr.name.c_str(), rcp_ret.err.c_str());
 					error = err;
 					longjmp(exit_jmp, 1);
 				}
-				ingr.name = rcp.recipe.title;
-				generate_html(rcp.recipe, ((std::filesystem::path)clargs.output_filepath / rcp.recipe.title).string() + ".html");
+				recipe rcp = rcp_ret.recipe;
+				ingr.name = rcp.title;
+				ingr.amount.unit = ingr.amount.unit == ""
+									   ? (rcp.servings.descriptor == ""
+											  ? "servings"
+											  : rcp.servings.descriptor)
+									   : ingr.amount.unit;
+
+				ingr.amount.number = ingr.amount.number == 0
+										 ? rcp.servings.count
+										 : ingr.amount.number;
+
+				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
 			}
 
 			rcp->ingredients.push_back(ingr);

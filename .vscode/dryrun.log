@@ -1,8 +1,0 @@
-make --dry-run --keep-going --print-directory
-make: Entering directory `/Users/skovborg/Documents/P4-lang'
-clang++ -o bin/exceptions.test -Wall -pedantic obj/test_lib.o obj/epicr.o obj/lexer.o obj/minf.o obj/outgen.o obj/parser.o obj/visitor.o obj/exceptions.test.o
- 
-echo "Running \033[4mexceptions.test\033[0m"
-./bin/exceptions.test
-make: Leaving directory `/Users/skovborg/Documents/P4-lang'
- 
