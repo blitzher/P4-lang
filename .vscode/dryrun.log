@@ -1,42 +1,8 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/skovborg/Documents/P4-lang'
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/testing/exceptions.test.cpp -o obj/exceptions.test.o
- 
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/testing/lexer.test.cpp -o obj/lexer.test.o
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/testing/parser.test.cpp -o obj/parser.test.o
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/testing/test_lib.cpp -o obj/test_lib.o
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/testing/visitor.test.cpp -o obj/visitor.test.o
- 
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/epicr.cpp -o obj/epicr.o
-echo "Compiled "src/epicr.cpp" successfully!"
- 
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/lexer.cpp -o obj/lexer.o
-echo "Compiled "src/lexer.cpp" successfully!"
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/main.cpp -o obj/main.o
-echo "Compiled "src/main.cpp" successfully!"
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/minf.cpp -o obj/minf.o
-echo "Compiled "src/minf.cpp" successfully!"
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/outgen.cpp -o obj/outgen.o
-echo "Compiled "src/outgen.cpp" successfully!"
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/parser.cpp -o obj/parser.o
-echo "Compiled "src/parser.cpp" successfully!"
-mkdir -p bin obj
-clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -c src/visitor.cpp -o obj/visitor.o
-echo "Compiled "src/visitor.cpp" successfully!"
 clang++ -o bin/exceptions.test -Wall -pedantic obj/test_lib.o obj/epicr.o obj/lexer.o obj/minf.o obj/outgen.o obj/parser.o obj/visitor.o obj/exceptions.test.o
-echo "Running \033[4mexceptions.test\033[0m"
  
+echo "Running \033[4mexceptions.test\033[0m"
 ./bin/exceptions.test
 make: Leaving directory `/Users/skovborg/Documents/P4-lang'
  

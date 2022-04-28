@@ -104,8 +104,6 @@
         }
         .reset-amount{
             width: 50px;
-            float: right;
-            margin-right: 10px;
         }
         .servings{
             width: 50px;
@@ -127,24 +125,24 @@
         }
         .measurement-system{
             float: right;
-            margin-right: 10px;
-            height: 24px;
+            margin-right: 15px;
         }
 	</style>
 </header>
 <div class="wrapper">
     <h1 id="title-div">
-        ~title~
+        Burger buns
     </h1>
     <button class = collapse-all-button onclick="collapse_or_expand()" > Collapse All </button>
 </div>
 <hr>
 <div class="wrapper">
-    ~total-time~
-    ~prep-time~
-    ~cook-time~
+    
+    
+    
     <div id="servings-div">
-        ~servings~
+        <button class = reset-amount disabled="false" onclick="reset_amount()" > Reset </button>
+        <input type='number' class='servings' max='1000' min='1' oninput='update_numbers()'onfocusout='update_numbers(this)' value=10> -12 buns
     </div>
     <select class="measurement-system">
         <option hidden value="convertUnits">Convert Units</option>
@@ -152,16 +150,15 @@
         <option value="metric">Metric</option>
         <option value="imperial">Imperial</option>
     </select>
-    <button class = reset-amount disabled="false" onclick="reset_amount()" > Reset </button>
 </div>
 <hr>
 <div class="wrapper">
     <div class="left-half">
-        ~ingredients~
-		~optionalIngredients~
-        ~kitchenware~
-        ~nutrients~
-        ~tags~
+        <h3 class=ingredients-header><strong>Ingredients</strong></h3><li>luke warm water (<text class='number'>400</text> <text class='unit'>g</text>)<li>fresh yeast (<text class='number'>25</text> <text class='unit'>g</text>)<li>wheat flour (<text class='number'>700</text> <text class='unit'>g</text>)<li>sugar (<text class='number'>50</text> <text class='unit'>g</text>)<li>softened butter (<text class='number'>50</text> <text class='unit'>g</text>)<li>salt (<text class='number'>10</text> <text class='unit'>g</text>)<li>egg (<text class='number'>1</text><text class='unit'></text>)<li>sesame seeds <li>extra wheat flour 
+		<h3 class=field-header><strong>Optional</strong></h3>
+        <h3>Kitchenware</h3><li>standmixer</li>
+        <h3 class='field-header'><strong>Nutrients*</strong></h3><text>*pr. 100 grams</text>
+        <h3>Tags: </h3><li>bread</li><li>easy to make</li>
     </div>
     <div class="right-half">
         <div class="collapsible-wrapper">
@@ -171,11 +168,180 @@
             </h3>
         </div>
         <div class="collapsible-body">
-            ~description~
+            Homemade burger buns are quick to bake yourself, 
+and then they taste far better than the purchased version.
         </div>
     
         <!-- steps -->
-        ~instructions~
+        <div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 1
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>water (<text class='number'>0</text><text class='unit'></text>), fresh yeast (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Put the water in the bowl of the standmixer and disovle the yeast herein.
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>water (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 2
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>water (<text class='number'>0</text><text class='unit'></text>), wheat flour (<text class='number'>0</text><text class='unit'></text>), sugar (<text class='number'>0</text><text class='unit'></text>), salt (<text class='number'>0</text><text class='unit'></text>)</h5>
+		<strong>Kitchenware: </strong>standmixer<hr class='body-rule'>
+		<p class='instruction-body'>Add flour, salt, and sugar. Kneed in the standmixer until the dough comes 
+together.
+It often takes about 5 minutes.
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>dough (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 3
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>softened butter (<text class='number'>0</text><text class='unit'></text>)</h5>
+		<strong>Kitchenware: </strong>standmixer<hr class='body-rule'>
+		<p class='instruction-body'>Now add the butter and knead the dough until it is smooth and pliable, 
+then release the bowl of the standmixer.
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>dough (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 4
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>dough (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Cover the bowl with plastic wrap and then a tea towel and let the dough 
+rise for 1 hour at room temperature.
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>dough (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 5
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>dough (<text class='number'>0</text><text class='unit'></text>), extra wheat flour (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Turn the dough out onto a floured work surface. Divide the dough into 
+10 pieces.
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>dough piece (<text class='number'>10</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 6
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>dough piece (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Shape each dough piece into a bun by folding the sides over each other 
+all the way around.
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>burger buns (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 7
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>burger buns (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Place the burger buns with the folds facing down on a baking sheet lined 
+with parchment paper.
+
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>burger buns (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 8
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>burger buns (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Let the burger buns rise for 15 minutes. Press the buns flat with the 
+palm of your hand to the desired size.
+
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>burger buns (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 9
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>burger buns (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Let the buns prove for another 45-60 minutes.
+
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>burger buns (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 10
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>egg (<text class='number'>0</text><text class='unit'></text>), sesame seeds (<text class='number'>0</text><text class='unit'></text>), burger buns (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Whisk an egg together and brush the burger buns, and sprinkle with 
+sesame seeds.
+
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>burger buns (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 11
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>burger buns (<text class='number'>0</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Bake the burger buns at 200 Cover/under heat for approx. 15 minutes.
+
+</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>burger buns (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div>
     
         <script>
             /* arrays of HTML elements */
@@ -193,13 +359,14 @@
 
             /* amount arrays */
             let current_amounts = [];
-            let original_amounts = [];
+            let default_amounts = [];
             let metric_amounts = [];
             let imperial_amounts = [];
 
             /* miscellaneous variables */
             let all_are_collapsed = false;
-            let original_number_of_servings = servings_field.value;
+            let default_number_of_servings = servings_field.value;
+            let measurement_system = "original";
 
             const metric_units = [
                 "g",
@@ -209,7 +376,7 @@
                 "l",
                 "mm",
                 "cm",
-                "C"
+                "c"
             ];
 
             const invalid_chars = [
@@ -247,33 +414,31 @@
             /* initialize and assign final values to the arrays for holding amounts */
             save_start_values();
             function save_start_values(){
-                console.log(numbers.length);
                 for (i = 0; i < numbers.length; i++) {
-                    let original_unit = units[i].innerHTML;
-                    let original_number;
-                    if (original_unit == "C" || original_unit == "F")
-                        original_number = parseFloat(numbers[i].innerHTML);
-                    else 
-                        original_number = parseFloat(numbers[i].innerHTML) / original_number_of_servings;
-                    var original_amount = new Amount(original_number, original_unit);
+                    let default_number = parseFloat(numbers[i].innerHTML) / default_number_of_servings;
+                    let default_unit = units[i].innerHTML;
+                    var default_amount = new Amount(default_number, default_unit);
 
-                    original_amounts.push(original_amount);
-                    metric_amounts.push(original_amount);
-                    imperial_amounts.push(original_amount);
+                    default_amounts.push(default_amount);
+                    metric_amounts.push(default_amount);
+                    imperial_amounts.push(default_amount);
 
-                    if(is_metric(original_unit)){ /* convert to imperial */ 
-                        metric_amounts[i] = original_amount;
-                        imperial_amounts[i] = get_metric_to_imperial(original_amount);
+                    if(is_metric(default_unit)){ /* convert to imperial */ 
+                        metric_amounts[i] = default_amount;
+                        imperial_amounts[i] = get_metric_to_imperial(default_amount);
                     }
                     else { /* convert to metric */ 
-                        metric_amounts[i] = get_imperial_to_metric(original_amount);
-                        imperial_amounts[i] = original_amount;
+                        metric_amounts[i] = get_imperial_to_metric(default_amount);
+                        imperial_amounts[i] = default_amount;
                     }
                 }
             }
 
             /* listen for changes on the dropdown menu */
-            measurement_system_dropdown.addEventListener("change", change_measurement_system);
+            measurement_system_dropdown.addEventListener("change", () => {
+                measurement_system = measurement_system_dropdown.value;
+                update_numbers();
+            });
 
             /* listen for clicks on the dropdown arrows */
             for (i = 0; i < headers.length; i++) {
@@ -364,32 +529,27 @@
             /* prohibit writing illegal characters in the "servings" field */
             servings_field.addEventListener("keydown", e => {
                 if (invalid_chars.includes(e.key)) {
-                    e.preventoriginal();
+                    e.preventDefault();
                 }
             });
             
             /* change amounts according to which measurement system is chosen */
             function update_numbers(){
                 truncate();
+                change_measurement_system();
 
                 /* if no number is written in the servings field, don't do anything*/
                 if (servings_field.value != ""){ 
                     for (i = 0; i < numbers.length; i++) {
-                        let new_number;
-                        if (units[i].innerHTML == "C" || units[i].innerHTML == "F"){
-                            new_number = current_amounts[i].number; 
-                            console.log("moawdk");
-                        }
-                        else 
-                            new_number = (current_amounts[i].number * parseFloat(servings_field.value));
+                        let new_number = (current_amounts[i].number * parseFloat(servings_field.value));
                         new_number = Math.round((new_number + Number.EPSILON)* 100.0) / 100.0;
                         numbers[i].innerHTML = new_number.toString();
                         units[i].innerHTML = current_amounts[i].unit;  
                     }
                 }
 
-                /* disable reset button if the number of servings is already the original number */
-                if ((servings_field.value == original_number_of_servings) && (measurement_system_dropdown.value == "original")){
+                /* disable reset button if the number of servings is already the default number */
+                if (servings_field.value == default_number_of_servings){
                     reset_amount_button.disabled = true;
                 }
                 else {
@@ -397,11 +557,9 @@
                 }
             }
 
-            /* reset servings amount to original */
+            /* reset servings amount to default */
             function reset_amount(){
-                servings_field.value = original_number_of_servings.toString();
-                measurement_system_dropdown.value = "original";
-                change_measurement_system();
+                servings_field.value = default_number_of_servings.toString();
                 update_numbers(servings_field);
             }
 
@@ -424,8 +582,7 @@
                     case "l":     convert_to_imperial(imperial_amount, L_TO_QT, "qt");                      break;
                     case "mm":    convert_to_imperial(imperial_amount, MM_TO_INCH, "in");                   break;
                     case "cm":    convert_to_imperial(imperial_amount, CM_TO_INCH, "in");                   break;
-                    case "C":     imperial_amount.number = C_TO_F(imperial_amount.number);   
-                                  imperial_amount.unit = "F";                                               break;
+                    case "c":     imperial_amount.number *= C_TO_F(number);   imperial_amount.unit = "f";   break;
                     default:      /* unit is not in the metric system */
                 }
                 return imperial_amount;
@@ -435,14 +592,13 @@
             function get_imperial_to_metric(imperial_amount){
                 var metric_amount = Object.assign({}, imperial_amount); /* copy object */
                 switch(imperial_amount.unit){
-                    case "oz":      convertToMetric(metric_amount, G_TO_OZ, "g");                       break;
-                    case "lbs":     convertToMetric(metric_amount, KG_TO_LBS, "kg");                    break;
-                    case "fl-oz":   convertToMetric(metric_amount, ML_TO_FLOZ, "ml");                   break;
-                    case "qt":      convertToMetric(metric_amount, L_TO_QT, "l");                       break;
-                    case "in":      convertToMetric(metric_amount, CM_TO_INCH, "cm");                   break;
-                    case "ft":      convertToMetric(metric_amount, M_TO_FEET, "m");                     break;
-                    case "F":       metric_amount.number = F_TO_C(metric_amount.number);    
-                                    metric_amount.unit = "C";                                           break;
+                    case "oz":      convertToMetric(metric_amount, G_TO_OZ, "g");                   break;
+                    case "lbs":     convertToMetric(metric_amount, KG_TO_LBS, "kg");                break;
+                    case "fl-oz":   convertToMetric(metric_amount, ML_TO_FLOZ, "ml");               break;
+                    case "qt":      convertToMetric(metric_amount, L_TO_QT, "l");                   break;
+                    case "in":      convertToMetric(metric_amount, CM_TO_INCH, "cm");               break;
+                    case "ft":      convertToMetric(metric_amount, M_TO_FEET, "m");                 break;
+                    case "f":       metric_amount.number = F_TO_C(number);    metric_amount.unit = "c";   break;
                     default:        /* unit is not in the imperial system */
                 }
                 return metric_amount;
@@ -462,22 +618,21 @@
 
             /* change current amount to fit the selected measurement system */
             function change_measurement_system(){
-                if (measurement_system_dropdown.value == "imperial"){
+                if (measurement_system == "imperial"){
                     for (i = 0; i < numbers.length; i++) {
                         current_amounts[i] = imperial_amounts[i];
                     }
                 }
-                else if (measurement_system_dropdown.value == "metric"){
+                else if (measurement_system == "metric"){
                     for (i = 0; i < numbers.length; i++) {
                         current_amounts[i] = metric_amounts[i];
                     }
                 }
-                else { /* original amounts */
+                else { /* default amounts */
                     for (i = 0; i < numbers.length; i++) {
-                        current_amounts[i] = original_amounts[i];    
+                        current_amounts[i] = default_amounts[i];    
                     }
                 }
-                update_numbers();
             }
         </script>
     </div>

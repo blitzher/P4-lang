@@ -100,7 +100,7 @@ namespace epicr
                     if (!istream.eof()) /* can't seek when at EOF */
                     {
                         istream.seekg(-1, ios_base::cur); /* seek from current position */
-                    } 
+                    }
                     break;
                 }
                 else if (vtoken.size() == 0)
@@ -167,8 +167,7 @@ namespace epicr
     {
         if (stoken.size() == 1)
         {
-            char charr = stoken[0];
-            switch (charr)
+            switch (stoken[0])
             {
             case ',':
                 return E_TT_COMMA;
@@ -192,35 +191,29 @@ namespace epicr
         }
 
         /* Check if the word is a blank or newline*/
-        bool is_blank = true;
-        bool is_newline = true;
-        for (size_t i = 0; i < stoken.size(); i++)
-        {
-            if (is_newline && (stoken[i] != '\n' && stoken[i] != 0xd))
-                is_newline = false;
-            if (is_blank && stoken[i] != ' ')
-            {
-                is_blank = false;
-            }
-            if (!is_blank && !is_newline)
-                break;
-        }
-        if (is_blank)
+        if (stoken[0] == ' ')
             return E_TT_BLANK;
-        if (is_newline)
+        if (stoken[0] == '\n')
             return E_TT_NEWLINE;
 
         /* Check if the word is a numeric */
         bool is_numeric = true;
+        bool found_comma = false;
         char ch;
         for (size_t i = 0; i < stoken.size(); i++)
         {
             ch = stoken[i];
-            if (i == 0 && ch == '.')
+            if (ch == '.')
             {
-                is_numeric = false;
-                break;
+                if (!found_comma)
+                    found_comma = true;
+                else
+                {
+                    is_numeric = false;
+                    break;
+                }
             }
+
             /* If the word is not 0-9 and not '.', it isn't a number */
             if (!CH_IS_NUM(ch))
             {

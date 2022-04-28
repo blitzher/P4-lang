@@ -74,6 +74,9 @@ $(T_TARGETS)::
 run: $(BINDIR)/$(TARGET)
 	./$< examples/Carbonara.rcp -o dist
 
+run-rel: $(BINDIR)/$(TARGET)
+	./$< examples/burgers.rcp -o dist
+
 test::
 	@rm -rf $(BINDIR)/.tests
 test:: $(T_TARGETS)

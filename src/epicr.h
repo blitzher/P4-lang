@@ -33,8 +33,8 @@ namespace epicr
 
     typedef enum epicr_html_style
     {
-        E_HTML_BASIC,
-        E_HTML_FANCY
+        E_HS_BASIC,
+        E_HS_FANCY
     } epicr_html_style;
 
     typedef struct amount_s

@@ -136,7 +136,7 @@ namespace epicr
 
 	parse_ret parse_recipe(std::string filename)
 	{
-		cmd_args args = {filename, E_HTML_BASIC, "dist", E_US_NONE};
+		cmd_args args = {filename, E_HS_BASIC, "dist", E_US_NONE};
 		return parse_recipe(args);
 	}
 
@@ -186,14 +186,14 @@ namespace epicr
 
 	epicr::epicr_html_style parse_style(std::string argv)
 	{
-		epicr::epicr_html_style choosen_style = epicr::E_HTML_BASIC;
+		epicr::epicr_html_style choosen_style = epicr::E_HS_BASIC;
 		if (argv == "--basic" || argv == "-b")
 		{
-			choosen_style = epicr::E_HTML_BASIC;
+			choosen_style = epicr::E_HS_BASIC;
 		}
 		else if (argv == "--fancy" || argv == "-f")
 		{
-			choosen_style = epicr::E_HTML_FANCY;
+			choosen_style = epicr::E_HS_FANCY;
 		}
 		return choosen_style;
 	}
@@ -219,7 +219,7 @@ namespace epicr
 			argv_s.push_back(std::string(argv[i]));
 		}
 
-		epicr::cmd_args CMD_ARGS = {"", E_HTML_BASIC, concat_output_dir(), E_US_NONE};
+		epicr::cmd_args CMD_ARGS = {"", E_HS_BASIC, concat_output_dir(), E_US_NONE};
 		for (int i = 0; i < argc; i++)
 		{
 			std::string arg = to_lower(argv_s[i]);
