@@ -47,10 +47,10 @@ namespace epicr{
     }
 
     /* construct HTML string for ingredient list item */
-    string insertIngredient(std::vector<ingredient> ingredients, size_t i){
+    string insert_ingredient(std::vector<ingredient> ingredients, size_t i){
         string result = "<li>" + ingredients[i].name + " ";
         if (!ingredients[i].amount.is_uncountable){
-            generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+            result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
         }
         return result;
     }
@@ -61,7 +61,7 @@ namespace epicr{
 		for (size_t i = 0; i < ingredients.size(); i++){
 			if (ingredients[i].is_optional)
 				continue;
-			result += insertIngredient(ingredients, i);
+			result += insert_ingredient(ingredients, i);
 		}
 		return result;
     }
@@ -72,7 +72,7 @@ namespace epicr{
 		for (size_t i = 0; i < ingredients.size(); i++){
 			if (!ingredients[i].is_optional) 
 				continue;
-            result += insertIngredient(ingredients, i);
+            result += insert_ingredient(ingredients, i);
 		}
 		return result;
     }
@@ -108,7 +108,7 @@ namespace epicr{
                 result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable){
-                generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+                result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
             }
 		}
         result += "</h5>";
@@ -150,7 +150,7 @@ namespace epicr{
                 result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable){
-               generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+               result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
             }
 		}
         result += "</h5>";
