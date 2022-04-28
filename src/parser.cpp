@@ -227,9 +227,6 @@ namespace epicr
 
 			if (ingr.is_ingredient_ref)
 			{
-				std::string cwd = std::filesystem::current_path();
-				std::cout << cwd << std::endl;
-
 				std::filesystem::path fpath = std::filesystem::absolute(clargs.input_filepath);
 				std::filesystem::path ppath = fpath.parent_path();
 
