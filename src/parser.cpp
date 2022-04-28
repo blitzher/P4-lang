@@ -247,7 +247,9 @@ namespace epicr
 									   : ingr.amount.unit;
 
 				ingr.amount.number = ingr.amount.number == 0
-										 ? rcp.servings.count
+										 ? (rcp.servings.count == 0
+												? 1
+												: rcp.servings.count)
 										 : ingr.amount.number;
 
 				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
