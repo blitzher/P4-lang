@@ -35,10 +35,7 @@
 	}
 #define ADV(count)                            \
 	{                                         \
-		for (int __i = 0; __i < count; __i++) \
-		{                                     \
-			ctoken = lexer->next_token();     \
-		}                                     \
+		ctoken = lexer->next_token(count).back();                           \
 		utoken = lexer->peek_token();         \
 	}
 #pragma endregion
@@ -59,9 +56,10 @@ namespace epicr
 {
 #pragma region Parser implementation
 
-	Parser::Parser(Lexer *lexer_r)
+	Parser::Parser(Lexer* lexer_r)
 	{
 		lexer = lexer_r;
+		silent = false;
 	}
 	recipe Parser::Parse()
 	{
@@ -76,7 +74,7 @@ namespace epicr
 		setjmp(exit_jmp);
 		/* Parse all fields */
 		while (ctoken.type != E_TT_EOF && !has_error)
-		/* TODO: refactor x */
+			/* TODO: refactor x */
 		{
 			if (to_lower(ctoken.word) == "title")
 				ParseTitle(&rcp);
@@ -91,8 +89,8 @@ namespace epicr
 			else if (to_lower(ctoken.word) == "tags")
 				ParseTags(&rcp);
 			else if (to_lower(ctoken.word) == "prep-time" ||
-					 to_lower(ctoken.word) == "cook-time" ||
-					 to_lower(ctoken.word) == "total-time")
+				to_lower(ctoken.word) == "cook-time" ||
+				to_lower(ctoken.word) == "total-time")
 				ParseTime(&rcp);
 			else if (to_lower(ctoken.word) == "ingredients")
 				ParseIngredients(&rcp);
@@ -112,7 +110,7 @@ namespace epicr
 		return rcp;
 	}
 
-	void Parser::ParseTitle(recipe *rcp)
+	void Parser::ParseTitle(recipe* rcp)
 	{
 		ADV_NON_BLANK(2);
 
@@ -126,7 +124,7 @@ namespace epicr
 
 		rcp->title = strip_spaces_right(rcp->title);
 	}
-	void Parser::ParseDescription(recipe *rcp)
+	void Parser::ParseDescription(recipe* rcp)
 	{
 		ADV_NON_BLANK(2);
 		/* Read all words and spaces in description */
@@ -137,7 +135,7 @@ namespace epicr
 		}
 		rcp->description = strip_spaces_right(rcp->description);
 	}
-	void Parser::ParseServings(recipe *rcp)
+	void Parser::ParseServings(recipe* rcp)
 	{
 		ADV_NON_BLANK(2);
 		if (ctoken.type != E_TT_NUMBER || utoken.type == E_TT_EOF)
@@ -150,7 +148,7 @@ namespace epicr
 		rcp->servings.descriptor = ReadWords(false, false);
 	}
 
-	void Parser::ParseNutrients(recipe *rcp)
+	void Parser::ParseNutrients(recipe* rcp)
 	{
 		ADV_NON_BLANK(2);
 
@@ -171,7 +169,7 @@ namespace epicr
 		rcp->nutrients = nutrients;
 	}
 
-	void Parser::ParseKitchenware(recipe *rcp)
+	void Parser::ParseKitchenware(recipe* rcp)
 	{
 		ADV_NON_BLANK(2);
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
@@ -183,7 +181,7 @@ namespace epicr
 		}
 	}
 
-	void Parser::ParseTags(recipe *rcp)
+	void Parser::ParseTags(recipe* rcp)
 	{
 		ADV_NON_BLANK(2);
 
@@ -195,7 +193,7 @@ namespace epicr
 		}
 	}
 
-	void Parser::ParseTime(recipe *rcp)
+	void Parser::ParseTime(recipe* rcp)
 	{
 		/*saves which kind of time it is: */
 		std::string time_type = to_lower(ctoken.word);
@@ -215,7 +213,7 @@ namespace epicr
 			rcp->time.total_time = time;
 	}
 
-	void Parser::ParseIngredients(recipe *rcp)
+	void Parser::ParseIngredients(recipe* rcp)
 	{
 		ADV_NON_BLANK(2);
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
@@ -233,7 +231,7 @@ namespace epicr
 				auto rcp_ret = parse_recipe((ppath / ingr.name).string() + ".rcp");
 				if (rcp_ret.has_err)
 				{
-					char *err = (char *)malloc(100);
+					char* err = (char*)malloc(100);
 					sprintf(err, "In %s: %s", ingr.name.c_str(), rcp_ret.err.c_str());
 					error = err;
 					longjmp(exit_jmp, 1);
@@ -241,16 +239,16 @@ namespace epicr
 				recipe rcp = rcp_ret.recipe;
 				ingr.name = rcp.title;
 				ingr.amount.unit = ingr.amount.unit == ""
-									   ? (rcp.servings.descriptor == ""
-											  ? "servings"
-											  : rcp.servings.descriptor)
-									   : ingr.amount.unit;
+					? (rcp.servings.descriptor == ""
+						? "servings"
+						: rcp.servings.descriptor)
+					: ingr.amount.unit;
 
 				ingr.amount.number = ingr.amount.number == 0
-										 ? (rcp.servings.count == 0
-												? 1
-												: rcp.servings.count)
-										 : ingr.amount.number;
+					? (rcp.servings.count == 0
+						? 1
+						: rcp.servings.count)
+					: ingr.amount.number;
 
 				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
 			}
@@ -260,23 +258,25 @@ namespace epicr
 		}
 	}
 
-	void Parser::ParseInstructions(recipe *rcp)
+	void Parser::ParseInstructions(recipe* rcp)
 	{
+
 		ADV_NON_BLANK(2);
 
+		printf("ctoken == with : %d\n", ctoken.word == "with");
 		while (utoken.type != E_TT_COLON && utoken.type != E_TT_EOF)
 		{
 			instruction single_instruction = instruction();
 			if (to_lower(ctoken.word) == "with")
 			{
-				ADV_NON_BLANK(1)
+				ADV_NON_BLANK(1);
 				ParseInstructionHeaderWith(&single_instruction);
 				if (has_error)
 					return;
 			}
 			if (to_lower(ctoken.word) == "using")
 			{
-				ADV_NON_BLANK(1)
+				ADV_NON_BLANK(1);
 				ParseInstructionHeaderUsing(&single_instruction);
 				if (has_error)
 					return;
@@ -296,7 +296,7 @@ namespace epicr
 			rcp->instructions.push_back(single_instruction); // something doesnt work here
 		}
 	}
-	void Parser::ParseInstructionHeaderWith(instruction *single_instruction)
+	void Parser::ParseInstructionHeaderWith(instruction* single_instruction)
 	{
 		if (ctoken.type != E_TT_PARENS_OPEN)
 		{
@@ -308,7 +308,7 @@ namespace epicr
 			if (ctoken.type == E_TT_PARENS_CLOSE) /*if the with is empty*/
 			{
 				ADV_NON_BLANK(1)
-				return;	
+					return;
 			}
 			ingredient current_ingredient = ReadIngredient(ASSUME_REST);
 			if (has_error)
@@ -321,7 +321,7 @@ namespace epicr
 		}
 		ADV_NON_BLANK(1) /*reads through the end parenthesis*/
 	}
-	void Parser::ParseInstructionHeaderUsing(instruction *single_instruction)
+	void Parser::ParseInstructionHeaderUsing(instruction* single_instruction)
 	{
 		if (ctoken.type != E_TT_PARENS_OPEN)
 			ERR_VOID("expected open bracket with 'using' ", ctoken);
@@ -332,7 +332,7 @@ namespace epicr
 			if (ctoken.type == E_TT_PARENS_CLOSE) /*if the using is empty*/
 			{
 				ADV_NON_BLANK(1)
-				return;	
+					return;
 			}
 			std::string current_kitchenware = ReadWords(true, false);
 			if (ctoken.type != E_TT_COMMA && ctoken.type != E_TT_PARENS_CLOSE)
@@ -343,7 +343,7 @@ namespace epicr
 		}
 		ADV_NON_BLANK(1); /*reads through the end parenthesis*/
 	}
-	void Parser::ParseInstructionBody(instruction *current_instruction)
+	void Parser::ParseInstructionBody(instruction* current_instruction)
 	{
 		std::vector<instruction_word> Body;
 
@@ -381,11 +381,11 @@ namespace epicr
 			Body.push_back(iword);
 		}
 		if (Body.size() == 0)
-			ERR_VOID("Instruction body cannot be empty",ctoken)
-		current_instruction->body = Body;
+			ERR_VOID("Instruction body cannot be empty", ctoken)
+			current_instruction->body = Body;
 	}
 
-	void Parser::ParseInstructionYield(instruction *single_instruction)
+	void Parser::ParseInstructionYield(instruction* single_instruction)
 	{
 		do
 		{
@@ -403,9 +403,10 @@ namespace epicr
 	{
 		bool can_have_asterix = (arg & HAS_ASTERIX) >> 1;
 		bool can_have_qmark = (arg & HAS_QMARK) >> 2;
-		ingredient current_ingredient = ingredient();
 
+		ingredient current_ingredient = ingredient();
 		amount ingredient_amount = amount();
+
 		if (ctoken.type != E_TT_WORD && ctoken.type != E_TT_NUMBER)
 		{
 			ERR("Expected ingredient name", ctoken);
@@ -492,7 +493,7 @@ namespace epicr
 			amnt.is_relative_amount = true;
 			amnt.relative_amount = ReadWords(false, false);
 
-			std::string valid_relatives[]{"rest", "quarter", "half", "all"};
+			std::string valid_relatives[]{ "rest", "quarter", "half", "all" };
 
 			bool is_valid = false;
 			size_t i;
@@ -531,13 +532,15 @@ namespace epicr
 
 		while (ReadWordsPredicate(ctoken.type, can_read_numbers, can_read_parenthesis))
 		{
+			print_token(ctoken);
 			final_word += ctoken.word;
-			ADV(1);
+			ctoken = lexer->next_token();
 		}
 
 		if (ctoken.type == E_TT_NEWLINE)
 			ADV_NON_BLANK(1);
 
+		utoken = lexer->peek_token();
 		return strip_spaces_right(final_word);
 	}
 
