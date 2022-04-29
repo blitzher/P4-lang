@@ -1,57 +1,59 @@
 #include "./test_lib.h"
 
-void stolen_expect_token_type(epicr::epicr_token actual, epicr::epicr_token_type expected)
+void title_before_eof_matches()
 {
-	if (actual.type != expected)
+	test_lib::REGISTER;
+	std::vector<std::string> titles = {"carbonara","spaghetti carbonara","the spaghetti carbonara",
+									   "a very good spaghetti carbonara recipe"};
+	std::string example_string;
+	epicr::recipe rcp;
+	for(size_t i = 0;i<titles.size();i++)
 	{
-		char *err_msg = (char *)malloc(100);
-		sprintf(err_msg, "\nActual  : %s (%s)\nExpected: %s",
-				epicr::token_to_string(actual.type).c_str(), actual.word.c_str(),
-				epicr::token_to_string(expected).c_str());
-		test_lib::deny(err_msg);
+		example_string = "cook-time: 5 min    title: " + titles[i];
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		std::cout<<"title: "<<rcp.title<<"\n";
+		test_lib::expect_equal_s(rcp.title,titles[i]);
 	}
-	test_lib::accept();
 }
 
-void stolen_basic_test()
+void description_before_eof_matches()
 {
 	test_lib::REGISTER;
-
-	std::istringstream test_string("hello!");
-	epicr::Lexer lexer(test_string);
-	epicr::epicr_token tokens[]{lexer.next_token(), lexer.next_token()};
-	stolen_expect_token_type(tokens[0], epicr::E_TT_WORD);
-	test_lib::expect_equal_s("hello!", tokens[0].word);
-	stolen_expect_token_type(tokens[1], epicr::E_TT_EOF);
+	std::vector<std::string> descriptions = {"a recipe","this is a recipe","recipe is ...\nspaghetti carbonara (very good)",
+									   "this is a very good spaghetti carbonara recipe","this is recipe."};
+	std::string example_string;
+	epicr::recipe rcp;
+	for(size_t i = 0;i<descriptions.size();i++)
+	{
+		example_string = "cook-time: 10 min description: " + descriptions[i];
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_s(rcp.description,descriptions[i]);
+	}
 }
-
-void stolen_sentence_test()
+void servings_before_eof_matches()
 {
 	test_lib::REGISTER;
-
-	std::istringstream test_string("hello there, this is a sentence!");
-	epicr::Lexer lexer(test_string);
-	std::vector<epicr::epicr_token> tokens = lexer.next_token(13);
-	test_lib::expect_equal_s("hello", tokens[0].word);
-	stolen_expect_token_type(tokens[1], epicr::E_TT_BLANK);
-	test_lib::expect_equal_s("there", tokens[2].word);
-	stolen_expect_token_type(tokens[3], epicr::E_TT_COMMA);
-	stolen_expect_token_type(tokens[4], epicr::E_TT_BLANK);
-	test_lib::expect_equal_s("this", tokens[5].word);
-	stolen_expect_token_type(tokens[6], epicr::E_TT_BLANK);
-	test_lib::expect_equal_s("is", tokens[7].word);
-	stolen_expect_token_type(tokens[8], epicr::E_TT_BLANK);
-	test_lib::expect_equal_s("a", tokens[9].word);
-	stolen_expect_token_type(tokens[10], epicr::E_TT_BLANK);
-	test_lib::expect_equal_s("sentence!", tokens[11].word);
-	stolen_expect_token_type(tokens[12], epicr::E_TT_EOF);
+	std::map<std::string,epicr::servings> servings;
+	servings.insert({{"5"},{5,""}});
+	servings.insert({{"10 people"},{10,"people"}});
+	servings.insert({{"3 people guys"},{3,"people guys"}});
+	servings.insert({{"1 portions of magnificent dishes"},{1,"portions of magnificent dishes"}});
+	std::string example_string;
+	epicr::recipe rcp;
+	for(auto serving : servings)
+	{
+		example_string = "cook-time: 10 min servings: " + serving.first;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.servings.count,serving.second.count);
+		test_lib::expect_equal_s(rcp.servings.descriptor,serving.second.descriptor);
+	}
 }
 
 int main(void)
 {
-	stolen_basic_test();
-    stolen_sentence_test();
-    
+	title_before_eof_matches();
+	description_before_eof_matches();
+	servings_before_eof_matches();
 	test_lib::print_recap();
 	return test_lib::result();
 }
