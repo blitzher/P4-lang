@@ -27,6 +27,7 @@
 
 namespace epicr
 {
+    std::string concat_output_dir(std::string);
 
     typedef char ingredient_arg;
     typedef unsigned int uint;

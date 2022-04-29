@@ -1,15 +1,17 @@
-title: Spaghetti
+title: Cooked spaghetti
 
 description: a simple spaghetti recipe
 
-servings: 2 people
-
 ingredients:
-    spaghetti (100 g),
-    water (0.5 l)
+    spaghetti [100g],
+    water
+
+tags: delicious
 
 instructions:
     with(spaghetti, water):
-        throw in a pot and cook til ready
+        Throw in pot and boil until ready
+
     yield:
         cooked spaghetti
+        

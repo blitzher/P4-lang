@@ -1,12 +1,16 @@
 #include "epicr.h"
 #include <filesystem>
+#include <unistd.h>
 
 using std::string;
 
 #define MAX_S_LENGTH 4096
 #define MAX_B_LENGTH 65536 /* 4096 * 16 */
-namespace epicr{
-	string load_template(string template_name){
+namespace epicr
+{
+    /* create html file */
+	string load_template(string template_name)
+    {
 		string file_content;
 		string dir = "src";
 		string file_name = template_name + ".html";
@@ -14,7 +18,8 @@ namespace epicr{
 		std::ifstream fstream = epicr::open_file(fpath);
 
 		int gotten_char = fstream.get();
-		do {
+		do 
+        {
 			file_content += gotten_char;
 			gotten_char = fstream.get();
 		} while (!fstream.eof());
@@ -22,14 +27,16 @@ namespace epicr{
 	}
 
     /* construct HTML string for time fields */
-    string insert_time(string header, string time){
+    string insert_time(string header, string time)
+    {
 		if (time == "")
 			return "";
         return "<div class=time-header>" + header + "</div><div class=time-content>" + time + "</div>";
 	}
 
     /* construct HTML string for servings field */
-    string insert_servings(servings servings){
+    string insert_servings(servings servings)
+    {
         string number = std::to_string(servings.count);
         string descriptor = servings.descriptor;
 		if (servings.count == 0){
@@ -41,7 +48,9 @@ namespace epicr{
 		return result;
 	}
 
-    string generate_ingredient_html(string number, string unit){
+    /* insert number and amount */
+    string generate_ingredient_html(string number, string unit)
+    {
         string result = "(<text class='number'>" + number + "</text>";
         if (unit != "")
             result += " <text class='unit'>" + unit;
@@ -52,21 +61,24 @@ namespace epicr{
     }
 
     /* construct HTML string for ingredient list item */
-    string insert_ingredient(std::vector<ingredient> ingredients, size_t i){
+    string insert_ingredient(std::vector<ingredient> ingredients, size_t i)
+    {
         string result = "<li>" + ingredients[i].name + " ";
-        if (!ingredients[i].amount.is_uncountable){
+        if (!ingredients[i].amount.is_uncountable)
             result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
-        }
         return result;
     }
 
     /* construct HTML string for ingredients listing */
-	string insert_declaration_ingredients(std::vector<ingredient> ingredients){
+	string insert_declaration_ingredients(std::vector<ingredient> ingredients)
+    {
 		string result = "<h3 class=ingredients-header><strong>Ingredients</strong></h3>";
-		for (size_t i = 0; i < ingredients.size(); i++){
-            if (ingredients[i].is_ingredient_ref){
-                std::cout << "ingredient ref";
-                result += "<text class='is_ingredient_ref'>" + insert_ingredient(ingredients, i) + "</text>";
+		for (size_t i = 0; i < ingredients.size(); i++)
+        {
+            if (ingredients[i].is_ingredient_ref)
+            {
+                result += "<li><a class='is_ingredient_ref' target='_blank'>"+ ingredients[i].name + " ";
+                result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit) + "</a>";
             }
 			else if (ingredients[i].is_optional)
 				continue;
@@ -77,10 +89,12 @@ namespace epicr{
     }
     
     /* construct HTML string for optional ingredients listings */
-    string insert_optional_ingredients(std::vector<ingredient> ingredients){
+    string insert_optional_ingredients(std::vector<ingredient> ingredients)
+    {
         bool thereIsAtLeastOneOptionalIngredient = false;
 		string result = "<h3 class=field-header><strong>Optional</strong></h3>";
-		for (size_t i = 0; i < ingredients.size(); i++){
+		for (size_t i = 0; i < ingredients.size(); i++)
+        {
 			if (!ingredients[i].is_optional) 
 				continue;
             thereIsAtLeastOneOptionalIngredient = true;
@@ -92,22 +106,24 @@ namespace epicr{
     }
 
     /* construct HTML string for a list -> used for tags and kitchenware */
-    string insert_text_in_list(string header, std::vector<string> listElements){
+    string insert_text_in_list(string header, std::vector<string> listElements)
+    {
         if (listElements.size() == 0)
 			return "";
         string result = "<h3>" + header + "</h3>";
-		for (size_t i = 0; i < listElements.size(); i++){
+		for (size_t i = 0; i < listElements.size(); i++)
 			result += "<li>" + listElements[i] + "</li>";
-		}
 		return result;
     }
 
     /* construct HTML string for nutrients listing */
-    string insert_nutrients(std::vector<ingredient> nutrients){
+    string insert_nutrients(std::vector<ingredient> nutrients)
+    {
 		string result = "<h3 class='field-header'><strong>Nutrients*</strong></h3>";
         if (nutrients.size() == 0)
             return "";
-		for (size_t i = 0; i < nutrients.size(); i++){
+		for (size_t i = 0; i < nutrients.size(); i++)
+        {
             std::string number = epicr::double_to_string(nutrients[i].amount.number);
             std::string unit = nutrients[i].amount.unit;
 			result += "<li>" + nutrients[i].name + " (" + number + " " + unit + ")</li>";
@@ -117,26 +133,29 @@ namespace epicr{
     }
 
     /* construct HTML string for ingredient field in instructions */
-    string insert_instruction_ingredients(string header, std::vector<ingredient> ingredients){
+    string insert_instruction_ingredients(string header, std::vector<ingredient> ingredients)
+    {
         string result = "<h5><strong>" + header + "</strong>";
-		for (size_t i = 0; i < ingredients.size(); i++){
+		for (size_t i = 0; i < ingredients.size(); i++)
+        {
             if (i != 0)
                 result += ", ";
 			result += ingredients[i].name + " ";
-			if (!ingredients[i].amount.is_uncountable){
+			if (!ingredients[i].amount.is_uncountable)
                 result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
-            }
 		}
         result += "</h5>";
 		return result;
 	}
 
     /* construct HTML string for kitchenware field in instructions */
-    string insert_instruction_kitchenware(string header, std::vector<string> kitchenware){
+    string insert_instruction_kitchenware(string header, std::vector<string> kitchenware)
+    {
 		if (kitchenware.size() == 0)
 			return "";
         string result = "<strong>" + header + "</strong>";
-		for (size_t i = 0; i < kitchenware.size(); i++){
+		for (size_t i = 0; i < kitchenware.size(); i++)
+        {
 			result += kitchenware[i];
             if (i != kitchenware.size() - 1)
                 result += ", ";
@@ -146,11 +165,14 @@ namespace epicr{
 	}
 
     /* construct HTML string for instructions body */
-	string insert_instruction_body(std::vector<instruction_word> body){
+	string insert_instruction_body(std::vector<instruction_word> body)
+    {
 		string result = "<p class='instruction-body'>";
-		for (size_t i = 0; i < body.size(); i++){
+		for (size_t i = 0; i < body.size(); i++)
+        {
 			result += body[i].spelling;
-			if (body[i].is_amount == true){
+			if (body[i].is_amount == true)
+            {
                 result += "<text class='number'>" + epicr::double_to_string(body[i].value.number) + "</text>";
                 result += " <text class='unit'>" + body[i].value.unit + "</text>";
             }
@@ -160,7 +182,8 @@ namespace epicr{
 	}
 
     /* construct HTML string for yield field in instructions */
-    string insert_yield_ingredients(string header, std::vector<ingredient> ingredients){
+    string insert_yield_ingredients(string header, std::vector<ingredient> ingredients)
+    {
 		string result = "<h5><strong>" + header + "</strong>";
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
@@ -174,7 +197,9 @@ namespace epicr{
 		return result;
     }
 
-    string insert_description(string description){
+    /* insert description unless it is empty */
+    string insert_description(string description)
+    {
         if (description == "")
             return "";
         string result = "<div class='collapsible-wrapper'><div class='arrow-down'></div><h3 class='collapsible'>";
@@ -183,7 +208,8 @@ namespace epicr{
     }
 
 	// find a string in another string and replace it with a third string
-	bool replace(string &str, const string &from_string, const string &to_string){
+	bool replace(string &str, const string &from_string, const string &to_string)
+    {
 		size_t start_position = str.find(from_string);
 		if (start_position == string::npos) // if no matching string was found
 			return false;
@@ -192,7 +218,8 @@ namespace epicr{
 	}
 
     /* generate HTML strings and replace placeholders */
-	bool generate_html(recipe rcp, string filename){
+	bool generate_html(recipe rcp, string filename)
+    {
 		string base_template_s = load_template("base");
 		const char *base_template = base_template_s.c_str();
 		string step_template_s = load_template("step");
@@ -207,7 +234,8 @@ namespace epicr{
 		string instruction_strings;
 
         /* format final HTML strings for instructions*/
-		for (auto inst : rcp.instructions){
+		for (auto inst : rcp.instructions)
+        {
 			index++;
             string instruction_string = step_template;
 			string step_text = "Step " + std::to_string(index);
@@ -227,7 +255,8 @@ namespace epicr{
             if(inst.body.size() > 0)
                 body += insert_instruction_body(inst.body);
                 
-			if(inst.yields.size() > 0){
+			if(inst.yields.size() > 0)
+            {
                 yield += "<hr class='body-rule'>";
                 yield += insert_yield_ingredients("<text class='arrow'> &#10230 <text>", inst.yields);
             }
