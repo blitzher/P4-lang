@@ -31,20 +31,21 @@ namespace epicr
     {
 		if (time == "")
 			return "";
-        return "<div class=time-header>" + header + "</div><div class=time-content>" + time + "</div>";
+		return "<div class=time-header>" + header + "</div><div class=time-content>" + time + "</div>";
 	}
 
-    /* construct HTML string for servings field */
-    string insert_servings(servings servings)
-    {
-        string number = std::to_string(servings.count);
-        string descriptor = servings.descriptor;
-		if (servings.count == 0){
-            number = "1";
-            descriptor = "servings";
-        }
-        string result = "<input type='number' class='servings' max='1000' min='1' oninput='update_numbers()'";
-        result += "onfocusout='update_numbers(this)' value=" + number + "> " + descriptor;
+	/* construct HTML string for servings field */
+	string insert_servings(servings servings)
+	{
+		string number = std::to_string(servings.count);
+		string descriptor = servings.descriptor;
+		if (servings.count == 0)
+		{
+			number = "1";
+			descriptor = "servings";
+		}
+		string result = "<input type='number' class='servings' max='1000' min='1' oninput='update_numbers()'";
+		result += "onfocusout='update_numbers(this)' value=" + number + "> " + descriptor;
 		return result;
 	}
 
@@ -82,8 +83,8 @@ namespace epicr
             }
 			else if (ingredients[i].is_optional)
 				continue;
-            else 
-                result += insert_ingredient(ingredients, i) + "</text>";
+			else
+				result += insert_ingredient(ingredients, i) + "</text>";
 		}
 		return result;
     }
@@ -97,13 +98,13 @@ namespace epicr
         {
 			if (!ingredients[i].is_optional) 
 				continue;
-            thereIsAtLeastOneOptionalIngredient = true;
-            result += insert_ingredient(ingredients, i);
+			thereIsAtLeastOneOptionalIngredient = true;
+			result += insert_ingredient(ingredients, i);
 		}
-        if (!thereIsAtLeastOneOptionalIngredient)
-            return "";
+		if (!thereIsAtLeastOneOptionalIngredient)
+			return "";
 		return result;
-    }
+	}
 
     /* construct HTML string for a list -> used for tags and kitchenware */
     string insert_text_in_list(string header, std::vector<string> listElements)
@@ -114,7 +115,7 @@ namespace epicr
 		for (size_t i = 0; i < listElements.size(); i++)
 			result += "<li>" + listElements[i] + "</li>";
 		return result;
-    }
+	}
 
     /* construct HTML string for nutrients listing */
     string insert_nutrients(std::vector<ingredient> nutrients)
@@ -128,7 +129,7 @@ namespace epicr
             std::string unit = nutrients[i].amount.unit;
 			result += "<li>" + nutrients[i].name + " (" + number + " " + unit + ")</li>";
 		}
-        result += "<text>*pr. 100 grams</text>";
+		result += "<text>*pr. 100 grams</text>";
 		return result;
     }
 
@@ -144,7 +145,7 @@ namespace epicr
 			if (!ingredients[i].amount.is_uncountable)
                 result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
-        result += "</h5>";
+		result += "</h5>";
 		return result;
 	}
 
@@ -157,10 +158,10 @@ namespace epicr
 		for (size_t i = 0; i < kitchenware.size(); i++)
         {
 			result += kitchenware[i];
-            if (i != kitchenware.size() - 1)
-                result += ", ";
+			if (i != kitchenware.size() - 1)
+				result += ", ";
 		}
-        result += "<hr class='body-rule'>";
+		result += "<hr class='body-rule'>";
 		return result;
 	}
 
@@ -177,7 +178,7 @@ namespace epicr
                 result += " <text class='unit'>" + body[i].value.unit + "</text>";
             }
 		}
-        result += "</p>";
+		result += "</p>";
 		return result;
 	}
 
@@ -187,15 +188,15 @@ namespace epicr
 		string result = "<h5><strong>" + header + "</strong>";
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
-            if (i != 0)
-                result += ", ";
+			if (i != 0)
+				result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
-               result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+				result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
-        result += "</h5>";
+		result += "</h5>";
 		return result;
-    }
+	}
 
     /* insert description unless it is empty */
     string insert_description(string description)
@@ -226,7 +227,7 @@ namespace epicr
 		const char *step_template = step_template_s.c_str();
 
 		std::filesystem::create_directory("dist");
-        
+
 		std::ofstream file{filename};
 		if (!file.is_open())
 			return false;
@@ -237,7 +238,7 @@ namespace epicr
 		for (auto inst : rcp.instructions)
         {
 			index++;
-            string instruction_string = step_template;
+			string instruction_string = step_template;
 			string step_text = "Step " + std::to_string(index);
             string instructionIngredients = "";
             string instructionKitchenware = "";
@@ -280,7 +281,7 @@ namespace epicr
 		string total_time = insert_time("Total time: ", rcp.time.total_time.c_str());
 		string prep_time = insert_time("Prep time: ", rcp.time.prep_time.c_str());
 		string cook_time = insert_time("Cook time: ", rcp.time.cook_time.c_str());
-        string description = insert_description(rcp.description.c_str());
+		string description = insert_description(rcp.description.c_str());
 
 		string output_string = base_template; // convert base template to string
 
