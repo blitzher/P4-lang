@@ -1,0 +1,15 @@
+title: Spaghetti
+
+description: a simple spaghetti recipe
+
+servings: 2 people
+
+ingredients:
+    spaghetti (100 g),
+    water (0.5 l)
+
+instructions:
+    with(spaghetti, water):
+        throw in a pot and cook til ready
+    yield:
+        cooked spaghetti

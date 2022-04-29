@@ -240,7 +240,7 @@ namespace epicr{
 			replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
-
+        
 		/* format final HTML strings */
 		string servings = insert_servings(rcp.servings);
 		string tags = insert_text_in_list("Tags: ", rcp.tags);
