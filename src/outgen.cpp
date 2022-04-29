@@ -1,6 +1,5 @@
 #include "epicr.h"
 #include <filesystem>
-#include <unistd.h>
 
 using std::string;
 
