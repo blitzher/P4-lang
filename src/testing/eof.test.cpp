@@ -70,7 +70,6 @@ void prep_time_before_eof_matches()
 	for (auto prep_time : prep_times)
 	{
 		example_string = "title: pasta    prep-time: " + prep_time;
-		std::cout<<example_string<<"\n";
 		rcp = epicr::parse_string_silent(example_string).recipe;
 		test_lib::expect_equal_s(rcp.time.prep_time, prep_time);
 	}
@@ -88,6 +87,117 @@ void cook_time_before_eof_matches()
 		test_lib::expect_equal_s(rcp.time.cook_time, cook_time);
 	}
 }
+void one_tag_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> tags = {"pasta","pasta dish"};
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto tag : tags)
+	{
+		example_string = "title: pasta    tags: " + tag;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_s(rcp.tags[0], tag);
+	}
+}
+void two_tags_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::map<std::string, std::vector<std::string>> tags;
+	tags.insert({{"pasta, dish"},{"pasta","dish"}});
+	tags.insert({{"pasta, pasta dish"},{"pasta","pasta dish"}});
+	tags.insert({{"pasta dish, pasta"},{"pasta dish","pasta"}});
+	tags.insert({{"pasta, nice pasta dish"},{"pasta","nice pasta dish"}});
+	tags.insert({{"nice pasta dish, pasta"},{"nice pasta dish","pasta"}});
+
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto tag : tags)
+	{
+		example_string = "title: pasta    tags: " + tag.first;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.tags.size(),2);
+		test_lib::expect_equal_s(rcp.tags[0], tag.second[0]);
+		test_lib::expect_equal_s(rcp.tags[1], tag.second[1]);
+	}
+}
+void three_tags_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::map<std::string, std::vector<std::string>> tags;
+	tags.insert({{"pasta, easy dish, good first dish to make"},{"pasta", "easy dish", "good first dish to make"}});
+	tags.insert({{"easy dish, good first dish to make, pasta"},{"easy dish", "good first dish to make", "pasta"}});
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto tag : tags)
+	{
+		example_string = "title: pasta    tags: " + tag.first;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.tags.size(),3);
+		test_lib::expect_equal_s(rcp.tags[0], tag.second[0]);
+		test_lib::expect_equal_s(rcp.tags[1], tag.second[1]);
+		test_lib::expect_equal_s(rcp.tags[2], tag.second[2]);
+	}
+}
+
+void one_kitchenware_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> kitchenware = {"pot","big pan","big pot with an extra large lid"};
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto a_kitchenware : kitchenware)
+	{
+		example_string = "title: pasta    kitchenware: " + a_kitchenware;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_s(rcp.kitchenware[0], a_kitchenware);
+	}
+}
+
+void two_kitchenware_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::map<std::string, std::vector<std::string>> kitchenware_map;
+	kitchenware_map.insert({{"pan, pot"},{"pan","pot"}});
+	kitchenware_map.insert({{"pan, large pot"},{"pan","large pot"}});
+	kitchenware_map.insert({{"large pot,pan"},{"large pot","pan"}});
+	kitchenware_map.insert({{"rather large pot, pan"},{"rather large pot","pan"}});
+	kitchenware_map.insert({{"pan,rather large pot"},{"pan","rather large pot"}});
+	
+
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto kitchenware : kitchenware_map)
+	{
+		example_string = "title: pasta    kitchenware: " + kitchenware.first;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.kitchenware.size(),2);
+		test_lib::expect_equal_s(rcp.kitchenware[0], kitchenware.second[0]);
+		test_lib::expect_equal_s(rcp.kitchenware[1], kitchenware.second[1]);
+	}
+}
+void three_kitchenware_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::map<std::string, std::vector<std::string>> kitchenware_map;
+	kitchenware_map.insert({{"pan, pot, bowl"},{"pan","pot","bowl"}});
+	kitchenware_map.insert({{"pan, bowl, large pot"},{"pan","bowl","large pot"}});
+	kitchenware_map.insert({{"bowl, large pot, pan"},{"bowl","large pot","pan"}});
+	kitchenware_map.insert({{"rather large pot, pan, bowl"},{"rather large pot","pan","bowl"}});
+	kitchenware_map.insert({{"bowl,pan,rather large pot"},{"bowl","pan","rather large pot"}});
+	
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto kitchenware : kitchenware_map)
+	{
+		example_string = "title: pasta    kitchenware: " + kitchenware.first;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.kitchenware.size(),3);
+		test_lib::expect_equal_s(rcp.kitchenware[0], kitchenware.second[0]);
+		test_lib::expect_equal_s(rcp.kitchenware[1], kitchenware.second[1]);
+		test_lib::expect_equal_s(rcp.kitchenware[2], kitchenware.second[2]);
+	}
+}
 
 int main(void)
 {
@@ -97,6 +207,12 @@ int main(void)
 	total_time_before_eof_matches();
 	prep_time_before_eof_matches();
 	cook_time_before_eof_matches();
+	one_tag_before_eof_matches();
+	two_tags_before_eof_matches();
+	three_tags_before_eof_matches();
+	one_kitchenware_before_eof_matches();
+	two_kitchenware_before_eof_matches();
+	three_kitchenware_before_eof_matches();
 	test_lib::print_recap();
 	return test_lib::result();
 }
