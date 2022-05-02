@@ -157,6 +157,9 @@ namespace epicr
 
     } epicr_token;
 
+/**
+ * @brief Includes all lexer functions
+*/
     class Lexer
     {
     private:
@@ -169,28 +172,79 @@ namespace epicr
         bool is_peaking;
 
     public:
+        /**
+         * @brief Base constructor for the lexer
+        */
         Lexer();
+    
+        /**
+         * @brief 
+         * @param std::ifstream Is the input file stream and is used to read information from files
+         * @param file The file you want to read from
+        */
         Lexer(std::ifstream &file);
+
+        /**
+         * @brief Constructor that can take an input stream such it can read and interpret input from sequences of characters
+         * @param std::istream Is used for input 
+         * @param file The file you want to read from
+        */
         Lexer(std::istream &file);
 
         /* Return whether or not the Lexer is ready to yield tokens */
         bool DEBUG_MODE;
         bool is_ready();
 
-        /* Return the next token, and moving the reader */
+        /**
+         * @brief Return the next token with token types, and moves the reader to the next token unless EOF
+         * @return token
+        */
         epicr_token next_token();
-        /* Return the next `n` tokens as an array */
+
+        /**
+         * @brief Return the next `n` tokens as an array
+         * @param n Number of tokens
+         * @return token
+        */
         std::vector<epicr_token> next_token(int n);
-        /* Return the next non blank, non new line token */
+
+        /**
+         * @brief Return the next non blank, non new line token
+         * @return next_token()
+        */
         epicr_token next_non_blank_token();
+
+        /**
+         * @brief Assign a E_TT to a token
+         * @param stoken Stream token is the current token in the stream
+         * @return E_TT
+        */
         epicr_token_type token_type(std::string stoken);
-        /* Peek the next token */
+        
+        /**
+         * @brief Peek the next token
+         * @return token
+        */
         epicr_token peek_token();
-        /* Peek the `n` 'th token. Undefined for `n=0` */
+
+        /**
+         * @brief Peek the `n` 'th token. Undefined for `n=0`
+         * @param n How many tokens the function should peek
+         * @return peek_token()
+        */
         epicr_token peek_token(int n);
-        /* Peek the next non-blank token */
+
+        /**
+         * @brief Peek the next non-blank token 
+         * @return token
+        */
         epicr_token peek_non_blank_token();
-        /* Peek the `n` 'th non-blank token. Undefined for `n=0`*/
+
+        /**
+         * @brief Peek the `n` 'th non-blank token. Undefined for `n=0`
+         * @param n How many non-blank tokens the function should peek
+         * @return peek_non_blank_token() 
+        */
         epicr_token peek_non_blank_token(int n);
     };
 
