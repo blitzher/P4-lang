@@ -47,6 +47,10 @@ int main(int argc, char **argv)
 	amntconve.visit(&my_recipe);
 	cout << amntconve.has_error << " AmtCon: " << amntconve.error << endl;
 
+	auto mand_fields = epicr::visitor::MandatoryFields();
+	mand_fields.visit(&my_recipe);
+	cout << mand_fields.has_error << " ManFld: " << mand_fields.error << endl;
+
 	std::cout << "clarg output filepath: " << epicr::clargs.output_filepath << std::endl;
 
 	if (!my_parser.has_error)
