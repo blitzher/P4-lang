@@ -130,7 +130,7 @@ namespace epicr
 	{
 		ADV_NON_BLANK(2);
 		/* Read all words and spaces in description */
-		while (utoken.type != E_TT_COLON)
+		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
 			rcp->description += ctoken.word;
 			ADV(1);
@@ -140,12 +140,11 @@ namespace epicr
 	void Parser::ParseServings(recipe *rcp)
 	{
 		ADV_NON_BLANK(2);
-		if (ctoken.type != E_TT_NUMBER || utoken.type == E_TT_EOF)
+		if (ctoken.type != E_TT_NUMBER)
 		{
 			ERR_VOID("No correct description for amount has been found!", ctoken);
 		}
 		rcp->servings.count += stoi(ctoken.word);
-
 		ADV_NON_BLANK(1);
 		rcp->servings.descriptor = ReadWords(false, false);
 	}

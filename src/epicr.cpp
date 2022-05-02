@@ -6,15 +6,15 @@ namespace fs = std::filesystem;
 
 namespace epicr
 {
+    std::string concat_output_dir(std::string dest)
+    {
+        fs::path p = fs::current_path();
+        fs::path output_dir = p;
+        fs::path destination = (dest);
+        fs::path full_path = output_dir / destination;
+        return full_path.string();
+    }
 
-	std::string concat_output_dir(std::string dest)
-	{
-		fs::path p = fs::current_path();
-		fs::path output_dir = p;
-		fs::path destination = (dest);
-		fs::path full_path = output_dir / destination;
-		return full_path.string();
-	}
 	cmd_args clargs;
 	std::ifstream open_file(std::string filename)
 	{
