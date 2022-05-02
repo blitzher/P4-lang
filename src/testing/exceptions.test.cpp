@@ -230,7 +230,7 @@ int main()
     visit_no_repeating_ingredients_exception();
     visit_relative_amount_only_on_ingredients_in_ingredient_list_exception();
     visit_mandatory_fields_exception();
-    //recursive_files_exception();
+    recursive_files_exception();
     test_lib::print_recap();
     return test_lib::result();
 }
