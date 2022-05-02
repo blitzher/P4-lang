@@ -466,4 +466,52 @@ symbols[yield.name].amount.unit.c_str(), yield.amount.unit.c_str(), yield.name.c
     }
 
 #pragma endregion
+
+#pragma region MandatoryFields implementation
+
+    MandatoryFields::MandatoryFields()
+    {
+        error = "No error";
+        has_error = false;
+    }
+
+    void MandatoryFields::has_mandatory_fields(const recipe *rcp)
+    {
+        if (rcp->title == "")
+        {
+            error = "No title was found";
+            has_error = true;
+            return;
+        }
+        if (rcp->ingredients.empty())
+        {
+            error = "No ingredients was found";
+            has_error = true;
+            return;
+        }
+        if (rcp->instructions.empty())
+        {
+            error = "No instructions was found";
+            has_error = true;
+            return;
+        }
+    }
+
+    void MandatoryFields::servings_default_value(recipe *rcp)
+    {
+        if (rcp->servings.count == 0 && rcp->servings.descriptor == "")
+        {
+            rcp->servings.count = 1;
+            rcp->servings.descriptor = "servings";
+        }
+    }
+
+    void MandatoryFields::visit(recipe *rcp)
+    {
+        has_mandatory_fields(rcp);
+        servings_default_value(rcp);
+    }
+
+#pragma endregion
+
 }

@@ -289,6 +289,17 @@ namespace epicr
             AmountConverter();
         };
 
+        class MandatoryFields : public Visitor
+        {
+        private:
+            void servings_default_value(recipe *rcp);
+            void has_mandatory_fields(const recipe *rcp);
+
+        public:
+            void visit(recipe *);
+            MandatoryFields();
+        };
+
         const double G_TO_OZ = 0.035;
         const double KG_TO_LBS = 2.2046;
         const double L_TO_QT = 1.057;

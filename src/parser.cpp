@@ -140,7 +140,7 @@ namespace epicr
 		ADV_NON_BLANK(2);
 		if (ctoken.type != E_TT_NUMBER)
 		{
-			ERR_VOID("No correct description for amount has been found!", ctoken);
+			ERR_VOID("No correct description for amount has been found", ctoken);
 		}
 		rcp->servings.count += stoi(ctoken.word);
 		ADV_NON_BLANK(1);
@@ -305,8 +305,8 @@ namespace epicr
 			ADV_NON_BLANK(1);
 			if (ctoken.type == E_TT_PARENS_CLOSE) /*if the with is empty*/
 			{
-				ADV_NON_BLANK(1)
-					return;
+				ADV_NON_BLANK(1);
+				return;
 			}
 			ingredient current_ingredient = ReadIngredient(E_RI_ASSUME_REST);
 			if (has_error)
@@ -329,8 +329,8 @@ namespace epicr
 			ADV_NON_BLANK(1);
 			if (ctoken.type == E_TT_PARENS_CLOSE) /*if the using is empty*/
 			{
-				ADV_NON_BLANK(1)
-					return;
+				ADV_NON_BLANK(1);
+				return;
 			}
 			std::string current_kitchenware = ReadWords(E_RW_NUMBERS);
 			if (ctoken.type != E_TT_COMMA && ctoken.type != E_TT_PARENS_CLOSE)
@@ -379,8 +379,8 @@ namespace epicr
 			Body.push_back(iword);
 		}
 		if (Body.size() == 0)
-			ERR_VOID("Instruction body cannot be empty", ctoken)
-			current_instruction->body = Body;
+		  ERR_VOID("Instruction body cannot be empty", ctoken);
+		current_instruction->body = Body;
 	}
 
 	void Parser::ParseInstructionYield(instruction* single_instruction)
