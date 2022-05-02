@@ -10,7 +10,7 @@ namespace epicr
 	cmd_args clargs;
 	std::vector<std::string> included_recipes;
 	std::string recurison_error;
-	bool has_recurison_error;
+	bool has_recurison_error = false;
 
 	std::ifstream open_file(std::string filename)
 	{
@@ -76,7 +76,7 @@ namespace epicr
 		std::string type = token_to_string(token.type);
 
 		if (token.type != E_TT_BLANK && token.type != E_TT_NEWLINE)
-			printf("%-18s-> %-6s (%llu) uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.word.size(), token.uid, token.line);
+			printf("%-18s-> %-6s (%lu) uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.word.size(), token.uid, token.line);
 		else
 			printf("%-18s   %-10i uid:%i line:%i\n", type.c_str(), (int)token.word.size(), token.uid, token.line);
 	}
@@ -153,8 +153,16 @@ namespace epicr
 
 	parse_ret parse_recipe(std::string filename)
 	{
-		cmd_args args = { filename, E_HS_BASIC, "dist", E_US_NONE };
+		cmd_args args = { filename, E_HS_BASIC, "dist", E_US_NONE, false };
+		epicr::clargs = args;
 		return parse_recipe(args);
+	}
+
+	parse_ret parse_recipe_silent(std::string filename)
+	{
+		cmd_args args = { filename, E_HS_BASIC, "dist", E_US_NONE, true };
+		epicr::clargs = args;
+		return parse_recipe_silent(args);
 	}
 
 	parse_ret parse_recipe(cmd_args clargs)
@@ -176,12 +184,12 @@ namespace epicr
 		return ret;
 	}
 
-	parse_ret parse_recipe_silent(std::string filename)
+	parse_ret parse_recipe_silent(cmd_args clargs)
 	{
-		if (cached_recipes.find(filename) != cached_recipes.end())
-			return cached_recipes[filename];
+		if (cached_recipes.find(clargs.input_filepath) != cached_recipes.end())
+			return cached_recipes[clargs.input_filepath];
 
-		std::ifstream input_filestream = open_file(filename);
+		std::ifstream input_filestream = open_file(clargs.input_filepath);
 		if (has_recurison_error)
 			return { {}, true, recurison_error };
 		Lexer lexer(input_filestream);
@@ -259,7 +267,7 @@ namespace epicr
 			argv_s.push_back(std::string(argv[i]));
 		}
 
-		epicr::cmd_args CMD_ARGS = { "", E_HS_BASIC, concat_output_dir("dist"), E_US_NONE };
+		epicr::cmd_args CMD_ARGS = { "", E_HS_BASIC, concat_output_dir("dist"), E_US_NONE, false };
 		for (int i = 0; i < argc; i++)
 		{
 			std::string arg = to_lower(argv_s[i]);

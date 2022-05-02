@@ -24,6 +24,12 @@
 			"type": "lldb",
 			"request": "launch",
 			"program": "${workspaceFolder}/bin/exceptions.test"
+		},
+		{
+			"name": "Debug parser.test",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/bin/parser.test"
 		}
 	]
 }

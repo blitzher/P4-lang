@@ -34,6 +34,10 @@ namespace test_lib
 		/* tests are by default unevaluated */
 		tests[func_name] = { func_name, UNEVALUATED, "Call \"accept\" or \"deny\" to evaluate" };
 		most_recent_test = &tests[func_name];
+		/* epicr specific, to reset all recursion checking
+		 * between unit tests */
+		epicr::has_recurison_error = false;
+		epicr::included_recipes.clear();
 	}
 
 	void accept()

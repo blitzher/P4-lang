@@ -194,10 +194,18 @@ void visit_mandatory_fields_exception()
     epicr::recipe rcp = epicr::parse_string("title: ingredients: instructions:").recipe;
     epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
     mand_fields.visit(&rcp);
-    epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
+    epicr::rcp_ret ret = { &rcp, mand_fields.has_error, mand_fields.error };
     test_lib::expect_exception(ret, "No title was found");
 }
-  
+
+void recursive_files_exception() {
+    test_lib::REGISTER;
+
+    epicr::parse_ret ret = epicr::parse_recipe_silent("src/test-recipes/recursion0.rcp");
+    test_lib::expect_exception(ret, "In recursion1:\n\tIn recursion0:\n\t\tFile /home/skov/p4-lang/src/test-recipes/recursion0.rcp was already included (recursion)");
+}
+
+
 int main()
 {
     parse_incorrect_field_exception();
@@ -221,6 +229,7 @@ int main()
     visit_no_repeating_ingredients_exception();
     visit_relative_amount_only_on_ingredients_in_ingredient_list_exception();
     visit_mandatory_fields_exception();
+    recursive_files_exception();
     test_lib::print_recap();
     return test_lib::result();
 }
