@@ -68,7 +68,7 @@ namespace epicr
 		std::string type = token_to_string(token.type);
 
 		if (token.type != E_TT_BLANK && token.type != E_TT_NEWLINE)
-			printf("%-18s-> %-6s (%lu) uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.word.size(), token.uid, token.line);
+			printf("%-18s-> %-6s (%llu) uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.word.size(), token.uid, token.line);
 		else
 			printf("%-18s   %-10i uid:%i line:%i\n", type.c_str(), (int)token.word.size(), token.uid, token.line);
 	}
