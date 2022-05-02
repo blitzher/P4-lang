@@ -29,6 +29,7 @@ void description_before_eof_matches()
 		test_lib::expect_equal_s(rcp.description, description);
 	}
 }
+
 void servings_before_eof_matches()
 {
 	test_lib::REGISTER;
@@ -47,6 +48,7 @@ void servings_before_eof_matches()
 		test_lib::expect_equal_s(rcp.servings.descriptor, serving.second.descriptor);
 	}
 }
+
 void total_time_before_eof_matches()
 {
 	test_lib::REGISTER;
@@ -87,6 +89,7 @@ void cook_time_before_eof_matches()
 		test_lib::expect_equal_s(rcp.time.cook_time, cook_time);
 	}
 }
+
 void one_tag_before_eof_matches()
 {
 	test_lib::REGISTER;
@@ -155,7 +158,6 @@ void one_kitchenware_before_eof_matches()
 		test_lib::expect_equal_s(rcp.kitchenware[0], a_kitchenware);
 	}
 }
-
 void two_kitchenware_before_eof_matches()
 {
 	test_lib::REGISTER;
@@ -217,7 +219,6 @@ void optional_ingredient_before_eof_matches()
 		test_lib::expect_equal_b(rcp.ingredients[2].is_optional,true);
 	}
 }
-
 void uncountable_ingredient_before_eof_matches()
 {
 	test_lib::REGISTER;
@@ -271,7 +272,7 @@ void ingredient_amount_and_unit_before_eof_matches()
 void ingredient_no_unit_before_eof_matches()
 {
 	test_lib::REGISTER;
-	std::vector<std::string> ingredients = {"æble","pære","melon"};
+	std::vector<std::string> ingredients = {"apple","small pear","rather large melon"};
 	
 	std::string example_string;
 	epicr::recipe rcp;
@@ -286,6 +287,60 @@ void ingredient_no_unit_before_eof_matches()
 	}
 }
 
+void empty_yield_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::string example_string = "title: pasta    instructions: with(water): drink the water yield:";
+	epicr::recipe rcp = epicr::parse_string_silent(example_string).recipe;
+	test_lib::expect_equal_i(rcp.instructions[0].yields.size(),0);
+}
+void yield_no_amount_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> yieldIngredients = {"ice","cold ice","ice cold ice","extremely cold and wet ice"};
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto ingredient : yieldIngredients)
+	{
+		example_string = "title: pasta    instructions: with(water): freeze the water yield: water," + ingredient;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.instructions[0].yields.size(),2);
+		test_lib::expect_equal_s(rcp.instructions[0].yields[1].name, ingredient);
+		test_lib::expect_equal_i(rcp.instructions[0].yields[1].amount.number,1);
+		test_lib::expect_equal_s(rcp.instructions[0].yields[1].amount.unit,"");
+	}
+}
+void yield_no_unit_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> yieldIngredients = {"apple","small pear","rather large melon"};
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto ingredient : yieldIngredients)
+	{
+		example_string = "title: pasta    instructions: with(tree): pick the fruits from the tree yield: leaf," + ingredient + "[3]";
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.instructions[0].yields.size(),2);
+		test_lib::expect_equal_s(rcp.instructions[0].yields[1].name, ingredient);
+		test_lib::expect_equal_i(rcp.instructions[0].yields[1].amount.number,3);
+		test_lib::expect_equal_s(rcp.instructions[0].yields[1].amount.unit,"");
+	}
+}
+void uncountable_yield_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> yieldIngredients = {"ginger beer","light beer","cold beer"};
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto ingredient : yieldIngredients)
+	{
+		example_string = "title: pasta    instructions: with(water,yeast): brew the beer yield: alcohol," + ingredient + "+";
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.instructions[0].yields.size(),2);
+		test_lib::expect_equal_s(rcp.instructions[0].yields[1].name, ingredient);
+		test_lib::expect_equal_b(rcp.instructions[0].yields[1].amount.is_uncountable,true);
+	}
+}
 
 int main(void)
 {
@@ -306,6 +361,10 @@ int main(void)
 	ingredient_no_amount_before_eof_matches();
 	ingredient_amount_and_unit_before_eof_matches();
 	ingredient_no_unit_before_eof_matches();
+	empty_yield_before_eof_matches();
+	yield_no_amount_before_eof_matches();
+	yield_no_unit_before_eof_matches();
+	uncountable_yield_before_eof_matches();
 	test_lib::print_recap();
 	return test_lib::result();
 }
