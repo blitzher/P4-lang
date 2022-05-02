@@ -186,7 +186,6 @@ void visit_title_ingredient_must_remain_in_the_end_exception()
     auto ingrvisit = epicr::visitor::IngredientVerifier();
     auto final_rcp = epicr::ingredient_verify_recipe(&rcp);
     test_lib::expect_exception(final_rcp, "Title-ingredient must remain after all instructions have been executed");
-}
 
 void visit_mandatory_fields_exception()
 {
@@ -197,7 +196,7 @@ void visit_mandatory_fields_exception()
     epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
     test_lib::expect_exception(ret, "No title was found");
 }
-
+  
 int main()
 {
     parse_incorrect_field_exception();
