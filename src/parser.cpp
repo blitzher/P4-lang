@@ -122,7 +122,6 @@ namespace epicr
 			if (utoken.type != E_TT_COLON)
 				ADV_NON_BLANK(1);
 		}
-
 		rcp->title = strip_spaces_right(rcp->title);
 	}
 	void Parser::ParseDescription(recipe* rcp)
@@ -544,7 +543,7 @@ namespace epicr
 		while (ReadWordsPredicate(ctoken.type, arg) && utoken.type != E_TT_COLON)
 		{
 			final_word += ctoken.word;
-			ctoken = lexer->next_token();
+			ADV(1);
 		}
 
 		if (ctoken.type == E_TT_NEWLINE)
