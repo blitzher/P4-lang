@@ -19,17 +19,9 @@ void print_lexer_tokens(epicr::Lexer lexer);
 
 int main(int argc, char** argv)
 {
-	cout << "Command line arguments:" << endl;
-
-	for (int i = 0; i < argc; i++)
-	{
-		cout << i << ": " << argv[i] << endl;
-	}
-	cout << "-------\n";
-
 	epicr::parse_cmd_args(argc, argv);
 
-	ifstream file = epicr::open_file(argv[1]);
+	ifstream file = epicr::open_file(epicr::clargs.input_filepath);
 
 	cout << "Compiling " << epicr::clargs.input_filepath << endl;
 

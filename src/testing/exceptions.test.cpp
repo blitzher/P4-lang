@@ -186,7 +186,7 @@ void visit_title_ingredient_must_remain_in_the_end_exception()
     auto ingrvisit = epicr::visitor::IngredientVerifier();
     auto final_rcp = epicr::ingredient_verify_recipe(&rcp);
     test_lib::expect_exception(final_rcp, "Title-ingredient must remain after all instructions have been executed");
-    
+
 }
 
 int main()

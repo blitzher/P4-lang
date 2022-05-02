@@ -12,6 +12,18 @@
 			"args": [
 				"src/test-recipes/BuggyLexer.rcp"
 			],
+		},
+		{
+			"name": "Debug eof.test",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/bin/eof.test"
+		},
+		{
+			"name": "Debug exceptions.test",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/bin/exceptions.test"
 		}
 	]
 }

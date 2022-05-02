@@ -17,18 +17,28 @@
 
 #pragma region Debug macros
 
-#define HAS_PLUS 1     // 0b0000 0001
-#define HAS_ASTERIX 2  // 0b0000 0010
-#define HAS_QMARK 4    // 0b0000 0100
-#define ASSUME_1_NUM 8 // 0b0000 1000
-#define ASSUME_REST 16 // 0b0001 0000
+
+/* Read ingredient args */
+#define E_RI_NONE 0
+#define E_RI_HAS_PLUS 1     // 0b0000 0001
+#define E_RI_HAS_ASTERIX 2  // 0b0000 0010
+#define E_RI_HAS_QMARK 4    // 0b0000 0100
+#define E_RI_ASSUME_1_NUM 8 // 0b0000 1000
+#define E_RI_ASSUME_REST 16 // 0b0001 0000
+
+/* Read word args */
+#define E_RW_NONE 0
+#define E_RW_NUMBERS 1
+#define E_RW_PARENTHESIS 2
 
 #pragma endregion
 
 namespace epicr
 {
+    std::string concat_output_dir(std::string);
 
     typedef char ingredient_arg;
+    typedef char readwords_arg;
     typedef unsigned int uint;
 #pragma region Recipe Data
 
@@ -217,11 +227,11 @@ namespace epicr
         ingredient ReadIngredient(ingredient_arg);
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
         accepts a boolean as input stating whether or not it can read numbers as well*/
-        std::string ReadWords(bool, bool);
+        std::string ReadWords(readwords_arg);
         /* Read an amount from the current position */
         amount ReadAmount(ingredient_arg arg);
         /*predicate used in the readWords function to determine the allowed token types that can be read*/
-        bool ReadWordsPredicate(epicr_token_type, bool, bool);
+        bool ReadWordsPredicate(epicr_token_type, readwords_arg);
         /*reads the seperator (comma) if there are more elements in the field. Otherwise stay at the start of the next field
         if no seperator or next field is read, an error is thrown*/
         void ReadSeperatorOrWaitAtNextField(std::string);

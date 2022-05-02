@@ -1,0 +1,17 @@
+title: Cooked spaghetti
+
+description: a simple spaghetti recipe
+
+ingredients:
+    spaghetti [100g],
+    water
+
+tags: delicious
+
+instructions:
+    with(spaghetti, water):
+        Throw in pot and boil until ready
+
+    yield:
+        cooked spaghetti
+        

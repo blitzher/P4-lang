@@ -21,6 +21,8 @@ struct compare
 #define CH_V_CONTAINS(ARR, VALUE) \
     (any_of(ARR.begin(), ARR.end(), compare(VALUE)))
 
+#define EOF_TOKEN_OBJECT { "EOF", E_TT_EOF, token_count, line_num }
+
 namespace epicr
 {
     vector<char> token_breakers = { ' ', '\n', 0x0d, ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*' };
@@ -55,23 +57,27 @@ namespace epicr
         /* Check if the file stream is ended */
         if (!ready)
         {
-            return { "EOF", E_TT_EOF, token_count, line_num };
+            return EOF_TOKEN_OBJECT;
         }
         else if (istream.eof() && can_return_pre_eof_token)
         {
             if (pre_eof_index < pre_eof_tokens.size())
-                return pre_eof_tokens[pre_eof_index++];
+            {
+                epicr_token pre_eof_token = pre_eof_tokens[pre_eof_index++];
+                return pre_eof_token;
+            }
             else
             {
                 can_return_pre_eof_token = false;
                 ready = false;
+                return EOF_TOKEN_OBJECT;
             }
 
         }
         else if (istream.eof())
         {
             ready = false;
-            return { "EOF", E_TT_EOF, token_count, line_num };
+            return EOF_TOKEN_OBJECT;
         }
 
         vector<char> vtoken;
@@ -249,6 +255,8 @@ namespace epicr
         uint line_offset = 0;
         epicr_token token;
         is_peaking = true;
+        int before_peek_eof_index = pre_eof_index;
+
 
         for (int i = 0; i < amnt; i++)
         {
@@ -262,6 +270,7 @@ namespace epicr
         /* retract the header by the width of the read tokens */
 
         // printf("can_return...:%i eof_flag:%i ready:%i\n", can_return_pre_eof_token, istream.eof(), ready);
+        pre_eof_index = before_peek_eof_index;
         is_peaking = false;
         if (!istream.eof())
             istream.seekg(-offset, ios_base::cur);
