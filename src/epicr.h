@@ -232,7 +232,7 @@ namespace epicr
         ingredient ReadIngredient(ingredient_arg);
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
         accepts a boolean as input stating whether or not it can read numbers as well*/
-        std::string ReadWords(readwords_arg);
+        std::string ReadWords(readwords_arg,bool);
         /* Read an amount from the current position */
         amount ReadAmount(ingredient_arg arg);
         /*predicate used in the readWords function to determine the allowed token types that can be read*/
