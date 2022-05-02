@@ -82,7 +82,7 @@ namespace epicr
 
     typedef struct servings_s
     {
-        int count;
+        double count;
         std::string descriptor;
     } servings;
 

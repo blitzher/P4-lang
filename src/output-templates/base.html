@@ -227,6 +227,7 @@
                 function save_start_values()
                 {
                     set_ingredient_refs();
+                    truncate();
 
                     for (i = 0; i < numbers.length; i++) 
                     {
@@ -354,7 +355,7 @@
                 /* limit the range of numbers which can be written in the "servings" field */
                 function truncate()
                 {
-                    value = parseInt(servings_field.value);
+                    value = parseFloat(servings_field.value);
                     max = parseInt(servings_field.max);
                     min = parseInt(servings_field.min);
 
@@ -365,6 +366,12 @@
 
                     if (servings_field.value.includes("."))
                         servings_field.value = truncateString(servings_field.value, 4);
+                    
+                    /* checks for digit and then checks for 00 */
+                    if(/([\d]+\.+00)/.test(servings_field.value))
+                    {
+                        servings_field.value = parseInt(servings_field.value);
+                    }
                 }
 
                 function truncateString(str, num) 
@@ -387,7 +394,7 @@
                 function update_numbers()
                 {
                     truncate();
-
+                    
                     /* if no number is written in the servings field, don't do anything*/
                     if (servings_field.value != "")
                     { 
