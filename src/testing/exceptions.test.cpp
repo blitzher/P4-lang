@@ -202,7 +202,7 @@ void recursive_files_exception() {
     test_lib::REGISTER;
 
     epicr::parse_ret ret = epicr::parse_recipe_silent("src/test-recipes/recursion0.rcp");
-    std::string file = std::filesystem::absolute("src/test-recipes/recursion0.rcp");
+    std::string file = std::filesystem::absolute("src/test-recipes/recursion0.rcp").string();
     test_lib::expect_exception(ret, "In recursion1:\n\tIn recursion0:\n\t\tFile " + file + " was already included (recursion)");
 }
 
