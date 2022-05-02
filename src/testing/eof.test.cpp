@@ -97,6 +97,7 @@ void one_tag_before_eof_matches()
 	{
 		example_string = "title: pasta    tags: " + tag;
 		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.tags.size(),1);
 		test_lib::expect_equal_s(rcp.tags[0], tag);
 	}
 }
@@ -150,6 +151,7 @@ void one_kitchenware_before_eof_matches()
 	{
 		example_string = "title: pasta    kitchenware: " + a_kitchenware;
 		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.kitchenware.size(),1);
 		test_lib::expect_equal_s(rcp.kitchenware[0], a_kitchenware);
 	}
 }
@@ -199,6 +201,92 @@ void three_kitchenware_before_eof_matches()
 	}
 }
 
+void optional_ingredient_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> ingredients = {"salt","more salt","a large amount of salt"};
+	
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto ingredient : ingredients)
+	{
+		example_string = "title: pasta    ingredients: dough,water," + ingredient + "?";
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.ingredients.size(),3);
+		test_lib::expect_equal_s(rcp.ingredients[2].name, ingredient);
+		test_lib::expect_equal_b(rcp.ingredients[2].is_optional,true);
+	}
+}
+
+void uncountable_ingredient_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> ingredients = {"salt","more salt","however much salt you have"};
+	
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto ingredient : ingredients)
+	{
+		example_string = "title: pasta    ingredients: dough,water," + ingredient + "+";
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.ingredients.size(),3);
+		test_lib::expect_equal_s(rcp.ingredients[2].name, ingredient);
+		test_lib::expect_equal_b(rcp.ingredients[2].amount.is_uncountable,true);
+	}
+}
+void ingredient_no_amount_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> ingredients = {"butter","yeast","milk"};
+	
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto ingredient : ingredients)
+	{
+		example_string = "title: pasta    ingredients: dough,water," + ingredient;
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.ingredients.size(),3);
+		test_lib::expect_equal_s(rcp.ingredients[2].name, ingredient);
+		test_lib::expect_equal_i(rcp.ingredients[2].amount.number,1);
+		test_lib::expect_equal_s(rcp.ingredients[2].amount.unit,"");
+	}
+}
+void ingredient_amount_and_unit_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> ingredients = {"butter","yeast","milk"};
+	
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto ingredient : ingredients)
+	{
+		example_string = "title: pasta    ingredients: dough,water," + ingredient + " [100 g]";
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.ingredients.size(),3);
+		test_lib::expect_equal_s(rcp.ingredients[2].name, ingredient);
+		test_lib::expect_equal_i(rcp.ingredients[2].amount.number,100);
+		test_lib::expect_equal_s(rcp.ingredients[2].amount.unit,"g");
+	}
+}
+void ingredient_no_unit_before_eof_matches()
+{
+	test_lib::REGISTER;
+	std::vector<std::string> ingredients = {"æble","pære","melon"};
+	
+	std::string example_string;
+	epicr::recipe rcp;
+	for (auto ingredient : ingredients)
+	{
+		example_string = "title: pasta    ingredients: dough,water," + ingredient + " [10]";
+		rcp = epicr::parse_string_silent(example_string).recipe;
+		test_lib::expect_equal_i(rcp.ingredients.size(),3);
+		test_lib::expect_equal_s(rcp.ingredients[2].name, ingredient);
+		test_lib::expect_equal_i(rcp.ingredients[2].amount.number,10);
+		test_lib::expect_equal_s(rcp.ingredients[2].amount.unit,"");
+	}
+}
+
+
 int main(void)
 {
 	title_before_eof_matches();
@@ -213,6 +301,11 @@ int main(void)
 	one_kitchenware_before_eof_matches();
 	two_kitchenware_before_eof_matches();
 	three_kitchenware_before_eof_matches();
+	optional_ingredient_before_eof_matches();
+	uncountable_ingredient_before_eof_matches();
+	ingredient_no_amount_before_eof_matches();
+	ingredient_amount_and_unit_before_eof_matches();
+	ingredient_no_unit_before_eof_matches();
 	test_lib::print_recap();
 	return test_lib::result();
 }
