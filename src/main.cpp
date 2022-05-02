@@ -17,23 +17,16 @@ using namespace std;
 /* Remove or outcomment when not debugging */
 void print_lexer_tokens(epicr::Lexer lexer);
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-	cout << "Command line arguments:" << endl;
-
-	for (int i = 0; i < argc; i++)
-	{
-		cout << i << ": " << argv[i] << endl;
-	}
-	cout << "-------\n";
-
 	epicr::parse_cmd_args(argc, argv);
 
-	ifstream file = epicr::open_file(argv[1]);
+	ifstream file = epicr::open_file(epicr::clargs.input_filepath);
 
 	cout << "Compiling " << epicr::clargs.input_filepath << endl;
 
 	epicr::Lexer my_lexer = epicr::Lexer(file);
+
 	epicr::Parser my_parser = epicr::Parser(&my_lexer);
 	epicr::recipe my_recipe = my_parser.Parse();
 
@@ -67,14 +60,14 @@ void print_lexer_tokens(epicr::Lexer lexer)
 
 	while (lexer.is_ready())
 	{
-		epicr::epicr_token token = lexer.next_non_blank_token();
-		epicr::epicr_token peek = lexer.peek_non_blank_token(1);
-		if (token_count < 100)
+		epicr::epicr_token token = lexer.next_token();
+		epicr::epicr_token peek = lexer.peek_token();
+		if (token_count > 70)
 		{
 			printf("%3i c:", token_count);
 			epicr::print_token(token);
-			// printf("%3i p:", token_count + 1);
-			// epicr::print_token(peek);
+			printf("%3i p:", token_count + 1);
+			epicr::print_token(peek);
 			cout << endl;
 		}
 

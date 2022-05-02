@@ -5,30 +5,25 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "clang++ - Build and debug active file",
-			"type": "cppdbg",
+			"name": "Launch",
+			"type": "lldb",
 			"request": "launch",
-			"program": "${fileDirname}/${fileBasenameNoExtension}",
-			"args": [],
-			"stopAtEntry": false,
-			"cwd": "${fileDirname}",
-			"environment": [],
-			"externalConsole": false,
-			"MIMode": "lldb",
-			"setupCommands": [
-				{
-					"description": "Enable pretty-printing for gdb",
-					"text": "-enable-pretty-printing",
-					"ignoreFailures": true
-				},
-				{
-					"description": "Set Disassembly Flavor to Intel",
-					"text": "-gdb-set disassembly-flavor intel",
-					"ignoreFailures": true
-				}
+			"program": "${workspaceFolder}/bin/main",
+			"args": [
+				"src/test-recipes/BuggyLexer.rcp"
 			],
-			"preLaunchTask": "C/C++: clang++ build active file",
-			"miDebuggerPath": "/usr/bin/lldb-mi"
+		},
+		{
+			"name": "Debug eof.test",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/bin/eof.test"
+		},
+		{
+			"name": "Debug exceptions.test",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/bin/exceptions.test"
 		}
 	]
 }
