@@ -6,19 +6,27 @@ namespace fs = std::filesystem;
 
 namespace epicr
 {
-	std::string concat_output_dir(std::string dest)
-	{
-		fs::path p = fs::current_path();
-		fs::path output_dir = p;
-		fs::path destination = (dest);
-		fs::path full_path = output_dir / destination;
-		return full_path.string();
-	}
 
 	cmd_args clargs;
+	std::vector<std::string> included_recipes;
+	std::string recurison_error;
+	bool has_recurison_error;
+
 	std::ifstream open_file(std::string filename)
 	{
-		std::ifstream file{ filename, std::ios_base::binary };
+		std::string fpath = std::filesystem::absolute(filename).string();
+		std::ifstream file;
+
+		if ((std::find(included_recipes.begin(), included_recipes.end(), fpath) != included_recipes.end())) {
+			char* err = (char*)malloc(200);
+			sprintf(err, "File %s was already included (recursion)", filename.c_str());
+			recurison_error = err;
+			has_recurison_error = true;
+			return file;
+		}
+		file.open(filename, std::ios_base::binary);
+		included_recipes.push_back(fpath);
+
 
 		if (!file.is_open())
 			std::cout << "File " << filename << " could not be opened!" << std::endl;
@@ -122,6 +130,15 @@ namespace epicr
 		return result;
 	}
 
+	std::string concat_output_dir(std::string dest)
+	{
+		fs::path p = fs::current_path();
+		fs::path output_dir = p;
+		fs::path destination = (dest);
+		fs::path full_path = output_dir / destination;
+		return full_path.string();
+	}
+
 	bool ingredient_in_map(
 		std::string ingredientName,
 		std::unordered_map<std::string, ingredient> ingredients)
@@ -146,6 +163,8 @@ namespace epicr
 			return cached_recipes[clargs.input_filepath];
 
 		std::ifstream input_filestream = open_file(clargs.input_filepath);
+		if (has_recurison_error)
+			return { {}, true, recurison_error };
 		Lexer lexer(input_filestream);
 		Parser parser(&lexer);
 		recipe rcp = parser.Parse();
@@ -163,6 +182,8 @@ namespace epicr
 			return cached_recipes[filename];
 
 		std::ifstream input_filestream = open_file(filename);
+		if (has_recurison_error)
+			return { {}, true, recurison_error };
 		Lexer lexer(input_filestream);
 		Parser parser(&lexer);
 		parser.silence(true);

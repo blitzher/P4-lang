@@ -76,7 +76,10 @@ run: $(BINDIR)/$(TARGET)
 
 run-rel: $(BINDIR)/$(TARGET)
 	./$< examples/burgers.rcp -o dist
-									
+
+run-infinite-recursion: $(BINDIR)/$(TARGET)
+	./$< src/test-recipes/recursion0.rcp -o dist
+
 test::
 	@rm -rf $(BINDIR)/.tests
 test:: $(T_TARGETS)

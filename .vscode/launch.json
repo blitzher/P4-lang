@@ -10,7 +10,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/bin/main",
 			"args": [
-				"src/test-recipes/BuggyLexer.rcp"
+				"src/test-recipes/recursion0.rcp"
 			],
 		},
 		{
