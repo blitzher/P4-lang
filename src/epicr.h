@@ -14,6 +14,7 @@
 #include <filesystem>
 #include <csetjmp>
 #include <unordered_set>
+#include <regex>
 
 #pragma region Debug macros
 
@@ -146,10 +147,14 @@ namespace epicr
         epicr_html_style choosen_style;
         std::string output_filepath;
         epicr_unit_system unit_system;
+        bool silent;
 
     } cmd_args;
 
     extern cmd_args clargs;
+    extern std::vector<std::string> included_recipes;
+    extern std::string recurison_error;
+    extern bool has_recurison_error;
 
     extern std::map<epicr_unit_type, std::vector<std::string>> units_in_type;
     extern std::map<std::string, std::vector<std::string>> unit_aliases;
@@ -292,11 +297,11 @@ namespace epicr
         class MandatoryFields : public Visitor
         {
         private:
-            void servings_default_value(recipe *rcp);
-            void has_mandatory_fields(const recipe *rcp);
+            void servings_default_value(recipe* rcp);
+            void has_mandatory_fields(const recipe* rcp);
 
         public:
-            void visit(recipe *);
+            void visit(recipe*);
             MandatoryFields();
         };
 
@@ -358,6 +363,7 @@ namespace epicr
     parse_ret parse_recipe(std::string filename);
     parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
+    parse_ret parse_recipe_silent(cmd_args);
     parse_ret parse_string(std::string recipeExcerpt);
     parse_ret parse_string_silent(std::string str);
 

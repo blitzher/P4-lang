@@ -77,6 +77,8 @@ void parsed_tags()
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.tags.size(), 3);
+	if (rcp.tags.size() < 3)
+		return;
 	test_lib::expect_equal_s(rcp.tags[0], "pasta");
 	test_lib::expect_equal_s(rcp.tags[1], "easy to make (for most)");
 	test_lib::expect_equal_s(rcp.tags[2], "under 2 hours");
@@ -88,6 +90,7 @@ void parsed_kitchenware()
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.kitchenware.size(), 2);
+	if (rcp.kitchenware.size() < 2) return;
 	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
 }
@@ -100,7 +103,7 @@ void parsed_ingredients()
 
 	if (rcp.ingredients.size() < 5)
 	{
-		char *m = (char *)malloc(100);
+		char* m = (char*)malloc(100);
 		sprintf(m, "Not all ingredients were parsed properly, found %zu ingredients", rcp.ingredients.size());
 		test_lib::deny(m);
 		return;
@@ -141,7 +144,7 @@ void instruction_has_correct_ingredients_name()
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
-	std::vector<std::string> ingredients = {"wheatflour", "egg", "salt", "water"};
+	std::vector<std::string> ingredients = { "wheatflour", "egg", "salt", "water" };
 	size_t ingredient_size = ingredients.size();
 	for (size_t i = 0; i < ingredient_size; i++)
 	{
@@ -213,7 +216,7 @@ void instruction_with_can_be_empty()
 {
 	test_lib::REGISTER;
 	epicr::parse_ret parse_return = epicr::parse_string("instructions: with(): get some water from the tap yield: water");
-	test_lib::expect_equal_b(parse_return.has_err,false);
+	test_lib::expect_equal_b(parse_return.has_err, false);
 	test_lib::expect_equal_i(parse_return.recipe.instructions[0].ingredients.size(), 0);
 }
 
@@ -221,7 +224,7 @@ void instruction_using_can_be_empty()
 {
 	test_lib::REGISTER;
 	epicr::parse_ret parse_return = epicr::parse_string("instructions: using(): Wash your hands thoroughly");
-	test_lib::expect_equal_b(parse_return.has_err,false);
+	test_lib::expect_equal_b(parse_return.has_err, false);
 	test_lib::expect_equal_i(parse_return.recipe.instructions[0].kitchenware.size(), 0);
 }
 
@@ -245,10 +248,10 @@ void instruction_body_text_is_parsed_correctly()
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	size_t actual_instruction_body_size = rcp.instructions[0].body.size();
 	std::string expected_instruction_body = std::string("Put the 300 g wheatflour on the table and make a cavity in the middle.\n") +
-											std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
-											std::string("Start mixing the eggs into the wheatflour.\n") +
-											std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
-											std::string("Knead the dough thoroughly.\n");
+		std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
+		std::string("Start mixing the eggs into the wheatflour.\n") +
+		std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
+		std::string("Knead the dough thoroughly.\n");
 	std::string actual_instruction_body = "";
 	for (size_t i = 0; i < actual_instruction_body_size; i++)
 	{

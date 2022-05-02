@@ -71,7 +71,8 @@ namespace epicr
 
 		/* If an error occured during parsing,
 		 * return what was parsed so far */
-		setjmp(exit_jmp);
+		if (setjmp(exit_jmp) == 1)
+			return rcp;
 		/* Parse all fields */
 		while (ctoken.type != E_TT_EOF && !has_error)
 			/* TODO: refactor x */
@@ -226,13 +227,25 @@ namespace epicr
 				std::filesystem::path fpath = std::filesystem::absolute(clargs.input_filepath);
 				std::filesystem::path ppath = fpath.parent_path();
 
-				auto rcp_ret = parse_recipe((ppath / ingr.name).string() + ".rcp");
+				auto rcp_ret = parse_recipe_silent((ppath / ingr.name).string() + ".rcp");
 				if (rcp_ret.has_err)
 				{
-					char* err = (char*)malloc(100);
-					sprintf(err, "In %s: %s", ingr.name.c_str(), rcp_ret.err.c_str());
+					has_error = true;
+					char* err = (char*)malloc(500);
+					std::string child_err = std::regex_replace(rcp_ret.err, std::regex("\n"), "\n\t");
+					sprintf(err, "In %s:\n\t%s", ingr.name.c_str(), child_err.c_str());
 					error = err;
-					longjmp(exit_jmp, 1);
+					if (!silent)
+					{
+						std::cout << "ERROR ON LINE " << __LINE__
+							<< " (" << __FILE__ << ":"
+							<< __FUNCTION__ << ")" << std::endl;
+						std::cout << error << std::endl;
+						print_token(ctoken);
+						std::cout << std::endl;
+					}
+
+					return;
 				}
 				recipe rcp = rcp_ret.recipe;
 				ingr.name = rcp.title;
