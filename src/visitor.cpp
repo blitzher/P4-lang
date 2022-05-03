@@ -477,7 +477,7 @@ namespace epicr::visitor
 
     void MandatoryFields::has_mandatory_fields(const recipe *rcp)
     {
-        if (rcp->title == "")
+        if (rcp->title.empty())
         {
             error = "No title was found";
             has_error = true;
