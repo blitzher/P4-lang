@@ -188,6 +188,16 @@ void visit_title_ingredient_must_remain_in_the_end_exception()
     test_lib::expect_exception(final_rcp, "Title-ingredient must remain after all instructions have been executed");
 }
 
+/*this is if the wordCanBeEmpty boolean parameter for readWords is false*/
+void read_words_empty_words_exception()
+{
+    test_lib::REGISTER;
+    std::string incorrect_tag_string = "tags: tag1,tag2,,";
+    auto rcp = epicr::parse_string_silent(incorrect_tag_string);
+
+    test_lib::expect_exception(rcp, "word cannot be empty");
+}
+
 void visit_mandatory_fields_exception()
 {
     test_lib::REGISTER;
@@ -205,7 +215,6 @@ void recursive_files_exception() {
     std::string file = std::filesystem::absolute("src/test-recipes/recursion0.rcp").string();
     test_lib::expect_exception(ret, "In recursion1:\n\tIn recursion0:\n\t\tFile " + file + " was already included (recursion)");
 }
-
 
 int main()
 {
@@ -229,6 +238,7 @@ int main()
     parse_body_cannot_be_empty_exception();
     visit_no_repeating_ingredients_exception();
     visit_relative_amount_only_on_ingredients_in_ingredient_list_exception();
+    read_words_empty_words_exception();
     visit_mandatory_fields_exception();
     recursive_files_exception();
     test_lib::print_recap();

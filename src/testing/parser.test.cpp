@@ -326,6 +326,14 @@ void parse_fields_in_random_order()
 	test_lib::expect_equal_i(rcp.ingredients[0].amount.number, 300);
 }
 
+void trailing_commas_is_allowed()
+{
+	test_lib::REGISTER;
+    std::string incorrect_tag_string = "tags: tag1,tag2,";
+    auto rcp = epicr::parse_string_silent(incorrect_tag_string).recipe;
+    test_lib::expect_equal_i(rcp.tags.size(),2);
+}
+
 void parse_recipe_with_random_casing()
 {
 	test_lib::REGISTER;
@@ -384,6 +392,7 @@ int main(void)
 	instruction_yields_an_ingredient();
 	instruction_yields_1_if_no_amount_specified();
 	last_instruction_yields_correct_ingredient_name();
+	trailing_commas_is_allowed();
 	parse_fields_in_random_order();
 	parse_recipe_with_random_casing();
 	parse_ingredients_with_non_ascii_chars();
