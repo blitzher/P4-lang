@@ -198,17 +198,38 @@ void read_words_empty_words_exception()
     test_lib::expect_exception(rcp, "word cannot be empty");
 }
 
-void visit_mandatory_fields_exception()
+void visit_mandatory_fields_title_exception()
 {
     test_lib::REGISTER;
     epicr::recipe rcp = epicr::parse_string("title: ingredients: instructions:").recipe;
     epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
     mand_fields.visit(&rcp);
-    epicr::rcp_ret ret = { &rcp, mand_fields.has_error, mand_fields.error };
+    epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
     test_lib::expect_exception(ret, "No title was found");
 }
 
-void recursive_files_exception() {
+void visit_mandatory_fields_ingredients_exception()
+{
+    test_lib::REGISTER;
+    epicr::recipe rcp = epicr::parse_string("title: hello ingredients: instructions:").recipe;
+    epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
+    mand_fields.visit(&rcp);
+    epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
+    test_lib::expect_exception(ret, "No ingredients was found");
+}
+
+void visit_mandatory_fields_instructions_exception()
+{
+    test_lib::REGISTER;
+    epicr::recipe rcp = epicr::parse_string("title: hello ingredients: carrot instructions:").recipe;
+    epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
+    mand_fields.visit(&rcp);
+    epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
+    test_lib::expect_exception(ret, "No instructions was found");
+}
+
+void recursive_files_exception()
+{
     test_lib::REGISTER;
 
     epicr::parse_ret ret = epicr::parse_recipe_silent("src/test-recipes/recursion0.rcp");
@@ -239,7 +260,9 @@ int main()
     visit_no_repeating_ingredients_exception();
     visit_relative_amount_only_on_ingredients_in_ingredient_list_exception();
     read_words_empty_words_exception();
-    visit_mandatory_fields_exception();
+    visit_mandatory_fields_title_exception();
+    visit_mandatory_fields_ingredients_exception();
+    visit_mandatory_fields_instructions_exception();
     recursive_files_exception();
     test_lib::print_recap();
     return test_lib::result();

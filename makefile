@@ -72,7 +72,7 @@ $(T_TARGETS)::
 
 # runnable targets 
 run: $(BINDIR)/$(TARGET)
-	./$< src/test-recipes/BuggyLexer.rcp -o dist
+	./$< examples/Carbonara.rcp -o dist
 
 run-rel: $(BINDIR)/$(TARGET)
 	./$< examples/burgers.rcp -o dist
