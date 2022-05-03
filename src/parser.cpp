@@ -261,6 +261,11 @@ namespace epicr
 
 			if (ingr.is_ingredient_ref)
 			{
+				if (!std::filesystem::exists(clargs.input_filepath))
+				{
+					goto out_ref;
+				}
+
 				std::filesystem::path fpath = std::filesystem::absolute(clargs.input_filepath);
 				std::filesystem::path ppath = fpath.parent_path();
 
@@ -294,7 +299,7 @@ namespace epicr
 
 				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
 			}
-
+		out_ref:
 			rcp->ingredients.push_back(ingr);
 			ReadSeperatorOrWaitAtNextField("ingredients");
 		}
