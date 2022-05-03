@@ -42,47 +42,47 @@ namespace epicr
 
         /* all units and their type */
         std::vector<std::string> weight_units = {
-            "g", "kg", "oz", "lbs"};
+            "g", "kg", "oz", "lbs" };
         units_in_type[E_UT_WEIGHT] = weight_units;
 
         std::vector<std::string> volume_units = {
-            "ml", "dl", "l", "fl-oz", "cup", "qt", "gal"};
+            "ml", "dl", "l", "fl-oz", "cup", "qt", "gal" };
         units_in_type[E_UT_VOLUME] = volume_units;
 
         std::vector<std::string> length_units = {
-            "mm", "cm", "in", "ft"};
+            "mm", "cm", "in", "ft" };
         units_in_type[E_UT_LENGTH] = length_units;
 
         std::vector<std::string> temperature_units = {
-            "c", "f"};
+            "c", "f" };
         units_in_type[E_UT_TEMPERATURE] = temperature_units;
 
         /* alias' of the different units */
-        unit_aliases["g"] = {"g", "gram", "grams"};
-        unit_aliases["kg"] = {"kg", "kilogram", "kgs", "kilograms"};
-        unit_aliases["oz"] = {"oz", "ounce", "ounces"};
-        unit_aliases["lbs"] = {"lbs", "pounds"};
+        unit_aliases["g"] = { "g", "gram", "grams" };
+        unit_aliases["kg"] = { "kg", "kilogram", "kgs", "kilograms" };
+        unit_aliases["oz"] = { "oz", "ounce", "ounces" };
+        unit_aliases["lbs"] = { "lbs", "pounds" };
 
-        unit_aliases["ml"] = {"ml", "milliliter"};
-        unit_aliases["dl"] = {"dl", "deciliter"};
-        unit_aliases["l"] = {"l", "liter"};
-        unit_aliases["fl-oz"] = {"fl-oz", "fluid ounce"};
-        unit_aliases["cup"] = {"cup", "cups"};
-        unit_aliases["qt"] = {"qt", "quarts"};
-        unit_aliases["gal"] = {"gal", "gallon", "gallons"};
+        unit_aliases["ml"] = { "ml", "milliliter" };
+        unit_aliases["dl"] = { "dl", "deciliter" };
+        unit_aliases["l"] = { "l", "liter" };
+        unit_aliases["fl-oz"] = { "fl-oz", "fluid ounce" };
+        unit_aliases["cup"] = { "cup", "cups" };
+        unit_aliases["qt"] = { "qt", "quarts" };
+        unit_aliases["gal"] = { "gal", "gallon", "gallons" };
 
-        unit_aliases["mm"] = {"mm", "millimeter", "millimeters"};
-        unit_aliases["cm"] = {"cm", "centimeter", "centimeters"};
-        unit_aliases["in"] = {"in", "inch", "inches"};
-        unit_aliases["ft"] = {"ft", "feet"};
+        unit_aliases["mm"] = { "mm", "millimeter", "millimeters" };
+        unit_aliases["cm"] = { "cm", "centimeter", "centimeters" };
+        unit_aliases["in"] = { "in", "inch", "inches" };
+        unit_aliases["ft"] = { "ft", "feet" };
 
-        unit_aliases["c"] = {"c", "celsius"};
-        unit_aliases["f"] = {"f", "fahrenheit"};
+        unit_aliases["c"] = { "c", "celsius" };
+        unit_aliases["f"] = { "f", "fahrenheit" };
 
         units_in_system[E_US_METRIC] = {
-            "g", "kg", "ml", "dl", "l", "mm", "cm", "c"};
+            "g", "kg", "ml", "dl", "l", "mm", "cm", "c" };
         units_in_system[E_US_IMPERIAL] = {
-            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "f"};
+            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "f" };
 
         map_is_initalized = true;
     }
@@ -91,7 +91,7 @@ namespace epicr
 namespace epicr::visitor
 {
 
-/* Just used to group things */
+    /* Just used to group things */
 #pragma region IngredientVerifier implementation
 
     IngredientVerifier::IngredientVerifier()
@@ -103,7 +103,7 @@ namespace epicr::visitor
         error = "No error";
     };
 
-    void IngredientVerifier::visit(recipe *a_rcp)
+    void IngredientVerifier::visit(recipe* a_rcp)
     {
 
         /* shallow copy of input recipe */
@@ -130,18 +130,18 @@ namespace epicr::visitor
 
         int instruction_count = 0;
 
-        for (auto &inst : a_rcp->instructions)
+        for (auto& inst : a_rcp->instructions)
 
         {
             instruction_count++;
             /* consume */
-            for (auto &ingr : inst.ingredients)
+            for (auto& ingr : inst.ingredients)
             {
 
                 if (!ingredient_in_map(ingr.name, symbols))
                 {
-                    char *err = (char *)malloc(100);
-                    sprintf(err, "Ingredient %s used in instruction not found in ingredients list", ingr.name.c_str());
+                    char* err = (char*)malloc(100);
+                    sprintf(err, "Ingredient <%s> used in instruction not found in ingredients list", ingr.name.c_str());
                     ERR(err);
                     return;
                 }
@@ -171,7 +171,7 @@ namespace epicr::visitor
                         ingr.amount = original_symbols[ingr.name].amount;
                         break;
                     default:
-                        char *err = (char *)malloc(100);
+                        char* err = (char*)malloc(100);
                         sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relative_amount.c_str(), ingr.name.c_str());
                         ERR(err);
                         return;
@@ -201,10 +201,10 @@ namespace epicr::visitor
                 {
                     if (!ingredients_compatible(symbols[yield.name], yield))
                     {
-                        char *err_msg = (char *)malloc(200);
+                        char* err_msg = (char*)malloc(200);
                         sprintf(err_msg, "Differing unit types for yield\
 \nIn list: %s\n_in yield: %s\nFor ingredient '%s' in instruction #%i\n",
-                                symbols[yield.name].amount.unit.c_str(), yield.amount.unit.c_str(), yield.name.c_str(), instruction_count);
+symbols[yield.name].amount.unit.c_str(), yield.amount.unit.c_str(), yield.name.c_str(), instruction_count);
                         ERR(err_msg);
                         return;
                     }
@@ -225,9 +225,9 @@ namespace epicr::visitor
                 title_ingredient_remaining = true;
             else if (ingr.amount.number != 0 && !ingr.amount.is_uncountable)
             {
-                char *err_msg = (char *)malloc(200);
+                char* err_msg = (char*)malloc(200);
                 sprintf(err_msg, "Unused ingredient: %s %s",
-                        ingr.name.c_str(), amount_to_string(ingr.amount).c_str());
+                    ingr.name.c_str(), amount_to_string(ingr.amount).c_str());
                 ERR(err_msg);
             }
         }
@@ -257,8 +257,8 @@ namespace epicr::visitor
 
     bool AmountConverter::is_convertable(std::string unit)
     {
-        for (const auto &pair : unit_aliases)
-            for (const auto &alias : pair.second)
+        for (const auto& pair : unit_aliases)
+            for (const auto& alias : pair.second)
                 if (to_lower(unit) == alias)
                     return true;
 
@@ -274,8 +274,8 @@ namespace epicr::visitor
     std::string AmountConverter::standardize(std::string unit)
     {
         std::string unit_lower = to_lower(unit);
-        for (const auto &pair : unit_aliases)
-            for (const auto &alias : pair.second)
+        for (const auto& pair : unit_aliases)
+            for (const auto& alias : pair.second)
                 if (unit_lower == alias)
                     return unit_aliases[pair.first][0];
 
@@ -290,7 +290,7 @@ namespace epicr::visitor
      * @param system The system to be scaled into
      * @return amount
      */
-    void AmountConverter::convert_amount(amount *amnt, epicr_unit_system tar_sys)
+    void AmountConverter::convert_amount(amount* amnt, epicr_unit_system tar_sys)
     {
 
         /* If the target unit system is undefined, don't modify
@@ -302,9 +302,9 @@ namespace epicr::visitor
         epicr_unit_system cur_sys;
 
         /* find out what system the current unit is in*/
-        for (const auto &pair : epicr::units_in_system)
+        for (const auto& pair : epicr::units_in_system)
         {
-            for (const auto &unit_in_sys : pair.second)
+            for (const auto& unit_in_sys : pair.second)
             {
                 if (standardized == unit_in_sys)
                 {
@@ -427,35 +427,35 @@ namespace epicr::visitor
         }
     }
 
-    void AmountConverter::visit(recipe *rcp)
+    void AmountConverter::visit(recipe* rcp)
     {
 
-        std::vector<amount *> scaleables;
+        std::vector<amount*> scaleables;
 
         /* Get all amounts from ingredients */
-        for (auto &ingr : rcp->ingredients)
+        for (auto& ingr : rcp->ingredients)
         {
-            amount *amnt_ptr = &ingr.amount;
+            amount* amnt_ptr = &ingr.amount;
             scaleables.push_back(amnt_ptr);
         }
 
         /* Get all amounts from instructions */
-        for (auto &inst : rcp->instructions)
+        for (auto& inst : rcp->instructions)
         {
-            for (auto &ingr : inst.ingredients)
+            for (auto& ingr : inst.ingredients)
                 scaleables.push_back(&(ingr.amount));
 
-            for (auto &word : inst.body)
+            for (auto& word : inst.body)
             {
                 if (word.is_amount)
                     scaleables.push_back(&(word.value));
             }
 
-            for (auto &ingr : inst.yields)
+            for (auto& ingr : inst.yields)
                 scaleables.push_back(&(ingr.amount));
         }
 
-        for (auto &amnt : scaleables)
+        for (auto& amnt : scaleables)
         {
             if (!is_convertable(amnt->unit))
                 continue;
@@ -466,4 +466,52 @@ namespace epicr::visitor
     }
 
 #pragma endregion
+
+#pragma region MandatoryFields implementation
+
+    MandatoryFields::MandatoryFields()
+    {
+        error = "No error";
+        has_error = false;
+    }
+
+    void MandatoryFields::has_mandatory_fields(const recipe *rcp)
+    {
+        if (rcp->title == "")
+        {
+            error = "No title was found";
+            has_error = true;
+            return;
+        }
+        if (rcp->ingredients.empty())
+        {
+            error = "No ingredients was found";
+            has_error = true;
+            return;
+        }
+        if (rcp->instructions.empty())
+        {
+            error = "No instructions was found";
+            has_error = true;
+            return;
+        }
+    }
+
+    void MandatoryFields::servings_default_value(recipe *rcp)
+    {
+        if (rcp->servings.count == 0 && rcp->servings.descriptor == "")
+        {
+            rcp->servings.count = 1;
+            rcp->servings.descriptor = "servings";
+        }
+    }
+
+    void MandatoryFields::visit(recipe *rcp)
+    {
+        has_mandatory_fields(rcp);
+        servings_default_value(rcp);
+    }
+
+#pragma endregion
+
 }

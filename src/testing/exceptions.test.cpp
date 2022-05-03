@@ -16,7 +16,7 @@ void parse_invalid_servings_amount_exception()
 
     std::string incorrect_field_string = "servings: people 2";
     auto rcp = epicr::parse_string_silent(incorrect_field_string);
-    test_lib::expect_exception(rcp, "No correct description for amount has been found!");
+    test_lib::expect_exception(rcp, "No correct description for amount has been found");
 }
 
 void parse_invalid_nutrient_amount_exception()
@@ -186,8 +186,26 @@ void visit_title_ingredient_must_remain_in_the_end_exception()
     auto ingrvisit = epicr::visitor::IngredientVerifier();
     auto final_rcp = epicr::ingredient_verify_recipe(&rcp);
     test_lib::expect_exception(final_rcp, "Title-ingredient must remain after all instructions have been executed");
-    
 }
+
+void visit_mandatory_fields_exception()
+{
+    test_lib::REGISTER;
+    epicr::recipe rcp = epicr::parse_string("title: ingredients: instructions:").recipe;
+    epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
+    mand_fields.visit(&rcp);
+    epicr::rcp_ret ret = { &rcp, mand_fields.has_error, mand_fields.error };
+    test_lib::expect_exception(ret, "No title was found");
+}
+
+void recursive_files_exception() {
+    test_lib::REGISTER;
+
+    epicr::parse_ret ret = epicr::parse_recipe_silent("src/test-recipes/recursion0.rcp");
+    std::string file = std::filesystem::absolute("src/test-recipes/recursion0.rcp").string();
+    test_lib::expect_exception(ret, "In recursion1:\n\tIn recursion0:\n\t\tFile " + file + " was already included (recursion)");
+}
+
 
 int main()
 {
@@ -211,6 +229,8 @@ int main()
     parse_body_cannot_be_empty_exception();
     visit_no_repeating_ingredients_exception();
     visit_relative_amount_only_on_ingredients_in_ingredient_list_exception();
+    visit_mandatory_fields_exception();
+    recursive_files_exception();
     test_lib::print_recap();
     return test_lib::result();
 }

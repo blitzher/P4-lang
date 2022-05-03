@@ -87,6 +87,21 @@ void imperial_to_metric_values_conversions()
 	test_lib::expect_equal_d(rcp.ingredients[4].amount.number, 3.78541f);
 	test_lib::expect_equal_d(rcp.ingredients[5].amount.number, 2.36588f);
 }
+
+void has_mandatory_fields_check()
+{
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Carbonara.rcp").recipe;
+
+	epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
+	mand_fields.visit(&rcp);
+	if (mand_fields.has_error)
+		test_lib::deny("An unexpected error has occured");
+	else
+		test_lib::accept();
+}
+
 int main(void)
 {
 	no_error_on_valid_file();
@@ -94,6 +109,7 @@ int main(void)
 	metric_to_imperial_values_conversions();
 	imperial_to_metric_names_conversions();
 	imperial_to_metric_values_conversions();
+	has_mandatory_fields_check();
 	// metric_to_imperial_values_conversions();
 
 	test_lib::print_recap();

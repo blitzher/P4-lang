@@ -11,7 +11,7 @@ CXXFLAGS   = -std=c++17 \
              -Wno-missing-braces -Wempty-body -Wno-error=uninitialized \
              -Wno-error=deprecated-declarations \
              -pedantic -fansi-escape-codes \
-             -Os
+             -Os -g
 
 LD         = clang++ -o
 LDFLAGS    = -Wall -pedantic
@@ -72,11 +72,14 @@ $(T_TARGETS)::
 
 # runnable targets 
 run: $(BINDIR)/$(TARGET)
-	./$< examples/Carbonara.rcp -o dist
+	./$< src/test-recipes/BuggyLexer.rcp -o dist
 
 run-rel: $(BINDIR)/$(TARGET)
 	./$< examples/burgers.rcp -o dist
-									
+
+run-infinite-recursion: $(BINDIR)/$(TARGET)
+	./$< src/test-recipes/recursion0.rcp -o dist
+
 test::
 	@rm -rf $(BINDIR)/.tests
 test:: $(T_TARGETS)
