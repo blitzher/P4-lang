@@ -1,0 +1,22 @@
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  label_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GITHUB_TOKEN: ${{ secrets.ISSUE_BOT }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: |
+          gh issue view $ISSUE_URL --json body > body.json;
+          content = ${cat body.json};
+          if [[ content =~ \"body\":\".+\"]]
+          then
+          else
+            gh issue comment $ISSUE_URL --body "Please add a description to your issue, before submitting";
+            gh issue close $ISSUE_URL;
+          fi
+          
