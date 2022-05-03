@@ -88,7 +88,7 @@ void imperial_to_metric_values_conversions()
 	test_lib::expect_equal_d(rcp.ingredients[5].amount.number, 2.36588f);
 }
 
-void has_mandatory_fields_check()
+void check_mandatory_fields_check()
 {
 	test_lib::REGISTER;
 
@@ -109,7 +109,7 @@ int main(void)
 	metric_to_imperial_values_conversions();
 	imperial_to_metric_names_conversions();
 	imperial_to_metric_values_conversions();
-	has_mandatory_fields_check();
+	check_mandatory_fields_check();
 
 	test_lib::print_recap();
 	return test_lib::result();
