@@ -514,4 +514,23 @@ namespace epicr::visitor
 
 #pragma endregion
 
+    rcp_ret visit_all(recipe *rcp)
+    {
+        auto in_vis = IngredientVerifier();
+        auto ac_vis = AmountConverter();
+        auto mf_vis = MandatoryFields();
+
+        in_vis.visit(rcp);
+        if (in_vis.has_error)
+            return {{}, 1, " IngVer: " + in_vis.error};
+        ac_vis.visit(rcp);
+        if (ac_vis.has_error)
+            return {{}, 1, " AmtCon: " + ac_vis.error};
+        mf_vis.visit(rcp);
+        if (mf_vis.has_error)
+            return {{}, 1, " ManFld: " + mf_vis.error};
+
+        return {rcp, 0, " Visitors: No error"};
+    }
+
 }

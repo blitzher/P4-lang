@@ -17,7 +17,7 @@ using namespace std;
 /* Remove or outcomment when not debugging */
 void print_lexer_tokens(epicr::Lexer lexer);
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	epicr::parse_cmd_args(argc, argv);
 
@@ -30,21 +30,13 @@ int main(int argc, char** argv)
 	epicr::Parser my_parser = epicr::Parser(&my_lexer);
 	epicr::recipe my_recipe = my_parser.Parse();
 
-	cout << my_parser.has_error << " Parser: " << my_parser.error << endl;
+	cout << my_parser.has_error << " Parser  : " << my_parser.error << endl;
 
-	auto ingrvisit = epicr::visitor::IngredientVerifier();
-	ingrvisit.visit(&my_recipe);
-	cout << ingrvisit.has_error << " IngVis: " << ingrvisit.error << endl;
-
-	auto amntconve = epicr::visitor::AmountConverter();
-	amntconve.visit(&my_recipe);
-	cout << amntconve.has_error << " AmtCon: " << amntconve.error << endl;
-
-	auto mand_fields = epicr::visitor::MandatoryFields();
-	mand_fields.visit(&my_recipe);
-	cout << mand_fields.has_error << " ManFld: " << mand_fields.error << endl;
-
-	std::cout << "clarg output filepath: " << epicr::clargs.output_filepath << std::endl;
+	if (!my_parser.has_error)
+	{
+		epicr::rcp_ret vis_ret = epicr::visitor::visit_all(&my_recipe);
+		cout << vis_ret.has_err << vis_ret.err << endl;
+	}
 
 	if (!my_parser.has_error)
 	{
