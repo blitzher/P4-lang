@@ -290,14 +290,12 @@ namespace epicr
 			instruction single_instruction = instruction();
 			if (to_lower(ctoken.word) == "with")
 			{
-				ADV_NON_BLANK(1);
 				ParseInstructionHeaderWith(&single_instruction);
 				if (has_error)
 					return;
 			}
 			if (to_lower(ctoken.word) == "using")
 			{
-				ADV_NON_BLANK(1);
 				ParseInstructionHeaderUsing(&single_instruction);
 				if (has_error)
 					return;
@@ -310,15 +308,15 @@ namespace epicr
 			ParseInstructionBody(&single_instruction);
 			if (to_lower(ctoken.word) == "yield" && utoken.type == E_TT_COLON)
 			{
-				ADV_NON_BLANK(2);
 				ParseInstructionYield(&single_instruction);
 			}
 
-			rcp->instructions.push_back(single_instruction); // something doesnt work here
+			rcp->instructions.push_back(single_instruction);
 		}
 	}
-	void Parser::ParseInstructionHeaderWith(instruction *single_instruction)
+	void Parser::ParseInstructionHeaderWith(instruction* current_instruction)
 	{
+		ADV_NON_BLANK(1);
 		if (ctoken.type != E_TT_PARENS_OPEN)
 		{
 			ERR_VOID("expected open bracket with 'with' ", ctoken);
@@ -338,12 +336,13 @@ namespace epicr
 			{
 				ERR_VOID("Expected a ',' as seperator between ingredient or a closing parenthesis for the 'with'", ctoken);
 			}
-			single_instruction->ingredients.push_back(current_ingredient);
+			current_instruction->ingredients.push_back(current_ingredient);
 		}
 		ADV_NON_BLANK(1) /*reads through the end parenthesis*/
 	}
-	void Parser::ParseInstructionHeaderUsing(instruction *single_instruction)
+	void Parser::ParseInstructionHeaderUsing(instruction* current_instruction)
 	{
+		ADV_NON_BLANK(1);
 		if (ctoken.type != E_TT_PARENS_OPEN)
 			ERR_VOID("expected open bracket with 'using' ", ctoken);
 
@@ -360,7 +359,7 @@ namespace epicr
 			{
 				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing parenthesis for the 'using'", ctoken);
 			}
-			single_instruction->kitchenware.push_back(current_kitchenware);
+			current_instruction->kitchenware.push_back(current_kitchenware);
 		}
 		ADV_NON_BLANK(1); /*reads through the end parenthesis*/
 	}
@@ -406,8 +405,9 @@ namespace epicr
 		current_instruction->body = Body;
 	}
 
-	void Parser::ParseInstructionYield(instruction *single_instruction)
+	void Parser::ParseInstructionYield(instruction* current_instruction)
 	{
+		ADV_NON_BLANK(2);
 		do
 		{
 			if (ctoken.type == E_TT_COMMA)
@@ -417,7 +417,7 @@ namespace epicr
 			ingredient current_yield = ReadIngredient(E_RI_HAS_PLUS | E_RI_ASSUME_1_NUM);
 			if (has_error)
 				return;
-			single_instruction->yields.push_back(current_yield);
+			current_instruction->yields.push_back(current_yield);
 		} while (ctoken.type == E_TT_COMMA);
 	}
 	ingredient Parser::ReadIngredient(ingredient_arg arg)
@@ -467,8 +467,7 @@ namespace epicr
 			ADV_NON_BLANK(1);
 		}
 
-		ingredient_amount = ReadAmount(arg);
-		current_ingredient.amount = ingredient_amount;
+		current_ingredient.amount = ReadAmount(arg);
 		return current_ingredient;
 	}
 
