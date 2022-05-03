@@ -433,49 +433,119 @@ namespace epicr
 
     namespace visitor
     {
-
+        /**
+         * @brief superclass that all visitors inherit from
+         * 
+         */
         class Visitor
         {
-        private:
-            // cmd_args
         public:
             std::string error;
             bool has_error;
+            /**
+             * @brief the main function of the visitor. All subclasses of the visitor uses this function to visit recipe.
+             * 
+             */
             void visit(recipe *);
         };
-
+        /**
+         * @brief visitor class that handles the verification of ingredients
+         * 
+         */
         class IngredientVerifier : public Visitor
         {
         private:
             std::unordered_map<std::string, ingredient> symbols;
             std::unordered_map<std::string, ingredient> original_symbols;
             std::unordered_set<std::string> uniqueIngredients;
+            /**
+             * @brief returns whether or not 2 ingredient's units are compatible with each other
+             * 
+             * @param a the first ingredient
+             * @param b the second ingredient
+             * @return whether or not they are compatible
+             */
             bool ingredients_compatible(ingredient a, ingredient b);
 
         public:
+            /**
+             * @brief the visit method of the ingredientVerifier
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
+        
             void visit(recipe *);
             IngredientVerifier();
         };
-
+        
+        /**
+         * @brief visitor class that handles the amount conversion
+         * 
+         */
         class AmountConverter : public Visitor
         {
         private:
+            /**
+             * @brief Checks whether or not a unit is convertable i.e if it matches an alias.
+             *
+             * @param std::string the unit to check.
+             * @return returns a boolean stating whether or not the unit is convertable
+             */
             bool is_convertable(std::string);
+            /**
+             * @brief Convert a unit alias into the standard, i.e. 'grams' to 'g'.
+             *
+             * @param unit Unit to standardize
+             * @return std::string The standard for a specific unit alias
+             */
             std::string standardize(std::string);
+            /**
+             * @brief Convert a unit into a different unit system, i.e. E_TT_METRIC to E_TT_IMPERIAL
+             *
+             * @param amnt The amount to be scaled
+             * @param system The system to be scaled into
+             * @return amount
+             */
             void convert_amount(amount *amnt, epicr_unit_system system);
 
         public:
+            /**
+             * @brief the visit method of the AmountConverter
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
             void visit(recipe *);
             AmountConverter();
         };
-
+        
+        /**
+         * @brief visitor class that handles the verification of mandatory fields
+         * 
+         */
         class MandatoryFields : public Visitor
         {
         private:
-            void servings_default_value(recipe *rcp);
-            void has_mandatory_fields(const recipe *rcp);
+            /**
+             * @brief set the default value for servings if none was specified.
+             * 
+             * @param rcp a pointer to the recipe that is to be updated.
+             */
+            void set_servings_default_value(recipe *rcp);
+            /**
+             * @brief checks whether or not the mandatory fields are all specified. 
+             * Provides error if the field is not found
+             * 
+             * @param rcp a pointer to the recipe to check on. 
+             * A const, as the recipe is only used for verification and not updated.
+             */
+            void check_mandatory_fields(const recipe *rcp);
 
         public:
+            /**
+             * @brief the visit method of the MandatoryFields
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
             void visit(recipe *);
             MandatoryFields();
         };

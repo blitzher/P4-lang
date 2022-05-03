@@ -265,12 +265,6 @@ namespace epicr::visitor
         return false;
     }
 
-    /**
-     * @brief Convert a unit alias into the standard, i.e. 'grams' to 'g'.
-     *
-     * @param unit Unit to standardize
-     * @return std::string The standard for a specific unit alias
-     */
     std::string AmountConverter::standardize(std::string unit)
     {
         std::string unit_lower = to_lower(unit);
@@ -282,14 +276,7 @@ namespace epicr::visitor
         ERR("No valid standard found for unit");
         return "";
     }
-
-    /**
-     * @brief Convert a unit into a different unit system, i.e. E_TT_METRIC to E_TT_IMPERIAL
-     *
-     * @param amnt The amount to be scaled
-     * @param system The system to be scaled into
-     * @return amount
-     */
+    
     void AmountConverter::convert_amount(amount *amnt, epicr_unit_system tar_sys)
     {
 
@@ -475,7 +462,7 @@ namespace epicr::visitor
         has_error = false;
     }
 
-    void MandatoryFields::has_mandatory_fields(const recipe *rcp)
+    void MandatoryFields::check_mandatory_fields(const recipe *rcp)
     {
         if (rcp->title.empty())
         {
@@ -497,7 +484,7 @@ namespace epicr::visitor
         }
     }
 
-    void MandatoryFields::servings_default_value(recipe *rcp)
+    void MandatoryFields::set_servings_default_value(recipe *rcp)
     {
         if (rcp->servings.count == 0 && rcp->servings.descriptor == "")
         {
@@ -508,8 +495,8 @@ namespace epicr::visitor
 
     void MandatoryFields::visit(recipe *rcp)
     {
-        has_mandatory_fields(rcp);
-        servings_default_value(rcp);
+        check_mandatory_fields(rcp);
+        set_servings_default_value(rcp);
     }
 
 #pragma endregion
