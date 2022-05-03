@@ -18,7 +18,6 @@
 
 #pragma region Debug macros
 
-
 /* Read ingredient args */
 #define E_RI_NONE 0
 #define E_RI_HAS_PLUS 1     // 0b0000 0001
@@ -151,6 +150,20 @@ namespace epicr
 
     } cmd_args;
 
+    typedef struct parse_ret_s
+    {
+        recipe recipe;
+        bool has_err;
+        std::string err;
+    } parse_ret;
+
+    typedef struct rcp_ret_s
+    {
+        recipe *recipe;
+        bool has_err;
+        std::string err;
+    } rcp_ret;
+
     extern cmd_args clargs;
     extern std::vector<std::string> included_recipes;
     extern std::string recurison_error;
@@ -171,10 +184,13 @@ namespace epicr
 
     } epicr_token;
 
+    /**
+     * @brief Includes all lexer functions
+     */
     class Lexer
     {
     private:
-        std::istream& istream;
+        std::istream &istream;
         uint token_count;
         uint line_num;
         bool ready;
@@ -185,28 +201,79 @@ namespace epicr
         void init();
 
     public:
+        /**
+         * @brief Base constructor for the lexer
+         */
         Lexer();
-        Lexer(std::ifstream& file);
-        Lexer(std::istream& file);
+
+        /**
+         * @brief Constructor that take input file and is used to read information from a file
+         * @param `std::ifstream` Is the input file stream
+         * @param `file` The file you want to read from
+         */
+        Lexer(std::ifstream &file);
+
+        /**
+         * @brief Constructor that can take an input stream such it can read and interpret input from sequences of characters
+         * @param `std::istream` Is used for input
+         * @param `file` The file you want to read from
+         */
+        Lexer(std::istream &file);
 
         /* Return whether or not the Lexer is ready to yield tokens */
         bool DEBUG_MODE;
         bool is_ready();
 
-        /* Return the next token, and moving the reader */
+        /**
+         * @brief Return the next token with token types, and moves the reader to the next token unless EOF
+         * @return token
+         */
         epicr_token next_token();
-        /* Return the next `n` tokens as an array */
+
+        /**
+         * @brief Return the next `n` tokens as an array
+         * @param `n` Number of tokens
+         * @return token
+         */
         std::vector<epicr_token> next_token(int n);
-        /* Return the next non blank, non new line token */
+
+        /**
+         * @brief Return the next non blank, non new line token
+         * @return next_token()
+         */
         epicr_token next_non_blank_token();
+
+        /**
+         * @brief Assign a E_TT to a token
+         * @param `stoken` Stream token is the current token in the stream
+         * @return E_TT
+         */
         epicr_token_type token_type(std::string stoken);
-        /* Peek the next token */
+
+        /**
+         * @brief Peek the next token
+         * @return token
+         */
         epicr_token peek_token();
-        /* Peek the `n` 'th token. Undefined for `n=0` */
+
+        /**
+         * @brief Peek the `n` 'th token. Undefined for `n=0`
+         * @param `n` How many tokens the function should peek
+         * @return peek_token()
+         */
         epicr_token peek_token(int n);
-        /* Peek the next non-blank token */
+
+        /**
+         * @brief Peek the next non-blank token
+         * @return token
+         */
         epicr_token peek_non_blank_token();
-        /* Peek the `n` 'th non-blank token. Undefined for `n=0`*/
+
+        /**
+         * @brief Peek the `n` 'th non-blank token. Undefined for `n=0`
+         * @param `n` How many non-blank tokens the function should peek
+         * @return peek_non_blank_token()
+         */
         epicr_token peek_non_blank_token(int n);
     };
 
@@ -360,7 +427,7 @@ namespace epicr
          * 
          */
         void silence(bool);
-        Parser(Lexer* lexer_r);
+        Parser(Lexer *lexer_r);
         ~Parser();
     };
 
@@ -374,7 +441,7 @@ namespace epicr
         public:
             std::string error;
             bool has_error;
-            void visit(recipe*);
+            void visit(recipe *);
         };
 
         class IngredientVerifier : public Visitor
@@ -386,7 +453,7 @@ namespace epicr
             bool ingredients_compatible(ingredient a, ingredient b);
 
         public:
-            void visit(recipe*);
+            void visit(recipe *);
             IngredientVerifier();
         };
 
@@ -395,21 +462,21 @@ namespace epicr
         private:
             bool is_convertable(std::string);
             std::string standardize(std::string);
-            void convert_amount(amount* amnt, epicr_unit_system system);
+            void convert_amount(amount *amnt, epicr_unit_system system);
 
         public:
-            void visit(recipe*);
+            void visit(recipe *);
             AmountConverter();
         };
 
         class MandatoryFields : public Visitor
         {
         private:
-            void servings_default_value(recipe* rcp);
-            void has_mandatory_fields(const recipe* rcp);
+            void servings_default_value(recipe *rcp);
+            void has_mandatory_fields(const recipe *rcp);
 
         public:
-            void visit(recipe*);
+            void visit(recipe *);
             MandatoryFields();
         };
 
@@ -427,11 +494,13 @@ namespace epicr
         inline double C_TO_F(double deg)
         {
             return deg * 9 / 5 + 32;
-        }
+        };
         inline double F_TO_C(double deg)
         {
             return (deg - 32) * 5 / 9;
-        }
+        };
+
+        rcp_ret visit_all(recipe *rcp);
 
     }
 
@@ -454,20 +523,6 @@ namespace epicr
 
     bool generate_html(recipe, std::string filename);
 
-    typedef struct parse_ret_s
-    {
-        recipe recipe;
-        bool has_err;
-        std::string err;
-    } parse_ret;
-
-    typedef struct rcp_ret_s
-    {
-        recipe* recipe;
-        bool has_err;
-        std::string err;
-    } rcp_ret;
-
     parse_ret parse_recipe(std::string filename);
     parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
@@ -475,8 +530,8 @@ namespace epicr
     parse_ret parse_string(std::string recipeExcerpt);
     parse_ret parse_string_silent(std::string str);
 
-    rcp_ret ingredient_verify_recipe(recipe*);
+    rcp_ret ingredient_verify_recipe(recipe *);
 
     /* Command line argument related declarations */
-    void parse_cmd_args(int argc, char** argv);
+    void parse_cmd_args(int argc, char **argv);
 }

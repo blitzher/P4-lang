@@ -110,7 +110,6 @@ int main(void)
 	imperial_to_metric_names_conversions();
 	imperial_to_metric_values_conversions();
 	has_mandatory_fields_check();
-	// metric_to_imperial_values_conversions();
 
 	test_lib::print_recap();
 	return test_lib::result();
