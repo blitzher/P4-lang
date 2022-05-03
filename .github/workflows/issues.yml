@@ -11,12 +11,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ISSUE_BOT }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
         run: |
-          gh issue view $ISSUE_URL --json body > body.json;
-          content = ${cat body.json};
-          if [[ content =~ \"body\":\".+\"]]
-          then
+          gh issue view $ISSUE_URL --json body >body.json
+          content=$(cat body.json)
+          if [ content =~ \"body\":\".+\"]; then
+              echo "All good"
           else
-            gh issue comment $ISSUE_URL --body "Please add a description to your issue, before submitting";
-            gh issue close $ISSUE_URL;
+              gh issue comment $ISSUE_URL --body "Please add a description to your issue, before submitting"
+              gh issue close $ISSUE_URL
           fi
+
           
