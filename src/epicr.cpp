@@ -17,8 +17,9 @@ namespace epicr
 		std::string fpath = std::filesystem::absolute(filename).string();
 		std::ifstream file;
 
-		if ((std::find(included_recipes.begin(), included_recipes.end(), fpath) != included_recipes.end())) {
-			char* err = (char*)malloc(200);
+		if ((std::find(included_recipes.begin(), included_recipes.end(), fpath) != included_recipes.end()))
+		{
+			char *err = (char *)malloc(200);
 			sprintf(err, "File %s was already included (recursion)", filename.c_str());
 			recurison_error = err;
 			has_recurison_error = true;
@@ -26,7 +27,6 @@ namespace epicr
 		}
 		file.open(filename, std::ios_base::binary);
 		included_recipes.push_back(fpath);
-
 
 		if (!file.is_open())
 			std::cout << "File " << filename << " could not be opened!" << std::endl;
@@ -76,7 +76,7 @@ namespace epicr
 		std::string type = token_to_string(token.type);
 
 		if (token.type != E_TT_BLANK && token.type != E_TT_NEWLINE)
-			printf("%-18s-> %-6s (%llu) uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.word.size(), token.uid, token.line);
+			printf("%-18s-> %-6s (%lu) uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.word.size(), token.uid, token.line);
 		else
 			printf("%-18s   %-10i uid:%i line:%i\n", type.c_str(), (int)token.word.size(), token.uid, token.line);
 	}
@@ -143,7 +143,7 @@ namespace epicr
 		std::string ingredientName,
 		std::unordered_map<std::string, ingredient> ingredients)
 	{
-		for (const auto& pair : ingredients)
+		for (const auto &pair : ingredients)
 		{
 			if (pair.first == ingredientName)
 				return true;
@@ -153,14 +153,14 @@ namespace epicr
 
 	parse_ret parse_recipe(std::string filename)
 	{
-		cmd_args args = { filename, E_HS_BASIC, "dist", E_US_NONE, false };
+		cmd_args args = {filename, E_HS_BASIC, "dist", E_US_NONE, false};
 		epicr::clargs = args;
 		return parse_recipe(args);
 	}
 
 	parse_ret parse_recipe_silent(std::string filename)
 	{
-		cmd_args args = { filename, E_HS_BASIC, "dist", E_US_NONE, true };
+		cmd_args args = {filename, E_HS_BASIC, "dist", E_US_NONE, true};
 		epicr::clargs = args;
 		return parse_recipe_silent(args);
 	}
@@ -172,12 +172,12 @@ namespace epicr
 
 		std::ifstream input_filestream = open_file(clargs.input_filepath);
 		if (has_recurison_error)
-			return { {}, true, recurison_error };
+			return {{}, true, recurison_error};
 		Lexer lexer(input_filestream);
 		Parser parser(&lexer);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = { rcp, parser.has_error, parser.error };
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 
 		cached_recipes[clargs.input_filepath] = ret;
 
@@ -191,13 +191,13 @@ namespace epicr
 
 		std::ifstream input_filestream = open_file(clargs.input_filepath);
 		if (has_recurison_error)
-			return { {}, true, recurison_error };
+			return {{}, true, recurison_error};
 		Lexer lexer(input_filestream);
 		Parser parser(&lexer);
 		parser.silence(true);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = { rcp, parser.has_error, parser.error };
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
 	}
 
@@ -208,7 +208,7 @@ namespace epicr
 		Parser parser(&lexer);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = { rcp, parser.has_error, parser.error };
+		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
 	}
 
@@ -220,15 +220,28 @@ namespace epicr
 		parser.silence(true);
 		recipe rcp = parser.Parse();
 
-		parse_ret ret = { rcp, parser.has_error, parser.error };
+		parse_ret ret = {rcp, parser.has_error, parser.error};
+		return ret;
+	}
+	parse_ret parse_string_silent(std::string recipeExcerpt, Parser *parser)
+	{
+		std::istringstream test_string(recipeExcerpt);
+		Lexer lexer(test_string);
+		Parser _parser(&lexer);
+		_parser.silence(true);
+		*parser = _parser;
+		recipe rcp = parser->Parse();
+
+		parse_ret ret = {rcp, parser->has_error, parser->error};
+
 		return ret;
 	}
 
-	rcp_ret ingredient_verify_recipe(recipe* recipe)
+	rcp_ret ingredient_verify_recipe(recipe *recipe)
 	{
 		auto ingrvisit = epicr::visitor::IngredientVerifier();
 		ingrvisit.visit(recipe);
-		rcp_ret ret = { recipe, ingrvisit.has_error, ingrvisit.error };
+		rcp_ret ret = {recipe, ingrvisit.has_error, ingrvisit.error};
 		return ret;
 	}
 
@@ -259,7 +272,7 @@ namespace epicr
 		return choosen_system;
 	}
 
-	void parse_cmd_args(int argc, char** argv)
+	void parse_cmd_args(int argc, char **argv)
 	{
 		std::vector<std::string> argv_s;
 		for (int i = 0; i < argc; i++)
@@ -267,7 +280,7 @@ namespace epicr
 			argv_s.push_back(std::string(argv[i]));
 		}
 
-		epicr::cmd_args CMD_ARGS = { "", E_HS_BASIC, concat_output_dir("dist"), E_US_NONE, false };
+		epicr::cmd_args CMD_ARGS = {"", E_HS_BASIC, concat_output_dir("dist"), E_US_NONE, false};
 		for (int i = 0; i < argc; i++)
 		{
 			std::string arg = to_lower(argv_s[i]);
