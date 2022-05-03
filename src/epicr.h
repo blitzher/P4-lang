@@ -18,7 +18,6 @@
 
 #pragma region Debug macros
 
-
 /* Read ingredient args */
 #define E_RI_NONE 0
 #define E_RI_HAS_PLUS 1     // 0b0000 0001
@@ -151,6 +150,20 @@ namespace epicr
 
     } cmd_args;
 
+    typedef struct parse_ret_s
+    {
+        recipe recipe;
+        bool has_err;
+        std::string err;
+    } parse_ret;
+
+    typedef struct rcp_ret_s
+    {
+        recipe *recipe;
+        bool has_err;
+        std::string err;
+    } rcp_ret;
+
     extern cmd_args clargs;
     extern std::vector<std::string> included_recipes;
     extern std::string recurison_error;
@@ -174,7 +187,7 @@ namespace epicr
     class Lexer
     {
     private:
-        std::istream& istream;
+        std::istream &istream;
         uint token_count;
         uint line_num;
         bool ready;
@@ -186,8 +199,8 @@ namespace epicr
 
     public:
         Lexer();
-        Lexer(std::ifstream& file);
-        Lexer(std::istream& file);
+        Lexer(std::ifstream &file);
+        Lexer(std::istream &file);
 
         /* Return whether or not the Lexer is ready to yield tokens */
         bool DEBUG_MODE;
@@ -214,25 +227,25 @@ namespace epicr
     {
     private:
         bool silent;
-        Lexer* lexer;
-        void ParseTitle(recipe*);
-        void ParseDescription(recipe*);
-        void ParseServings(recipe*);
-        void ParseNutrients(recipe*);
-        void ParseIngredients(recipe*);
-        void ParseKitchenware(recipe*);
-        void ParseTags(recipe*);
-        void ParseTime(recipe*);
-        void ParseInstructions(recipe*);
-        void ParseInstructionHeaderWith(instruction* single_instruction);
-        void ParseInstructionHeaderUsing(instruction* single_instruction);
-        void ParseInstructionBody(instruction* current_instruction);
-        void ParseInstructionYield(instruction* single_instruction);
+        Lexer *lexer;
+        void ParseTitle(recipe *);
+        void ParseDescription(recipe *);
+        void ParseServings(recipe *);
+        void ParseNutrients(recipe *);
+        void ParseIngredients(recipe *);
+        void ParseKitchenware(recipe *);
+        void ParseTags(recipe *);
+        void ParseTime(recipe *);
+        void ParseInstructions(recipe *);
+        void ParseInstructionHeaderWith(instruction *single_instruction);
+        void ParseInstructionHeaderUsing(instruction *single_instruction);
+        void ParseInstructionBody(instruction *current_instruction);
+        void ParseInstructionYield(instruction *single_instruction);
         /* Read an ingredient from the current position */
         ingredient ReadIngredient(ingredient_arg);
         /*Read words and blanks from the current position, then returns the word, with right spaces stripped
         accepts a boolean as input stating whether or not it can read numbers as well*/
-        std::string ReadWords(readwords_arg,bool);
+        std::string ReadWords(readwords_arg, bool);
         /* Read an amount from the current position */
         amount ReadAmount(ingredient_arg arg);
         /*predicate used in the readWords function to determine the allowed token types that can be read*/
@@ -252,7 +265,7 @@ namespace epicr
         epicr_token error_token;
         recipe Parse();
         void silence(bool);
-        Parser(Lexer* lexer_r);
+        Parser(Lexer *lexer_r);
         ~Parser();
     };
 
@@ -266,7 +279,7 @@ namespace epicr
         public:
             std::string error;
             bool has_error;
-            void visit(recipe*);
+            void visit(recipe *);
         };
 
         class IngredientVerifier : public Visitor
@@ -278,7 +291,7 @@ namespace epicr
             bool ingredients_compatible(ingredient a, ingredient b);
 
         public:
-            void visit(recipe*);
+            void visit(recipe *);
             IngredientVerifier();
         };
 
@@ -287,21 +300,21 @@ namespace epicr
         private:
             bool is_convertable(std::string);
             std::string standardize(std::string);
-            void convert_amount(amount* amnt, epicr_unit_system system);
+            void convert_amount(amount *amnt, epicr_unit_system system);
 
         public:
-            void visit(recipe*);
+            void visit(recipe *);
             AmountConverter();
         };
 
         class MandatoryFields : public Visitor
         {
         private:
-            void servings_default_value(recipe* rcp);
-            void has_mandatory_fields(const recipe* rcp);
+            void servings_default_value(recipe *rcp);
+            void has_mandatory_fields(const recipe *rcp);
 
         public:
-            void visit(recipe*);
+            void visit(recipe *);
             MandatoryFields();
         };
 
@@ -319,11 +332,13 @@ namespace epicr
         inline double C_TO_F(double deg)
         {
             return deg * 9 / 5 + 32;
-        }
+        };
         inline double F_TO_C(double deg)
         {
             return (deg - 32) * 5 / 9;
-        }
+        };
+
+        rcp_ret visit_all(recipe *rcp);
 
     }
 
@@ -346,20 +361,6 @@ namespace epicr
 
     bool generate_html(recipe, std::string filename);
 
-    typedef struct parse_ret_s
-    {
-        recipe recipe;
-        bool has_err;
-        std::string err;
-    } parse_ret;
-
-    typedef struct rcp_ret_s
-    {
-        recipe* recipe;
-        bool has_err;
-        std::string err;
-    } rcp_ret;
-
     parse_ret parse_recipe(std::string filename);
     parse_ret parse_recipe(cmd_args);
     parse_ret parse_recipe_silent(std::string filename);
@@ -367,8 +368,8 @@ namespace epicr
     parse_ret parse_string(std::string recipeExcerpt);
     parse_ret parse_string_silent(std::string str);
 
-    rcp_ret ingredient_verify_recipe(recipe*);
+    rcp_ret ingredient_verify_recipe(recipe *);
 
     /* Command line argument related declarations */
-    void parse_cmd_args(int argc, char** argv);
+    void parse_cmd_args(int argc, char **argv);
 }
