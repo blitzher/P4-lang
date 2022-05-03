@@ -4,7 +4,7 @@ on:
       - opened
 
 jobs:
-  label_issue:
+  issue_descriptions:
     runs-on: ubuntu-latest
     steps:
       - env:
@@ -13,11 +13,9 @@ jobs:
         run: |
           gh issue view $ISSUE_URL --json body >body.json
           content=$(cat body.json)
-          if [ content =~ \"body\":\".+\"]; then
+          if [[ $content =~ \"body\":\".+\" ]]; then
               echo "All good"
           else
-              gh issue comment $ISSUE_URL --body "Please add a description to your issue, before submitting"
+              gh issue comment $ISSUE_URL --body "Please add a description to your issue, before submitting. This was done automatically."
               gh issue close $ISSUE_URL
           fi
-
-          
