@@ -194,16 +194,16 @@ namespace epicr
         Lexer();
     
         /**
-         * @brief 
-         * @param std::ifstream Is the input file stream and is used to read information from files
-         * @param file The file you want to read from
+         * @brief Constructor that take input file and is used to read information from a file
+         * @param `std::ifstream` Is the input file stream 
+         * @param `file` The file you want to read from
         */
         Lexer(std::ifstream &file);
 
         /**
          * @brief Constructor that can take an input stream such it can read and interpret input from sequences of characters
-         * @param std::istream Is used for input 
-         * @param file The file you want to read from
+         * @param `std::istream` Is used for input 
+         * @param `file` The file you want to read from
         */
         Lexer(std::istream &file);
 
@@ -219,7 +219,7 @@ namespace epicr
 
         /**
          * @brief Return the next `n` tokens as an array
-         * @param n Number of tokens
+         * @param `n` Number of tokens
          * @return token
         */
         std::vector<epicr_token> next_token(int n);
@@ -232,7 +232,7 @@ namespace epicr
 
         /**
          * @brief Assign a E_TT to a token
-         * @param stoken Stream token is the current token in the stream
+         * @param `stoken` Stream token is the current token in the stream
          * @return E_TT
         */
         epicr_token_type token_type(std::string stoken);
@@ -245,7 +245,7 @@ namespace epicr
 
         /**
          * @brief Peek the `n` 'th token. Undefined for `n=0`
-         * @param n How many tokens the function should peek
+         * @param `n` How many tokens the function should peek
          * @return peek_token()
         */
         epicr_token peek_token(int n);
@@ -258,7 +258,7 @@ namespace epicr
 
         /**
          * @brief Peek the `n` 'th non-blank token. Undefined for `n=0`
-         * @param n How many non-blank tokens the function should peek
+         * @param `n` How many non-blank tokens the function should peek
          * @return peek_non_blank_token() 
         */
         epicr_token peek_non_blank_token(int n);
