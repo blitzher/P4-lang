@@ -279,99 +279,99 @@ namespace epicr
 
     /**
      * @brief class that handles the parsing of recipes
-     * 
+     *
      */
     class Parser
     {
     private:
         bool silent;
-        Lexer* lexer;
+        Lexer *lexer;
         /**
          * @brief Parses the title of the recipe. When this function is called, we are on the "title"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseTitle(recipe*);
+        void ParseTitle(recipe *);
         /**
          * @brief Parses the description of the recipe. When this function is called, we are on the "description"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseDescription(recipe*);
+        void ParseDescription(recipe *);
         /**
          * @brief Parses the servings of the recipe. When this function is called, we are on the "servings"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseServings(recipe*);
+        void ParseServings(recipe *);
         /**
          * @brief Parses the nutrients of the recipe. When this function is called, we are on the "nutrients"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseNutrients(recipe*);
+        void ParseNutrients(recipe *);
         /**
          * @brief Parses the ingredients of the recipe. When this function is called, we are on the "ingredients"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseIngredients(recipe*);
+        void ParseIngredients(recipe *);
         /**
          * @brief Parses the kitchenware of the recipe. When this function is called, we are on the "kitchenware"-header token,
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseKitchenware(recipe*);
+        void ParseKitchenware(recipe *);
         /**
          * @brief Parses the tags of the recipe. When this function is called, we are on the "tags"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseTags(recipe*);
+        void ParseTags(recipe *);
         /**
-         * @brief Parses the time of the recipe. When this function is called, we are on one of the three "time"-headers 
+         * @brief Parses the time of the recipe. When this function is called, we are on one of the three "time"-headers
          * (total-time, prep-time, or cook-time)
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseTime(recipe*);
+        void ParseTime(recipe *);
         /**
          * @brief Parses the instructions of the recipe. When this function is called, we are on the "instructions"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
-         * 
+         *
          */
-        void ParseInstructions(recipe*);
+        void ParseInstructions(recipe *);
         /**
-         * @brief helper function for ParseInstructions. Parses the "with" header of the instruction. 
+         * @brief helper function for ParseInstructions. Parses the "with" header of the instruction.
          * When this function is called we are on the "with"-header, and we end on the token after the end parenthesis
-         * 
+         *
          * @param current_instruction a pointer to the instruction of the recipe object to be updated in the function
          */
-        void ParseInstructionHeaderWith(instruction* current_instruction);
+        void ParseInstructionHeaderWith(instruction *current_instruction);
         /**
-         * @brief helper function for ParseInstructions. Parses the "using" header of the instruction. 
+         * @brief helper function for ParseInstructions. Parses the "using" header of the instruction.
          * When this function is called we are on the "using"-header, and we end on the token after the end parenthesis
-         * 
+         *
          * @param current_instruction a pointer to the instruction of the recipe object to be updated in the function
          */
-        void ParseInstructionHeaderUsing(instruction* current_instruction);
+        void ParseInstructionHeaderUsing(instruction *current_instruction);
         /**
-         * @brief helper function for ParseInstructions. Parses the body of the instruction. 
+         * @brief helper function for ParseInstructions. Parses the body of the instruction.
          * When this function is called we are on the first word of the body and end on the token after the final word of the body.
-         * 
+         *
          * @param current_instruction a pointer to the instruction of the recipe object to be updated in the function
          */
-        void ParseInstructionBody(instruction* current_instruction);
+        void ParseInstructionBody(instruction *current_instruction);
         /**
-         * @brief helper function for ParseInstructions. Parses the "yield" header of the instruction. 
+         * @brief helper function for ParseInstructions. Parses the "yield" header of the instruction.
          * When this function is called we are on the "yield"-header, and we end on the token after the final ingredient
-         * 
+         *
          * @param current_instruction a pointer to the instruction of the recipe object to be updated in the function
          */
-        void ParseInstructionYield(instruction* current_instruction);
+        void ParseInstructionYield(instruction *current_instruction);
         /**
          * @brief Reads an ingredient and a possible postfix and/or amount from the current position.
-         * 
+         *
          * @param ingredient_arg bitmasks specifying whether or not the ingredient can be postfixed by asterix and/or question mark
          * @return returns the ingredient read
          */
@@ -380,14 +380,14 @@ namespace epicr
          * @brief reads words and blanks from the current position
          * @param readwords_arg bitmasks used for the readWords predicate to determining extra tokens that can be read by the function
          * @param bool a bool determining whether the word read is allowed to be empty
-         * 
+         *
          * @return returns the word read with right spaces stripped
          */
-        std::string ReadWords(readwords_arg,bool);
+        std::string ReadWords(readwords_arg, bool);
         /**
          * @brief Reads an amount (relative or not) from the current position
          * @param arg bitmasks determining whether or not an empty amount is assumed to be 1 or the relative amount, "rest"
-         * 
+         *
          * @return returns the amount read
          */
         amount ReadAmount(ingredient_arg arg);
@@ -395,14 +395,14 @@ namespace epicr
          * @brief predicate used in the readWords function to determine if the token type is an allowed token type in the given context
          * @param epicr_token_type the token type to determine
          * @param readwords_arg bitmasks determining whether the token is allowed to be a number and/or parenthesis
-         * 
+         *
          * @return returns a boolean stating if the token type is allowed in this context
          */
         bool ReadWordsPredicate(epicr_token_type, readwords_arg);
         /**
          * @brief Reads the seperator (a comma) if there are more elements in the field. Otherwise stay at the start of the next field
          * when this function is called we are either on the comma seperating the next element or on the header of the next field, otherwise an error is thrown
-         * @param std::string the name of the field we are currently (possibly) reading more elements of. 
+         * @param std::string the name of the field we are currently (possibly) reading more elements of.
          * This string is solely used for proper error messages.
          */
         void ReadSeperatorOrWaitAtNextField(std::string);
@@ -413,18 +413,19 @@ namespace epicr
     public:
         bool DEBUG_MODE;
         bool has_error;
+        std::vector<std::string> warnings;
         std::string original_amount;
         std::string error;
         epicr_token error_token;
         /**
          * @brief the main function of the parser. Performs the parsing, calling the corresponding ParseXX functions
-         * 
+         *
          * @return recipe that has been parsed
          */
         recipe Parse();
         /**
          * @brief silences the parser, i.e. making it not print anything if an error occurs
-         * 
+         *
          */
         void silence(bool);
         Parser(Lexer *lexer_r);

@@ -37,6 +37,20 @@
 		}                                                  \
 		longjmp(exit_jmp, 1);                              \
 	}
+#define WARN(msg, token)                              \
+	{                                                 \
+		warnings.push_back(msg);                      \
+		if (!silent)                                  \
+		{                                             \
+			std::cout << "WARNING ON LINE "           \
+					  << __LINE__ << " (" << __FILE__ \
+					  << ":" << __FUNCTION__          \
+					  << ")" << std::endl;            \
+			std::cout << msg << std::endl;            \
+			print_token(token);                       \
+			std::cout << std::endl;                   \
+		}                                             \
+	}
 
 #define ERR_VOID(msg, token) \
 	{                        \
@@ -314,7 +328,7 @@ namespace epicr
 			rcp->instructions.push_back(single_instruction);
 		}
 	}
-	void Parser::ParseInstructionHeaderWith(instruction* current_instruction)
+	void Parser::ParseInstructionHeaderWith(instruction *current_instruction)
 	{
 		ADV_NON_BLANK(1);
 		if (ctoken.type != E_TT_PARENS_OPEN)
@@ -340,7 +354,7 @@ namespace epicr
 		}
 		ADV_NON_BLANK(1) /*reads through the end parenthesis*/
 	}
-	void Parser::ParseInstructionHeaderUsing(instruction* current_instruction)
+	void Parser::ParseInstructionHeaderUsing(instruction *current_instruction)
 	{
 		ADV_NON_BLANK(1);
 		if (ctoken.type != E_TT_PARENS_OPEN)
@@ -405,7 +419,7 @@ namespace epicr
 		current_instruction->body = Body;
 	}
 
-	void Parser::ParseInstructionYield(instruction* current_instruction)
+	void Parser::ParseInstructionYield(instruction *current_instruction)
 	{
 		ADV_NON_BLANK(2);
 		do
@@ -446,8 +460,8 @@ namespace epicr
 				}
 				if (current_ingredient.is_ingredient_ref)
 				{
-					ERR("Duplicate asterix", ctoken);
-				} // should be a warning
+					WARN("Duplicate asterix", ctoken);
+				}
 				current_ingredient.is_ingredient_ref = true;
 			}
 
@@ -460,7 +474,7 @@ namespace epicr
 				}
 				else if (current_ingredient.is_optional)
 				{
-					ERR("Duplicate question mark", ctoken); // should be a warning
+					WARN("Duplicate question mark", ctoken);
 				}
 				current_ingredient.is_optional = true;
 			}
