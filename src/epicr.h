@@ -578,20 +578,55 @@ namespace epicr
 
     void compress(std::string filepath);
     void decompress(std::string filepath);
-    /*returns a new string with all chars in the input string in lowercase*/
+    
+    /**
+     * @brief return a new string with all chars of the input string converted to lowercase.
+     * 
+     * @param std::string the input string.
+     * @return returns the input string in lowercase.
+     */
     std::string to_lower(std::string);
-    /*returns a new string where all types of spaces to right is stripped from the input string */
+    /**
+     * @brief returns a new string where all types of spaces to the right is stripped from the input string.
+     * @param std::string the input string to strip from.
+     * @return retuns the input string with right spaces stripped.
+     */
     std::string strip_spaces_right(std::string);
-    /* converts a double to a string - also rounds to the nearest 2 decimals */
+    /**
+     * @brief returns a new string based on a number of type double. Also round it to the nearest 2 decimals.
+     * @param double the number of type double.
+     * @return the converted number of type double rounded to nearest 2 decimals.
+     *
+     */
     std::string double_to_string(double);
-    /* converts an amount to a printable string */
+    /**
+     * @brief return a printable string based on an epicr-amount.
+     * @param amount a struct type used as amount for ingredients in the recipe struct.
+     * @return the printable string based on the amount.
+     */
     std::string amount_to_string(amount);
 
+    /**
+     * @brief returns whether or not the string end with a substring.
+     * 
+     * @param value the string to check on.
+     * @param ending the substring to check with.
+     * @return true, if the string ends with the substring.
+     * @return false if the string does not end with the substring.
+     */
     bool string_ends_with(std::string const& value, std::string const& ending);
-
-    /*return whether or not an ingredient with that name exists in the unordered map*/
+    /**
+     * @brief return whether or not an ingredient with that name exists in an unordered map
+     * @param std::string the ingredient name
+     * @param std::unordered_map<std::string, ingredient> a map with the ingredient name as a first value and the ingredient as second value
+     * @return true, if an ingredient with that name exist in the map
+     * @return false, if an ingredient with that name does not exist in the map
+     */
     bool ingredient_in_map(std::string, std::unordered_map<std::string, ingredient>);
-    /* Print the contents of a token to stdout */
+    /**
+     * @brief Print the contents of a token to stdout. 
+     * @param epicr_token The token to print out.
+     */
     void print_token(epicr_token);
 
     std::ifstream open_file(std::string filename);
