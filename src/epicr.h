@@ -245,7 +245,7 @@ namespace epicr
 
         /**
          * @brief Assign a E_TT to a token
-         * @param `stoken` Stream token is the current token in the stream
+         * @param `stoken` String token is the current token in the string
          * @return E_TT
          */
         epicr_token_type token_type(std::string stoken);
