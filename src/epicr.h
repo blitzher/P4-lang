@@ -576,9 +576,6 @@ namespace epicr
 
     }
 
-    void compress(std::string filepath);
-    void decompress(std::string filepath);
-    
     /**
      * @brief return a new string with all chars of the input string converted to lowercase.
      * 
