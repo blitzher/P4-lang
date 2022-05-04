@@ -258,7 +258,7 @@ void instruction_body_text_is_parsed_correctly()
 		actual_instruction_body += rcp.instructions[0].body[i].spelling;
 		if (rcp.instructions[0].body[i].is_amount)
 		{
-			actual_instruction_body += epicr::double_to_string(rcp.instructions[0].body[i].value.number) + " ";
+			actual_instruction_body += epicr::round_double_to_string(rcp.instructions[0].body[i].value.number) + " ";
 			if (rcp.instructions[0].body[i].value.unit != "")
 				actual_instruction_body += rcp.instructions[0].body[i].value.unit + " ";
 		}

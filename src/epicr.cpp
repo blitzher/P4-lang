@@ -108,7 +108,7 @@ namespace epicr
 		return (end == std::string::npos) ? "" : str.substr(0, end + 1);
 	}
 
-	std::string double_to_string(double num)
+	std::string round_double_to_string(double num)
 	{
 		num = floor((num + 0.005) * 100.0) / 100.0; /*rounds to the nearest 2 decimals*/
 		std::string str = std::to_string(num);
@@ -124,7 +124,7 @@ namespace epicr
 	std::string amount_to_string(amount amount)
 	{
 		std::string result = "(";
-		result += epicr::double_to_string(amount.number);
+		result += std::to_string(amount.number);
 		if (!(amount.unit == ""))
 			result += " " + amount.unit;
 		result += ")";

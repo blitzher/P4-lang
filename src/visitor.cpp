@@ -1,26 +1,45 @@
 #include "./epicr.h"
+#include <iterator>
 
-#define ERR(s)            \
-    {                     \
-        has_error = true; \
-        error = s;        \
+#define ERR(s)                \
+    {                         \
+        if (!has_error)       \
+        {                     \
+            has_error = true; \
+            error = s;        \
+        }                     \
     }
 
 /* Check if something exits in the map. E.g checks if an ingredient is in the ingredient list */
-bool map_contains(std::unordered_map<std::string, epicr::ingredient> m, std::string k)
+template <typename T, typename A>
+bool map_contains(std::unordered_map<T, A> map, T key)
 {
-    for (auto key_value_pair : m)
+    for (auto key_value_pair : map)
     {
-        if (key_value_pair.first == k)
+        if (key_value_pair.first == key)
             return true;
     }
     return false;
 }
 
+template <typename K, typename VT>
+K key_of_value_in_map_vec(std::map<K, std::vector<VT>> map, VT val, K def)
+{
+    for (const auto &pair : map)
+    {
+        for (const auto &vecv : pair.second)
+        {
+            if (vecv == val)
+                return pair.first;
+        }
+    }
+    return def;
+}
+
 template <typename T, typename A>
 bool vec_contains(std::vector<T, A> vector, T value)
 {
-    for (const T t : vector)
+    for (const T &t : vector)
         if (value == t)
             return true;
     return false;
@@ -74,7 +93,7 @@ namespace epicr
         unit_aliases["mm"] = {"mm", "millimeter", "millimeters"};
         unit_aliases["cm"] = {"cm", "centimeter", "centimeters"};
         unit_aliases["in"] = {"in", "inch", "inches"};
-        unit_aliases["ft"] = {"ft", "feet"};
+        unit_aliases["ft"] = {"ft", "feet", "foot"};
 
         unit_aliases["c"] = {"c", "celsius"};
         unit_aliases["f"] = {"f", "fahrenheit"};
@@ -131,13 +150,15 @@ namespace epicr::visitor
         int instruction_count = 0;
 
         for (auto &inst : a_rcp->instructions)
-
         {
+            if (has_error)
+                break;
             instruction_count++;
             /* consume */
             for (auto &ingr : inst.ingredients)
             {
-
+                if (has_error)
+                    break;
                 if (!ingredient_in_map(ingr.name, symbols))
                 {
                     char *err = (char *)malloc(100);
@@ -183,14 +204,20 @@ namespace epicr::visitor
                     ERR("Ingredient used in instruction not found in ingredients list");
                     return;
                 }
-
-                if (ingr.amount.number > symbols[ingr.name].amount.number)
+                amount original_amount = ingr.amount;
+                if (ingredients_compatible(symbols[ingr.name], ingr))
                 {
-                    ingredients_compatible(symbols[ingr.name], ingr);
-                    ERR("Used too much of ingredient");
+                    ingr = match_ingredients(ingr, symbols[ingr.name]);
+                }
+
+                if (ingr.amount.number - symbols[ingr.name].amount.number > FLT_EPSILON)
+                {
+                    //std::cout << ingr.amount.number << ">" << symbols[ingr.name].amount.number;
+                    ERR("Used too much of ingredient, " + ingr.name);
                     return;
                 }
                 symbols[ingr.name].amount.number -= ingr.amount.number;
+                ingr.amount = original_amount;
             }
 
             /* yield */
@@ -208,6 +235,7 @@ namespace epicr::visitor
                         ERR(err_msg);
                         return;
                     }
+                    yield = match_ingredients(yield, symbols[yield.name]);
                     symbols[yield.name].amount.number += yield.amount.number;
                 }
                 /* otherwise, add it to the symbol table */
@@ -217,13 +245,16 @@ namespace epicr::visitor
                 }
             }
         }
+        if (has_error)
+            return;
         bool title_ingredient_remaining = false;
         for (auto key_value_pair : symbols)
         {
             ingredient ingr = key_value_pair.second;
+
             if (to_lower(ingr.name) == to_lower(a_rcp->title))
                 title_ingredient_remaining = true;
-            else if (ingr.amount.number != 0 && !ingr.amount.is_uncountable)
+            else if (ingr.amount.number > FLT_EPSILON && !ingr.amount.is_uncountable)
             {
                 char *err_msg = (char *)malloc(200);
                 sprintf(err_msg, "Unused ingredient: %s %s",
@@ -237,12 +268,225 @@ namespace epicr::visitor
 
     bool IngredientVerifier::ingredients_compatible(ingredient a, ingredient b)
     {
-        if (a.amount.unit != b.amount.unit)
+        /*if units are not of the same type*/
+        if (
+            key_of_value_in_map_vec(units_in_type, a.amount.unit, E_UT_NONE) != key_of_value_in_map_vec(units_in_type, b.amount.unit, E_UT_NONE))
         {
-            ERR("Invalid unit used in instruction");
+            ERR("Unit " + a.amount.unit + " and unit " + b.amount.unit + " are not the same type of unit");
+            return false;
+        }
+        epicr_unit_system ingredient_a_unit_system = key_of_value_in_map_vec(units_in_system, a.amount.unit, E_US_NONE);
+        epicr_unit_system ingredient_b_unit_system = key_of_value_in_map_vec(units_in_system, b.amount.unit, E_US_NONE);
+        if (a.amount.unit == b.amount.unit)
+        {
+            return true;
+        }
+        /*if one of them (or both) are a user defined unit*/
+        else if (ingredient_a_unit_system == E_US_NONE || ingredient_b_unit_system == E_US_NONE)
+        {
+            ERR("User created units are not compatible with each other. The user created units are unit " + a.amount.unit + " and unit " + b.amount.unit);
+            return false;
+        }
+        /*if units are not in the same unit system*/
+        else if (ingredient_a_unit_system != ingredient_b_unit_system)
+        {
+            ERR("Unit " + a.amount.unit + " and unit " + b.amount.unit + " are not in the same unit system");
             return false;
         }
         return true;
+    }
+    ingredient IngredientVerifier::match_ingredients(ingredient a, const ingredient b)
+    {
+        /*metric*/
+        if (key_of_value_in_map_vec(units_in_system, b.amount.unit, E_US_NONE) == E_US_METRIC)
+        {
+            /*weight units*/
+            if (a.amount.unit == "g")
+            {
+                if (b.amount.unit == "kg")
+                {
+                    a.amount.number *= G_TO_KG;
+                    a.amount.unit = "kg";
+                }
+            }
+            else if (a.amount.unit == "kg")
+            {
+                if (b.amount.unit == "g")
+                {
+                    a.amount.number /= G_TO_KG;
+                    a.amount.unit = "g";
+                }
+            }
+            /*volume units*/
+            else if (a.amount.unit == "ml")
+            {
+                if (b.amount.unit == "dl")
+                {
+                    a.amount.number *= ML_TO_DL;
+                    a.amount.unit = "dl";
+                }
+                else if (b.amount.unit == "l")
+                {
+                    a.amount.number *= ML_TO_DL * DL_TO_L;
+                    a.amount.unit = "l";
+                }
+            }
+            else if (a.amount.unit == "dl")
+            {
+                if (b.amount.unit == "l")
+                {
+                    a.amount.number *= DL_TO_L;
+                    a.amount.unit = "l";
+                }
+                else if (b.amount.unit == "ml")
+                {
+                    a.amount.number /= ML_TO_DL;
+                    a.amount.unit = "ml";
+                }
+            }
+            else if (a.amount.unit == "l")
+            {
+                if (b.amount.unit == "dl")
+                {
+                    a.amount.number /= DL_TO_L;
+                    a.amount.unit = "dl";
+                }
+                else if (b.amount.unit == "ml")
+                {
+                    a.amount.number /= ML_TO_DL / DL_TO_L;
+                    a.amount.unit = "ml";
+                }
+            }
+            /*length units*/
+            else if (a.amount.unit == "mm")
+            {
+                if (b.amount.unit == "cm")
+                {
+                    a.amount.number *= MM_TO_CM;
+                    a.amount.unit = "cm";
+                }
+            }
+            else if (a.amount.unit == "cm")
+            {
+                if (b.amount.unit == "mm")
+                {
+                    a.amount.number /= MM_TO_CM;
+                    a.amount.unit = "mm";
+                }
+            }
+        }
+        /*imperial*/
+        if (key_of_value_in_map_vec(units_in_system, b.amount.unit, E_US_NONE) == E_US_IMPERIAL)
+        {
+            /*weight units*/
+            if (a.amount.unit == "oz")
+            {
+                if (b.amount.unit == "lbs")
+                {
+                    a.amount.number *= OZ_TO_LBS;
+                    a.amount.unit = "lbs";
+                }
+            }
+            else if (a.amount.unit == "lbs")
+            {
+                if (b.amount.unit == "oz")
+                {
+                    a.amount.number /= OZ_TO_LBS;
+                    a.amount.unit = "oz";
+                }
+            }
+            /*volume units*/
+            else if (a.amount.unit == "fl-oz")
+            {
+                if (b.amount.unit == "cup")
+                {
+                    a.amount.number *= FLOZ_TO_CUP;
+                    a.amount.unit = "cup";
+                }
+                else if (b.amount.unit == "qt")
+                {
+                    a.amount.number *= FLOZ_TO_CUP * CUP_TO_QT;
+                    a.amount.unit = "qt";
+                }
+                else if (b.amount.unit == "gal")
+                {
+                    a.amount.number *= FLOZ_TO_CUP * CUP_TO_QT * QT_TO_GAL;
+                    a.amount.unit = "gal";
+                }
+            }
+            else if (a.amount.unit == "cup")
+            {
+                if (b.amount.unit == "fl-oz")
+                {
+                    a.amount.number /= FLOZ_TO_CUP;
+                    a.amount.unit = "fl-oz";
+                }
+                else if (b.amount.unit == "qt")
+                {
+                    a.amount.number *= CUP_TO_QT;
+                    a.amount.unit = "qt";
+                }
+                else if (b.amount.unit == "gal")
+                {
+                    a.amount.number *= CUP_TO_QT * QT_TO_GAL;
+                    a.amount.unit = "gal";
+                }
+            }
+            else if (a.amount.unit == "qt")
+            {
+                if (b.amount.unit == "cup")
+                {
+                    a.amount.number /= CUP_TO_QT;
+                    a.amount.unit = "cup";
+                }
+                else if (b.amount.unit == "fl-oz")
+                {
+                    a.amount.number /= FLOZ_TO_CUP / CUP_TO_QT;
+                    a.amount.unit = "fl-oz";
+                }
+                else if (b.amount.unit == "gal")
+                {
+                    a.amount.number *= QT_TO_GAL;
+                    a.amount.unit = "gal";
+                }
+            }
+            else if (a.amount.unit == "gal")
+            {
+                if (b.amount.unit == "qt")
+                {
+                    a.amount.number /= QT_TO_GAL;
+                    a.amount.unit = "qt";
+                }
+                else if (b.amount.unit == "cup")
+                {
+                    a.amount.number /= CUP_TO_QT / QT_TO_GAL;
+                    a.amount.unit = "cup";
+                }
+                else if (b.amount.unit == "fl-oz")
+                {
+                    a.amount.number /= FLOZ_TO_CUP / CUP_TO_QT / QT_TO_GAL;
+                    a.amount.unit = "fl-oz";
+                }
+            }
+            /*length units*/
+            else if (a.amount.unit == "in")
+            {
+                if (b.amount.unit == "ft")
+                {
+                    a.amount.number *= IN_TO_FT;
+                    a.amount.unit = "ft";
+                }
+            }
+            else if (a.amount.unit == "ft")
+            {
+                if (b.amount.unit == "in")
+                {
+                    a.amount.number /= IN_TO_FT;
+                    a.amount.unit = "in";
+                }
+            }
+        }
+        return a;
     }
 #pragma endregion
 
@@ -276,7 +520,7 @@ namespace epicr::visitor
         ERR("No valid standard found for unit");
         return "";
     }
-    
+
     void AmountConverter::convert_amount(amount *amnt, epicr_unit_system tar_sys)
     {
 
@@ -284,8 +528,10 @@ namespace epicr::visitor
          * any of the ingredients */
         if (tar_sys == E_US_NONE)
             return;
-
+        std::cout<<amnt->unit<<"==";
         std::string standardized = standardize(to_lower(amnt->unit));
+        amnt->unit = standardized;
+        std::cout<<amnt->unit<<"\n";
         epicr_unit_system cur_sys;
 
         /* find out what system the current unit is in*/
@@ -416,7 +662,7 @@ namespace epicr::visitor
 
     void AmountConverter::visit(recipe *rcp)
     {
-
+        std::cout<<12<<"\n";
         std::vector<amount *> scaleables;
 
         /* Get all amounts from ingredients */
@@ -503,16 +749,18 @@ namespace epicr::visitor
 
     rcp_ret visit_all(recipe *rcp)
     {
-        auto in_vis = IngredientVerifier();
         auto ac_vis = AmountConverter();
+        auto in_vis = IngredientVerifier();
         auto mf_vis = MandatoryFields();
+
+        ac_vis.visit(rcp);
+        if (ac_vis.has_error)
+            return {{}, 1, " AmtCon: " + ac_vis.error};
 
         in_vis.visit(rcp);
         if (in_vis.has_error)
             return {{}, 1, " IngVer: " + in_vis.error};
-        ac_vis.visit(rcp);
-        if (ac_vis.has_error)
-            return {{}, 1, " AmtCon: " + ac_vis.error};
+
         mf_vis.visit(rcp);
         if (mf_vis.has_error)
             return {{}, 1, " ManFld: " + mf_vis.error};

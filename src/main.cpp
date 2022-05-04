@@ -36,15 +36,15 @@ int main(int argc, char **argv)
 	{
 		epicr::rcp_ret vis_ret = epicr::visitor::visit_all(&my_recipe);
 		cout << vis_ret.has_err << vis_ret.err << endl;
+		if (!vis_ret.has_err)
+		{
+			string output_file = epicr::clargs.output_filepath;
+			output_file.append("/" + my_recipe.title + ".html");
+			epicr::generate_html(my_recipe, output_file);
+			printf("Wrote file: %s\n", output_file.c_str());
+		}
 	}
 
-	if (!my_parser.has_error)
-	{
-		string output_file = epicr::clargs.output_filepath;
-		output_file.append("/" + my_recipe.title + ".html");
-		epicr::generate_html(my_recipe, output_file);
-		printf("Wrote file: %s\n", output_file.c_str());
-	}
 
 	return 0;
 }

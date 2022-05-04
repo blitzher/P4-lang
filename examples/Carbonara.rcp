@@ -20,7 +20,7 @@ kitchenware:
     pan
 
 ingredients:
-    bacon [3 oz],
+    bacon [3 ounce],
     butter [1 tsp],     
     onion [1],
     cream [1 dl],      
@@ -40,7 +40,7 @@ instructions:
         Fry the bacon using the airfryer
 
         yield:
-            bacon [10 oz],
+            bacon [10 ounce],
             bacon fat
 
     with(onion, bacon fat, butter) using(pan):

@@ -127,6 +127,7 @@ namespace epicr
 
     enum epicr_unit_type
     {
+        E_UT_NONE,
         E_UT_WEIGHT,
         E_UT_VOLUME,
         E_UT_LENGTH,
@@ -468,6 +469,7 @@ namespace epicr
              * @return whether or not they are compatible
              */
             bool ingredients_compatible(ingredient a, ingredient b);
+            ingredient match_ingredients(ingredient a, const ingredient b);
 
         public:
             /**
@@ -552,6 +554,19 @@ namespace epicr
             MandatoryFields();
         };
 
+        const double G_TO_KG = 0.001;
+        const double OZ_TO_LBS = 0.0625;
+        
+        const double ML_TO_DL = 0.01;
+        const double DL_TO_L = 0.1;
+        const double FLOZ_TO_CUP = 0.125;
+        const double CUP_TO_QT = 0.25;
+        const double QT_TO_GAL = 0.25;
+
+        const double MM_TO_CM = 0.1;
+        const double CM_TO_M = 0.01;
+        const double IN_TO_FT = 1.f/12;
+
         const double G_TO_OZ = 0.035;
         const double KG_TO_LBS = 2.2046;
         const double L_TO_QT = 1.057;
@@ -595,7 +610,7 @@ namespace epicr
      * @return the converted number of type double rounded to nearest 2 decimals.
      *
      */
-    std::string double_to_string(double);
+    std::string round_double_to_string(double);
     /**
      * @brief return a printable string based on an epicr-amount.
      * @param amount a struct type used as amount for ingredients in the recipe struct.
