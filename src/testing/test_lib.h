@@ -43,7 +43,7 @@ namespace test_lib
 	void expect_equal_b(const bool actual, const bool expected);
 	void expect_exception(epicr::parse_ret parse_ret, std::string err_message);
 	void expect_exception(epicr::rcp_ret rcp_ret, std::string err_message);
-
+	void expect_warning(epicr::Parser parser, std::string err_message);
 	/* Final call in main, after tests have been run */
 	void print_recap();
 	// ---^^^---vvvv---:>~

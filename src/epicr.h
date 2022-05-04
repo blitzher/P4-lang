@@ -159,7 +159,7 @@ namespace epicr
 
     typedef struct rcp_ret_s
     {
-        recipe *recipe;
+        recipe* recipe;
         bool has_err;
         std::string err;
     } rcp_ret;
@@ -190,7 +190,7 @@ namespace epicr
     class Lexer
     {
     private:
-        std::istream &istream;
+        std::istream& istream;
         uint token_count;
         uint line_num;
         bool ready;
@@ -211,14 +211,14 @@ namespace epicr
          * @param `std::ifstream` Is the input file stream
          * @param `file` The file you want to read from
          */
-        Lexer(std::ifstream &file);
+        Lexer(std::ifstream& file);
 
         /**
          * @brief Constructor that can take an input stream such it can read and interpret input from sequences of characters
          * @param `std::istream` Is used for input
          * @param `file` The file you want to read from
          */
-        Lexer(std::istream &file);
+        Lexer(std::istream& file);
 
         /* Return whether or not the Lexer is ready to yield tokens */
         bool DEBUG_MODE;
@@ -412,6 +412,7 @@ namespace epicr
 
     public:
         bool DEBUG_MODE;
+        std::vector<std::string> warnings;
         bool has_error;
         std::vector<std::string> warnings;
         std::string original_amount;
@@ -428,56 +429,127 @@ namespace epicr
          *
          */
         void silence(bool);
-        Parser(Lexer *lexer_r);
+        Parser(Lexer* lexer_r);
+        Parser();
         ~Parser();
     };
 
     namespace visitor
     {
-
+        /**
+         * @brief superclass that all visitors inherit from
+         *
+         */
         class Visitor
         {
-        private:
-            // cmd_args
         public:
             std::string error;
             bool has_error;
-            void visit(recipe *);
+            /**
+             * @brief the main function of the visitor. All subclasses of the visitor uses this function to visit recipe.
+             *
+             */
+            void visit(recipe*);
         };
-
+        /**
+         * @brief visitor class that handles the verification of ingredients
+         *
+         */
         class IngredientVerifier : public Visitor
         {
         private:
             std::unordered_map<std::string, ingredient> symbols;
             std::unordered_map<std::string, ingredient> original_symbols;
             std::unordered_set<std::string> uniqueIngredients;
+            /**
+             * @brief returns whether or not 2 ingredient's units are compatible with each other
+             *
+             * @param a the first ingredient
+             * @param b the second ingredient
+             * @return whether or not they are compatible
+             */
             bool ingredients_compatible(ingredient a, ingredient b);
 
         public:
-            void visit(recipe *);
+            /**
+             * @brief the visit method of the ingredientVerifier
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
+
+            void visit(recipe*);
             IngredientVerifier();
         };
 
+        /**
+         * @brief visitor class that handles the amount conversion
+         *
+         */
         class AmountConverter : public Visitor
         {
         private:
+            /**
+             * @brief Checks whether or not a unit is convertable i.e if it matches an alias.
+             *
+             * @param std::string the unit to check.
+             * @return returns a boolean stating whether or not the unit is convertable
+             */
             bool is_convertable(std::string);
+            /**
+             * @brief Convert a unit alias into the standard, i.e. 'grams' to 'g'.
+             *
+             * @param unit Unit to standardize
+             * @return std::string The standard for a specific unit alias
+             */
             std::string standardize(std::string);
-            void convert_amount(amount *amnt, epicr_unit_system system);
+            /**
+             * @brief Convert a unit into a different unit system, i.e. E_TT_METRIC to E_TT_IMPERIAL
+             *
+             * @param amnt The amount to be scaled
+             * @param system The system to be scaled into
+             * @return amount
+             */
+            void convert_amount(amount* amnt, epicr_unit_system system);
 
         public:
-            void visit(recipe *);
+            /**
+             * @brief the visit method of the AmountConverter
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
+            void visit(recipe*);
             AmountConverter();
         };
 
+        /**
+         * @brief visitor class that handles the verification of mandatory fields
+         *
+         */
         class MandatoryFields : public Visitor
         {
         private:
-            void servings_default_value(recipe *rcp);
-            void has_mandatory_fields(const recipe *rcp);
+            /**
+             * @brief set the default value for servings if none was specified.
+             *
+             * @param rcp a pointer to the recipe that is to be updated.
+             */
+            void set_servings_default_value(recipe* rcp);
+            /**
+             * @brief checks whether or not the mandatory fields are all specified.
+             * Provides error if the field is not found
+             *
+             * @param rcp a pointer to the recipe to check on.
+             * A const, as the recipe is only used for verification and not updated.
+             */
+            void check_mandatory_fields(const recipe* rcp);
 
         public:
-            void visit(recipe *);
+            /**
+             * @brief the visit method of the MandatoryFields
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
+            void visit(recipe*);
             MandatoryFields();
         };
 
@@ -501,7 +573,7 @@ namespace epicr
             return (deg - 32) * 5 / 9;
         };
 
-        rcp_ret visit_all(recipe *rcp);
+        rcp_ret visit_all(recipe* rcp);
 
     }
 
@@ -515,6 +587,9 @@ namespace epicr
     std::string double_to_string(double);
     /* converts an amount to a printable string */
     std::string amount_to_string(amount);
+
+    bool string_ends_with(std::string const& value, std::string const& ending);
+
     /*return whether or not an ingredient with that name exists in the unordered map*/
     bool ingredient_in_map(std::string, std::unordered_map<std::string, ingredient>);
     /* Print the contents of a token to stdout */
@@ -530,9 +605,10 @@ namespace epicr
     parse_ret parse_recipe_silent(cmd_args);
     parse_ret parse_string(std::string recipeExcerpt);
     parse_ret parse_string_silent(std::string str);
+    parse_ret parse_string_silent(std::string recipeExcerpt, Parser* parser);
 
-    rcp_ret ingredient_verify_recipe(recipe *);
+    rcp_ret ingredient_verify_recipe(recipe*);
 
     /* Command line argument related declarations */
-    void parse_cmd_args(int argc, char **argv);
+    void parse_cmd_args(int argc, char** argv);
 }

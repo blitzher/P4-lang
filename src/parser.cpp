@@ -89,8 +89,12 @@ namespace epicr
 {
 #pragma region Parser implementation
 
+	Parser::Parser()
+	{
+	}
 	Parser::Parser(Lexer *lexer_r)
 	{
+		warnings = std::vector<std::string>();
 		lexer = lexer_r;
 		silent = false;
 	}
@@ -257,6 +261,11 @@ namespace epicr
 
 			if (ingr.is_ingredient_ref)
 			{
+				if (!std::filesystem::exists(clargs.input_filepath))
+				{
+					goto out_ref;
+				}
+
 				std::filesystem::path fpath = std::filesystem::absolute(clargs.input_filepath);
 				std::filesystem::path ppath = fpath.parent_path();
 
@@ -274,11 +283,13 @@ namespace epicr
 
 				recipe rcp = rcp_ret.recipe;
 				ingr.name = rcp.title;
-				ingr.amount.unit = ingr.amount.unit == ""
-									   ? (rcp.servings.descriptor == ""
-											  ? "servings"
-											  : rcp.servings.descriptor)
-									   : ingr.amount.unit;
+				if (!ingr.amount.unit.empty())
+				{
+					WARN("Unit should not be provided on ingredient reference to another recipe", ctoken);
+				}
+				ingr.amount.unit = rcp.servings.descriptor == ""
+									   ? "servings"
+									   : rcp.servings.descriptor;
 
 				ingr.amount.number = ingr.amount.number == 0
 										 ? (rcp.servings.count == 0
@@ -288,7 +299,7 @@ namespace epicr
 
 				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
 			}
-
+		out_ref:
 			rcp->ingredients.push_back(ingr);
 			ReadSeperatorOrWaitAtNextField("ingredients");
 		}

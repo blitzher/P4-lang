@@ -108,8 +108,9 @@ void parse_double_asterix_exception()
 {
     test_lib::REGISTER;
     std::string incorrect_ingredient_string = "ingredients: salt**";
-    auto rcp = epicr::parse_string_silent(incorrect_ingredient_string);
-    test_lib::expect_exception(rcp, "Duplicate asterix");
+    epicr::Parser *parser = new epicr::Parser;
+    auto rcp = epicr::parse_string_silent(incorrect_ingredient_string, parser);
+    test_lib::expect_warning(*parser, "Duplicate asterix");
 }
 
 void parse_nutrients_cannot_use_question_mark_exception()
@@ -124,8 +125,9 @@ void parse_double_question_mark_exception()
 {
     test_lib::REGISTER;
     std::string incorrect_ingredient_string = "ingredients: parmesan?*?";
-    auto rcp = epicr::parse_string_silent(incorrect_ingredient_string);
-    test_lib::expect_exception(rcp, "Duplicate question mark");
+    epicr::Parser *parser = new epicr::Parser;
+    auto rcp = epicr::parse_string_silent(incorrect_ingredient_string, parser);
+    test_lib::expect_warning(*parser, "Duplicate question mark");
 }
 
 void parse_invalid_relative_amount_exception()

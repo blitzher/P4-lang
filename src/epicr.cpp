@@ -17,7 +17,8 @@ namespace epicr
 		std::string fpath = std::filesystem::absolute(filename).string();
 		std::ifstream file;
 
-		if ((std::find(included_recipes.begin(), included_recipes.end(), fpath) != included_recipes.end())) {
+		if ((std::find(included_recipes.begin(), included_recipes.end(), fpath) != included_recipes.end()))
+		{
 			char* err = (char*)malloc(200);
 			sprintf(err, "File %s was already included (recursion)", filename.c_str());
 			recurison_error = err;
@@ -25,8 +26,8 @@ namespace epicr
 			return file;
 		}
 		file.open(filename, std::ios_base::binary);
-		included_recipes.push_back(fpath);
-
+		if (string_ends_with(filename, ".rcp"))
+			included_recipes.push_back(fpath);
 
 		if (!file.is_open())
 			std::cout << "File " << filename << " could not be opened!" << std::endl;
@@ -76,7 +77,7 @@ namespace epicr
 		std::string type = token_to_string(token.type);
 
 		if (token.type != E_TT_BLANK && token.type != E_TT_NEWLINE)
-			printf("%-18s-> %-6s (%llu) uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.word.size(), token.uid, token.line);
+			printf("%-18s-> %-6s (%lu) uid:%i line:%i\n", type.c_str(), token.word.c_str(), token.word.size(), token.uid, token.line);
 		else
 			printf("%-18s   %-10i uid:%i line:%i\n", type.c_str(), (int)token.word.size(), token.uid, token.line);
 	}
@@ -151,6 +152,13 @@ namespace epicr
 		return false;
 	}
 
+	bool string_ends_with(std::string const& value, std::string const& ending)
+	{
+		if (ending.size() > value.size())
+			return false;
+		return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+	}
+
 	parse_ret parse_recipe(std::string filename)
 	{
 		cmd_args args = { filename, E_HS_BASIC, "dist", E_US_NONE, false };
@@ -221,6 +229,19 @@ namespace epicr
 		recipe rcp = parser.Parse();
 
 		parse_ret ret = { rcp, parser.has_error, parser.error };
+		return ret;
+	}
+	parse_ret parse_string_silent(std::string recipeExcerpt, Parser* parser)
+	{
+		std::istringstream test_string(recipeExcerpt);
+		Lexer lexer(test_string);
+		Parser _parser(&lexer);
+		_parser.silence(true);
+		*parser = _parser;
+		recipe rcp = parser->Parse();
+
+		parse_ret ret = { rcp, parser->has_error, parser->error };
+
 		return ret;
 	}
 
