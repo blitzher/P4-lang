@@ -1,6 +1,10 @@
 #include "./epicr.h"
 #include <iterator>
 
+#ifndef FLT_EPSILON
+#define FLT_EPSILON __FLT_EPSILON__
+#endif
+
 #define ERR(s)                \
     {                         \
         if (!has_error)       \
@@ -212,7 +216,6 @@ namespace epicr::visitor
 
                 if (ingr.amount.number - symbols[ingr.name].amount.number > FLT_EPSILON)
                 {
-                    //std::cout << ingr.amount.number << ">" << symbols[ingr.name].amount.number;
                     ERR("Used too much of ingredient, " + ingr.name);
                     return;
                 }
@@ -523,15 +526,14 @@ namespace epicr::visitor
 
     void AmountConverter::convert_amount(amount *amnt, epicr_unit_system tar_sys)
     {
+        std::string standardized = standardize(to_lower(amnt->unit));
+        amnt->unit = standardized;
 
         /* If the target unit system is undefined, don't modify
          * any of the ingredients */
         if (tar_sys == E_US_NONE)
             return;
-        std::cout<<amnt->unit<<"==";
-        std::string standardized = standardize(to_lower(amnt->unit));
-        amnt->unit = standardized;
-        std::cout<<amnt->unit<<"\n";
+
         epicr_unit_system cur_sys;
 
         /* find out what system the current unit is in*/
@@ -662,7 +664,6 @@ namespace epicr::visitor
 
     void AmountConverter::visit(recipe *rcp)
     {
-        std::cout<<12<<"\n";
         std::vector<amount *> scaleables;
 
         /* Get all amounts from ingredients */

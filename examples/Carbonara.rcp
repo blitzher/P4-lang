@@ -40,7 +40,7 @@ instructions:
         Fry the bacon using the airfryer
 
         yield:
-            bacon [10 ounce],
+            bacon [10 oz],
             bacon fat
 
     with(onion, bacon fat, butter) using(pan):
