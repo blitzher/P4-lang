@@ -164,13 +164,27 @@ namespace epicr
 		return result;
 	}
 
+	/*return a new string with its newlines converted to <br>'s*/
+	std::string newlines_in_html(string a_string)
+	{
+		for (size_t i = 0;i<a_string.size();i++) 
+		{
+			if (a_string[i] == '\n')
+			{
+				a_string.replace(i,1,"<br>");
+			}
+		}
+		return a_string;
+	}
+
+	
 	/* construct HTML string for instructions body */
 	string insert_instruction_body(std::vector<instruction_word> body)
 	{
 		string result = "<p class='instruction-body'>";
 		for (size_t i = 0; i < body.size(); i++)
-		{
-			result += body[i].spelling;
+		{	
+			result += newlines_in_html(body[i].spelling);
 			if (body[i].is_amount == true)
 			{
 				result += "<text class='number'>" + epicr::double_to_string(body[i].value.number) + "</text>";
@@ -203,10 +217,11 @@ namespace epicr
 		if (description == "")
 			return "";
 		string result = "<div class='collapsible-wrapper'><div class='arrow-down'></div><h3 class='collapsible'>";
-		result += "Description</h3></div><div class='collapsible-body'>" + description + "</div>";
+		result += "Description</h3></div><div class='collapsible-body'>" + newlines_in_html(description) + "</div>";
 		return result;
 	}
-
+	
+	
 	// find a string in another string and replace it with a third string
 	bool replace(string &str, const string &from_string, const string &to_string)
 	{
