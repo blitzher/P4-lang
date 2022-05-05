@@ -90,7 +90,8 @@ void parsed_kitchenware()
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_i(rcp.kitchenware.size(), 2);
-	if (rcp.kitchenware.size() < 2) return;
+	if (rcp.kitchenware.size() < 2)
+		return;
 	test_lib::expect_equal_s(rcp.kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.kitchenware[1], "rolling pin");
 }
@@ -103,7 +104,7 @@ void parsed_ingredients()
 
 	if (rcp.ingredients.size() < 5)
 	{
-		char* m = (char*)malloc(100);
+		char *m = (char *)malloc(100);
 		sprintf(m, "Not all ingredients were parsed properly, found %zu ingredients", rcp.ingredients.size());
 		test_lib::deny(m);
 		return;
@@ -120,7 +121,6 @@ void parsed_ingredients()
 	}
 	if (rcp.ingredients[4].amount.number != std::numeric_limits<double>::infinity())
 	{
-		std::cout << rcp.ingredients[4].amount.number;
 		test_lib::deny("Expected ingredient extra wheatflour to have amount set to INF");
 	}
 }
@@ -144,7 +144,7 @@ void instruction_has_correct_ingredients_name()
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
-	std::vector<std::string> ingredients = { "wheatflour", "egg", "salt", "water" };
+	std::vector<std::string> ingredients = {"wheatflour", "egg", "salt", "water"};
 	size_t ingredient_size = ingredients.size();
 	for (size_t i = 0; i < ingredient_size; i++)
 	{
@@ -248,17 +248,17 @@ void instruction_body_text_is_parsed_correctly()
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	size_t actual_instruction_body_size = rcp.instructions[0].body.size();
 	std::string expected_instruction_body = std::string("Put the 300 g wheatflour on the table and make a cavity in the middle.\n") +
-		std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
-		std::string("Start mixing the eggs into the wheatflour.\n") +
-		std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
-		std::string("Knead the dough thoroughly.\n");
+											std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
+											std::string("Start mixing the eggs into the wheatflour.\n") +
+											std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
+											std::string("Knead the dough thoroughly.\n");
 	std::string actual_instruction_body = "";
 	for (size_t i = 0; i < actual_instruction_body_size; i++)
 	{
 		actual_instruction_body += rcp.instructions[0].body[i].spelling;
 		if (rcp.instructions[0].body[i].is_amount)
 		{
-			actual_instruction_body += epicr::double_to_string(rcp.instructions[0].body[i].value.number) + " ";
+			actual_instruction_body += epicr::round_double_to_string(rcp.instructions[0].body[i].value.number) + " ";
 			if (rcp.instructions[0].body[i].value.unit != "")
 				actual_instruction_body += rcp.instructions[0].body[i].value.unit + " ";
 		}
@@ -329,9 +329,9 @@ void parse_fields_in_random_order()
 void trailing_commas_is_allowed()
 {
 	test_lib::REGISTER;
-    std::string incorrect_tag_string = "tags: tag1,tag2,";
-    auto rcp = epicr::parse_string_silent(incorrect_tag_string).recipe;
-    test_lib::expect_equal_i(rcp.tags.size(),2);
+	std::string incorrect_tag_string = "tags: tag1,tag2,";
+	auto rcp = epicr::parse_string_silent(incorrect_tag_string).recipe;
+	test_lib::expect_equal_i(rcp.tags.size(), 2);
 }
 
 void parse_recipe_with_random_casing()

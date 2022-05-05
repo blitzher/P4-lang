@@ -65,7 +65,7 @@ namespace epicr
 	{
 		string result = "<li>" + ingredients[i].name + " ";
 		if (!ingredients[i].amount.is_uncountable)
-			result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+			result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		return result;
 	}
 
@@ -78,7 +78,7 @@ namespace epicr
 			if (ingredients[i].is_ingredient_ref)
 			{
 				result += "<li><a class='is_ingredient_ref' target='_blank'>" + ingredients[i].name + " ";
-				result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit) + "</a>";
+				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit) + "</a>";
 			}
 			else if (ingredients[i].is_optional)
 				continue;
@@ -124,7 +124,7 @@ namespace epicr
 			return "";
 		for (size_t i = 0; i < nutrients.size(); i++)
 		{
-			std::string number = epicr::double_to_string(nutrients[i].amount.number);
+			std::string number = epicr::round_double_to_string(nutrients[i].amount.number);
 			std::string unit = nutrients[i].amount.unit;
 			result += "<li>" + nutrients[i].name + " (" + number + " " + unit + ")</li>";
 		}
@@ -142,7 +142,7 @@ namespace epicr
 				result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
-				result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
 		result += "</h5>";
 		return result;
@@ -187,7 +187,7 @@ namespace epicr
 			result += newlines_in_html(body[i].spelling);
 			if (body[i].is_amount == true)
 			{
-				result += "<text class='number'>" + epicr::double_to_string(body[i].value.number) + "</text>";
+				result += "<text class='number'>" + epicr::round_double_to_string(body[i].value.number) + "</text>";
 				result += " <text class='unit'>" + body[i].value.unit + "</text>";
 			}
 		}
@@ -205,7 +205,7 @@ namespace epicr
 				result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
-				result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
 		result += "</h5>";
 		return result;
