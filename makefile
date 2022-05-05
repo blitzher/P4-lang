@@ -92,4 +92,5 @@ gui: $(BINDIR)/$(TARGET)
 	python3 src/GUI.py
 	
 
-	
+ducks: doxyfile
+	doxygen doxyfile
