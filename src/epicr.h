@@ -127,6 +127,7 @@ namespace epicr
 
     enum epicr_unit_type
     {
+        E_UT_NONE,
         E_UT_WEIGHT,
         E_UT_VOLUME,
         E_UT_LENGTH,
@@ -159,7 +160,7 @@ namespace epicr
 
     typedef struct rcp_ret_s
     {
-        recipe* recipe;
+        recipe *recipe;
         bool has_err;
         std::string err;
     } rcp_ret;
@@ -190,7 +191,7 @@ namespace epicr
     class Lexer
     {
     private:
-        std::istream& istream;
+        std::istream &istream;
         uint token_count;
         uint line_num;
         bool ready;
@@ -211,14 +212,14 @@ namespace epicr
          * @param `std::ifstream` Is the input file stream
          * @param `file` The file you want to read from
          */
-        Lexer(std::ifstream& file);
+        Lexer(std::ifstream &file);
 
         /**
          * @brief Constructor that can take an input stream such it can read and interpret input from sequences of characters
          * @param `std::istream` Is used for input
          * @param `file` The file you want to read from
          */
-        Lexer(std::istream& file);
+        Lexer(std::istream &file);
 
         /* Return whether or not the Lexer is ready to yield tokens */
         bool DEBUG_MODE;
@@ -245,7 +246,7 @@ namespace epicr
 
         /**
          * @brief Assign a E_TT to a token
-         * @param `stoken` Stream token is the current token in the stream
+         * @param `stoken` String token is the current token in the string
          * @return E_TT
          */
         epicr_token_type token_type(std::string stoken);
@@ -429,7 +430,7 @@ namespace epicr
          *
          */
         void silence(bool);
-        Parser(Lexer* lexer_r);
+        Parser(Lexer *lexer_r);
         Parser();
         ~Parser();
     };
@@ -449,7 +450,7 @@ namespace epicr
              * @brief the main function of the visitor. All subclasses of the visitor uses this function to visit recipe.
              *
              */
-            void visit(recipe*);
+            void visit(recipe *);
         };
         /**
          * @brief visitor class that handles the verification of ingredients
@@ -469,6 +470,7 @@ namespace epicr
              * @return whether or not they are compatible
              */
             bool ingredients_compatible(ingredient a, ingredient b);
+            ingredient match_ingredients(ingredient a, const ingredient b);
 
         public:
             /**
@@ -477,7 +479,7 @@ namespace epicr
              * @param recipe the recipe that will be altered by the visitor
              */
 
-            void visit(recipe*);
+            void visit(recipe *);
             IngredientVerifier();
         };
 
@@ -509,7 +511,7 @@ namespace epicr
              * @param system The system to be scaled into
              * @return amount
              */
-            void convert_amount(amount* amnt, epicr_unit_system system);
+            void convert_amount(amount *amnt, epicr_unit_system system);
 
         public:
             /**
@@ -517,7 +519,7 @@ namespace epicr
              *
              * @param recipe the recipe that will be altered by the visitor
              */
-            void visit(recipe*);
+            void visit(recipe *);
             AmountConverter();
         };
 
@@ -533,7 +535,7 @@ namespace epicr
              *
              * @param rcp a pointer to the recipe that is to be updated.
              */
-            void set_servings_default_value(recipe* rcp);
+            void set_servings_default_value(recipe *rcp);
             /**
              * @brief checks whether or not the mandatory fields are all specified.
              * Provides error if the field is not found
@@ -541,7 +543,7 @@ namespace epicr
              * @param rcp a pointer to the recipe to check on.
              * A const, as the recipe is only used for verification and not updated.
              */
-            void check_mandatory_fields(const recipe* rcp);
+            void check_mandatory_fields(const recipe *rcp);
 
         public:
             /**
@@ -549,9 +551,22 @@ namespace epicr
              *
              * @param recipe the recipe that will be altered by the visitor
              */
-            void visit(recipe*);
+            void visit(recipe *);
             MandatoryFields();
         };
+
+        const double G_TO_KG = 0.001;
+        const double OZ_TO_LBS = 0.0625;
+        
+        const double ML_TO_DL = 0.01;
+        const double DL_TO_L = 0.1;
+        const double FLOZ_TO_CUP = 0.125;
+        const double CUP_TO_QT = 0.25;
+        const double QT_TO_GAL = 0.25;
+
+        const double MM_TO_CM = 0.1;
+        const double CM_TO_M = 0.01;
+        const double IN_TO_FT = 1.f/12;
 
         const double G_TO_OZ = 0.035;
         const double KG_TO_LBS = 2.2046;
@@ -573,42 +588,144 @@ namespace epicr
             return (deg - 32) * 5 / 9;
         };
 
-        rcp_ret visit_all(recipe* rcp);
+        rcp_ret visit_all(recipe *rcp);
 
     }
 
-    void compress(std::string filepath);
-    void decompress(std::string filepath);
-    /*returns a new string with all chars in the input string in lowercase*/
+    /**
+     * @brief return a new string with all chars of the input string converted to lowercase.
+     *
+     * @param std::string the input string.
+     * @return returns the input string in lowercase.
+     */
     std::string to_lower(std::string);
-    /*returns a new string where all types of spaces to right is stripped from the input string */
+    /**
+     * @brief returns a new string where all types of spaces to the right is stripped from the input string.
+     * @param std::string the input string to strip from.
+     * @return retuns the input string with right spaces stripped.
+     */
     std::string strip_spaces_right(std::string);
-    /* converts a double to a string - also rounds to the nearest 2 decimals */
-    std::string double_to_string(double);
-    /* converts an amount to a printable string */
+    /**
+     * @brief returns a new string based on a number of type double. Also round it to the nearest 2 decimals.
+     * @param double the number of type double.
+     * @return the converted number of type double rounded to nearest 2 decimals.
+     *
+     */
+    std::string round_double_to_string(double);
+    /**
+     * @brief return a printable string based on an epicr-amount.
+     * @param amount a struct type used as amount for ingredients in the recipe struct.
+     * @return the printable string based on the amount.
+     */
     std::string amount_to_string(amount);
 
-    bool string_ends_with(std::string const& value, std::string const& ending);
-
-    /*return whether or not an ingredient with that name exists in the unordered map*/
+    /**
+     * @brief returns whether or not the string end with a substring.
+     *
+     * @param value the string to check on.
+     * @param ending the substring to check with.
+     * @return true, if the string ends with the substring.
+     * @return false if the string does not end with the substring.
+     */
+    bool string_ends_with(std::string const &value, std::string const &ending);
+    /**
+     * @brief return whether or not an ingredient with that name exists in an unordered map
+     * @param std::string the ingredient name
+     * @param std::unordered_map<std::string, ingredient> a map with the ingredient name as a first value and the ingredient as second value
+     * @return true, if an ingredient with that name exist in the map
+     * @return false, if an ingredient with that name does not exist in the map
+     */
     bool ingredient_in_map(std::string, std::unordered_map<std::string, ingredient>);
-    /* Print the contents of a token to stdout */
+    /**
+     * @brief Print the contents of a token to stdout.
+     * @param epicr_token The token to print out.
+     */
     void print_token(epicr_token);
 
+    /**
+     * @brief open a file to use in the output generation
+     *
+     * @param filename name of the file to be opened
+     * @return std::ifstream
+     */
     std::ifstream open_file(std::string filename);
 
+    /**
+     * @brief Generate the output from the parsed decorated structs
+     *
+     * @param filename
+     * @return true if the generation is successfull
+     * @return false if the generation is unsuccesfull,
+     * for example if the outputfile is already open
+     */
     bool generate_html(recipe, std::string filename);
 
+    /**
+     * @brief Parse a recipe from a given file
+     *
+     * @param filename name of desired input file
+     * @return parse_ret, parser return object
+     */
     parse_ret parse_recipe(std::string filename);
+    /**
+     * @brief Overload function to parse a recipe,
+     * that takes command line arguments instead of just a file name
+     *
+     * @return parse_ret, parser return object
+     */
     parse_ret parse_recipe(cmd_args);
+    /**
+     * @brief Parse a recipe from a given file, with no prints to the console
+     *
+     * @param filename name of desired input file
+     * @return parse_ret, parser return object
+     */
     parse_ret parse_recipe_silent(std::string filename);
+    /**
+     * @brief Overload function to parse a recipe,
+     * that takes command line arguments instead of just a file name,
+     * with no prints to the console
+     *
+     * @return parse_ret, parser return object
+     */
     parse_ret parse_recipe_silent(cmd_args);
+    /**
+     * @brief Function used in testing to parse a string instead of a file
+     *
+     * @param recipeExcerpt input string
+     * @return parse_ret, parser return object
+     */
     parse_ret parse_string(std::string recipeExcerpt);
+    /**
+     * @brief Function used in testing to parse a string instead of a file
+     * with no prints to the console
+     *
+     * @param str input string
+     * @return parse_ret, parser return object
+     */
     parse_ret parse_string_silent(std::string str);
-    parse_ret parse_string_silent(std::string recipeExcerpt, Parser* parser);
-
-    rcp_ret ingredient_verify_recipe(recipe*);
+    /**
+     * @brief Overloaded function used in testing to parse a string instead of a file
+     * with no prints to the console
+     *
+     * @param recipeExcerpt input string
+     * @param parser input parser
+     * @return parse_ret, parser return object
+     */
+    parse_ret parse_string_silent(std::string recipeExcerpt, Parser *parser);
+    /**
+     * @brief Visitor function to verify ingredients in a recipe
+     *
+     * @return rcp_ret, parser return object
+     */
+    rcp_ret ingredient_verify_recipe(recipe *);
 
     /* Command line argument related declarations */
-    void parse_cmd_args(int argc, char** argv);
+    /**
+     * @brief Parses command line arguments to the clargs struct of the parser class
+     *
+     * @param argc amount of clargs
+     * @param argv char array of clargs
+     */
+    void parse_cmd_args(int argc, char **argv);
 }

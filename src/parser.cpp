@@ -74,7 +74,6 @@
 #pragma endregion
 
 std::vector<std::string> optional_fields = {
-
 	"description",
 	"amount",
 	"nutrients",
@@ -91,6 +90,8 @@ namespace epicr
 
 	Parser::Parser()
 	{
+		warnings = std::vector<std::string>();
+		silent = false;
 	}
 	Parser::Parser(Lexer *lexer_r)
 	{
@@ -263,6 +264,7 @@ namespace epicr
 			{
 				if (!std::filesystem::exists(clargs.input_filepath))
 				{
+					WARN("Cannot import recipes from non-file inputs", ctoken);
 					goto out_ref;
 				}
 
@@ -392,7 +394,7 @@ namespace epicr
 	{
 		std::vector<instruction_word> Body;
 
-		while (utoken.type != E_TT_COLON && utoken.type != E_TT_EOF)
+		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
 			// has yield or update
 			if (ctoken.word == "yield" && utoken.type == E_TT_COLON)

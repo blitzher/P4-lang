@@ -27,11 +27,11 @@ void strip_spaces_right()
     test_lib::expect_equal_s(epicr::strip_spaces_right("hello!    "), "hello!");
 }
 
-void double_to_string()
+void round_double_to_string()
 {
     test_lib::REGISTER;
 
-    test_lib::expect_equal_s(epicr::double_to_string(2.5f), "2.50");
+    test_lib::expect_equal_s(epicr::round_double_to_string(2.5f), "2.50");
 }
 
 void amount_to_string()
@@ -52,7 +52,7 @@ int main()
     token_type_to_string();
     to_lower();
     strip_spaces_right();
-    double_to_string();
+    round_double_to_string();
     amount_to_string();
 
     test_lib::print_recap();

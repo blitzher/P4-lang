@@ -67,12 +67,12 @@ remove: clean
 	@echo "Executables removed!"
 
 $(T_TARGETS)::
-	@echo "Running \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
+	@echo "\033[kRunning \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
 
 # runnable targets 
 run: $(BINDIR)/$(TARGET)
-	./$< examples/Carbonara.rcp -o dist
+	./$< examples/Carbonara.rcp
 
 run-rel: $(BINDIR)/$(TARGET)
 	./$< examples/burgers.rcp -o dist
@@ -92,4 +92,5 @@ gui: $(BINDIR)/$(TARGET)
 	python3 src/GUI.py
 	
 
-	
+ducks: doxyfile
+	doxygen doxyfile

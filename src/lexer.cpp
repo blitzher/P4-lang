@@ -8,9 +8,9 @@ using namespace std;
 struct compare
 {
     char key;
-    compare(char const& i) : key(i) {}
+    compare(char const &i) : key(i) {}
 
-    bool operator()(char const& i)
+    bool operator()(char const &i)
     {
         return (i == key);
     }
@@ -21,15 +21,19 @@ struct compare
 #define CH_V_CONTAINS(ARR, VALUE) \
     (any_of(ARR.begin(), ARR.end(), compare(VALUE)))
 
-#define EOF_TOKEN_OBJECT { "EOF", E_TT_EOF, token_count, line_num }
+#define EOF_TOKEN_OBJECT                       \
+    {                                          \
+        "EOF", E_TT_EOF, token_count, line_num \
+    }
 
 namespace epicr
 {
-    vector<char> token_breakers = { ' ', '\n', 0x0d, ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*' };
+    vector<char> token_breakers = {' ', '\n', 0x0d, ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*'};
 
 #pragma region Lexer implementation
 
-    void Lexer::init() {
+    void Lexer::init()
+    {
         line_num = 1;
         token_count = 0;
         can_return_pre_eof_token = false;
@@ -37,13 +41,13 @@ namespace epicr
         is_peaking = false;
     }
 
-    Lexer::Lexer(ifstream& file) : istream(file)
+    Lexer::Lexer(ifstream &file) : istream(file)
     {
         ready = file.is_open();
         init();
     }
 
-    Lexer::Lexer(std::istream& stream) : istream(stream)
+    Lexer::Lexer(std::istream &stream) : istream(stream)
     {
         ready = !stream.eof();
         init();
@@ -51,9 +55,6 @@ namespace epicr
 
     epicr_token Lexer::next_token()
     {
-        // std::cout << can_return_pre_eof_token << ready << "getting token\n";
-        // print_token(pre_eof_token);
-
         /* Check if the file stream is ended */
         if (!ready)
         {
@@ -72,7 +73,6 @@ namespace epicr
                 ready = false;
                 return EOF_TOKEN_OBJECT;
             }
-
         }
         else if (istream.eof())
         {
@@ -88,7 +88,8 @@ namespace epicr
         while (istream.get(ch) && !istream.eof())
         {
             /* interpret tabs as spaces */
-            if (ch == '\t') ch = ' ';
+            if (ch == '\t')
+                ch = ' ';
 
             if (CH_V_CONTAINS(token_breakers, ch))
             {
@@ -105,7 +106,7 @@ namespace epicr
                         vtoken.push_back(ch);
                         istream.get(ch);
                     } while (!istream.eof() && (ch == vtoken[0] ||                 /* repeating space and LF endings */
-                        (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings (0xa is newline) [Windows] */
+                                                (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings (0xa is newline) [Windows] */
 
                     if (vtoken[0] == '\n')
                     {
@@ -149,7 +150,7 @@ namespace epicr
         if (stoken.size() == 0)
             return next_token();
 
-        epicr_token token{ stoken, token_type(stoken), token_count++, line_num };
+        epicr_token token{stoken, token_type(stoken), token_count++, line_num};
 
         /* store most recent token, in case we were peaking, and hit eof */
         if (is_peaking)
@@ -158,7 +159,8 @@ namespace epicr
             if (istream.eof())
                 can_return_pre_eof_token = true;
         }
-        else if (!pre_eof_tokens.empty()) {
+        else if (!pre_eof_tokens.empty())
+        {
             pre_eof_tokens.clear();
         }
         else if (istream.eof())
@@ -256,7 +258,6 @@ namespace epicr
         epicr_token token;
         is_peaking = true;
         int before_peek_eof_index = pre_eof_index;
-
 
         for (int i = 0; i < amnt; i++)
         {

@@ -65,7 +65,7 @@ namespace epicr
 	{
 		string result = "<li>" + ingredients[i].name + " ";
 		if (!ingredients[i].amount.is_uncountable)
-			result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+			result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		return result;
 	}
 
@@ -78,7 +78,7 @@ namespace epicr
 			if (ingredients[i].is_ingredient_ref)
 			{
 				result += "<li><a class='is_ingredient_ref' target='_blank'>" + ingredients[i].name + " ";
-				result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit) + "</a>";
+				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit) + "</a>";
 			}
 			else if (ingredients[i].is_optional)
 				continue;
@@ -124,7 +124,7 @@ namespace epicr
 			return "";
 		for (size_t i = 0; i < nutrients.size(); i++)
 		{
-			std::string number = epicr::double_to_string(nutrients[i].amount.number);
+			std::string number = epicr::round_double_to_string(nutrients[i].amount.number);
 			std::string unit = nutrients[i].amount.unit;
 			result += "<li>" + nutrients[i].name + " (" + number + " " + unit + ")</li>";
 		}
@@ -142,7 +142,7 @@ namespace epicr
 				result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
-				result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
 		result += "</h5>";
 		return result;
@@ -164,16 +164,30 @@ namespace epicr
 		return result;
 	}
 
+	/*return a new string with its newlines converted to <br>'s*/
+	std::string newlines_in_html(string a_string)
+	{
+		for (size_t i = 0;i<a_string.size();i++) 
+		{
+			if (a_string[i] == '\n')
+			{
+				a_string.replace(i,1,"<br>");
+			}
+		}
+		return a_string;
+	}
+
+	
 	/* construct HTML string for instructions body */
 	string insert_instruction_body(std::vector<instruction_word> body)
 	{
 		string result = "<p class='instruction-body'>";
 		for (size_t i = 0; i < body.size(); i++)
-		{
-			result += body[i].spelling;
+		{	
+			result += newlines_in_html(body[i].spelling);
 			if (body[i].is_amount == true)
 			{
-				result += "<text class='number'>" + epicr::double_to_string(body[i].value.number) + "</text>";
+				result += "<text class='number'>" + epicr::round_double_to_string(body[i].value.number) + "</text>";
 				result += " <text class='unit'>" + body[i].value.unit + "</text>";
 			}
 		}
@@ -191,7 +205,7 @@ namespace epicr
 				result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
-				result += generate_ingredient_html(epicr::double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
 		result += "</h5>";
 		return result;
@@ -203,10 +217,11 @@ namespace epicr
 		if (description == "")
 			return "";
 		string result = "<div class='collapsible-wrapper'><div class='arrow-down'></div><h3 class='collapsible'>";
-		result += "Description</h3></div><div class='collapsible-body'>" + description + "</div>";
+		result += "Description</h3></div><div class='collapsible-body'>" + newlines_in_html(description) + "</div>";
 		return result;
 	}
-
+	
+	
 	// find a string in another string and replace it with a third string
 	bool replace(string &str, const string &from_string, const string &to_string)
 	{
