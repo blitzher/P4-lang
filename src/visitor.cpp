@@ -84,7 +84,7 @@ namespace epicr
         unit_aliases["g"] = {"g", "gram", "grams"};
         unit_aliases["kg"] = {"kg", "kilogram", "kgs", "kilograms"};
         unit_aliases["oz"] = {"oz", "ounce", "ounces"};
-        unit_aliases["lbs"] = {"lbs", "pounds"};
+        unit_aliases["lbs"] = {"lbs", "pounds","lb"};
 
         unit_aliases["ml"] = {"ml", "milliliter"};
         unit_aliases["dl"] = {"dl", "deciliter"};
@@ -172,12 +172,6 @@ namespace epicr::visitor
 
                 if (ingr.amount.is_relative_amount)
                 {
-                    if (!ingredient_in_map(ingr.name, original_symbols) && !(ingr.amount.relative_amount == "rest"))
-                    {
-                        ERR("relative amounts can only be used for ingredients in the ingredient list. " + ingr.name + " is not in the ingredient list");
-                        return;
-                    }
-
                     switch (ingr.amount.relative_amount[0])
                     {
                     case 'r': /* rest */
@@ -233,10 +227,11 @@ namespace epicr::visitor
                     yield = match_ingredients(yield, symbols[yield.name]);
                     symbols[yield.name].amount.number += yield.amount.number;
                 }
-                /* otherwise, add it to the symbol table */
+                /* otherwise, add it to both symbol tables */
                 else
                 {
                     symbols[yield.name] = yield;
+                    original_symbols[yield.name] = yield;
                 }
             }
         }
