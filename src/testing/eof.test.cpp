@@ -285,6 +285,69 @@ void ingredient_no_unit_before_eof_matches()
 		test_lib::expect_equal_s(rcp.ingredients[2].amount.unit, "");
 	}
 }
+void instruction_with_body_eof() {
+	test_lib::REGISTER;
+	
+	std::vector<std::string> inputStrings =  {"this is body 12 c", "body is a body body"};
+
+	for (auto body : inputStrings) {
+		
+		std::string testString1 = "title:pasta ingredients: water instructions: with(water):" + body;
+		auto recipie1 = epicr::parse_string_silent(testString1);
+
+		auto rcp1 = recipie1.recipe;
+
+		size_t actual_instruction_body_size = rcp1.instructions[0].body.size();
+		std::string actual_instruction_body = "";
+		for (size_t i = 0; i < actual_instruction_body_size; i++)
+		{
+		actual_instruction_body += rcp1.instructions[0].body[i].spelling;
+		if (rcp1.instructions[0].body[i].is_amount)
+			{
+				actual_instruction_body += epicr::round_double_to_string(rcp1.instructions[0].body[i].value.number) + " ";
+				if (rcp1.instructions[0].body[i].value.unit != "")
+					actual_instruction_body += rcp1.instructions[0].body[i].value.unit + " ";
+			}
+		}
+
+		test_lib::expect_equal_s(body, actual_instruction_body);
+		test_lib::expect_equal_i(rcp1.instructions[0].body.size(),9);
+	}
+} 
+
+
+
+void instruction_using_body_eof() {
+	test_lib::REGISTER;
+	
+	std::vector<std::string> inputStrings =  {"this is a body body body", "body is a oven 9 C"};
+	std::string testString1;
+
+
+	for (auto body : inputStrings) {
+		
+		testString1 = "title:pasta ingredients: water instructions: using(water):" + body;
+		auto recipie1 = epicr::parse_string_silent(testString1);
+		auto rcp1 = recipie1.recipe;
+		//std::cout << recipie1.has_err;
+
+		size_t actual_instruction_body_size = rcp1.instructions[0].body.size();
+		std::string actual_instruction_body = "";
+		for (size_t i = 0; i < actual_instruction_body_size; i++)
+		{
+		actual_instruction_body += rcp1.instructions[0].body[i].spelling;
+		if (rcp1.instructions[0].body[i].is_amount)
+			{
+				actual_instruction_body += epicr::round_double_to_string(rcp1.instructions[0].body[i].value.number) + " ";
+				if (rcp1.instructions[0].body[i].value.unit != "")
+					actual_instruction_body += rcp1.instructions[0].body[i].value.unit + " ";
+			}
+		}
+
+		test_lib::expect_equal_s(body, actual_instruction_body);
+		test_lib::expect_equal_i(rcp1.instructions[0].body.size(),11);
+	}
+} 
 
 void empty_yield_before_eof_matches()
 {
@@ -360,10 +423,13 @@ int main(void)
 	ingredient_no_amount_before_eof_matches();
 	ingredient_amount_and_unit_before_eof_matches();
 	ingredient_no_unit_before_eof_matches();
+	instruction_with_body_eof();
+	instruction_using_body_eof();
 	empty_yield_before_eof_matches();
 	yield_no_amount_before_eof_matches();
 	yield_no_unit_before_eof_matches();
 	uncountable_yield_before_eof_matches();
+
 	test_lib::print_recap();
 	return test_lib::result();
 }
