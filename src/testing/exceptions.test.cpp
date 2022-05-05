@@ -169,7 +169,7 @@ void visit_no_repeating_ingredients_exception()
     epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/visitor_exception_recipes/duplicateIngredient.rcp").recipe;
     auto ingrvisit = epicr::visitor::IngredientVerifier();
     auto final_rcp = epicr::ingredient_verify_recipe(&rcp);
-    test_lib::expect_exception(final_rcp, "duplicate ingredient found: egg");
+    test_lib::expect_exception(final_rcp, "duplicate ingredient, egg was found");
 }
 
 void visit_relative_amount_only_on_ingredients_in_ingredient_list_exception()
