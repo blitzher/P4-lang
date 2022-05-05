@@ -27,9 +27,9 @@
 #define E_RI_ASSUME_REST 16 // 0b0001 0000
 
 /* Read word args */
-#define E_RW_NONE 0
-#define E_RW_NUMBERS 1
-#define E_RW_PARENTHESIS 2
+#define E_RW_NONE 0         // 0000
+#define E_RW_NUMBERS 1      // 0001
+#define E_RW_PARENTHESIS 2  // 0010
 
 #pragma endregion
 

@@ -429,7 +429,6 @@ namespace epicr
 		}
 		if (Body.size() == 0)
 			ERR_VOID("Instruction body cannot be empty", ctoken);
-			
 		current_instruction->body = Body;
 	}
 

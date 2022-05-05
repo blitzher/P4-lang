@@ -143,7 +143,7 @@ namespace epicr::visitor
             uniqueIngredients.insert(ingr.name);
             if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */
             {
-                ERR("duplicate ingredient found: " + ingr.name);
+                ERR("duplicate ingredient, " + ingr.name + " was found");
                 return;
             }
         }
@@ -165,9 +165,8 @@ namespace epicr::visitor
                     break;
                 if (!ingredient_in_map(ingr.name, symbols))
                 {
-                    char *err = (char *)malloc(100);
-                    sprintf(err, "Ingredient <%s> used in instruction not found in ingredients list", ingr.name.c_str());
-                    ERR(err);
+                    std::string err_msg = "Ingredient, " + ingr.name + " used in instruction not found in ingredients list";
+                    ERR(err_msg);
                     return;
                 }
 
@@ -196,18 +195,13 @@ namespace epicr::visitor
                         ingr.amount = original_symbols[ingr.name].amount;
                         break;
                     default:
-                        char *err = (char *)malloc(100);
-                        sprintf(err, "Received unexpected relative amount [%s] for ingredient [%s]", ingr.amount.relative_amount.c_str(), ingr.name.c_str());
-                        ERR(err);
+                        std::string err_msg = "Received unexpected relative amount [" +
+                                              ingr.amount.relative_amount + "] for ingredient, " + ingr.name;
+                        ERR(err_msg);
                         return;
                     }
                 }
-                if (!map_contains(symbols, ingr.name))
-                {
-                    /* TODO: sprintf into error message with ingr name */
-                    ERR("Ingredient used in instruction not found in ingredients list");
-                    return;
-                }
+                
                 amount original_amount = ingr.amount;
                 if (ingredients_compatible(symbols[ingr.name], ingr))
                 {
@@ -216,7 +210,10 @@ namespace epicr::visitor
 
                 if (ingr.amount.number - symbols[ingr.name].amount.number > FLT_EPSILON)
                 {
-                    ERR("Used too much of ingredient, " + ingr.name);
+                    std::string err_msg = "Used too much of ingredient, " + ingr.name + ". " +
+                                          epicr::round_double_to_string(symbols[ingr.name].amount.number) + " is available, and " +
+                                          epicr::round_double_to_string(ingr.amount.number) + " was used";
+                    ERR(err_msg);
                     return;
                 }
                 symbols[ingr.name].amount.number -= ingr.amount.number;
@@ -231,11 +228,6 @@ namespace epicr::visitor
                 {
                     if (!ingredients_compatible(symbols[yield.name], yield))
                     {
-                        char *err_msg = (char *)malloc(200);
-                        sprintf(err_msg, "Differing unit types for yield\
-\nIn list: %s\n_in yield: %s\nFor ingredient '%s' in instruction #%i\n",
-                                symbols[yield.name].amount.unit.c_str(), yield.amount.unit.c_str(), yield.name.c_str(), instruction_count);
-                        ERR(err_msg);
                         return;
                     }
                     yield = match_ingredients(yield, symbols[yield.name]);
@@ -259,14 +251,16 @@ namespace epicr::visitor
                 title_ingredient_remaining = true;
             else if (ingr.amount.number > FLT_EPSILON && !ingr.amount.is_uncountable)
             {
-                char *err_msg = (char *)malloc(200);
-                sprintf(err_msg, "Unused ingredient: %s %s",
-                        ingr.name.c_str(), amount_to_string(ingr.amount).c_str());
+
+                std::string err_msg = "Unused ingredient: " + ingr.name + amount_to_string(ingr.amount);
                 ERR(err_msg);
             }
         }
         if (!title_ingredient_remaining)
-            ERR("Title-ingredient must remain after all instructions have been executed");
+        {
+            std::string err_msg = "Title-ingredient, " + a_rcp->title + " must remain after all instructions have been executed";
+            ERR(err_msg);
+        }
     }
 
     bool IngredientVerifier::ingredients_compatible(ingredient a, ingredient b)
@@ -520,7 +514,7 @@ namespace epicr::visitor
                 if (unit_lower == alias)
                     return unit_aliases[pair.first][0];
 
-        ERR("No valid standard found for unit");
+        ERR("No valid standard found for unit, " + unit);
         return "";
     }
 
