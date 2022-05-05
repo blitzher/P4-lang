@@ -67,7 +67,7 @@ remove: clean
 	@echo "Executables removed!"
 
 $(T_TARGETS)::
-	@echo "Running \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
+	@echo "\033[kRunning \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
 
 # runnable targets 

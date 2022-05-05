@@ -28,6 +28,8 @@ namespace test_lib
 		std::string name;
 		state test_state;
 		std::string err_message;
+		int accept_count;
+		int deny_count;
 
 	} test_data;
 
