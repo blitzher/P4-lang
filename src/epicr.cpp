@@ -231,16 +231,18 @@ namespace epicr
 		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
 	}
-	parse_ret parse_string_silent(std::string recipeExcerpt, Parser *parser)
+  
+	parse_ret parse_string_silent(std::string recipeExcerpt, Parser *o_parser)
 	{
 		std::istringstream test_string(recipeExcerpt);
 		Lexer lexer(test_string);
 		Parser _parser(&lexer);
 		_parser.silence(true);
-		*parser = _parser;
-		recipe rcp = parser->Parse();
+		*o_parser = _parser;
+		recipe rcp = o_parser->Parse();
 
-		parse_ret ret = {rcp, parser->has_error, parser->error};
+		parse_ret ret = {rcp, o_parser->has_error, o_parser->error};
+
 
 		return ret;
 	}
