@@ -25,19 +25,22 @@ size_t c_str_size(char *c_str)
 }
 
 /* by default 0, set to 1 if any tests fail */
-int failed;
+int failed = 0;
+int accept_count = 0;
+int deny_count = 0;
 
 namespace test_lib
 {
 	void register_test(std::string func_name)
 	{
 		/* tests are by default unevaluated */
-		tests[func_name] = {func_name, UNEVALUATED, "Call \"accept\" or \"deny\" to evaluate"};
+		tests[func_name] = {func_name, UNEVALUATED, "Call \"accept\" or \"deny\" to evaluate", 0, 0};
 		most_recent_test = &tests[func_name];
 		/* epicr specific, to reset all recursion checking
 		 * between unit tests */
 		epicr::has_recurison_error = false;
 		epicr::included_recipes.clear();
+		accept_count = deny_count = 0;
 	}
 
 	void accept()
@@ -48,6 +51,7 @@ namespace test_lib
 			most_recent_test->test_state = ACCEPT;
 			most_recent_test->err_message = "";
 		}
+		most_recent_test->accept_count++;
 	}
 
 	void deny(std::string err_message)
@@ -55,6 +59,7 @@ namespace test_lib
 		CHECK_TESTS_NON_EMPTY();
 		most_recent_test->test_state = FAIL;
 		most_recent_test->err_message = err_message;
+		most_recent_test->deny_count++;
 		failed = 1;
 	}
 
@@ -255,9 +260,9 @@ namespace test_lib
 			}
 
 			if (test.test_state == ACCEPT)
-				printf("%s\n", test.name.c_str());
+				printf("%s (%i/%i)\n", test.name.c_str(), test.accept_count, test.accept_count + test.deny_count);
 			else
-				printf("%s: %s\n", test.name.c_str(), test.err_message.c_str());
+				printf("%s: %s (%i/%i)\n", test.name.c_str(), test.err_message.c_str(), test.accept_count, test.accept_count + test.deny_count);
 		}
 	}
 
