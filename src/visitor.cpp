@@ -14,6 +14,16 @@
         }                     \
     }
 
+#define WARN(msg)                                     \
+	{                                                 \
+        std::cout << "WARNING ON LINE "           \
+                    << __LINE__ << " (" << __FILE__ \
+                    << ":" << __FUNCTION__          \
+                    << ")" << std::endl;            \
+        std::cout << msg << std::endl;            \
+        std::cout << std::endl;                   \
+	}
+
 /* Check if something exits in the map. E.g checks if an ingredient is in the ingredient list */
 template <typename T, typename A>
 bool map_contains(std::unordered_map<T, A> map, T key)
@@ -175,6 +185,8 @@ namespace epicr::visitor
                     switch (ingr.amount.relative_amount[0])
                     {
                     case 'r': /* rest */
+                        if (symbols[ingr.name].amount.number == 0)
+                            WARN("Ingredient, " + ingr.name + " has already been completely consumed, and therefore it has no impact in this context");
                         ingr.amount = symbols[ingr.name].amount;
                         break;
                     case 'h': /* half */
