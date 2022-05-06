@@ -37,14 +37,14 @@ class App(tk.Frame):
         self.output_dir_button.pack(anchor=W)
         tk.Radiobutton(
             self,
-            text="Fancy HTML style",
+            text="Fancy Output style",
             variable=self.html_buttons,
             value=1,
             command=self.select_style,
         ).pack(anchor=W)
         tk.Radiobutton(
             self,
-            text="Basic HTML style",
+            text="Basic Output style",
             variable=self.html_buttons,
             value=2,
             command=self.select_style,

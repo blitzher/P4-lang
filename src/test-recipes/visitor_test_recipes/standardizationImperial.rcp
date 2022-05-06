@@ -1,0 +1,18 @@
+title: Pasta
+
+kitchenware:
+    stuff
+    
+ingredients:
+    wheatflour [1 ounce],
+    flour [1 pounds],
+    water [1 quarts],
+    cocaine [1 inch]
+
+instructions:
+        
+    using(stuff):
+        hello!
+        
+        yield: 
+            Pasta
