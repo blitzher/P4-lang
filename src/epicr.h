@@ -27,9 +27,9 @@
 #define E_RI_ASSUME_REST 16 // 0b0001 0000
 
 /* Read word args */
-#define E_RW_NONE 0
-#define E_RW_NUMBERS 1
-#define E_RW_PARENTHESIS 2
+#define E_RW_NONE 0         // 0000
+#define E_RW_NUMBERS 1      // 0001
+#define E_RW_PARENTHESIS 2  // 0010
 
 #pragma endregion
 
@@ -44,8 +44,8 @@ namespace epicr
 
     typedef enum epicr_html_style
     {
-        E_HS_BASIC,
-        E_HS_FANCY
+        E_OS_BASIC,
+        E_OS_FANCY
     } epicr_html_style;
 
     typedef struct amount_s
@@ -160,7 +160,7 @@ namespace epicr
 
     typedef struct rcp_ret_s
     {
-        recipe *recipe;
+        recipe* recipe;
         bool has_err;
         std::string err;
     } rcp_ret;
@@ -191,7 +191,7 @@ namespace epicr
     class Lexer
     {
     private:
-        std::istream &istream;
+        std::istream& istream;
         uint token_count;
         uint line_num;
         bool ready;
@@ -212,14 +212,14 @@ namespace epicr
          * @param `std::ifstream` Is the input file stream
          * @param `file` The file you want to read from
          */
-        Lexer(std::ifstream &file);
+        Lexer(std::ifstream& file);
 
         /**
          * @brief Constructor that can take an input stream such it can read and interpret input from sequences of characters
          * @param `std::istream` Is used for input
          * @param `file` The file you want to read from
          */
-        Lexer(std::istream &file);
+        Lexer(std::istream& file);
 
         /* Return whether or not the Lexer is ready to yield tokens */
         bool DEBUG_MODE;
@@ -286,90 +286,90 @@ namespace epicr
     {
     private:
         bool silent;
-        Lexer *lexer;
+        Lexer* lexer;
         /**
          * @brief Parses the title of the recipe. When this function is called, we are on the "title"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseTitle(recipe *);
+        void ParseTitle(recipe*);
         /**
          * @brief Parses the description of the recipe. When this function is called, we are on the "description"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseDescription(recipe *);
+        void ParseDescription(recipe*);
         /**
          * @brief Parses the servings of the recipe. When this function is called, we are on the "servings"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseServings(recipe *);
+        void ParseServings(recipe*);
         /**
          * @brief Parses the nutrients of the recipe. When this function is called, we are on the "nutrients"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseNutrients(recipe *);
+        void ParseNutrients(recipe*);
         /**
          * @brief Parses the ingredients of the recipe. When this function is called, we are on the "ingredients"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseIngredients(recipe *);
+        void ParseIngredients(recipe*);
         /**
          * @brief Parses the kitchenware of the recipe. When this function is called, we are on the "kitchenware"-header token,
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseKitchenware(recipe *);
+        void ParseKitchenware(recipe*);
         /**
          * @brief Parses the tags of the recipe. When this function is called, we are on the "tags"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseTags(recipe *);
+        void ParseTags(recipe*);
         /**
          * @brief Parses the time of the recipe. When this function is called, we are on one of the three "time"-headers
          * (total-time, prep-time, or cook-time)
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseTime(recipe *);
+        void ParseTime(recipe*);
         /**
          * @brief Parses the instructions of the recipe. When this function is called, we are on the "instructions"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
          *
          */
-        void ParseInstructions(recipe *);
+        void ParseInstructions(recipe*);
         /**
          * @brief helper function for ParseInstructions. Parses the "with" header of the instruction.
          * When this function is called we are on the "with"-header, and we end on the token after the end parenthesis
          *
          * @param current_instruction a pointer to the instruction of the recipe object to be updated in the function
          */
-        void ParseInstructionHeaderWith(instruction *current_instruction);
+        void ParseInstructionHeaderWith(instruction* current_instruction);
         /**
          * @brief helper function for ParseInstructions. Parses the "using" header of the instruction.
          * When this function is called we are on the "using"-header, and we end on the token after the end parenthesis
          *
          * @param current_instruction a pointer to the instruction of the recipe object to be updated in the function
          */
-        void ParseInstructionHeaderUsing(instruction *current_instruction);
+        void ParseInstructionHeaderUsing(instruction* current_instruction);
         /**
          * @brief helper function for ParseInstructions. Parses the body of the instruction.
          * When this function is called we are on the first word of the body and end on the token after the final word of the body.
          *
          * @param current_instruction a pointer to the instruction of the recipe object to be updated in the function
          */
-        void ParseInstructionBody(instruction *current_instruction);
+        void ParseInstructionBody(instruction* current_instruction);
         /**
          * @brief helper function for ParseInstructions. Parses the "yield" header of the instruction.
          * When this function is called we are on the "yield"-header, and we end on the token after the final ingredient
          *
          * @param current_instruction a pointer to the instruction of the recipe object to be updated in the function
          */
-        void ParseInstructionYield(instruction *current_instruction);
+        void ParseInstructionYield(instruction* current_instruction);
         /**
          * @brief Reads an ingredient and a possible postfix and/or amount from the current position.
          *
@@ -429,7 +429,7 @@ namespace epicr
          *
          */
         void silence(bool);
-        Parser(Lexer *lexer_r);
+        Parser(Lexer* lexer_r);
         Parser();
         ~Parser();
     };
@@ -449,7 +449,7 @@ namespace epicr
              * @brief the main function of the visitor. All subclasses of the visitor uses this function to visit recipe.
              *
              */
-            void visit(recipe *);
+            void visit(recipe*);
         };
         /**
          * @brief visitor class that handles the verification of ingredients
@@ -478,7 +478,7 @@ namespace epicr
              * @param recipe the recipe that will be altered by the visitor
              */
 
-            void visit(recipe *);
+            void visit(recipe*);
             IngredientVerifier();
         };
 
@@ -510,7 +510,7 @@ namespace epicr
              * @param system The system to be scaled into
              * @return amount
              */
-            void convert_amount(amount *amnt, epicr_unit_system system);
+            void convert_amount(amount* amnt, epicr_unit_system system);
 
         public:
             /**
@@ -518,7 +518,7 @@ namespace epicr
              *
              * @param recipe the recipe that will be altered by the visitor
              */
-            void visit(recipe *);
+            void visit(recipe*);
             AmountConverter();
         };
 
@@ -534,7 +534,7 @@ namespace epicr
              *
              * @param rcp a pointer to the recipe that is to be updated.
              */
-            void set_servings_default_value(recipe *rcp);
+            void set_servings_default_value(recipe* rcp);
             /**
              * @brief checks whether or not the mandatory fields are all specified.
              * Provides error if the field is not found
@@ -542,7 +542,7 @@ namespace epicr
              * @param rcp a pointer to the recipe to check on.
              * A const, as the recipe is only used for verification and not updated.
              */
-            void check_mandatory_fields(const recipe *rcp);
+            void check_mandatory_fields(const recipe* rcp);
 
         public:
             /**
@@ -550,13 +550,31 @@ namespace epicr
              *
              * @param recipe the recipe that will be altered by the visitor
              */
-            void visit(recipe *);
+            void visit(recipe*);
             MandatoryFields();
         };
 
+        /**
+         * @brief visitor class that handles the verification of mandatory fields
+         *
+         */
+        class IngredientSorter : public Visitor
+        {
+        public:
+            /**
+             * @brief the visit method of the IngredientSorter
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
+            void visit(recipe*);
+            IngredientSorter();
+        };
+
+
+
         const double G_TO_KG = 0.001;
         const double OZ_TO_LBS = 0.0625;
-        
+
         const double ML_TO_DL = 0.01;
         const double DL_TO_L = 0.1;
         const double FLOZ_TO_CUP = 0.125;
@@ -565,7 +583,7 @@ namespace epicr
 
         const double MM_TO_CM = 0.1;
         const double CM_TO_M = 0.01;
-        const double IN_TO_FT = 1.f/12;
+        const double IN_TO_FT = 1.f / 12;
 
         const double G_TO_OZ = 0.035;
         const double KG_TO_LBS = 2.2046;
@@ -587,7 +605,7 @@ namespace epicr
             return (deg - 32) * 5 / 9;
         };
 
-        rcp_ret visit_all(recipe *rcp);
+        rcp_ret visit_all(recipe* rcp);
 
     }
 
@@ -626,7 +644,7 @@ namespace epicr
      * @return true, if the string ends with the substring.
      * @return false if the string does not end with the substring.
      */
-    bool string_ends_with(std::string const &value, std::string const &ending);
+    bool string_ends_with(std::string const& value, std::string const& ending);
     /**
      * @brief return whether or not an ingredient with that name exists in an unordered map
      * @param std::string the ingredient name
@@ -721,13 +739,13 @@ namespace epicr
      * @param parser input parser
      * @return parse_ret, parser return object
      */
-    parse_ret parse_string_silent(std::string recipeExcerpt, Parser *parser);
+    parse_ret parse_string_silent(std::string recipeExcerpt, Parser* parser);
     /**
      * @brief Visitor function to verify ingredients in a recipe
      *
      * @return rcp_ret, parser return object
      */
-    rcp_ret ingredient_verify_recipe(recipe *);
+    rcp_ret ingredient_verify_recipe(recipe*);
 
     /* Command line argument related declarations */
     /**
@@ -736,5 +754,5 @@ namespace epicr
      * @param argc amount of clargs
      * @param argv char array of clargs
      */
-    void parse_cmd_args(int argc, char **argv);
+    void parse_cmd_args(int argc, char** argv);
 }

@@ -169,16 +169,7 @@ void visit_no_repeating_ingredients_exception()
     epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/visitor_exception_recipes/duplicateIngredient.rcp").recipe;
     auto ingrvisit = epicr::visitor::IngredientVerifier();
     auto final_rcp = epicr::ingredient_verify_recipe(&rcp);
-    test_lib::expect_exception(final_rcp, "duplicate ingredient found: egg");
-}
-
-void visit_relative_amount_only_on_ingredients_in_ingredient_list_exception()
-{
-    test_lib::REGISTER;
-    epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/visitor_exception_recipes/wrongRelativeAmount.rcp").recipe;
-    auto ingrvisit = epicr::visitor::IngredientVerifier();
-    auto final_rcp = epicr::ingredient_verify_recipe(&rcp);
-    test_lib::expect_exception(final_rcp, "relative amounts can only be used for ingredients in the ingredient list. b is not in the ingredient list");
+    test_lib::expect_exception(final_rcp, "duplicate ingredient 'egg' was found");
 }
 
 void visit_title_ingredient_must_remain_in_the_end_exception()
@@ -260,7 +251,6 @@ int main()
     parse_invalid_type_of_amount_exception();
     parse_body_cannot_be_empty_exception();
     visit_no_repeating_ingredients_exception();
-    visit_relative_amount_only_on_ingredients_in_ingredient_list_exception();
     read_words_empty_words_exception();
     visit_mandatory_fields_title_exception();
     visit_mandatory_fields_ingredients_exception();

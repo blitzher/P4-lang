@@ -69,7 +69,7 @@ namespace epicr
 		}
 
 		if(template_style == "HTML") {
-			string result = "<input type='number' class='servings' max='1000' min='0' oninput='update_numbers()'";
+			string result = "<input onClick='this.select();' type='number' class='servings' max='1000' min='0' oninput='update_numbers()'";
 			result += "onfocusout='update_numbers(this)' value=" + number + "> " + descriptor;
 			return result;
 		}

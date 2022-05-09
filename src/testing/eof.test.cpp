@@ -388,6 +388,7 @@ void yield_no_unit_before_eof_matches()
 		test_lib::expect_equal_s(rcp.instructions[0].yields[1].amount.unit, "");
 	}
 }
+
 void uncountable_yield_before_eof_matches()
 {
 	test_lib::REGISTER;

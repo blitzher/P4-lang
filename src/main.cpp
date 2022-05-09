@@ -22,7 +22,6 @@ int main(int argc, char **argv)
 	epicr::parse_cmd_args(argc, argv);
 
 	ifstream file = epicr::open_file(epicr::clargs.input_filepath);
-
 	cout << "Compiling " << epicr::clargs.input_filepath << endl;
 
 	epicr::Lexer my_lexer = epicr::Lexer(file);
@@ -39,15 +38,23 @@ int main(int argc, char **argv)
 		if (!vis_ret.has_err)
 		{
 			string output_file = epicr::clargs.output_filepath;
+			string file;
+			#ifdef _WIN32
+				file = epicr::clargs.input_filepath.substr(epicr::clargs.input_filepath.find_last_of("\\")+1,epicr::clargs.input_filepath.size());
+			#else
+				file = epicr::clargs.input_filepath.substr(epicr::clargs.input_filepath.find_last_of("/")+1,epicr::clargs.input_filepath.size());
+			#endif
+			string filename = file.substr(0,file.find_last_of("."));
+			
 			epicr::epicr_html_style choosen_style = epicr::clargs.choosen_style;
-			//epicr::epicr_html_style choosen_style = epicr::E_HS_FANCY;  // switch with above for html output also in parser
-			if(choosen_style == epicr::E_HS_FANCY) {
-				output_file.append("/" + my_recipe.title + ".html");
+			//epicr::epicr_html_style choosen_style = epicr::E_OS_FANCY;  // switch with above for html output also in parser
+			if(choosen_style == epicr::E_OS_FANCY) {
+				output_file.append("/" + filename + ".html");
 				epicr::generate_html(my_recipe, output_file);
 				printf("Wrote HTML file: %s\n", output_file.c_str());
 			}
-			else if (choosen_style == epicr::E_HS_BASIC){
-				output_file.append("/" + my_recipe.title + ".txt");
+			else if (choosen_style == epicr::E_OS_BASIC){
+				output_file.append("/" + filename + ".txt");
 				epicr::generate_txt(my_recipe, output_file);
 				printf("Wrote basic file: %s\n", output_file.c_str());
 			}
