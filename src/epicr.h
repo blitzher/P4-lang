@@ -554,6 +554,24 @@ namespace epicr
             MandatoryFields();
         };
 
+        /**
+         * @brief visitor class that handles the verification of mandatory fields
+         *
+         */
+        class IngredientSorter : public Visitor
+        {
+        public:
+            /**
+             * @brief the visit method of the IngredientSorter
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
+            void visit(recipe*);
+            IngredientSorter();
+        };
+
+
+
         const double G_TO_KG = 0.001;
         const double OZ_TO_LBS = 0.0625;
 

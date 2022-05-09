@@ -50,8 +50,8 @@ K key_of_value_in_map_vec(std::map<K, std::vector<VT>> map, VT val, K def)
     return def;
 }
 
-template <typename T, typename A>
-bool vec_contains(std::vector<T, A> vector, T value)
+template <typename T>
+bool vec_contains(std::vector<T> vector, T value)
 {
     for (const T& t : vector)
         if (value == t)
@@ -60,6 +60,14 @@ bool vec_contains(std::vector<T, A> vector, T value)
 }
 
 bool map_is_initalized = false;
+
+/* Indexed ingredients struct */
+typedef struct indexed_ingredient_s { epicr::ingredient ingr; int index; } indexed_ingredient;
+
+bool compare_indexed_ingredient(indexed_ingredient i1, indexed_ingredient i2)
+{
+    return (i1.index < i2.index);
+}
 
 namespace epicr
 {
@@ -755,11 +763,66 @@ namespace epicr::visitor
 
 #pragma endregion
 
+#pragma region IngredientSorter implementation
+    IngredientSorter::IngredientSorter() {
+
+    };
+
+    void IngredientSorter::visit(recipe* rcp) {
+        std::vector<indexed_ingredient> ordered_ingredients;
+        int index = 0;
+
+        /* get a collection of ingredients in the ingredients list */
+        std::vector<ingredient> existing_ingredients;
+        for (const auto& ingr : rcp->ingredients)
+            existing_ingredients.push_back(ingr);
+
+        for (const auto& inst : rcp->instructions) {
+            for (const auto& ingr : inst.ingredients) {
+
+                /* determine if ingredient in instruction is in ingredient list */
+                bool exists = false;
+                for (const auto& e_ingr : existing_ingredients)
+                {
+                    if (e_ingr.name == ingr.name)
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists)
+                    continue;
+
+                /* determine if ingredient in instruction is already indexed */
+                bool contained = false;
+                for (const auto& unique : ordered_ingredients) {
+                    if (ingr.name == unique.ingr.name)
+                        contained = true;
+                }
+
+                /* otherwise, add it */
+                if (!contained) {
+                    indexed_ingredient ii = { ingr, index++ };
+                    ordered_ingredients.push_back(ii);
+                }
+            }
+        }
+        std::sort(ordered_ingredients.begin(), ordered_ingredients.end(), compare_indexed_ingredient);
+
+        /* override the ingredients in the ingredient list with the sorted array */
+        for (const auto& ordered : ordered_ingredients) {
+            rcp->ingredients[ordered.index] = ordered.ingr;
+        }
+
+    }
+#pragma endregion
+
     rcp_ret visit_all(recipe* rcp)
     {
         auto ac_vis = AmountConverter();
         auto in_vis = IngredientVerifier();
         auto mf_vis = MandatoryFields();
+        auto is_vis = IngredientSorter();
 
         mf_vis.visit(rcp);
         if (mf_vis.has_error)
@@ -772,6 +835,8 @@ namespace epicr::visitor
         in_vis.visit(rcp);
         if (in_vis.has_error)
             return { {}, 1, " IngVer: " + in_vis.error };
+
+        is_vis.visit(rcp);
 
         return { rcp, 0, " Visitors: No error" };
     }
