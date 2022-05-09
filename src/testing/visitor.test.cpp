@@ -224,6 +224,21 @@ void resolved_fraction_relative() {
 
 }
 
+void sorts_ingredients() {
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/visitor_test_recipes/unsorted.rcp").recipe;
+
+	auto sorter = epicr::visitor::IngredientSorter();
+	sorter.visit(&rcp);
+
+	test_lib::expect_equal_s(rcp.ingredients[0].name, "A");
+	test_lib::expect_equal_s(rcp.ingredients[1].name, "B");
+	test_lib::expect_equal_s(rcp.ingredients[2].name, "C");
+	test_lib::expect_equal_s(rcp.ingredients[3].name, "D");
+
+}
+
 int main(void)
 {
 	no_error_on_valid_file();
@@ -242,6 +257,7 @@ int main(void)
 	mandatory_fields_check();
 	resolved_percentage_relative();
 	resolved_fraction_relative();
+	sorts_ingredients();
 	test_lib::print_recap();
 	return test_lib::result();
 }
