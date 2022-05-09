@@ -30,7 +30,7 @@ ingredients:
 
 instructions:
     using(pan):
-        Put your pan on the stove and set the stove to medium heat.
+        Put your pan on the stove and set the stove to [200 C].
     
     with(bacon) using(pan):
         Cook the bacon on the pan until it is crisp.
@@ -55,7 +55,6 @@ instructions:
         Remove the onion bacon mix from the heat and stir in the eggs and the cooked spaghetti, 
         and mix the dish well with the freshly grated parmesan.
         Season with salt and freshly ground pepper.
-
         yield:
             spaghetti carbonara
 

@@ -87,7 +87,7 @@ namespace epicr
         units_in_type[E_UT_LENGTH] = length_units;
 
         std::vector<std::string> temperature_units = {
-            "c", "f"};
+            "C", "F"};
         units_in_type[E_UT_TEMPERATURE] = temperature_units;
 
         /* alias' of the different units */
@@ -109,13 +109,13 @@ namespace epicr
         unit_aliases["in"] = {"in", "inch", "inches"};
         unit_aliases["ft"] = {"ft", "feet", "foot"};
 
-        unit_aliases["c"] = {"c", "celsius"};
-        unit_aliases["f"] = {"f", "fahrenheit"};
+        unit_aliases["C"] = {"C", "celsius"};
+        unit_aliases["F"] = {"F", "fahrenheit"};
 
         units_in_system[E_US_METRIC] = {
-            "g", "kg", "ml", "dl", "l", "mm", "cm", "c"};
+            "g", "kg", "ml", "dl", "l", "mm", "cm", "C"};
         units_in_system[E_US_IMPERIAL] = {
-            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "f"};
+            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "F"};
 
         map_is_initalized = true;
     }
@@ -597,10 +597,10 @@ namespace epicr::visitor
                 amnt->number = amnt->number * MM_TO_INCH;
                 amnt->unit = "in";
             }
-            else if (standardized == "c")
+            else if (standardized == "C")
             {
                 amnt->number = C_TO_F(amnt->number);
-                amnt->unit = "f";
+                amnt->unit = "F";
             }
         }
         else
@@ -655,10 +655,10 @@ namespace epicr::visitor
                 amnt->number = amnt->number / MM_TO_INCH;
                 amnt->unit = "mm";
             }
-            else if (standardized == "f")
+            else if (standardized == "F")
             {
                 amnt->number = F_TO_C(amnt->number);
-                amnt->unit = "c";
+                amnt->unit = "C";
             }
         }
     }

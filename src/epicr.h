@@ -415,7 +415,6 @@ namespace epicr
         bool DEBUG_MODE;
         std::vector<std::string> warnings;
         bool has_error;
-        std::vector<std::string> warnings;
         std::string original_amount;
         std::string error;
         epicr_token error_token;
