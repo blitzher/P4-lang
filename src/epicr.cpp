@@ -162,14 +162,12 @@ namespace epicr
 	parse_ret parse_recipe(std::string filename)
 	{
 		cmd_args args = { filename, E_OS_BASIC, "dist", E_US_NONE, false };
-		epicr::clargs = args;
 		return parse_recipe(args);
 	}
 
 	parse_ret parse_recipe_silent(std::string filename)
 	{
 		cmd_args args = { filename, E_OS_BASIC, "dist", E_US_NONE, true };
-		epicr::clargs = args;
 		return parse_recipe_silent(args);
 	}
 

@@ -298,7 +298,7 @@ namespace epicr
 						: rcp.servings.count)
 					: ingr.amount.number;
 
-				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
+				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / ingr.name).string() + ".html");
 			}
 		out_ref:
 			rcp->ingredients.push_back(ingr);
