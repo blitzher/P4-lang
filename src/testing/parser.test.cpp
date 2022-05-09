@@ -104,7 +104,7 @@ void parsed_ingredients()
 
 	if (rcp.ingredients.size() < 5)
 	{
-		char *m = (char *)malloc(100);
+		char* m = (char*)malloc(100);
 		sprintf(m, "Not all ingredients were parsed properly, found %zu ingredients", rcp.ingredients.size());
 		test_lib::deny(m);
 		return;
@@ -144,7 +144,7 @@ void instruction_has_correct_ingredients_name()
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
-	std::vector<std::string> ingredients = {"wheatflour", "egg", "salt", "water"};
+	std::vector<std::string> ingredients = { "wheatflour", "egg", "salt", "water" };
 	size_t ingredient_size = ingredients.size();
 	for (size_t i = 0; i < ingredient_size; i++)
 	{
@@ -248,10 +248,10 @@ void instruction_body_text_is_parsed_correctly()
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	size_t actual_instruction_body_size = rcp.instructions[0].body.size();
 	std::string expected_instruction_body = std::string("Put the 300 g wheatflour on the table and make a cavity in the middle.\n") +
-											std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
-											std::string("Start mixing the eggs into the wheatflour.\n") +
-											std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
-											std::string("Knead the dough thoroughly.\n");
+		std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
+		std::string("Start mixing the eggs into the wheatflour.\n") +
+		std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
+		std::string("Knead the dough thoroughly.\n");
 	std::string actual_instruction_body = "";
 	for (size_t i = 0; i < actual_instruction_body_size; i++)
 	{
@@ -360,6 +360,24 @@ void parse_ingredients_with_non_ascii_chars()
 	test_lib::expect_equal_s(rcp.ingredients[4].name, "໙៨ᱷ꠷𑇩𑇰");
 }
 
+void parse_percentage_relative() {
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_string("ingredients: bacon [100g] instructions: with(bacon[100%]): do stuff").recipe;
+	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.is_relative_amount, true);
+	test_lib::expect_equal_d(rcp.instructions[0].ingredients[0].amount.number, 100);
+	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "%");
+}
+
+void parse_fraction_relative() {
+	test_lib::REGISTER;
+
+	epicr::recipe rcp = epicr::parse_string("ingredients: bacon [100g] instructions: with(bacon[1/10]): do stuff").recipe;
+	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.is_relative_amount, true);
+	test_lib::expect_equal_d(rcp.instructions[0].ingredients[0].amount.number, 10);
+	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "%");
+}
+
 int main(void)
 {
 	pasta_recipe_parses_without_error();
@@ -396,6 +414,8 @@ int main(void)
 	parse_fields_in_random_order();
 	parse_recipe_with_random_casing();
 	parse_ingredients_with_non_ascii_chars();
+	parse_percentage_relative();
+	parse_fraction_relative();
 	test_lib::print_recap();
 	return test_lib::result();
 }
