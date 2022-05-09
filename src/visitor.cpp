@@ -153,7 +153,7 @@ namespace epicr::visitor
             uniqueIngredients.insert(ingr.name);
             if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */
             {
-                ERR("duplicate ingredient, " + ingr.name + " was found");
+                ERR("duplicate ingredient '" + ingr.name + "' was found");
                 return;
             }
         }
@@ -175,7 +175,7 @@ namespace epicr::visitor
                     break;
                 if (!ingredient_in_map(ingr.name, symbols))
                 {
-                    std::string err_msg = "Ingredient, " + ingr.name + " used in instruction not found in ingredients list";
+                    std::string err_msg = "Ingredient '" + ingr.name + "' used in instruction not found in ingredients list";
                     ERR(err_msg);
                     return;
                 }
@@ -186,7 +186,7 @@ namespace epicr::visitor
                     {
                     case 'r': /* rest */
                         if (symbols[ingr.name].amount.number == 0)
-                            WARN("Ingredient, " + ingr.name + " has already been completely consumed, and therefore it has no impact in this context");
+                            WARN("Ingredient '" + ingr.name + "' has already been completely consumed, and therefore it has no impact in this context");
                         ingr.amount = symbols[ingr.name].amount;
                         break;
                     case 'h': /* half */
@@ -202,7 +202,7 @@ namespace epicr::visitor
                         break;
                     default:
                         std::string err_msg = "Received unexpected relative amount [" +
-                                              ingr.amount.relative_amount + "] for ingredient, " + ingr.name;
+                                              ingr.amount.relative_amount + "] for Ingredient '" + ingr.name + "'";
                         ERR(err_msg);
                         return;
                     }
@@ -216,7 +216,7 @@ namespace epicr::visitor
 
                 if (ingr.amount.number - symbols[ingr.name].amount.number > FLT_EPSILON)
                 {
-                    std::string err_msg = "Used too much of ingredient, " + ingr.name + ". " +
+                    std::string err_msg = "Used too much of Ingredient '" + ingr.name + "'. " +
                                           epicr::round_double_to_string(symbols[ingr.name].amount.number) + " is available, and " +
                                           epicr::round_double_to_string(ingr.amount.number) + " was used";
                     ERR(err_msg);
@@ -259,13 +259,13 @@ namespace epicr::visitor
             else if (ingr.amount.number > FLT_EPSILON && !ingr.amount.is_uncountable)
             {
 
-                std::string err_msg = "Unused ingredient: " + ingr.name + amount_to_string(ingr.amount);
+                std::string err_msg = "Unused Ingredient '" + ingr.name + amount_to_string(ingr.amount)+ "'";
                 ERR(err_msg);
             }
         }
         if (!title_ingredient_remaining)
         {
-            std::string err_msg = "Title-ingredient, " + a_rcp->title + " must remain after all instructions have been executed";
+            std::string err_msg = "Title-Ingredient '" + a_rcp->title + "' must remain after all instructions have been executed";
             ERR(err_msg);
         }
     }
@@ -276,7 +276,7 @@ namespace epicr::visitor
         if (
             key_of_value_in_map_vec(units_in_type, a.amount.unit, E_UT_NONE) != key_of_value_in_map_vec(units_in_type, b.amount.unit, E_UT_NONE))
         {
-            ERR("Unit " + a.amount.unit + " and unit " + b.amount.unit + " are not the same type of unit");
+            ERR("Unit '" + a.amount.unit + "' and unit '" + b.amount.unit + "' are not the same type of unit for Ingredient '" + a.name + "'");
             return false;
         }
         epicr_unit_system ingredient_a_unit_system = key_of_value_in_map_vec(units_in_system, a.amount.unit, E_US_NONE);
@@ -294,7 +294,7 @@ namespace epicr::visitor
         /*if units are not in the same unit system*/
         else if (ingredient_a_unit_system != ingredient_b_unit_system)
         {
-            ERR("Unit " + a.amount.unit + " and unit " + b.amount.unit + " are not in the same unit system");
+            ERR("Unit '" + a.amount.unit + "' and unit '" + b.amount.unit + "' are not in the same unit system for Ingredient '" + a.name + "'");
             return false;
         }
         return true;

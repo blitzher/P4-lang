@@ -284,7 +284,6 @@ namespace epicr
 				}
 
 				recipe rcp = rcp_ret.recipe;
-				ingr.name = rcp.title;
 				if (!ingr.amount.unit.empty())
 				{
 					WARN("Unit should not be provided on ingredient reference to another recipe", ctoken);

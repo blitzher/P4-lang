@@ -1,50 +1,46 @@
 title: Spaghetti carbonara
-description: Pasta Carbonara is one of the dishes that we occasionally resort to on busy weekdays and some weekend evenings. The days when the need for an easy, lightning fast and super delicious dish is weighted much higher than a long time in the kitchen and slow but cozy simmering dishes - which I also really like, but every thing in its time... and such a very simple Spaghetti Carbonara is eternally good.
-
-Since Spaghetti Carbonara is one of the dishes where the quality tops on a few ingredients, it is good to use a bacon of really good quality and with good taste. It makes a big difference in court.
-
 servings: 4 people
-cook-time: 15 min
-prep-time: 5 min
-total-time: 20 min
+prep-time: 2 min
+cook-time: 13 min
 tags: pasta, easy to make, under 30 min, pork
 
+description: Pasta Carbonara is one of the dishes that we occasionally resort to on busy weekdays and some weekend evenings. The days when the need for an easy, lightning fast and super delicious dish is weighted higher than a long time in the kitchen and slow but cozy simmering dishes - which I also really like, but every thing in its time
+... and such a very simple Spaghetti Carbonara is eternally good.
+
 nutrients:
-    calories [10 g],
-    protein [10 g],
-    fat [10 g],
-    carbs [10 g]
+    calories [860 kcal],
+    protein [38 g],
+    fat [75 g],
+    carbs [47 g]
     
 kitchenware:
-    airfryer,
     pan
 
 ingredients:
-    bacon [3 ounce],
+    bacon [100 g],
     butter [1 tsp],     
-    onion [1],
+    onion,
     cream [1 dl],      
-    egg [2], 
+    egg [2],         
     parmesan [5g],      
-    spaghetti*,
-    salt,
+    spaghetti* [4],
+    salt+,
     pepper+,
     extra parmesan?+ 
 
-
 instructions:
-    using(airfryer):
-        Preheat your airfryer to [200 C]
+    using(pan):
+        Put your pan on the stove and set the stove to medium heat.
     
-    with(bacon) using(airfryer):
-        Fry the bacon using the airfryer
+    with(bacon) using(pan):
+        Cook the bacon on the pan until it is crisp.
 
         yield:
-            bacon [10 oz],
-            bacon fat
+            bacon [80 g],
+            bacon fat 
 
-    with(onion, bacon fat, butter) using(pan):
-        Put butter on the pan with bacon fat and sauté the onions until soft and clear.
+    with(butter, onion, bacon fat) using(pan):
+        Put butter on the pan with bacon fat and saute the onions until soft and clear.
 
         yield:
             cooked onions
@@ -55,7 +51,7 @@ instructions:
         yield:
             onion bacon mix+
     
-    with(onion bacon mix, egg[2], Cooked spaghetti, parmesan, salt, pepper):
+    with(onion bacon mix, egg[2], spaghetti, parmesan, salt, pepper):
         Remove the onion bacon mix from the heat and stir in the eggs and the cooked spaghetti, 
         and mix the dish well with the freshly grated parmesan.
         Season with salt and freshly ground pepper.
@@ -64,7 +60,7 @@ instructions:
             spaghetti carbonara
 
     with(extra parmesan, spaghetti carbonara):
-        Sprinkle the extra parmesan (e.g. [20 g]) on the spaghetti carbonara.
+        Sprinkle some more parmesan (e.g. [20 g]) on the spaghetti carbonara for that extra nice touch.
     
         yield:
             spaghetti carbonara

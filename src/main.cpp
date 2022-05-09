@@ -22,7 +22,6 @@ int main(int argc, char **argv)
 	epicr::parse_cmd_args(argc, argv);
 
 	ifstream file = epicr::open_file(epicr::clargs.input_filepath);
-
 	cout << "Compiling " << epicr::clargs.input_filepath << endl;
 
 	epicr::Lexer my_lexer = epicr::Lexer(file);
@@ -39,7 +38,14 @@ int main(int argc, char **argv)
 		if (!vis_ret.has_err)
 		{
 			string output_file = epicr::clargs.output_filepath;
-			output_file.append("/" + my_recipe.title + ".html");
+			string file;
+			#ifdef _WIN32
+				file = epicr::clargs.input_filepath.substr(epicr::clargs.input_filepath.find_last_of("\\")+1,epicr::clargs.input_filepath.size());
+			#else
+				file = epicr::clargs.input_filepath.substr(epicr::clargs.input_filepath.find_last_of("/")+1,epicr::clargs.input_filepath.size());
+			#endif
+			string filename = file.substr(0,file.find_last_of("."));
+			output_file.append("/" + filename + ".html");
 			epicr::generate_html(my_recipe, output_file);
 			printf("Wrote file: %s\n", output_file.c_str());
 		}
