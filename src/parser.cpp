@@ -428,6 +428,11 @@ namespace epicr
 		}
 		if (Body.size() == 0)
 			ERR_VOID("Instruction body cannot be empty", ctoken);
+
+        /* strip trailing blanks */
+        while(strip_spaces_right(Body.back().spelling) == "")
+            Body.pop_back();
+
 		current_instruction->body = Body;
 	}
 
