@@ -5,7 +5,7 @@ ingredients:
     burgerBuns*
 
 instructions:
-    with(meat, Burger buns):
+    with(meat, burgerBuns):
         put the meat in the buns
 
     yield:

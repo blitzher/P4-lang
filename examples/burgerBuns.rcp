@@ -2,7 +2,6 @@ title: Burger buns
 servings: 10 buns
 
 ingredients:
-    luke warm water [400 g],
     fresh yeast [25 g],
     wheat flour [700 g],
     sugar [50 g],
@@ -10,7 +9,8 @@ ingredients:
     salt [10 g],
     egg [1],
     sesame seeds+,
-    extra wheat flour+
+    extra wheat flour+,
+    water+
 
 kitchenware:
     standmixer

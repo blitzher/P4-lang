@@ -216,10 +216,9 @@ namespace epicr::visitor
                 }
                 else if (ingr.amount.unit == "%")
                 {
-
-                    double percentage = ingr.amount.number / 100;
+                    double percent = ingr.amount.number;
                     ingr.amount = original_symbols[ingr.name].amount;
-                    ingr.amount.number *= percentage;
+                    ingr.amount.number *= percent;
                 }
 
                 amount original_amount = ingr.amount;
@@ -773,24 +772,15 @@ namespace epicr::visitor
         int index = 0;
 
         /* get a collection of ingredients in the ingredients list */
-        std::vector<ingredient> existing_ingredients;
+        std::unordered_map<std::string, ingredient> existing_ingredients;
         for (const auto& ingr : rcp->ingredients)
-            existing_ingredients.push_back(ingr);
+            existing_ingredients[ingr.name] = ingr;
 
         for (const auto& inst : rcp->instructions) {
             for (const auto& ingr : inst.ingredients) {
 
                 /* determine if ingredient in instruction is in ingredient list */
-                bool exists = false;
-                for (const auto& e_ingr : existing_ingredients)
-                {
-                    if (e_ingr.name == ingr.name)
-                    {
-                        exists = true;
-                        break;
-                    }
-                }
-                if (!exists)
+                if (!map_contains(existing_ingredients, ingr.name))
                     continue;
 
                 /* determine if ingredient in instruction is already indexed */
@@ -802,7 +792,7 @@ namespace epicr::visitor
 
                 /* otherwise, add it */
                 if (!contained) {
-                    indexed_ingredient ii = { ingr, index++ };
+                    indexed_ingredient ii = { existing_ingredients[ingr.name], index++ };
                     ordered_ingredients.push_back(ii);
                 }
             }

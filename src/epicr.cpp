@@ -162,14 +162,12 @@ namespace epicr
 	parse_ret parse_recipe(std::string filename)
 	{
 		cmd_args args = { filename, E_OS_BASIC, "dist", E_US_NONE, false };
-		epicr::clargs = args;
 		return parse_recipe(args);
 	}
 
 	parse_ret parse_recipe_silent(std::string filename)
 	{
 		cmd_args args = { filename, E_OS_BASIC, "dist", E_US_NONE, true };
-		epicr::clargs = args;
 		return parse_recipe_silent(args);
 	}
 
@@ -194,6 +192,8 @@ namespace epicr
 
 	parse_ret parse_recipe_silent(cmd_args clargs)
 	{
+		if (epicr::clargs.input_filepath == "")
+			epicr::clargs.input_filepath = clargs.input_filepath;
 		if (cached_recipes.find(clargs.input_filepath) != cached_recipes.end())
 			return cached_recipes[clargs.input_filepath];
 
