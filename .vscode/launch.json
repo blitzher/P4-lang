@@ -11,8 +11,7 @@
 			"program": "${workspaceFolder}/bin/main",
 			"args": [
 				"examples/Carbonara.rcp"
-			],
-			"stopOnEntry": true
+			]
 		},
 		{
 			"name": "Debug eof.test",
