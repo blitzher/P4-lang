@@ -8,9 +8,9 @@ using namespace std;
 struct compare
 {
     char key;
-    compare(char const &i) : key(i) {}
+    compare(char const& i) : key(i) {}
 
-    bool operator()(char const &i)
+    bool operator()(char const& i)
     {
         return (i == key);
     }
@@ -28,7 +28,7 @@ struct compare
 
 namespace epicr
 {
-    vector<char> token_breakers = {' ', '\n', 0x0d, ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*'};
+    vector<char> token_breakers = { ' ', '\n', 0x0d, ',', ':', '(', ')', '[', ']', '{', '}', '?', '+', '*' };
 
 #pragma region Lexer implementation
 
@@ -41,13 +41,13 @@ namespace epicr
         is_peaking = false;
     }
 
-    Lexer::Lexer(ifstream &file) : istream(file)
+    Lexer::Lexer(ifstream& file) : istream(file)
     {
         ready = file.is_open();
         init();
     }
 
-    Lexer::Lexer(std::istream &stream) : istream(stream)
+    Lexer::Lexer(std::istream& stream) : istream(stream)
     {
         ready = !stream.eof();
         init();
@@ -106,7 +106,7 @@ namespace epicr
                         vtoken.push_back(ch);
                         istream.get(ch);
                     } while (!istream.eof() && (ch == vtoken[0] ||                 /* repeating space and LF endings */
-                                                (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings (0xa is newline) [Windows] */
+                        (vtoken[0] == 0xa && ch == 0xd))); /* CRLF endings (0xa is newline) [Windows] */
 
                     if (vtoken[0] == '\n')
                     {
@@ -142,6 +142,12 @@ namespace epicr
             {
                 is_numeric = true;
             }
+            else if (CH_IS_NUM(ch) && vtoken.size() > 0 && !is_numeric) {
+                {
+                    istream.seekg(-1, ios_base::cur);
+                    break;
+                }
+            }
 
             vtoken.push_back(ch);
         }
@@ -150,7 +156,7 @@ namespace epicr
         if (stoken.size() == 0)
             return next_token();
 
-        epicr_token token{stoken, token_type(stoken), token_count++, line_num};
+        epicr_token token{ stoken, token_type(stoken), token_count++, line_num };
 
         /* store most recent token, in case we were peaking, and hit eof */
         if (is_peaking)

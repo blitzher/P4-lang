@@ -1,0 +1,17 @@
+title: cool
+
+ingredients:
+	D,
+	C,
+	B,
+	A,
+
+
+instructions:
+	with(A, B):
+		neat
+
+		yield: cool
+
+	with (C, D):
+		nice
