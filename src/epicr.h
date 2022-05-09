@@ -668,7 +668,7 @@ namespace epicr
     std::ifstream open_file(std::string filename);
 
     /**
-     * @brief Generate the output from the parsed decorated structs
+     * @brief Generate the HTML output from the parsed decorated structs
      *
      * @param filename
      * @return true if the generation is successfull
@@ -677,6 +677,16 @@ namespace epicr
      */
     bool generate_html(recipe, std::string filename);
 
+        /**
+     * @brief Generate the basic output from the parsed decorated structs
+     *
+     * @param filename
+     * @return true if the generation is successfull
+     * @return false if the generation is unsuccesfull,
+     * for example if the outputfile is already open
+     */
+    bool generate_txt(recipe, std::string filename);
+    
     /**
      * @brief Parse a recipe from a given file
      *

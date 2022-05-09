@@ -298,8 +298,18 @@ namespace epicr
 						: rcp.servings.count)
 					: ingr.amount.number;
 
-				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / ingr.name).string() + ".html");
-			}
+
+      switch(choosen_style)
+      {
+        case (epicr::E_OS_FANCY):
+          generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
+          break;
+        case (epicr::E_OS_BASIC):
+          generate_txt(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".txt");
+          break;
+      }
+				
+		}
 		out_ref:
 			rcp->ingredients.push_back(ingr);
 			ReadSeperatorOrWaitAtNextField("ingredients");
@@ -428,6 +438,11 @@ namespace epicr
 		}
 		if (Body.size() == 0)
 			ERR_VOID("Instruction body cannot be empty", ctoken);
+
+        /* strip trailing blanks */
+        while(strip_spaces_right(Body.back().spelling) == "")
+            Body.pop_back();
+
 		current_instruction->body = Body;
 	}
 

@@ -95,35 +95,35 @@ namespace epicr
         units_in_type[E_UT_LENGTH] = length_units;
 
         std::vector<std::string> temperature_units = {
-            "c", "f" };
+            "C", "F"};
         units_in_type[E_UT_TEMPERATURE] = temperature_units;
 
         /* alias' of the different units */
-        unit_aliases["g"] = { "g", "gram", "grams" };
-        unit_aliases["kg"] = { "kg", "kilogram", "kgs", "kilograms" };
-        unit_aliases["oz"] = { "oz", "ounce", "ounces" };
-        unit_aliases["lbs"] = { "lbs", "pounds","lb" };
+        unit_aliases["g"] = {"g", "gram", "grams"};
+        unit_aliases["kg"] = {"kg", "kilogram", "kgs", "kilograms"};
+        unit_aliases["oz"] = {"oz", "ounce", "ounces"};
+        unit_aliases["lbs"] = {"lbs", "pounds","lb"};
 
-        unit_aliases["ml"] = { "ml", "milliliter" };
-        unit_aliases["dl"] = { "dl", "deciliter" };
-        unit_aliases["l"] = { "l", "liter" };
-        unit_aliases["fl-oz"] = { "fl-oz", "fluid ounce" };
-        unit_aliases["cup"] = { "cup", "cups" };
-        unit_aliases["qt"] = { "qt", "quarts" };
-        unit_aliases["gal"] = { "gal", "gallon", "gallons" };
+        unit_aliases["ml"] = {"ml", "milliliter"};
+        unit_aliases["dl"] = {"dl", "deciliter"};
+        unit_aliases["l"] = {"l", "liter"};
+        unit_aliases["fl-oz"] = {"fl-oz", "fluid ounce"};
+        unit_aliases["cup"] = {"cup", "cups"};
+        unit_aliases["qt"] = {"qt", "quarts"};
+        unit_aliases["gal"] = {"gal", "gallon", "gallons"};
 
-        unit_aliases["mm"] = { "mm", "millimeter", "millimeters" };
-        unit_aliases["cm"] = { "cm", "centimeter", "centimeters" };
-        unit_aliases["in"] = { "in", "inch", "inches" };
-        unit_aliases["ft"] = { "ft", "feet", "foot" };
+        unit_aliases["mm"] = {"mm", "millimeter", "millimeters"};
+        unit_aliases["cm"] = {"cm", "centimeter", "centimeters"};
+        unit_aliases["in"] = {"in", "inch", "inches"};
+        unit_aliases["ft"] = {"ft", "feet", "foot"};
 
-        unit_aliases["c"] = { "c", "celsius" };
-        unit_aliases["f"] = { "f", "fahrenheit" };
+        unit_aliases["C"] = {"C", "celsius"};
+        unit_aliases["F"] = {"F", "fahrenheit"};
 
         units_in_system[E_US_METRIC] = {
-            "g", "kg", "ml", "dl", "l", "mm", "cm", "c" };
+            "g", "kg", "ml", "dl", "l", "mm", "cm", "C"};
         units_in_system[E_US_IMPERIAL] = {
-            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "f" };
+            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "F"};
 
         map_is_initalized = true;
     }
@@ -132,7 +132,6 @@ namespace epicr
 namespace epicr::visitor
 {
 
-    /* Just used to group things */
 #pragma region IngredientVerifier implementation
 
     IngredientVerifier::IngredientVerifier()
@@ -153,8 +152,8 @@ namespace epicr::visitor
         /* fill the symbol table and check for duplicate ingredients*/
         for (auto ingr : a_rcp->ingredients)
         {
-            symbols[ingr.name] = ingr;          // used to check correspondance between ingredient list and instructions
-            original_symbols[ingr.name] = ingr; // copy of ingredients
+            symbols[to_lower(ingr.name)] = ingr;          // used to check correspondance between ingredient list and instructions
+            original_symbols[to_lower(ingr.name)] = ingr; // copy of ingredients
 
             /*duplicate ingredients check*/
             size_t ingredients_count = uniqueIngredients.size();
@@ -193,20 +192,20 @@ namespace epicr::visitor
                     switch (ingr.amount.relative_amount[0])
                     {
                     case 'r': /* rest */
-                        if (symbols[ingr.name].amount.number == 0)
+                        if (symbols[to_lower(ingr.name)].amount.number == 0)
                             WARN("Ingredient '" + ingr.name + "' has already been completely consumed, and therefore it has no impact in this context");
-                        ingr.amount = symbols[ingr.name].amount;
+                        ingr.amount = symbols[to_lower(ingr.name)].amount;
                         break;
                     case 'h': /* half */
-                        ingr.amount = original_symbols[ingr.name].amount;
+                        ingr.amount = original_symbols[to_lower(ingr.name)].amount;
                         ingr.amount.number *= 0.5f;
                         break;
                     case 'q': /* quarter */
-                        ingr.amount = original_symbols[ingr.name].amount;
+                        ingr.amount = original_symbols[to_lower(ingr.name)].amount;
                         ingr.amount.number *= 0.25f;
                         break;
                     case 'a': /* all */
-                        ingr.amount = original_symbols[ingr.name].amount;
+                        ingr.amount = original_symbols[to_lower(ingr.name)].amount;
                         break;
                     default:
                         std::string err_msg = "Received unexpected relative amount [" +
@@ -223,20 +222,20 @@ namespace epicr::visitor
                 }
 
                 amount original_amount = ingr.amount;
-                if (ingredients_compatible(symbols[ingr.name], ingr))
+                if (ingredients_compatible(symbols[to_lower(ingr.name)], ingr))
                 {
-                    ingr = match_ingredients(ingr, symbols[ingr.name]);
+                    ingr = match_ingredients(ingr, symbols[to_lower(ingr.name)]);
                 }
 
-                if (ingr.amount.number - symbols[ingr.name].amount.number > FLT_EPSILON)
+                if (ingr.amount.number - symbols[to_lower(ingr.name)].amount.number > FLT_EPSILON)
                 {
                     std::string err_msg = "Used too much of Ingredient '" + ingr.name + "'. " +
-                        epicr::round_double_to_string(symbols[ingr.name].amount.number) + " is available, and " +
-                        epicr::round_double_to_string(ingr.amount.number) + " was used";
+                                          epicr::round_double_to_string(symbols[to_lower(ingr.name)].amount.number) + " is available, and " +
+                                          epicr::round_double_to_string(ingr.amount.number) + " was used";
                     ERR(err_msg);
                     return;
                 }
-                symbols[ingr.name].amount.number -= ingr.amount.number;
+                symbols[to_lower(ingr.name)].amount.number -= ingr.amount.number;
                 ingr.amount = original_amount;
             }
 
@@ -246,18 +245,18 @@ namespace epicr::visitor
                 /* if ingredient already exists, update */
                 if (map_contains(symbols, yield.name))
                 {
-                    if (!ingredients_compatible(symbols[yield.name], yield))
+                    if (!ingredients_compatible(symbols[to_lower(yield.name)], yield))
                     {
                         return;
                     }
-                    yield = match_ingredients(yield, symbols[yield.name]);
-                    symbols[yield.name].amount.number += yield.amount.number;
+                    yield = match_ingredients(yield, symbols[to_lower(yield.name)]);
+                    symbols[to_lower(yield.name)].amount.number += yield.amount.number;
                 }
                 /* otherwise, add it to both symbol tables */
                 else
                 {
-                    symbols[yield.name] = yield;
-                    original_symbols[yield.name] = yield;
+                    symbols[to_lower(yield.name)] = yield;
+                    original_symbols[to_lower(yield.name)] = yield;
                 }
             }
         }
@@ -611,10 +610,10 @@ namespace epicr::visitor
                 amnt->number = amnt->number * MM_TO_INCH;
                 amnt->unit = "in";
             }
-            else if (standardized == "c")
+            else if (standardized == "C")
             {
                 amnt->number = C_TO_F(amnt->number);
-                amnt->unit = "f";
+                amnt->unit = "F";
             }
         }
         else
@@ -669,10 +668,10 @@ namespace epicr::visitor
                 amnt->number = amnt->number / MM_TO_INCH;
                 amnt->unit = "mm";
             }
-            else if (standardized == "f")
+            else if (standardized == "F")
             {
                 amnt->number = F_TO_C(amnt->number);
-                amnt->unit = "c";
+                amnt->unit = "C";
             }
         }
     }
