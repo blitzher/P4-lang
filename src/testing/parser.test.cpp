@@ -251,7 +251,7 @@ void instruction_body_text_is_parsed_correctly()
 											std::string("Crack the 3 eggs in the cavity, and add salt.\n") +
 											std::string("Start mixing the eggs into the wheatflour.\n") +
 											std::string("If the dough becomes too dry, add water, and if it becomes too sticky add wheatflour.\n") +
-											std::string("Knead the dough thoroughly.\n");
+											std::string("Knead the dough thoroughly.");
 	std::string actual_instruction_body = "";
 	for (size_t i = 0; i < actual_instruction_body_size; i++)
 	{
