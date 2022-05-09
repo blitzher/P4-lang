@@ -192,6 +192,8 @@ namespace epicr
 
 	parse_ret parse_recipe_silent(cmd_args clargs)
 	{
+		if (epicr::clargs.input_filepath == "")
+			epicr::clargs.input_filepath = clargs.input_filepath;
 		if (cached_recipes.find(clargs.input_filepath) != cached_recipes.end())
 			return cached_recipes[clargs.input_filepath];
 

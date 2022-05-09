@@ -217,10 +217,9 @@ namespace epicr::visitor
                 }
                 else if (ingr.amount.unit == "%")
                 {
-
-                    double percentage = ingr.amount.number / 100;
+                    double percent = ingr.amount.number;
                     ingr.amount = original_symbols[ingr.name].amount;
-                    ingr.amount.number *= percentage;
+                    ingr.amount.number *= percent;
                 }
 
                 amount original_amount = ingr.amount;

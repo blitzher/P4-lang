@@ -81,7 +81,7 @@ run-infinite-recursion: $(BINDIR)/$(TARGET)
 	./$< src/test-recipes/recursion0.rcp -o dist
 
 test::
-	@rm -rf $(BINDIR)/.tests
+	rm -rf $(BINDIR)/.tests
 test:: $(T_TARGETS)
 	@echo "Finished tests"
 

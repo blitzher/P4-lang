@@ -365,7 +365,7 @@ void parse_percentage_relative() {
 
 	epicr::recipe rcp = epicr::parse_string("ingredients: bacon [100g] instructions: with(bacon[100%]): do stuff").recipe;
 	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.is_relative_amount, true);
-	test_lib::expect_equal_d(rcp.instructions[0].ingredients[0].amount.number, 100);
+	test_lib::expect_equal_d(rcp.instructions[0].ingredients[0].amount.number, 1.00);
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "%");
 }
 
@@ -374,7 +374,7 @@ void parse_fraction_relative() {
 
 	epicr::recipe rcp = epicr::parse_string("ingredients: bacon [100g] instructions: with(bacon[1/10]): do stuff").recipe;
 	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.is_relative_amount, true);
-	test_lib::expect_equal_d(rcp.instructions[0].ingredients[0].amount.number, 10);
+	test_lib::expect_equal_d(rcp.instructions[0].ingredients[0].amount.number, 0.10);
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "%");
 }
 

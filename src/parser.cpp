@@ -535,18 +535,27 @@ namespace epicr
 			amnt.unit = ReadWords(E_RW_NONE, true);
 
 			if (amnt.unit == "%")
+			{
 				amnt.is_relative_amount = true;
+				amnt.number = amnt.number * 0.01;
+				if (amnt.number > 1 || amnt.number < 0)
+					ERR(("Invalid percentage '" + epicr::round_double_to_string(amnt.number) + "%' used"), ctoken)
+			}
 			else if (amnt.unit == "/") {
 
 				if (ctoken.type != E_TT_NUMBER)
 					ERR("Expected denominator in fraction", ctoken);
 				double denom = std::stod(ctoken.word);
-				amnt.number = (amnt.number * 100) / denom;
+				amnt.number = amnt.number / denom;
+
+				if (amnt.number > 1 || amnt.number < 0)
+					ERR("Invalid fraction '" + round_double_to_string(amnt.number) + "' used", ctoken);
+
 				amnt.unit = "%";
 				amnt.is_relative_amount = true;
 				ADV_NON_BLANK(1);
-
 			}
+
 		}
 		else if (ctoken.type == E_TT_WORD)
 		{
