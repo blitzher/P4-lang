@@ -299,8 +299,15 @@ namespace epicr
 												: rcp.servings.count)
 										 : ingr.amount.number;
 
-				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
+			epicr::epicr_html_style choosen_style = epicr::clargs.choosen_style;
+			if(choosen_style == epicr::E_HS_FANCY) {
+				generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html"); 
 			}
+			else {
+				generate_txt(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".txt");
+			}
+				
+		}
 		out_ref:
 			rcp->ingredients.push_back(ingr);
 			ReadSeperatorOrWaitAtNextField("ingredients");
