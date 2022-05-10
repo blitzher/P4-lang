@@ -12,8 +12,8 @@ namespace epicr
 	{
 		string file_content;
 		string dir = "src";
-		string file_name = template_name + ".html";
-		string fpath = dir + "\\output-templates\\" + file_name;
+		std::filesystem::path file_name = std::filesystem::path(dir) / "output-templates" / template_name;
+		string fpath = file_name.string() + ".html";
 		std::ifstream fstream = epicr::open_file(fpath);
 
 		int gotten_char = fstream.get();

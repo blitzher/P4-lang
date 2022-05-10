@@ -258,7 +258,7 @@
                 function set_ingredient_refs()
                 {
                     path = window.location.pathname+window.location.search;
-                    last_slash = path.lastIndexOf("\\");
+                    last_slash = path.lastIndexOf("/");
                     path = path.slice(0, last_slash);
 
                     for (i = 0; i < ingredient_refs.length; i++)
@@ -266,7 +266,7 @@
                         ingredient_name = ingredient_refs[i].innerHTML;
                         first_parenthesis = ingredient_name.indexOf("(");
                         ingredient_name = ingredient_name.slice(0, first_parenthesis);
-                        ingredient_refs[i].href = path + "\\" + ingredient_name.trim() + ".html";
+                        ingredient_refs[i].href = path + "/" + ingredient_name.trim() + ".html";
                     }
                 }
 
