@@ -257,7 +257,7 @@ namespace epicr
         return (is_numeric) ? E_TT_NUMBER : E_TT_WORD;
     }
 
-    epicr_token Lexer::peek_token(int TokensToPeak)
+    epicr_token Lexer::peek_token(int tokensToPeak)
     {
         size_t offset = 0;
         uint line_offset = 0;
@@ -265,14 +265,14 @@ namespace epicr
         is_peaking = true;
         int before_peek_eof_index = pre_eof_index;
 
-        for (int i = 0; i < TokensToPeak; i++)
+        for (int i = 0; i < tokensToPeak; i++)
         {
             token = next_token();
             offset += token.word.size();
             if (token.type == E_TT_NEWLINE)
                 line_offset += token.word.size();
         }
-        token_count -= TokensToPeak;
+        token_count -= tokensToPeak;
         line_num -= line_offset;
         /* retract the header by the width of the read tokens */
 
@@ -290,7 +290,7 @@ namespace epicr
         return peek_token(1);
     }
 
-    epicr_token Lexer::peek_non_blank_token(int TokensToPeak)
+    epicr_token Lexer::peek_non_blank_token(int tokensToPeak)
     {
         int non_blank_count = 0;
         epicr_token token;
@@ -298,7 +298,7 @@ namespace epicr
         size_t line_offset = 0;
         is_peaking = true;
 
-        while (non_blank_count < TokensToPeak)
+        while (non_blank_count < tokensToPeak)
         {
             token = next_token();
             offset += token.word.size();
@@ -310,7 +310,7 @@ namespace epicr
                 non_blank_count++;
         }
 
-        token_count -= TokensToPeak;
+        token_count -= tokensToPeak;
         line_num -= line_offset;
         is_peaking = false;
         if (!istream.eof())

@@ -233,10 +233,10 @@ namespace epicr
 
         /**
          * @brief Return the next `n` tokens as an array
-         * @param `n` Number of tokens
+         * @param `tokenToPeak` Number of tokens
          * @return token
          */
-        std::vector<epicr_token> next_token(int n);
+        std::vector<epicr_token> next_token(int tokenToPeak);
 
         /**
          * @brief Return the next non blank, non new line token
@@ -506,11 +506,11 @@ namespace epicr
             /**
              * @brief Convert a unit into a different unit system, i.e. E_TT_METRIC to E_TT_IMPERIAL
              *
-             * @param tokensToPeak The amount to be scaled
+             * @param amnt The amount to be scaled
              * @param system The system to be scaled into
              * @return amount
              */
-            void convert_amount(amount* tokensToPeak, epicr_unit_system system);
+            void convert_amount(amount* amnt, epicr_unit_system system);
 
         public:
             /**
@@ -677,16 +677,6 @@ namespace epicr
      */
     bool generate_html(recipe, std::string filename);
 
-	/**
-	 * @brief finds a string in another string and replace it with a third string
-	 * 
-	 * @param str 
-	 * @param from_string 
-	 * @param to_string 
-	 * @return finds 
-	 */
-	bool replace(std::string &str, const std::string &from_string, const std::string &to_string);
-
         /**
      * @brief Generate the basic output from the parsed decorated structs
      *
@@ -695,7 +685,7 @@ namespace epicr
      * @return false if the generation is unsuccesfull,
      * for example if the outputfile is already open
      */
-    bool generate_basic(recipe, std::string filename);
+    bool generate_txt(recipe, std::string filename);
     
     /**
      * @brief Parse a recipe from a given file
