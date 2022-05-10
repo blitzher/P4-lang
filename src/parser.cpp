@@ -301,10 +301,10 @@ namespace epicr
 				switch (clargs.choosen_style)
 				{
 				case (epicr::E_OS_FANCY):
-					generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
+					generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / ingr.name).string() + ".html");
 					break;
 				case (epicr::E_OS_BASIC):
-					generate_basic(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".md");
+					generate_basic(rcp, ((std::filesystem::path)clargs.output_filepath / ingr.name).string() + ".md");
 					break;
 				}
 			}
