@@ -84,7 +84,7 @@ class App(tk.Frame):
         self.out_dir_label.set("No directory selected")
         self.output_fpath_label["textvariable"] = self.out_dir_label
         self.html_style = ""
-        self.unit_system = ""
+        self.unit_system = "None"
         self.directory = tk.StringVar()
         self.directory.set("")
         self.output_dir_clarg = tk.StringVar()
@@ -139,6 +139,7 @@ class App(tk.Frame):
             self.html_style,
             self.unit_system,
         )
+        print(self.unit_system)
         os.system("%s %s" % (executable, clargs))
 
     def format_fpath(self, s):
