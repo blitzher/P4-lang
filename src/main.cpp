@@ -38,7 +38,6 @@ int main(int argc, char **argv)
 		if (!vis_ret.has_err)
 		{
 			string output_file = epicr::clargs.output_filepath;
-			string file;
 			string filename = (std::filesystem::path(epicr::clargs.input_filepath).stem()).string();
 			
 			epicr::epicr_html_style choosen_style = epicr::clargs.choosen_style;
