@@ -304,7 +304,7 @@ namespace epicr
 					generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".html");
 					break;
 				case (epicr::E_OS_BASIC):
-					generate_txt(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".txt");
+					generate_basic(rcp, ((std::filesystem::path)clargs.output_filepath / rcp.title).string() + ".md");
 					break;
 				}
 			}

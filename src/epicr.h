@@ -677,6 +677,16 @@ namespace epicr
      */
     bool generate_html(recipe, std::string filename);
 
+	/**
+	 * @brief finds a string in another string and replace it with a third string
+	 * 
+	 * @param str 
+	 * @param from_string 
+	 * @param to_string 
+	 * @return finds 
+	 */
+	bool replace(std::string &str, const std::string &from_string, const std::string &to_string);
+
         /**
      * @brief Generate the basic output from the parsed decorated structs
      *
@@ -685,7 +695,7 @@ namespace epicr
      * @return false if the generation is unsuccesfull,
      * for example if the outputfile is already open
      */
-    bool generate_txt(recipe, std::string filename);
+    bool generate_basic(recipe, std::string filename);
     
     /**
      * @brief Parse a recipe from a given file
