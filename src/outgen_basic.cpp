@@ -226,7 +226,7 @@ namespace epicr
 			}
 
 			/* replace step placeholders with final strings */
-			epicr::replace(instruction_string, "~stepText~", step_text);
+			replace(instruction_string, "~stepText~", step_text);
 			epicr::replace(instruction_string, "~instructionIngredients~", instructionIngredients);
 			epicr::replace(instruction_string, "~instructionKitchenware~", instructionKitchenware);
 			epicr::replace(instruction_string, "~instructionBody~", body);
