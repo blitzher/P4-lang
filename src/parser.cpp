@@ -298,13 +298,16 @@ namespace epicr
 												: rcp.servings.count)
 										 : ingr.amount.number;
 
+				std::string filename = ((std::filesystem::path)clargs.output_filepath / ingr.name).string();
 				switch (clargs.choosen_style)
 				{
 				case (epicr::E_OS_FANCY):
-					generate_html(rcp, ((std::filesystem::path)clargs.output_filepath / ingr.name).string() + ".html");
+					filename += ".html";
+					generate_fancy(rcp, filename);
 					break;
 				case (epicr::E_OS_BASIC):
-					generate_txt(rcp, ((std::filesystem::path)clargs.output_filepath / ingr.name).string() + ".md");
+					filename += ".md";
+					generate_basic(rcp, filename);
 					break;
 				}
 			}

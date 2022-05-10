@@ -38,29 +38,26 @@ int main(int argc, char **argv)
 		if (!vis_ret.has_err)
 		{
 			string output_file = epicr::clargs.output_filepath;
-			string file;
-			#ifdef _WIN32
-				file = epicr::clargs.input_filepath.substr(epicr::clargs.input_filepath.find_last_of("\\")+1,epicr::clargs.input_filepath.size());
-			#else
-				file = epicr::clargs.input_filepath.substr(epicr::clargs.input_filepath.find_last_of("/")+1,epicr::clargs.input_filepath.size());
-			#endif
-			string filename = file.substr(0,file.find_last_of("."));
-			
+			string filename = (std::filesystem::path(epicr::clargs.input_filepath).stem()).string();
+
 			epicr::epicr_html_style choosen_style = epicr::clargs.choosen_style;
-			//epicr::epicr_html_style choosen_style = epicr::E_OS_FANCY;  // switch with above for html output also in parser
-			if(choosen_style == epicr::E_OS_FANCY) {
-				output_file.append("/" + filename + ".html");
-				epicr::generate_html(my_recipe, output_file);
+			// epicr::epicr_html_style choosen_style = epicr::E_OS_FANCY;  // switch with above for html output also in parser
+			if (choosen_style == epicr::E_OS_FANCY)
+			{
+				std::filesystem::path file = output_file / std::filesystem::path(filename);
+				output_file = file.string() + ".html";
+				epicr::generate_fancy(my_recipe, output_file);
 				printf("Wrote HTML file: %s\n", output_file.c_str());
 			}
-			else if (choosen_style == epicr::E_OS_BASIC){
-				output_file.append("/" + filename + ".md");
-				epicr::generate_txt(my_recipe, output_file);
+			else if (choosen_style == epicr::E_OS_BASIC)
+			{
+				std::filesystem::path file = output_file / std::filesystem::path(filename);
+				output_file = file.string() + ".html";
+				epicr::generate_basic(my_recipe, output_file);
 				printf("Wrote basic file: %s\n", output_file.c_str());
 			}
 		}
 	}
-
 
 	return 0;
 }
