@@ -226,11 +226,11 @@ namespace epicr
 			}
 
 			/* replace step placeholders with final strings */
-			replace(instruction_string, "~stepText~", step_text);
-			replace(instruction_string, "~instructionIngredients~", instructionIngredients);
-			replace(instruction_string, "~instructionKitchenware~", instructionKitchenware);
-			replace(instruction_string, "~instructionBody~", body);
-			replace(instruction_string, "~instructionYield~", yield);
+			epicr::replace(instruction_string, "~stepText~", step_text);
+			epicr::replace(instruction_string, "~instructionIngredients~", instructionIngredients);
+			epicr::replace(instruction_string, "~instructionKitchenware~", instructionKitchenware);
+			epicr::replace(instruction_string, "~instructionBody~", body);
+			epicr::replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
 
@@ -252,17 +252,17 @@ namespace epicr
 		string output_string = base_template_basic; // convert base template to string
 
 		/* replace placeholders with final strings */
-		replace(output_string, "~title~", title);
-		replace(output_string, "~servings~", servings);
-		replace(output_string, "~description~", description);
-		replace(output_string, "~total-time~", total_time);
-		replace(output_string, "~prep-time~", prep_time);
-		replace(output_string, "~cook-time~", cook_time);
-		replace(output_string, "~tags~", tags.c_str());
-		replace(output_string, "~ingredients~", ingredients.c_str());
-		replace(output_string, "~kitchenware~", kitchenware.c_str());
-		replace(output_string, "~nutrients~", nutrients.c_str());
-		replace(output_string, "~instructions~", instruction_strings.c_str());
+		epicr::replace(output_string, "~title~", title);
+		epicr::replace(output_string, "~servings~", servings);
+		epicr::replace(output_string, "~description~", description);
+		epicr::replace(output_string, "~total-time~", total_time);
+		epicr::replace(output_string, "~prep-time~", prep_time);
+		epicr::replace(output_string, "~cook-time~", cook_time);
+		epicr::replace(output_string, "~tags~", tags.c_str());
+		epicr::replace(output_string, "~ingredients~", ingredients.c_str());
+		epicr::replace(output_string, "~kitchenware~", kitchenware.c_str());
+		epicr::replace(output_string, "~nutrients~", nutrients.c_str());
+		epicr::replace(output_string, "~instructions~", instruction_strings.c_str());
 
 		file << output_string << std::endl;
 		file.close();

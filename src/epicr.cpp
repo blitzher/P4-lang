@@ -82,6 +82,16 @@ namespace epicr
 			printf("%-18s   %-10i uid:%i line:%i\n", type.c_str(), (int)token.word.size(), token.uid, token.line);
 	}
 
+	// finds a string in another string and replace it with a third string
+	bool replace(std::string &str, const std::string &from_string, const std::string &to_string)
+	{
+		size_t start_position = str.find(from_string);
+		if (start_position == std::string::npos) // if no matching string was found
+			return false;
+		str.replace(start_position, from_string.length(), to_string);
+		return true;
+	}
+
 	/* Rented from https://stackoverflow.com/questions/313970/how-to-convert-an-instance-of-stdstring-to-lower-case */
 	char char_to_lower(char ch)
 	{
