@@ -38,7 +38,6 @@ int main(int argc, char **argv)
 		if (!vis_ret.has_err)
 		{
 			string output_file = epicr::clargs.output_filepath;
-			string file;
 			string filename = (std::filesystem::path(epicr::clargs.input_filepath).stem()).string();
 			
 			epicr::epicr_html_style choosen_style = epicr::clargs.choosen_style;
@@ -51,7 +50,7 @@ int main(int argc, char **argv)
 			}
 			else if (choosen_style == epicr::E_OS_BASIC){
 				std::filesystem::path file = output_file / std::filesystem::path(filename);
-				output_file = file.string() + ".html";
+				output_file = file.string() + ".md";
 				epicr::generate_basic(my_recipe, output_file);
 				printf("Wrote basic file: %s\n", output_file.c_str());
 			}

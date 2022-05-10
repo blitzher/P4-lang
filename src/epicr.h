@@ -233,10 +233,10 @@ namespace epicr
 
         /**
          * @brief Return the next `n` tokens as an array
-         * @param `n` Number of tokens
+         * @param `tokenToPeak` Number of tokens
          * @return token
          */
-        std::vector<epicr_token> next_token(int n);
+        std::vector<epicr_token> next_token(int tokenToPeak);
 
         /**
          * @brief Return the next non blank, non new line token
@@ -676,8 +676,8 @@ namespace epicr
      * for example if the outputfile is already open
      */
     bool generate_html(recipe, std::string filename);
-
-	/**
+    
+    /**
 	 * @brief finds a string in another string and replace it with a third string
 	 * 
 	 * @param str 
@@ -686,7 +686,7 @@ namespace epicr
 	 * @return finds 
 	 */
 	bool replace(std::string &str, const std::string &from_string, const std::string &to_string);
-
+    
         /**
      * @brief Generate the basic output from the parsed decorated structs
      *
@@ -695,7 +695,7 @@ namespace epicr
      * @return false if the generation is unsuccesfull,
      * for example if the outputfile is already open
      */
-    bool generate_basic(recipe, std::string filename);
+    bool generate_txt(recipe, std::string filename);
     
     /**
      * @brief Parse a recipe from a given file
