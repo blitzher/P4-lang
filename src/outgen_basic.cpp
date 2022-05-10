@@ -1,13 +1,10 @@
 #include "epicr.h"
-#include <filesystem>
 
 using std::string;
 
-#define MAX_S_LENGTH 4096
-#define MAX_B_LENGTH 65536 /* 4096 * 16 */
 namespace epicr
 {
-		/* create txt file */
+	/* create txt file */
 	string load_basic_template(string template_name)
 	{
 		string file_content;
@@ -40,16 +37,14 @@ namespace epicr
 	{
 		string number = std::to_string(servings.count);
 		string descriptor = servings.descriptor;
-		
-		
+
 		if (servings.count == 0)
 		{
 			number = "1";
 			descriptor = "servings";
 		}
-		
-		return "**Servings:** " + number + " " + descriptor;
 
+		return "**Servings:** " + number + " " + descriptor;
 	}
 
 	/* constructs strings for ingredients listing */
@@ -59,22 +54,26 @@ namespace epicr
 
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
-			result +=ingredients[i].name;
-			if (!ingredients[i].amount.is_uncountable) {
-			result += " (" + epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit + ")";
-				if (ingredients[i].is_ingredient_ref) {
-				result += " [Reference recipe: " + ingredients[i].name + ".md]";	
+			result += ingredients[i].name;
+			if (!ingredients[i].amount.is_uncountable)
+			{
+				result += " (" + epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit + ")";
+				if (ingredients[i].is_ingredient_ref)
+				{
+					result += " [Reference recipe: " + ingredients[i].name + ".md]";
+				}
 			}
-			}
-			else {
+			else
+			{
 				result += " [Uncountable]";
 			}
-			if (ingredients[i].is_optional){
+			if (ingredients[i].is_optional)
+			{
 				result += " [Optional]";
 			}
 			result += "\n";
 		}
-		return header + "\n" + result;		
+		return header + "\n" + result;
 	}
 
 	/* constructs strings for a list -> used for tags and kitchenware */
@@ -84,26 +83,31 @@ namespace epicr
 			return "";
 		string result;
 
-		if(header == "Tags: "){
-			for (size_t i = 0; i < listElements.size(); i++) {
-			result += listElements[i] + ", ";
+		if (header == "Tags: ")
+		{
+			for (size_t i = 0; i < listElements.size(); i++)
+			{
+				result += listElements[i] + ", ";
 			}
-			result.erase(result.size()-2);
+			result.erase(result.size() - 2);
 			return header + result + "\n";
 		}
-		else { //kitchenware
-			for (size_t i = 0; i < listElements.size(); i++) {
-			result += listElements[i] + "\n";
+		else
+		{ // kitchenware
+			for (size_t i = 0; i < listElements.size(); i++)
+			{
+				result += listElements[i] + "\n";
 			}
 			return header + "\n" + result;
-		}	
+		}
 	}
 
 	/* constructs strings for nutrients listing */
 	string basic_insert_nutrients(std::vector<ingredient> nutrients)
 	{
 		string result;
-		if (nutrients.size() == 0) {
+		if (nutrients.size() == 0)
+		{
 			return "";
 		}
 		for (size_t i = 0; i < nutrients.size(); i++)
@@ -121,16 +125,15 @@ namespace epicr
 	{
 		string result;
 		for (size_t i = 0; i < ingredients.size(); i++)
-			{
-				if (i != 0)
-					result += ", ";
-				result += ingredients[i].name + " ";
-				if (!ingredients[i].amount.is_uncountable)
-					result += epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit;
-			}
+		{
+			if (i != 0)
+				result += ", ";
+			result += ingredients[i].name + " ";
+			if (!ingredients[i].amount.is_uncountable)
+				result += epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit;
+		}
 
 		return header + result;
-
 	}
 
 	/* constructs strings for kitchenware field in instructions */
@@ -138,25 +141,24 @@ namespace epicr
 	{
 		string result;
 		if (kitchenware.size() == 0)
-				return "";
+			return "";
 
 		for (size_t i = 0; i < kitchenware.size(); i++)
-			{
-				result += kitchenware[i];
-				if (i != kitchenware.size() - 1)
-					result += ", ";
-			}
+		{
+			result += kitchenware[i];
+			if (i != kitchenware.size() - 1)
+				result += ", ";
+		}
 
 		return header + result;
-		
 	}
-	
+
 	/* constructs strings for instructions body */
 	string basic_insert_instruction_body(std::vector<instruction_word> body)
 	{
 		string result;
 		for (size_t i = 0; i < body.size(); i++)
-		{	
+		{
 			result += body[i].spelling;
 			if (body[i].is_amount == true)
 			{
@@ -164,8 +166,7 @@ namespace epicr
 				result += body[i].value.unit;
 			}
 		}
-		return strip_spaces_right(result) + "\n"; //readability ig
-
+		return strip_spaces_right(result) + "\n"; // readability ig
 	}
 
 	/* constructs strings for yield field in instructions */
@@ -180,12 +181,12 @@ namespace epicr
 			if (!ingredients[i].amount.is_uncountable)
 				result += epicr::round_double_to_string(ingredients[i].amount.number) + ingredients[i].amount.unit;
 		}
-		return header + "\n" + result +"\n";
-
+		return header + "\n" + result + "\n";
 	}
 
 	/* generate strings for txt and replace placeholders */
-	bool generate_basic(recipe rcp, string filename) {
+	bool generate_basic(recipe rcp, string filename)
+	{
 		string base_template_basic_s = load_basic_template("base");
 		const char *base_template_basic = base_template_basic_s.c_str();
 		string step_template_basic_s = load_basic_template("step");
@@ -226,14 +227,13 @@ namespace epicr
 			}
 
 			/* replace step placeholders with final strings */
-			replace(instruction_string, "~stepText~", step_text);
+			epicr::replace(instruction_string, "~stepText~", step_text);
 			epicr::replace(instruction_string, "~instructionIngredients~", instructionIngredients);
 			epicr::replace(instruction_string, "~instructionKitchenware~", instructionKitchenware);
 			epicr::replace(instruction_string, "~instructionBody~", body);
 			epicr::replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
-
 
 		/* format final strings for .txt*/
 		string title = "### **Title:** ";

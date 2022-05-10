@@ -3,8 +3,6 @@
 
 using std::string;
 
-#define MAX_S_LENGTH 4096
-#define MAX_B_LENGTH 65536 /* 4096 * 16 */
 namespace epicr
 {
 	/* create html file */
@@ -39,8 +37,7 @@ namespace epicr
 	{
 		string number = std::to_string(servings.count);
 		string descriptor = servings.descriptor;
-		
-		
+
 		if (servings.count == 0)
 		{
 			number = "1";
@@ -49,7 +46,6 @@ namespace epicr
 		string result = "<input onClick='this.select();' type='number' class='servings' max='1000' min='0' oninput='update_numbers()'";
 		result += "onfocusout='update_numbers(this)' value=" + number + "> " + descriptor;
 		return result;
-
 	}
 
 	/* insert number and amount */
@@ -75,7 +71,7 @@ namespace epicr
 
 	/* constructs HTML and .txt strings for ingredients listing */
 	string insert_declaration_ingredients(std::vector<ingredient> ingredients)
-	{		
+	{
 		string result = "<h3 class=ingredients-header><strong>Ingredients</strong></h3>";
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
@@ -123,12 +119,13 @@ namespace epicr
 	/* constructs HTML and .txt strings for nutrients listing */
 	string insert_nutrients(std::vector<ingredient> nutrients)
 	{
-		if (nutrients.size() == 0) {
+		if (nutrients.size() == 0)
+		{
 			return "";
 		}
-			
+
 		string result = "<h3 class='field-header'><strong>Nutrients*</strong></h3>";
-		
+
 		for (size_t i = 0; i < nutrients.size(); i++)
 		{
 			std::string number = epicr::round_double_to_string(nutrients[i].amount.number);
@@ -142,7 +139,7 @@ namespace epicr
 	/* constructs HTML and .txt strings for ingredient field in instructions */
 	string insert_instruction_ingredients(string header, std::vector<ingredient> ingredients)
 	{
-		
+
 		string result = "<h5><strong>" + header + "</strong>";
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
@@ -160,8 +157,8 @@ namespace epicr
 	string insert_instruction_kitchenware(string header, std::vector<string> kitchenware)
 	{
 		if (kitchenware.size() == 0)
-				return "";
-		
+			return "";
+
 		string result = "<strong>" + header + "</strong>";
 		for (size_t i = 0; i < kitchenware.size(); i++)
 		{
@@ -176,24 +173,23 @@ namespace epicr
 	/*return a new string with its newlines converted to <br>'s*/
 	std::string newlines_in_html(string a_string)
 	{
-		for (size_t i = 0;i<a_string.size();i++) 
+		for (size_t i = 0; i < a_string.size(); i++)
 		{
 			if (a_string[i] == '\n')
 			{
-				a_string.replace(i,1,"<br>");
+				a_string.replace(i, 1, "<br>");
 			}
 		}
 		return a_string;
 	}
 
-	
 	/* constructs HTML and .txt strings for instructions body */
 	string insert_instruction_body(std::vector<instruction_word> body)
 	{
-		
+
 		string result = "<p class='instruction-body'>";
 		for (size_t i = 0; i < body.size(); i++)
-		{	
+		{
 			result += newlines_in_html(body[i].spelling);
 			if (body[i].is_amount == true)
 			{
@@ -232,7 +228,7 @@ namespace epicr
 	}
 
 	/* generate HTML strings and replace placeholders */
-	bool generate_html(recipe rcp, string filename)
+	bool generate_fancy(recipe rcp, string filename)
 	{
 		string base_template_s = load_HTML_template("base");
 		const char *base_template = base_template_s.c_str();

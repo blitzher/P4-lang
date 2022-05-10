@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 			{
 				std::filesystem::path file = output_file / std::filesystem::path(filename);
 				output_file = file.string() + ".html";
-				epicr::generate_html(my_recipe, output_file);
+				epicr::generate_fancy(my_recipe, output_file);
 				printf("Wrote HTML file: %s\n", output_file.c_str());
 			}
 			else if (choosen_style == epicr::E_OS_BASIC)
