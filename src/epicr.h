@@ -147,6 +147,7 @@ namespace epicr
         epicr_html_style choosen_style;
         std::string output_filepath;
         epicr_unit_system unit_system;
+        bool is_cookbook;
         bool silent;
 
     } cmd_args;
@@ -676,6 +677,16 @@ namespace epicr
     bool generate_fancy(recipe, std::string filename);
 
     /**
+     * @brief Generate the basic output from the parsed decorated structs
+     *
+     * @param filename
+     * @return true if the generation is successfull
+     * @return false if the generation is unsuccesfull,
+     * for example if the outputfile is already open
+     */
+    bool generate_basic(recipe, std::string filename);
+
+    /**
      * @brief finds a string in another string and replace it with a third string
      *
      * @param str
@@ -686,14 +697,12 @@ namespace epicr
     bool replace(std::string &str, const std::string &from_string, const std::string &to_string);
 
     /**
-     * @brief Generate the basic output from the parsed decorated structs
+     * @brief generate a cookbook format of all recipes specified in the folder.
      *
-     * @param filename
-     * @return true if the generation is successfull
-     * @return false if the generation is unsuccesfull,
-     * for example if the outputfile is already open
+     * @param directory the directory for recipes
+     * @param output_directory where to put the cookbook
      */
-    bool generate_basic(recipe, std::string filename);
+    void generate_cookbook(std::string directory, std::string output_directory);
 
     /**
      * @brief Parse a recipe from a given file

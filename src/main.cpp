@@ -21,6 +21,11 @@ int main(int argc, char **argv)
 {
 	epicr::parse_cmd_args(argc, argv);
 
+	if (epicr::clargs.is_cookbook)
+	{
+		epicr::generate_cookbook(epicr::clargs.input_filepath, epicr::clargs.output_filepath);
+	}
+
 	ifstream file = epicr::open_file(epicr::clargs.input_filepath);
 	cout << "Compiling " << epicr::clargs.input_filepath << endl;
 
