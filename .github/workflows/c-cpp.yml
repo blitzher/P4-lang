@@ -28,7 +28,8 @@ jobs:
       with:
         version: latest
         platform: x64
-    
+    - name: remove
+      run: make remove
     - uses: actions/checkout@v2
     - name: make tests
       run: make test
