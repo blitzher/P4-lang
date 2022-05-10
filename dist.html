@@ -1,0 +1,587 @@
+<html>
+    <header>
+        <style>
+            *{
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            }
+
+            html {
+                margin: 10%;
+                margin-top: 20px;
+                overflow: -moz-scrollbars-vertical; 
+                overflow-y: scroll;
+            }
+            #instruction {
+                border: 2px solid black;
+                border-radius: 5px;
+                min-height: 10px;
+                background-color: #faf3ee;
+                padding: 5px 15px 5px 10px;
+            }
+    
+            h5 {
+                font-weight: normal;
+                margin: 0px 0px 5px 0px;
+                font-size: 16px;
+            }
+
+            h3{
+                margin-bottom: 5px;
+                margin-top: 30px;
+            }
+
+            .ingredients-header, .collapsible:first-of-type{
+                margin: 10px 0 5px 0;
+            }
+
+            .collapsible {
+                padding-left: 10px;
+                float: left;
+            }
+            .wrapper {
+                overflow: hidden; /* add this to contain floated children */
+                position: relative;
+            }
+            .time-header {
+                margin-left: 10px;
+                margin-right: 5px;
+                font-weight: bold;
+                float:left; 
+            }
+            .time-content {
+                float: left; 
+                margin-right: 20px;
+            }
+            #title-div{
+                float:left; 
+                margin-bottom: 10px;
+                margin-left: 10px;
+            }
+            #servings-div{
+                float: right;
+                margin-right: 10px;
+            }
+            .left-half{
+                float: left;
+                margin-right: 5%;
+                width: calc(15% - 10px);
+                margin-left: 10px;
+            }
+            .right-half{
+                float: left;
+                width: calc(80% - 10px);
+                margin-right: 10px;
+            }
+            .arrow-down {
+                width: 0; 
+                height: 0; 
+                float: left;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 10px solid #d7d7d7;
+                margin-bottom: -8px;
+            }
+            .collapsible-wrapper:hover>.arrow-down{
+                border-top-color: #898989;
+            }
+            .collapsible-wrapper{
+                align-items: center;
+                display: flex;
+                cursor: pointer;
+                user-select: none;
+            }
+            .collapsible-body{
+                margin-bottom: 25px;
+            }
+            #description{
+                padding-left: 10px;
+                float: left;
+            }
+            .collapse-all-button{
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+            }
+            .reset-amount{
+                width: 50px;
+                float: right;
+                margin-right: 10px;
+            }
+            .servings{
+                width: 50px;
+            }
+            .instruction-body{
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+            .body-rule{
+                border: none;
+                height: 2px;
+                background: black;
+                margin-top: 10px;
+                margin-bottom: 5px;
+            }
+            .arrow{
+                font-size: 22px;
+                line-height: 14px;
+            }
+            .measurement-system{
+                float: right;
+                margin-right: 10px;
+                height: 24px;
+            }
+        </style>
+    </header>
+    <div class="wrapper">
+        <h1 id="title-div">
+            Spaghetti carbonara
+        </h1>
+        <button class = collapse-all-button onclick="collapse_or_expand()" > Collapse All </button>
+    </div>
+    <hr>
+    <div class="wrapper">
+        
+        <div class=time-header>Prep time: </div><div class=time-content>2 min</div>
+        <div class=time-header>Cook time: </div><div class=time-content>13 min</div>
+        <div id="servings-div">
+            <input onClick='this.select();' type='number' class='servings' max='1000' min='0' oninput='update_numbers()'onfocusout='update_numbers(this)' value=4.000000> people
+        </div>
+        <select class="measurement-system">
+            <option hidden value="convertUnits">Convert Units</option>
+            <option value="original">Original</option>
+            <option value="metric">Metric</option>
+            <option value="imperial">Imperial</option>
+        </select>
+        <button class = reset-amount disabled="false" onclick="reset_amount()" > Reset </button>
+    </div>
+    <hr>
+    <div class="wrapper">
+        <div class="left-half">
+            <h3 class=ingredients-header><strong>Ingredients</strong></h3><li>bacon (<text class='number'>100</text> <text class='unit'>g</text>)</text><li>butter (<text class='number'>1</text> <text class='unit'>tsp</text>)</text><li>onion (<text class='number'>1</text><text class='unit'></text>)</text><li>cream (<text class='number'>1</text> <text class='unit'>dl</text>)</text><li>egg (<text class='number'>2</text><text class='unit'></text>)</text><li><a class='is_ingredient_ref' target='_blank'>spaghetti (<text class='number'>4</text> <text class='unit'>servings</text>)</a><li>parmesan (<text class='number'>5</text> <text class='unit'>g</text>)</text><li>salt </text><li>pepper </text>
+            <h3 class=field-header><strong>Optional</strong></h3><li>extra parmesan 
+            <h3>Kitchenware</h3><li>pan</li>
+            <h3 class='field-header'><strong>Nutrients*</strong></h3><li>calories (860 kcal)</li><li>protein (38 g)</li><li>fat (75 g)</li><li>carbs (47 g)</li><text>*pr. 100 grams</text>
+            <h3>Tags: </h3><li>pasta</li><li>easy to make</li><li>under 30 min</li><li>pork</li>
+        </div>
+        <div class="right-half">
+            <div class='collapsible-wrapper'><div class='arrow-down'></div><h3 class='collapsible'>Description</h3></div><div class='collapsible-body'>Pasta Carbonara is one of the dishes that we occasionally resort to on busy weekdays and some weekend evenings. The days when the need for an easy, lightning fast and super delicious dish is weighted higher than a long time in the kitchen and slow but cozy simmering dishes - which I also really like, but every thing in its time<br>... and such a very simple Spaghetti Carbonara is eternally good.</div>
+        
+            <!-- steps -->
+            <div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 1
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		
+		<strong>Kitchenware: </strong>pan<hr class='body-rule'>
+		<p class='instruction-body'>Put your pan on the stove and set the stove to <text class='number'>200</text> <text class='unit'>C</text>.</p>
+	    
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 2
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>bacon (<text class='number'>100</text> <text class='unit'>g</text>)</h5>
+		<strong>Kitchenware: </strong>pan<hr class='body-rule'>
+		<p class='instruction-body'>Cook the bacon on the pan until it is crisp.</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>bacon (<text class='number'>80</text> <text class='unit'>g</text>), bacon fat (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 3
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>butter (<text class='number'>1</text> <text class='unit'>tsp</text>), onion (<text class='number'>1</text><text class='unit'></text>), bacon fat (<text class='number'>1</text><text class='unit'></text>)</h5>
+		<strong>Kitchenware: </strong>pan<hr class='body-rule'>
+		<p class='instruction-body'>Put butter on the pan with bacon fat and saute the onions until soft and clear.</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>cooked onions (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 4
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>bacon (<text class='number'>80</text> <text class='unit'>g</text>), cream (<text class='number'>1</text> <text class='unit'>dl</text>), cooked onions (<text class='number'>1</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Add the bacon and cream to the pan.</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>onion bacon mix </h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 5
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>onion bacon mix , egg (<text class='number'>2</text><text class='unit'></text>), spaghetti (<text class='number'>4</text> <text class='unit'>servings</text>), parmesan (<text class='number'>5</text> <text class='unit'>g</text>), salt , pepper </h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Remove the onion bacon mix from the heat and stir in the eggs and the cooked spaghetti, <br>and mix the dish well with the freshly grated parmesan.<br>Season with salt and freshly ground pepper.</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>spaghetti carbonara (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div><div>
+    <div class="collapsible-wrapper">
+        <div class="arrow-down"></div>
+        <h4 class="collapsible">
+            Step 6
+        </h4>
+    </div>
+	<div class="collapsible-body" id = "instruction">
+		<h5><strong>Ingredients: </strong>extra parmesan , spaghetti carbonara (<text class='number'>1</text><text class='unit'></text>)</h5><hr class='body-rule'>
+		
+		<p class='instruction-body'>Sprinkle some more parmesan (e.g. <text class='number'>20</text> <text class='unit'>g</text>) on the spaghetti carbonara for that extra nice touch.</p>
+	    <hr class='body-rule'><h5><strong><text class='arrow'> &#10230 <text></strong>spaghetti carbonara (<text class='number'>1</text><text class='unit'></text>)</h5>
+	</div>
+</div>
+        
+            <script>
+                /* arrays of HTML elements */
+                const headers = document.getElementsByClassName("collapsible-wrapper");
+                const steps = document.getElementsByClassName("collapsible-body");
+                const arrows = document.getElementsByClassName("arrow-down");
+                const numbers = document.getElementsByClassName("number");
+                const units = document.getElementsByClassName("unit");
+                const ingredient_refs = document.getElementsByClassName("is_ingredient_ref");
+
+                /* single HTML elements */
+                const collapse_all_button = document.getElementsByClassName("collapse-all-button")[0];
+                const reset_amount_button = document.getElementsByClassName("reset-amount")[0];
+                const servings_field = document.getElementsByClassName("servings")[0];
+                const measurement_system_dropdown = document.getElementsByClassName("measurement-system")[0];
+
+                /* amount arrays */
+                let current_amounts = [];
+                let original_amounts = [];
+                let metric_amounts = [];
+                let imperial_amounts = [];
+
+                /* miscellaneous variables */
+                let all_are_collapsed = false;
+                let original_number_of_servings = servings_field.value;
+                const metric_units = ["g", "kg", "ml", "dl", "l", "mm", "cm", "C"];
+                const invalid_chars = ["-", "+", "e", ","];
+                
+                /* object constructor for amounts */
+                function Amount(number, unit) 
+                {
+                    this.number = number;
+                    this.unit = unit;
+                }
+
+                /* constants and functions for converting between metric and imperial */
+                const G_TO_OZ = 0.035;
+                const KG_TO_LBS = 2.2046;
+                const L_TO_QT = 1.057;
+                const ML_TO_FLOZ = 0.0338;
+                const DL_TO_FLOZ = 3.38;
+                const M_TO_FEET = 3.28;
+                const CM_TO_INCH = 0.39370079;
+                const MM_TO_INCH = 0.039;
+
+                function C_TO_F(deg)
+                {
+                    return deg * 9 / 5 + 32;
+                }
+                function F_TO_C(deg)
+                {
+                    return (deg - 32) * 5 / 9;
+                }
+
+                /* initialize and assign final values to the arrays for holding amounts */
+                save_start_values();
+                function save_start_values()
+                {
+                    set_ingredient_refs();
+
+                    for (i = 0; i < numbers.length; i++) 
+                    {
+                        let original_unit = units[i].innerHTML;
+                        let original_number;
+                        if (original_unit == "C" || original_unit == "F")
+                            original_number = parseFloat(numbers[i].innerHTML);
+                        else 
+                            original_number = parseFloat(numbers[i].innerHTML) / original_number_of_servings;
+                        var original_amount = new Amount(original_number, original_unit);
+
+                        original_amounts.push(original_amount);
+                        metric_amounts.push(original_amount);
+                        imperial_amounts.push(original_amount);
+
+                        if(is_metric(original_unit)){ /* convert to imperial */ 
+                            metric_amounts[i] = original_amount;
+                            imperial_amounts[i] = get_metric_to_imperial(original_amount);
+                        }
+                        else { /* convert to metric */ 
+                            metric_amounts[i] = get_imperial_to_metric(original_amount);
+                            imperial_amounts[i] = original_amount;
+                        }
+                    }
+                    change_measurement_system();
+                }
+
+                /* set correct url's for href's */
+                function set_ingredient_refs()
+                {
+                    path = window.location.pathname+window.location.search;
+                    last_slash = path.lastIndexOf("\\");
+                    path = path.slice(0, last_slash);
+
+                    for (i = 0; i < ingredient_refs.length; i++)
+                    {
+                        ingredient_name = ingredient_refs[i].innerHTML;
+                        first_parenthesis = ingredient_name.indexOf("(");
+                        ingredient_name = ingredient_name.slice(0, first_parenthesis);
+                        ingredient_refs[i].href = path + "\\" + ingredient_name.trim() + ".html";
+                    }
+                }
+
+                /* listen for changes on the dropdown menu */
+                measurement_system_dropdown.addEventListener("change", change_measurement_system);
+
+                /* listen for clicks on the dropdown arrows */
+                for (i = 0; i < headers.length; i++) 
+                {
+                    const header = headers[i];
+                    const step = steps[i];
+                    const arrow = arrows[i];
+
+                    header.addEventListener("click", (ev) => {
+                        if(step.style.display == "none")
+                        {
+                            step.style.display = "block";
+                            arrow.style.transform = "rotate(0deg)";
+                        }
+                        else 
+                        {
+                            step.style.display = "none";
+                            arrow.style.transform = "rotate(-90deg)";
+                        }
+                        check_collapse_status();
+                    });
+                }
+
+                /* expand all segments if all are collapsed, else collapse all */
+                function collapse_or_expand()
+                {
+                    if (all_are_collapsed)
+                    {
+                        collapse_all(false); /* expand */ 
+                    }
+                    else 
+                    {
+                        collapse_all(true);  /* collapse */ 
+                    }
+                    check_collapse_status();
+                }
+
+                /* show/hide segments and rotate arrows */
+                function collapse_all(collapse)
+                {
+                    all_are_collapsed = collapse;
+                    let display = "block";
+                    let rotation = "rotate(0deg)";
+                    if (collapse)
+                    {
+                        display = "none";
+                        rotation = "rotate(-90deg)";
+                    }
+                    
+                    for (i = 0; i < headers.length; i++) 
+                    {
+                        const step = steps[i];
+                        const arrow = arrows[i];
+                        step.style.display = display;
+                        arrow.style.transform = rotation;
+                    }
+                }
+
+                /* change collapse/expand button depending on whether all segments are collapsed/expanded */
+                function check_collapse_status()
+                {
+                    oneIsNotCollapsed = false;
+                    for (j = 0; j < headers.length; j++) {
+                        if (steps[j].style.display == "block"){
+                            oneIsNotCollapsed = true;
+                        }
+                    }
+
+                    if(oneIsNotCollapsed)
+                        all_are_collapsed = false;
+                    else
+                        all_are_collapsed = true;
+
+                    if(all_are_collapsed)
+                        collapse_all_button.innerHTML = "Expand All";
+                    else 
+                        collapse_all_button.innerHTML = "Collapse All";
+                }
+
+                /* limit the range of numbers which can be written in the "servings" field */
+                function truncate()
+                {
+                    value = parseInt(servings_field.value);
+                    max = parseInt(servings_field.max);
+                    min = parseInt(servings_field.min); 
+
+                    if(value > max)
+                        servings_field.value = servings_field.max;
+                    else if(value < min)
+                        servings_field.value = value = servings_field.min;
+
+                    if (servings_field.value.includes("."))
+                        servings_field.value = truncateString(servings_field.value, 4);
+                }
+
+                function truncateString(str, num) 
+                {
+                    if (str.length > num)
+                        return str.slice(0, num);
+                    else
+                        return str;
+                }
+
+                /* prohibit writing illegal characters in the "servings" field */
+                servings_field.addEventListener("keydown", e => 
+                {
+                    if (invalid_chars.includes(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+                
+                /* change amounts according to which measurement system is chosen */
+                function update_numbers()
+                {
+                    truncate();
+
+                    /* if no number is written in the servings field, don't do anything*/
+                    if (servings_field.value != "")
+                    { 
+                        for (i = 0; i < numbers.length; i++) 
+                        {
+                            let new_number;
+                            if (units[i].innerHTML == "C" || units[i].innerHTML == "F"){
+                                new_number = current_amounts[i].number; 
+                            }
+                            else 
+                                new_number = (current_amounts[i].number * parseFloat(servings_field.value));
+                            new_number = Math.round((new_number + Number.EPSILON)* 100.0) / 100.0;
+                            numbers[i].innerHTML = new_number.toString();
+                            units[i].innerHTML = current_amounts[i].unit;  
+                        }
+                    }
+
+                    /* disable reset button if the number of servings is already the original number */
+                    if ((servings_field.value == original_number_of_servings) && (measurement_system_dropdown.value == "original"))
+                        reset_amount_button.disabled = true;
+                    else 
+                        reset_amount_button.disabled = false;
+                }
+
+                /* reset servings amount to original */
+                function reset_amount()
+                {
+                    servings_field.value = original_number_of_servings.toString();
+                    measurement_system_dropdown.value = "original";
+                    change_measurement_system();
+                    update_numbers(servings_field);
+                }
+
+                /* check if a unit is in the metric system */
+                function is_metric(unit)
+                {
+                    if(metric_units.includes(unit))
+                        return true;
+                    return false;
+                }
+
+                /* convert metric amounts to imperial amounts */
+                function get_metric_to_imperial(metric_amount)
+                {
+                    var imperial_amount = Object.assign({}, metric_amount); /* copy object */
+
+                    switch(metric_amount.unit)
+                    {
+                        case "g":     convert_to_imperial(imperial_amount, G_TO_OZ, "oz");                      break;
+                        case "kg":    convert_to_imperial(imperial_amount, KG_TO_LBS, "lbs");                   break;
+                        case "ml":    convert_to_imperial(imperial_amount, ML_TO_FLOZ, "fl-oz");                break;
+                        case "dl":    convert_to_imperial(imperial_amount, DL_TO_FLOZ, "fl-oz");                break;
+                        case "l":     convert_to_imperial(imperial_amount, L_TO_QT, "qt");                      break;
+                        case "mm":    convert_to_imperial(imperial_amount, MM_TO_INCH, "in");                   break;
+                        case "cm":    convert_to_imperial(imperial_amount, CM_TO_INCH, "in");                   break;
+                        case "C":     imperial_amount.number = C_TO_F(imperial_amount.number);   
+                                    imperial_amount.unit = "F";                                               break;
+                        default:      /* unit is not in the metric system */
+                    }
+                    return imperial_amount;
+                }
+
+                /* convert imperial amounts to metric amounts */
+                function get_imperial_to_metric(imperial_amount)
+                {
+                    var metric_amount = Object.assign({}, imperial_amount); /* copy object */
+                    switch(imperial_amount.unit)
+                    {
+                        case "oz":      convertToMetric(metric_amount, G_TO_OZ, "g");                       break;
+                        case "lbs":     convertToMetric(metric_amount, KG_TO_LBS, "kg");                    break;
+                        case "fl-oz":   convertToMetric(metric_amount, ML_TO_FLOZ, "ml");                   break;
+                        case "qt":      convertToMetric(metric_amount, L_TO_QT, "l");                       break;
+                        case "in":      convertToMetric(metric_amount, CM_TO_INCH, "cm");                   break;
+                        case "ft":      convertToMetric(metric_amount, M_TO_FEET, "m");                     break;
+                        case "F":       metric_amount.number = F_TO_C(metric_amount.number);    
+                                        metric_amount.unit = "C";                                           break;
+                        default:        /* unit is not in the imperial system */
+                    }
+                    return metric_amount;
+                }
+
+                /* update imperial amount with correct number and unit */
+                function convert_to_imperial(imperial_amount, conversion_rate, new_unit)
+                {
+                    imperial_amount.number *= conversion_rate;
+                    imperial_amount.unit = new_unit;
+                }
+
+                /* update metric amount with correct number and unit */
+                function convertToMetric(metric_amount, conversion_rate, new_unit)
+                {
+                    metric_amount.number /= conversion_rate;
+                    metric_amount.unit = new_unit;
+                }
+
+                /* change current amount to fit the selected measurement system */
+                function change_measurement_system()
+                {
+                    if (measurement_system_dropdown.value == "imperial")
+                    {
+                        for (i = 0; i < numbers.length; i++)
+                            current_amounts[i] = imperial_amounts[i];
+                    }
+                    else if (measurement_system_dropdown.value == "metric")
+                    {
+                        for (i = 0; i < numbers.length; i++)
+                            current_amounts[i] = metric_amounts[i];
+                    }
+                    else /* original amounts */
+                    { 
+                        for (i = 0; i < numbers.length; i++)
+                            current_amounts[i] = original_amounts[i];    
+                    }
+                    update_numbers();
+                }
+            </script>
+        </div>
+    </div>
+</html>
