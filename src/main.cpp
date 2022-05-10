@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 			}
 			else if (choosen_style == epicr::E_OS_BASIC){
 				output_file.append("/" + filename + ".md");
-				epicr::generate_basic(my_recipe, output_file);
+				epicr::generate_txt(my_recipe, output_file);
 				printf("Wrote basic file: %s\n", output_file.c_str());
 			}
 		}

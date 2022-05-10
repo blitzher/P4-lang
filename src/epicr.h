@@ -676,7 +676,17 @@ namespace epicr
      * for example if the outputfile is already open
      */
     bool generate_html(recipe, std::string filename);
-
+    
+    /**
+	 * @brief finds a string in another string and replace it with a third string
+	 * 
+	 * @param str 
+	 * @param from_string 
+	 * @param to_string 
+	 * @return finds 
+	 */
+	bool replace(std::string &str, const std::string &from_string, const std::string &to_string);
+    
         /**
      * @brief Generate the basic output from the parsed decorated structs
      *

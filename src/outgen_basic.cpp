@@ -184,7 +184,7 @@ namespace epicr
 	}
 
 	/* generate strings for txt and replace placeholders */
-	bool generate_basic(recipe rcp, string filename) {
+	bool generate_txt(recipe rcp, string filename) {
 		string base_template_basic_s = load_basic_template("base");
 		const char *base_template_basic = base_template_basic_s.c_str();
 		string step_template_basic_s = load_basic_template("step");
