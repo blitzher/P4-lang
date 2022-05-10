@@ -506,11 +506,11 @@ namespace epicr
             /**
              * @brief Convert a unit into a different unit system, i.e. E_TT_METRIC to E_TT_IMPERIAL
              *
-             * @param amnt The amount to be scaled
+             * @param tokensToPeak The amount to be scaled
              * @param system The system to be scaled into
              * @return amount
              */
-            void convert_amount(amount* amnt, epicr_unit_system system);
+            void convert_amount(amount* tokensToPeak, epicr_unit_system system);
 
         public:
             /**
