@@ -54,8 +54,8 @@ int main(int argc, char **argv)
 				printf("Wrote HTML file: %s\n", output_file.c_str());
 			}
 			else if (choosen_style == epicr::E_OS_BASIC){
-				output_file.append("/" + filename + ".txt");
-				epicr::generate_txt(my_recipe, output_file);
+				output_file.append("/" + filename + ".md");
+				epicr::generate_basic(my_recipe, output_file);
 				printf("Wrote basic file: %s\n", output_file.c_str());
 			}
 		}
