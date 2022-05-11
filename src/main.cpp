@@ -31,9 +31,22 @@ int main(int argc, char **argv)
 
 	cout << my_parser.has_error << " Parser  : " << my_parser.error << endl;
 
+	// creates temp file for gui to read
+	if(my_parser.has_error) {
+		ofstream ParsererrorLog("ParserErrorlog.txt");
+		ParsererrorLog << my_parser.error;
+	}
+
 	if (!my_parser.has_error)
 	{
 		epicr::rcp_ret vis_ret = epicr::visitor::visit_all(&my_recipe);
+
+		// creates temp file for gui to read
+		if(vis_ret.has_err) {
+			ofstream visitorErrorlog("visitorErrorlog.txt");
+			visitorErrorlog << vis_ret.err << endl;
+		}
+
 		cout << vis_ret.has_err << vis_ret.err << endl;
 		if (!vis_ret.has_err)
 		{

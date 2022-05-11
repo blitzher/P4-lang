@@ -727,7 +727,7 @@ namespace epicr::visitor
     {
         if (rcp->title.empty())
         {
-            error = "No title was found";
+            error = "No title or recipe was found";
             has_error = true;
             return;
         }

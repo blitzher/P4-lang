@@ -139,7 +139,7 @@ namespace epicr
 			then it must be an invalid field */
 			else if (utoken.type == E_TT_COLON)
 			{
-				ERR("invalid field: No field with this name", ctoken);
+				ERR("invalid field: No field with this name: " + ctoken.word, ctoken);
 			}
 			else
 			{
