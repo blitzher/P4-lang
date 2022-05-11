@@ -23,7 +23,7 @@ class App(tk.Frame):
         self.output_dir_button = tk.Button(
             self,
             command=lambda: self.open_dir(self.out_dir_label),
-            text="Choose output dir",
+            text="Choose output directory",
             height=1,
             width=15,
         )

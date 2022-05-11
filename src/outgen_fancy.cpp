@@ -227,24 +227,15 @@ namespace epicr
 		return result;
 	}
 
-	/* generate HTML strings and replace placeholders */
-	bool generate_fancy(recipe rcp, string filename)
-	{
-		string base_template_s = load_HTML_template("base");
-		const char *base_template = base_template_s.c_str();
-		string step_template_s = load_HTML_template("step");
-		const char *step_template = step_template_s.c_str();
-
-		std::filesystem::create_directory("dist");
-
-		std::ofstream file{filename};
-		if (!file.is_open())
-			return false;
-		int index = 0;
+    string insert_instructions(std::vector<instruction> instructions){
+        int index = 0;
 		string instruction_strings;
 
+        string step_template_s = load_HTML_template("step");
+		const char *step_template = step_template_s.c_str();
+
 		/* format final HTML strings for instructions*/
-		for (auto inst : rcp.instructions)
+		for (auto inst : instructions)
 		{
 			index++;
 			string instruction_string = step_template;
@@ -279,8 +270,23 @@ namespace epicr
 			epicr::replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
+        return instruction_strings;
+    }
+
+	/* generate HTML strings and replace placeholders */
+	bool generate_fancy(recipe rcp, string filename)
+	{
+		string base_template_s = load_HTML_template("base");
+		const char *base_template = base_template_s.c_str();
+
+		std::filesystem::create_directory("dist");
+
+		std::ofstream file{filename};
+		if (!file.is_open())
+			return false;
 
 		/* format final HTML strings */
+        string instruction_strings = insert_instructions(rcp.instructions);
 		string servings = insert_servings(rcp.servings);
 		string tags = insert_text_in_list("Tags: ", rcp.tags);
 		string kitchenware = insert_text_in_list("Kitchenware", rcp.kitchenware);

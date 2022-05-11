@@ -171,13 +171,13 @@ namespace epicr
 
 	parse_ret parse_recipe(std::string filename)
 	{
-		cmd_args args = { filename, E_OS_BASIC, "dist", E_US_NONE, false };
+		cmd_args args = { filename, E_STYLE_FANCY, "dist", E_US_NONE, false };
 		return parse_recipe(args);
 	}
 
 	parse_ret parse_recipe_silent(std::string filename)
 	{
-		cmd_args args = { filename, E_OS_BASIC, "dist", E_US_NONE, true };
+		cmd_args args = { filename, E_STYLE_FANCY, "dist", E_US_NONE, true };
 		return parse_recipe_silent(args);
 	}
 
@@ -267,14 +267,14 @@ namespace epicr
 
 	epicr::epicr_html_style parse_style(std::string argv)
 	{
-		epicr::epicr_html_style choosen_style = epicr::E_OS_BASIC;
+		epicr::epicr_html_style choosen_style = epicr::E_STYLE_BASIC;
 		if (argv == "--basic" || argv == "-b")
 		{
-			choosen_style = epicr::E_OS_BASIC;
+			choosen_style = epicr::E_STYLE_BASIC;
 		}
 		else if (argv == "--fancy" || argv == "-f")
 		{
-			choosen_style = epicr::E_OS_FANCY;
+			choosen_style = epicr::E_STYLE_FANCY;
 		}
 		return choosen_style;
 	}
@@ -300,7 +300,7 @@ namespace epicr
 			argv_s.push_back(std::string(argv[i]));
 		}
 
-		epicr::cmd_args CMD_ARGS = { "", E_OS_BASIC, concat_output_dir("dist"), E_US_NONE, false };
+		epicr::cmd_args CMD_ARGS = { "", E_STYLE_FANCY, concat_output_dir("dist"), E_US_NONE, false };
 		for (int i = 0; i < argc; i++)
 		{
 			std::string arg = to_lower(argv_s[i]);
