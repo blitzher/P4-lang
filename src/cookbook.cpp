@@ -15,14 +15,14 @@ namespace epicr
                                "<head><style>" +
                                "body, div, a{display:flex; place-content:center; align-items:center; flex-direction:column;}\n" +
                                "div {min-width:100vw}" +
-                               "a { padding:15px; background: #faf3ee; font-weight:bold; font-size:2em; width:100%}" +
+                               "a { padding:15px; background: #faf3ee; font-weight:bold; font-size:2em; font-style: italic; width:100%; color: black; }" +
                                "h1 {}" +
                                "</style></head>";
 
-        output_file_content += "<h1>epicR Cookbook of " + directory + "</h1><div>";
+        output_file_content += "<h1>epicR Cookbook of " + directory + "/</h1><div>";
         for (const auto &file : dir_iter)
         {
-            if (!string_ends_with(file.path().filename(), ".rcp"))
+            if (!string_ends_with(file.path().filename().string(), ".rcp"))
                 continue;
 
             const auto rcp_ret = parse_recipe(file.path().string());
@@ -44,11 +44,11 @@ namespace epicr
 
             switch (clargs.choosen_style)
             {
-            case E_OS_FANCY:
+            case E_STYLE_FANCY:
                 filename += ".html";
                 generate_fancy(rcp, filename);
                 break;
-            case E_OS_BASIC:
+            case E_STYLE_BASIC:
                 filename += ".md";
                 generate_basic(rcp, filename);
                 break;

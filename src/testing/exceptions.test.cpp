@@ -7,7 +7,7 @@ void parse_incorrect_field_exception()
 
     std::string incorrect_field_string = "incorrect_field: this is not right";
     auto rcp = epicr::parse_string_silent(incorrect_field_string);
-    test_lib::expect_exception(rcp, "invalid field: No field with this name");
+    test_lib::expect_exception(rcp, "invalid field: No field with this name: incorrect_field");
 }
 
 void parse_invalid_servings_amount_exception()
@@ -17,15 +17,6 @@ void parse_invalid_servings_amount_exception()
     std::string incorrect_field_string = "servings: people 2";
     auto rcp = epicr::parse_string_silent(incorrect_field_string);
     test_lib::expect_exception(rcp, "No correct description for amount has been found");
-}
-
-void parse_invalid_nutrient_amount_exception()
-{
-    test_lib::REGISTER;
-
-    std::string incorrect_field_string = "nutrients: calories [100 cm]";
-    auto rcp = epicr::parse_string_silent(incorrect_field_string);
-    test_lib::expect_exception(rcp, "Invalid unit after nutrient");
 }
 
 void parse_missing_colon_after_instruction_header_exception()
@@ -198,7 +189,7 @@ void visit_mandatory_fields_title_exception()
     epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
     mand_fields.visit(&rcp);
     epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
-    test_lib::expect_exception(ret, "No title was found");
+    test_lib::expect_exception(ret, "No title or recipe was found");
 }
 
 void visit_mandatory_fields_ingredients_exception()
@@ -234,7 +225,6 @@ int main()
 {
     parse_incorrect_field_exception();
     parse_invalid_servings_amount_exception();
-    parse_invalid_nutrient_amount_exception();
     parse_missing_colon_after_instruction_header_exception();
     parse_missing_open_bracket_after_with_exception();
     parse_expected_seperator_in_with_exception();

@@ -1,10 +1,11 @@
 import os
 import tkinter as tk
-from tkinter import E, LEFT, W, Entry, IntVar, ttk
+from tkinter import E, LEFT, W, Entry, IntVar, ttk, messagebox
 import tkinter.filedialog as fd
 
 
 class App(tk.Frame):
+    
     def __init__(self, master):
         super().__init__(master)
         root.geometry("550x210")
@@ -22,7 +23,7 @@ class App(tk.Frame):
         self.output_dir_button = tk.Button(
             self,
             command=lambda: self.open_dir(self.out_dir_label),
-            text="Choose output dir",
+            text="Choose output directory",
             height=1,
             width=15,
         )
@@ -127,6 +128,7 @@ class App(tk.Frame):
             dest.set(self.format_fpath(dirpath))
             self.directory.set(
                 self.output_dir_clarg.get() + self.out_dir_label.get())
+    
 
     def compile(self):
 
@@ -135,6 +137,12 @@ class App(tk.Frame):
         else:
             executable = os.path.join(".", "bin", "main")
 
+        if(os.path.exists("ParserErrorlog.txt")): 
+            os.remove("ParserErrorlog.txt")
+        
+        elif(os.path.exists("visitorErrorlog.txt")): 
+            os.remove("visitorErrorlog.txt")
+
         clargs = "%s %s --%s --%s" % (
             self.input_fpath.get(),
             self.directory.get(),
@@ -142,6 +150,20 @@ class App(tk.Frame):
             self.unit_system,
         )
         os.system("%s %s" % (executable, clargs))
+        if(os.path.exists("ParserErrorlog.txt")): 
+            parserLog = open("ParserErrorlog.txt")
+            messagebox.showerror(title="Paser Error", message=parserLog.readline())
+            parserLog.close()
+            os.remove("visitorErrorlog.txt")
+        elif(os.path.exists("visitorErrorlog.txt")): 
+            visitorLog = open("visitorErrorlog.txt")
+            messagebox.showerror(title="Visitor Error", message=visitorLog.readline())
+            visitorLog.close()
+            os.remove("visitorErrorlog.txt")
+        else:
+            messagebox.showinfo(title="No errors", message="Compilation suscceded! yay")
+        
+    
 
     def format_fpath(self, s):
         return s

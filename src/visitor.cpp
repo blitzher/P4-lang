@@ -14,15 +14,15 @@
         }                     \
     }
 
-#define WARN(msg)                                     \
-	{                                                 \
+#define WARN(msg)                                 \
+    {                                             \
         std::cout << "WARNING ON LINE "           \
-                    << __LINE__ << " (" << __FILE__ \
-                    << ":" << __FUNCTION__          \
-                    << ")" << std::endl;            \
+                  << __LINE__ << " (" << __FILE__ \
+                  << ":" << __FUNCTION__          \
+                  << ")" << std::endl;            \
         std::cout << msg << std::endl;            \
         std::cout << std::endl;                   \
-	}
+    }
 
 /* Check if something exits in the map. E.g checks if an ingredient is in the ingredient list */
 template <typename T, typename A>
@@ -39,9 +39,9 @@ bool map_contains(std::unordered_map<T, A> map, T key)
 template <typename K, typename VT>
 K key_of_value_in_map_vec(std::map<K, std::vector<VT>> map, VT val, K def)
 {
-    for (const auto& pair : map)
+    for (const auto &pair : map)
     {
-        for (const auto& vecv : pair.second)
+        for (const auto &vecv : pair.second)
         {
             if (vecv == val)
                 return pair.first;
@@ -53,21 +53,13 @@ K key_of_value_in_map_vec(std::map<K, std::vector<VT>> map, VT val, K def)
 template <typename T>
 bool vec_contains(std::vector<T> vector, T value)
 {
-    for (const T& t : vector)
+    for (const T &t : vector)
         if (value == t)
             return true;
     return false;
 }
 
 bool map_is_initalized = false;
-
-/* Indexed ingredients struct */
-typedef struct indexed_ingredient_s { epicr::ingredient ingr; int index; } indexed_ingredient;
-
-bool compare_indexed_ingredient(indexed_ingredient i1, indexed_ingredient i2)
-{
-    return (i1.index < i2.index);
-}
 
 namespace epicr
 {
@@ -83,15 +75,15 @@ namespace epicr
 
         /* all units and their type */
         std::vector<std::string> weight_units = {
-            "g", "kg", "oz", "lbs" };
+            "g", "kg", "oz", "lbs"};
         units_in_type[E_UT_WEIGHT] = weight_units;
 
         std::vector<std::string> volume_units = {
-            "ml", "dl", "l", "fl-oz", "cup", "qt", "gal" };
+            "ml", "dl", "l", "fl-oz", "cup", "qt", "gal"};
         units_in_type[E_UT_VOLUME] = volume_units;
 
         std::vector<std::string> length_units = {
-            "mm", "cm", "in", "ft" };
+            "mm", "cm", "in", "ft"};
         units_in_type[E_UT_LENGTH] = length_units;
 
         std::vector<std::string> temperature_units = {
@@ -102,7 +94,7 @@ namespace epicr
         unit_aliases["g"] = {"g", "gram", "grams"};
         unit_aliases["kg"] = {"kg", "kilogram", "kgs", "kilograms"};
         unit_aliases["oz"] = {"oz", "ounce", "ounces"};
-        unit_aliases["lbs"] = {"lbs", "pounds","lb"};
+        unit_aliases["lbs"] = {"lbs", "pounds", "lb"};
 
         unit_aliases["ml"] = {"ml", "milliliter"};
         unit_aliases["dl"] = {"dl", "deciliter"};
@@ -143,7 +135,7 @@ namespace epicr::visitor
         error = "No error";
     };
 
-    void IngredientVerifier::visit(recipe* a_rcp)
+    void IngredientVerifier::visit(recipe *a_rcp)
     {
 
         /* shallow copy of input recipe */
@@ -170,13 +162,13 @@ namespace epicr::visitor
 
         int instruction_count = 0;
 
-        for (auto& inst : a_rcp->instructions)
+        for (auto &inst : a_rcp->instructions)
         {
             if (has_error)
                 break;
             instruction_count++;
             /* consume */
-            for (auto& ingr : inst.ingredients)
+            for (auto &ingr : inst.ingredients)
             {
                 if (has_error)
                     break;
@@ -209,7 +201,7 @@ namespace epicr::visitor
                         break;
                     default:
                         std::string err_msg = "Received unexpected relative amount [" +
-                            ingr.amount.relative_amount + "] for Ingredient '" + ingr.name + "'";
+                                              ingr.amount.relative_amount + "] for Ingredient '" + ingr.name + "'";
                         ERR(err_msg);
                         return;
                     }
@@ -518,8 +510,8 @@ namespace epicr::visitor
 
     bool AmountConverter::is_convertable(std::string unit)
     {
-        for (const auto& pair : unit_aliases)
-            for (const auto& alias : pair.second)
+        for (const auto &pair : unit_aliases)
+            for (const auto &alias : pair.second)
                 if (to_lower(unit) == alias)
                     return true;
 
@@ -529,8 +521,8 @@ namespace epicr::visitor
     std::string AmountConverter::standardize(std::string unit)
     {
         std::string unit_lower = to_lower(unit);
-        for (const auto& pair : unit_aliases)
-            for (const auto& alias : pair.second)
+        for (const auto &pair : unit_aliases)
+            for (const auto &alias : pair.second)
                 if (unit_lower == alias)
                     return unit_aliases[pair.first][0];
 
@@ -538,7 +530,7 @@ namespace epicr::visitor
         return "";
     }
 
-    void AmountConverter::convert_amount(amount* amnt, epicr_unit_system tar_sys)
+    void AmountConverter::convert_amount(amount *amnt, epicr_unit_system tar_sys)
     {
         std::string standardized = standardize(to_lower(amnt->unit));
         amnt->unit = standardized;
@@ -551,9 +543,9 @@ namespace epicr::visitor
         epicr_unit_system cur_sys;
 
         /* find out what system the current unit is in*/
-        for (const auto& pair : epicr::units_in_system)
+        for (const auto &pair : epicr::units_in_system)
         {
-            for (const auto& unit_in_sys : pair.second)
+            for (const auto &unit_in_sys : pair.second)
             {
                 if (standardized == unit_in_sys)
                 {
@@ -676,34 +668,34 @@ namespace epicr::visitor
         }
     }
 
-    void AmountConverter::visit(recipe* rcp)
+    void AmountConverter::visit(recipe *rcp)
     {
-        std::vector<amount*> scaleables;
+        std::vector<amount *> scaleables;
 
         /* Get all amounts from ingredients */
-        for (auto& ingr : rcp->ingredients)
+        for (auto &ingr : rcp->ingredients)
         {
-            amount* amnt_ptr = &ingr.amount;
+            amount *amnt_ptr = &ingr.amount;
             scaleables.push_back(amnt_ptr);
         }
 
         /* Get all amounts from instructions */
-        for (auto& inst : rcp->instructions)
+        for (auto &inst : rcp->instructions)
         {
-            for (auto& ingr : inst.ingredients)
+            for (auto &ingr : inst.ingredients)
                 scaleables.push_back(&(ingr.amount));
 
-            for (auto& word : inst.body)
+            for (auto &word : inst.body)
             {
                 if (word.is_amount)
                     scaleables.push_back(&(word.value));
             }
 
-            for (auto& ingr : inst.yields)
+            for (auto &ingr : inst.yields)
                 scaleables.push_back(&(ingr.amount));
         }
 
-        for (auto& amnt : scaleables)
+        for (auto &amnt : scaleables)
         {
             if (!is_convertable(amnt->unit))
                 continue;
@@ -723,11 +715,11 @@ namespace epicr::visitor
         has_error = false;
     }
 
-    void MandatoryFields::check_mandatory_fields(const recipe* rcp)
+    void MandatoryFields::check_mandatory_fields(const recipe *rcp)
     {
         if (rcp->title.empty())
         {
-            error = "No title was found";
+            error = "No title or recipe was found";
             has_error = true;
             return;
         }
@@ -745,7 +737,7 @@ namespace epicr::visitor
         }
     }
 
-    void MandatoryFields::set_servings_default_value(recipe* rcp)
+    void MandatoryFields::set_servings_default_value(recipe *rcp)
     {
         if (rcp->servings.count == 0 && rcp->servings.descriptor == "")
         {
@@ -754,7 +746,7 @@ namespace epicr::visitor
         }
     }
 
-    void MandatoryFields::visit(recipe* rcp)
+    void MandatoryFields::visit(recipe *rcp)
     {
         check_mandatory_fields(rcp);
         set_servings_default_value(rcp);
@@ -763,21 +755,23 @@ namespace epicr::visitor
 #pragma endregion
 
 #pragma region IngredientSorter implementation
-    IngredientSorter::IngredientSorter() {
+    IngredientSorter::IngredientSorter(){
 
     };
 
-    void IngredientSorter::visit(recipe* rcp) {
-        std::vector<indexed_ingredient> ordered_ingredients;
-        int index = 0;
+    void IngredientSorter::visit(recipe *rcp)
+    {
+        std::vector<ingredient> ordered_ingredients;
 
         /* get a collection of ingredients in the ingredients list */
         std::unordered_map<std::string, ingredient> existing_ingredients;
-        for (const auto& ingr : rcp->ingredients)
+        for (const auto &ingr : rcp->ingredients)
             existing_ingredients[ingr.name] = ingr;
 
-        for (const auto& inst : rcp->instructions) {
-            for (const auto& ingr : inst.ingredients) {
+        for (const auto &inst : rcp->instructions)
+        {
+            for (const auto &ingr : inst.ingredients)
+            {
 
                 /* determine if ingredient in instruction is in ingredient list */
                 if (!map_contains(existing_ingredients, ingr.name))
@@ -785,29 +779,27 @@ namespace epicr::visitor
 
                 /* determine if ingredient in instruction is already indexed */
                 bool contained = false;
-                for (const auto& unique : ordered_ingredients) {
-                    if (ingr.name == unique.ingr.name)
+                for (const auto &unique : ordered_ingredients)
+                {
+                    if (ingr.name == unique.name)
                         contained = true;
                 }
 
                 /* otherwise, add it */
-                if (!contained) {
-                    indexed_ingredient ii = { existing_ingredients[ingr.name], index++ };
-                    ordered_ingredients.push_back(ii);
-                }
+                if (!contained)
+                    ordered_ingredients.push_back(existing_ingredients[ingr.name]);
             }
         }
-        std::sort(ordered_ingredients.begin(), ordered_ingredients.end(), compare_indexed_ingredient);
 
         /* override the ingredients in the ingredient list with the sorted array */
-        for (const auto& ordered : ordered_ingredients) {
-            rcp->ingredients[ordered.index] = ordered.ingr;
+        for (size_t i = 0; i < ordered_ingredients.size(); i++)
+        {
+            rcp->ingredients[i] = ordered_ingredients[i];
         }
-
     }
 #pragma endregion
 
-    rcp_ret visit_all(recipe* rcp)
+    rcp_ret visit_all(recipe *rcp)
     {
         auto ac_vis = AmountConverter();
         auto in_vis = IngredientVerifier();
@@ -816,19 +808,19 @@ namespace epicr::visitor
 
         mf_vis.visit(rcp);
         if (mf_vis.has_error)
-            return { {}, 1, " ManFld: " + mf_vis.error };
+            return {{}, 1, " ManFld: " + mf_vis.error};
 
         ac_vis.visit(rcp);
         if (ac_vis.has_error)
-            return { {}, 1, " AmtCon: " + ac_vis.error };
+            return {{}, 1, " AmtCon: " + ac_vis.error};
 
         in_vis.visit(rcp);
         if (in_vis.has_error)
-            return { {}, 1, " IngVer: " + in_vis.error };
+            return {{}, 1, " IngVer: " + in_vis.error};
 
         is_vis.visit(rcp);
 
-        return { rcp, 0, " Visitors: No error" };
+        return {rcp, 0, " Visitors: No error"};
     }
 
 }
