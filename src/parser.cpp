@@ -196,8 +196,6 @@ namespace epicr
 			ingredient nutrient = ReadIngredient(0);
 			if (has_error)
 				return;
-			if (nutrient.amount.unit != "kcal" && nutrient.amount.unit != "cal" && nutrient.amount.unit != "g")
-				ERR_VOID("Invalid unit after nutrient", ctoken);
 
 			nutrients.push_back(nutrient);
 			ReadSeperatorOrWaitAtNextField("nutrients");

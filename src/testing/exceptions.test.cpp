@@ -19,15 +19,6 @@ void parse_invalid_servings_amount_exception()
     test_lib::expect_exception(rcp, "No correct description for amount has been found");
 }
 
-void parse_invalid_nutrient_amount_exception()
-{
-    test_lib::REGISTER;
-
-    std::string incorrect_field_string = "nutrients: calories [100 cm]";
-    auto rcp = epicr::parse_string_silent(incorrect_field_string);
-    test_lib::expect_exception(rcp, "Invalid unit after nutrient");
-}
-
 void parse_missing_colon_after_instruction_header_exception()
 {
     test_lib::REGISTER;
@@ -234,7 +225,6 @@ int main()
 {
     parse_incorrect_field_exception();
     parse_invalid_servings_amount_exception();
-    parse_invalid_nutrient_amount_exception();
     parse_missing_colon_after_instruction_header_exception();
     parse_missing_open_bracket_after_with_exception();
     parse_expected_seperator_in_with_exception();
