@@ -17,21 +17,21 @@ class App(tk.Frame):
             command=lambda: self.open_file(self.input_fpath),
             text="Choose file/Recipe",
             height=1,
-            width=20,
+            width=15,
         )
         self.output_dir_button = tk.Button(
             self,
             command=lambda: self.open_dir(self.out_dir_label),
             text="Choose output directory",
             height=1,
-            width=20,
+            width=15,
         )
         self.compile_btn = tk.Button(
             self,
             command=lambda: self.compile(),
             text="Compile output",
             height=1,
-            width=20,
+            width=15,
         )
         self.input_file_button.pack(anchor=W)
         self.output_dir_button.pack(anchor=W)
