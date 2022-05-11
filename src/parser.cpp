@@ -299,11 +299,11 @@ namespace epicr
 				std::string filename = ((std::filesystem::path)clargs.output_filepath / ingr.name).string();
 				switch (clargs.choosen_style)
 				{
-				case (epicr::E_OS_FANCY):
+				case (epicr::E_STYLE_FANCY):
 					filename += ".html";
 					generate_fancy(rcp, filename);
 					break;
-				case (epicr::E_OS_BASIC):
+				case (epicr::E_STYLE_BASIC):
 					filename += ".md";
 					generate_basic(rcp, filename);
 					break;
