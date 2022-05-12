@@ -328,7 +328,7 @@ namespace epicr
 				CMD_ARGS.output_filepath = argv_s[i + 1];
 				i++;
 			}
-			else if (arg == "--book" || arg == "-b")
+			else if (arg == "--cookbook" || arg == "-c")
 			{
 				CMD_ARGS.is_cookbook = true;
 			}

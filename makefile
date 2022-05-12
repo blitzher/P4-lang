@@ -72,7 +72,7 @@ $(T_TARGETS)::
 
 # runnable targets 
 run: $(BINDIR)/$(TARGET)
-	./$< examples/Carbonara.rcp
+	./$< src/test-recipes/images.rcp
 
 run-rel: $(BINDIR)/$(TARGET)
 	./$< examples/burgers.rcp -o dist
