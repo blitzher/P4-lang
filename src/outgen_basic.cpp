@@ -29,13 +29,13 @@ namespace epicr
 		if (time == "")
 			return "";
 
-		return header + time;
+		return header + "\n" + time + "\n";
 	}
 
 	/* constructs strings for servings field */
 	string basic_insert_servings(servings servings)
 	{
-		string number = std::to_string(servings.count);
+		string number = epicr::round_double_to_string(servings.count);
 		string descriptor = servings.descriptor;
 
 		if (servings.count == 0)
@@ -44,34 +44,36 @@ namespace epicr
 			descriptor = "servings";
 		}
 
-		return "**Servings:** " + number + " " + descriptor;
+		return "**Servings:**\n" + number + " " + descriptor + "\n";
 	}
 
 	/* constructs strings for ingredients listing */
-	string basic_insert_declaration_ingredients(string header, std::vector<ingredient> ingredients)
+	string basic_insert_declaration_ingredients(string header, std::vector<ingredient> ingredients, bool optional)
 	{
 		string result;
 
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
-			result += ingredients[i].name;
-			if (!ingredients[i].amount.is_uncountable)
-			{
-				result += " (" + epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit + ")";
-				if (ingredients[i].is_ingredient_ref)
-				{
-					result += " [Reference recipe: " + ingredients[i].name + ".md]";
-				}
-			}
-			else
-			{
-				result += " [Uncountable]";
-			}
-			if (ingredients[i].is_optional)
-			{
-				result += " [Optional]";
-			}
-			result += "\n";
+            if ((!optional && !ingredients[i].is_optional) || (optional && ingredients[i].is_optional)) 
+            {
+                result += "- " + ingredients[i].name;
+
+                string unit = ingredients[i].amount.unit;
+
+                if (unit != "")
+                    unit += "";
+
+                if (!ingredients[i].amount.is_uncountable)
+                {
+                    result += " (" + epicr::round_double_to_string(ingredients[i].amount.number) + unit + ") \n";
+                    if (ingredients[i].is_ingredient_ref)
+                    {
+                        result += "- [Reference recipe: " + ingredients[i].name + ".md] \n";
+                    }
+                }
+                else 
+                    result += "\n";
+            }
 		}
 		return header + "\n" + result;
 	}
@@ -79,27 +81,15 @@ namespace epicr
 	/* constructs strings for a list -> used for tags and kitchenware */
 	string basic_insert_text_in_list(string header, std::vector<string> listElements)
 	{
+        string result;
 		if (listElements.size() == 0)
 			return "";
-		string result;
 
-		if (header == "Tags: ")
-		{
-			for (size_t i = 0; i < listElements.size(); i++)
-			{
-				result += listElements[i] + ", ";
-			}
-			result.erase(result.size() - 2);
-			return header + result + "\n";
-		}
-		else
-		{ // kitchenware
-			for (size_t i = 0; i < listElements.size(); i++)
-			{
-				result += listElements[i] + "\n";
-			}
-			return header + "\n" + result;
-		}
+        for (size_t i = 0; i < listElements.size(); i++)
+        {
+            result += "- " + listElements[i] + "\n";
+        }
+        return header + "\n" + result;
 	}
 
 	/* constructs strings for nutrients listing */
@@ -114,10 +104,10 @@ namespace epicr
 		{
 			std::string number = epicr::round_double_to_string(nutrients[i].amount.number);
 			std::string unit = nutrients[i].amount.unit;
-			result += nutrients[i].name + " (" + number + " " + unit + ")\n";
+			result += "- " + nutrients[i].name + " (" + number + " " + unit + ")\n";
 		}
 		result += "*pr. 100 grams";
-		return "**Nutrients:**\n" + result;
+		return "**Nutrients:** \n" + result;
 	}
 
 	/* constructs strings for ingredient field in instructions */
@@ -236,14 +226,18 @@ namespace epicr
 		}
 
 		/* format final strings for .txt*/
-		string title = "### **Title:** ";
+		string title = "### **Title:** \n";
 		title += rcp.title.c_str();
-		string description = "**Description:** ";
+        title += "\n";
+
+		string description = "**Description:** \n";
 		description += rcp.description.c_str();
+
 		string servings = basic_insert_servings(rcp.servings);
-		string tags = basic_insert_text_in_list("**Tags:** ", rcp.tags);
-		string kitchenware = basic_insert_text_in_list("**Kitchenware:** ", rcp.kitchenware);
-		string ingredients = basic_insert_declaration_ingredients("**Ingredients:** ", rcp.ingredients);
+		string tags = basic_insert_text_in_list("**Tags:**", rcp.tags);
+		string kitchenware = basic_insert_text_in_list("**Kitchenware:**", rcp.kitchenware);
+		string ingredients = basic_insert_declaration_ingredients("**Ingredients:**", rcp.ingredients, false);
+        string optional = basic_insert_declaration_ingredients("**Optional:**", rcp.ingredients, true);
 		string nutrients = basic_insert_nutrients(rcp.nutrients);
 		string total_time = basic_insert_time("**Total time:** ", rcp.time.total_time.c_str());
 		string prep_time = basic_insert_time("**Prep time:** ", rcp.time.prep_time.c_str());
@@ -258,11 +252,12 @@ namespace epicr
 		epicr::replace(output_string, "~total-time~", total_time);
 		epicr::replace(output_string, "~prep-time~", prep_time);
 		epicr::replace(output_string, "~cook-time~", cook_time);
-		epicr::replace(output_string, "~tags~", tags.c_str());
-		epicr::replace(output_string, "~ingredients~", ingredients.c_str());
-		epicr::replace(output_string, "~kitchenware~", kitchenware.c_str());
-		epicr::replace(output_string, "~nutrients~", nutrients.c_str());
-		epicr::replace(output_string, "~instructions~", instruction_strings.c_str());
+		epicr::replace(output_string, "~tags~", tags);
+		epicr::replace(output_string, "~ingredients~", ingredients);
+        epicr::replace(output_string, "~optional~", optional);
+		epicr::replace(output_string, "~kitchenware~", kitchenware);
+		epicr::replace(output_string, "~nutrients~", nutrients);
+		epicr::replace(output_string, "~instructions~", instruction_strings);
 
 		file << output_string << std::endl;
 		file.close();

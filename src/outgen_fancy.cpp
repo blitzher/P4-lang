@@ -95,10 +95,11 @@ namespace epicr
 		string result = "<h3 class=field-header><strong>Optional</strong></h3>";
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
-			if (!ingredients[i].is_optional)
-				continue;
-			thereIsAtLeastOneOptionalIngredient = true;
-			result += insert_ingredient(ingredients, i);
+			if (ingredients[i].is_optional)
+            {
+                thereIsAtLeastOneOptionalIngredient = true;
+			    result += insert_ingredient(ingredients, i);
+            }
 		}
 		if (!thereIsAtLeastOneOptionalIngredient)
 			return "";
