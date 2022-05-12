@@ -152,7 +152,7 @@ namespace epicr::visitor
             uniqueIngredients.insert(ingr.name);
             if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */
             {
-                ERR("duplicate ingredient '" + ingr.name + "' was found");
+                ERR("Duplicate ingredient '" + ingr.name + "' was found");
                 return;
             }
         }

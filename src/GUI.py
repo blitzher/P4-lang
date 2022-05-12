@@ -56,7 +56,7 @@ class App(tk.Frame):
 
         tk.Radiobutton(
             self,
-            text="Imperial system",
+            text="Original",
             variable=self.unit_buttons,
             value=1,
             command=self.select_system,
@@ -70,7 +70,7 @@ class App(tk.Frame):
         ).pack(anchor=W)
         tk.Radiobutton(
             self,
-            text="No conversion of unit system",
+            text="Imperial system",
             variable=self.unit_buttons,
             value=3,
             command=self.select_system,
@@ -92,8 +92,8 @@ class App(tk.Frame):
         self.output_dir_clarg.set("-o ")
         self.input_fpath_label.place(x=175, y=3)
         self.output_fpath_label.place(x=175, y=33)
-        self.html_buttons.set(2)
-        self.unit_buttons.set(3)
+        self.html_buttons.set(1)
+        self.unit_buttons.set(1)
 
     def open_file(self, dest):
         file = fd.askopenfile(filetypes=[("epicR Files", "*.rcp")])
@@ -114,11 +114,12 @@ class App(tk.Frame):
         value = self.unit_buttons.get()
 
         if value == 1:
-            self.unit_system = "Imperial"
+            self.unit_system = "None"
         elif value == 2:
             self.unit_system = "Metric"
         elif value == 3:
-            self.unit_system = "None"
+            self.unit_system = "Imperial"
+            
 
     def open_dir(self, dest):
         _dir = fd.askdirectory()
@@ -137,11 +138,8 @@ class App(tk.Frame):
         else:
             executable = os.path.join(".", "bin", "main")
 
-        if(os.path.exists("ParserErrorlog.txt")): 
-            os.remove("ParserErrorlog.txt")
-        
-        elif(os.path.exists("visitorErrorlog.txt")): 
-            os.remove("visitorErrorlog.txt")
+        if(os.path.exists(".epicr-error.txt")): 
+            os.remove(".epicr-error.txt")
 
         clargs = "%s %s --%s --%s" % (
             self.input_fpath.get(),
@@ -150,18 +148,14 @@ class App(tk.Frame):
             self.unit_system,
         )
         os.system("%s %s" % (executable, clargs))
-        if(os.path.exists("ParserErrorlog.txt")): 
-            parserLog = open("ParserErrorlog.txt")
-            messagebox.showerror(title="Paser Error", message=parserLog.readline())
-            parserLog.close()
-            os.remove("visitorErrorlog.txt")
-        elif(os.path.exists("visitorErrorlog.txt")): 
-            visitorLog = open("visitorErrorlog.txt")
-            messagebox.showerror(title="Visitor Error", message=visitorLog.readline())
-            visitorLog.close()
-            os.remove("visitorErrorlog.txt")
+
+        if(os.path.exists(".epicr-error.txt")): 
+            errorLog = open(".epicr-error.txt")
+            messagebox.showerror(title="Error", message=errorLog.readline())
+            errorLog.close()
+            os.remove(".epicr-error.txt")
         else:
-            messagebox.showinfo(title="No errors", message="Compilation suscceded! yay")
+            messagebox.showinfo(title="Success", message="Compilation suscceded! yay")
         
     
 

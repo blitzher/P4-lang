@@ -39,8 +39,8 @@ int main(int argc, char **argv)
 	// creates temp file for gui to read
 	if (my_parser.has_error)
 	{
-		ofstream ParsererrorLog("ParserErrorlog.txt");
-		ParsererrorLog << my_parser.error;
+		ofstream ParsererrorLog(".epicr-error.txt");
+		ParsererrorLog << my_parser.error << endl;
 	}
 
 	if (!my_parser.has_error)
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 		// creates temp file for gui to read
 		if (vis_ret.has_err)
 		{
-			ofstream visitorErrorlog("visitorErrorlog.txt");
+			ofstream visitorErrorlog(".epicr-error.txt");
 			visitorErrorlog << vis_ret.err << endl;
 		}
 

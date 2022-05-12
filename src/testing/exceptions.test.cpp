@@ -7,7 +7,7 @@ void parse_incorrect_field_exception()
 
     std::string incorrect_field_string = "incorrect_field: this is not right";
     auto rcp = epicr::parse_string_silent(incorrect_field_string);
-    test_lib::expect_exception(rcp, "invalid field: No field with this name: incorrect_field");
+    test_lib::expect_exception(rcp, "Invalid field: No field with this name: incorrect_field");
 }
 
 void parse_invalid_servings_amount_exception()
@@ -25,7 +25,7 @@ void parse_missing_colon_after_instruction_header_exception()
 
     std::string incorrect_field_string = "instructions: with(ingredient) using(kitchenware) do something";
     auto rcp = epicr::parse_string_silent(incorrect_field_string);
-    test_lib::expect_exception(rcp, "missing ':' after instruction header");
+    test_lib::expect_exception(rcp, "Missing ':' after instruction header");
 }
 
 void parse_missing_open_bracket_after_with_exception()
@@ -34,7 +34,7 @@ void parse_missing_open_bracket_after_with_exception()
 
     std::string incorrect_field_string = "instructions: with  ingra,ingrb";
     auto rcp = epicr::parse_string_silent(incorrect_field_string);
-    test_lib::expect_exception(rcp, "expected open bracket with 'with' ");
+    test_lib::expect_exception(rcp, "Expected open bracket with 'with' ");
 }
 
 void parse_expected_seperator_in_with_exception()
@@ -59,7 +59,7 @@ void parse_missing_open_bracket_after_using_exception()
 
     std::string incorrect_field_string = "instructions: using  k1,k2";
     auto rcp = epicr::parse_string_silent(incorrect_field_string);
-    test_lib::expect_exception(rcp, "expected open bracket with 'using' ");
+    test_lib::expect_exception(rcp, "Expected open bracket with 'using' ");
 }
 
 void parse_expected_seperator_in_using_exception()
@@ -143,7 +143,7 @@ void parse_no_comma_as_seperator_for_tags_exception()
     std::string field_name = "tags";
     std::string incorrect_tag_string = field_name + ": tag1,tag2*tag3";
     auto rcp = epicr::parse_string_silent(incorrect_tag_string);
-    test_lib::expect_exception(rcp, "expected a comma as a seperator between " + field_name);
+    test_lib::expect_exception(rcp, "Expected a comma as a seperator between " + field_name);
 }
 
 void parse_body_cannot_be_empty_exception()
@@ -160,7 +160,7 @@ void visit_no_repeating_ingredients_exception()
     epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/visitor_exception_recipes/duplicateIngredient.rcp").recipe;
     auto ingrvisit = epicr::visitor::IngredientVerifier();
     auto final_rcp = epicr::ingredient_verify_recipe(&rcp);
-    test_lib::expect_exception(final_rcp, "duplicate ingredient 'egg' was found");
+    test_lib::expect_exception(final_rcp, "Duplicate ingredient 'egg' was found");
 }
 
 void visit_title_ingredient_must_remain_in_the_end_exception()
@@ -179,7 +179,7 @@ void read_words_empty_words_exception()
     std::string incorrect_tag_string = "tags: tag1,tag2,,";
     auto rcp = epicr::parse_string_silent(incorrect_tag_string);
 
-    test_lib::expect_exception(rcp, "word cannot be empty");
+    test_lib::expect_exception(rcp, "A tag cannot be empty");
 }
 
 void visit_mandatory_fields_title_exception()
