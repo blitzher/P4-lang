@@ -1,0 +1,57 @@
+make.exe --dry-run --always-make --keep-going --print-directory
+make.exe: Entering directory `/c/Users/madsl/GitHub/P4-lang'
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/testing/eof.test.cpp -o obj/eof.test.o
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/testing/exceptions.test.cpp -o obj/exceptions.test.o
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/testing/lexer.test.cpp -o obj/lexer.test.o
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/testing/parser.test.cpp -o obj/parser.test.o
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/testing/test_lib.cpp -o obj/test_lib.o
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/testing/utility.test.cpp -o obj/utility.test.o
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/testing/visitor.test.cpp -o obj/visitor.test.o
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/cookbook.cpp -o obj/cookbook.o
+echo "Compiled "src/cookbook.cpp" successfully!"
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/epicr.cpp -o obj/epicr.o
+echo "Compiled "src/epicr.cpp" successfully!"
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/lexer.cpp -o obj/lexer.o
+echo "Compiled "src/lexer.cpp" successfully!"
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/main.cpp -o obj/main.o
+echo "Compiled "src/main.cpp" successfully!"
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/outgen_basic.cpp -o obj/outgen_basic.o
+echo "Compiled "src/outgen_basic.cpp" successfully!"
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/outgen_fancy.cpp -o obj/outgen_fancy.o
+echo "Compiled "src/outgen_fancy.cpp" successfully!"
+ 
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/parser.cpp -o obj/parser.o
+echo "Compiled "src/parser.cpp" successfully!"
+mkdir -p bin obj
+clang++ -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g -c src/visitor.cpp -o obj/visitor.o
+echo "Compiled "src/visitor.cpp" successfully!"
+clang++ -o bin/eof.test -Wall -pedantic obj/test_lib.o obj/cookbook.o obj/epicr.o obj/lexer.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o obj/eof.test.o
+echo "\033[kRunning \033[4meof.test\033[0m"
+./bin/eof.test
+make.exe: Leaving directory `/c/Users/madsl/GitHub/P4-lang'
+ 
