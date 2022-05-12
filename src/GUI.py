@@ -84,7 +84,7 @@ class App(tk.Frame):
         self.out_dir_label = tk.StringVar()
         self.out_dir_label.set("No directory selected")
         self.output_fpath_label["textvariable"] = self.out_dir_label
-        self.html_style = "Basic"
+        self.html_style = "Fancy"
         self.unit_system = "None"
         self.directory = tk.StringVar()
         self.directory.set("")
@@ -92,8 +92,8 @@ class App(tk.Frame):
         self.output_dir_clarg.set("-o ")
         self.input_fpath_label.place(x=215, y=3)
         self.output_fpath_label.place(x=215, y=33)
-        self.html_buttons.set(2)
-        self.unit_buttons.set(3)
+        self.html_buttons.set(1)
+        self.unit_buttons.set(1)
 
     def open_file(self, dest):
         file = fd.askopenfile(filetypes=[("epicR Files", "*.rcp")])
