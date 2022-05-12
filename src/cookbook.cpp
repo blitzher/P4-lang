@@ -40,7 +40,7 @@ namespace epicr
                 continue;
             }
 
-            std::string filename = out_dir / file.path().stem().string();
+            std::string filename = (out_dir / file.path().stem()).string();
 
             switch (clargs.choosen_style)
             {
