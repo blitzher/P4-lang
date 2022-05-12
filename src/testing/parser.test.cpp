@@ -104,7 +104,7 @@ void parsed_ingredients()
 
 	if (rcp.ingredients.size() < 5)
 	{
-		char* m = (char*)malloc(100);
+		char *m = (char *)malloc(100);
 		sprintf(m, "Not all ingredients were parsed properly, found %zu ingredients", rcp.ingredients.size());
 		test_lib::deny(m);
 		return;
@@ -144,7 +144,7 @@ void instruction_has_correct_ingredients_name()
 	test_lib::REGISTER;
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
-	std::vector<std::string> ingredients = { "wheatflour", "egg", "salt", "water" };
+	std::vector<std::string> ingredients = {"wheatflour", "egg", "salt", "water"};
 	size_t ingredient_size = ingredients.size();
 	for (size_t i = 0; i < ingredient_size; i++)
 	{
@@ -210,6 +210,16 @@ void instruction_has_correct_kitchenware_name()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 	test_lib::expect_equal_s(rcp.instructions[1].kitchenware[0], "plastic wrap");
 	test_lib::expect_equal_s(rcp.instructions[2].kitchenware[0], "kitchenroller");
+}
+
+void instruction_has_image()
+{
+	test_lib::REGISTER;
+	// A cool image, very nice!
+	epicr::parse_ret rcp = epicr::parse_recipe("src/test-recipes/images.rcp");
+	test_lib::expect_equal_s(rcp.recipe.instructions[0].image_href, "https://variety.com/wp-content/uploads/2021/07/Rick-Astley-Never-Gonna-Give-You-Up.png");
+	test_lib::expect_equal_s(rcp.recipe.instructions[0].body[0].spelling, "A");
+	test_lib::expect_equal_s(rcp.recipe.instructions[0].body[9].spelling, "nice!");
 }
 
 void instruction_with_can_be_empty()
@@ -360,7 +370,8 @@ void parse_ingredients_with_non_ascii_chars()
 	test_lib::expect_equal_s(rcp.ingredients[4].name, "໙៨ᱷ꠷𑇩𑇰");
 }
 
-void parse_percentage_relative() {
+void parse_percentage_relative()
+{
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_string("ingredients: bacon [100g] instructions: with(bacon[100%]): do stuff").recipe;
@@ -369,7 +380,8 @@ void parse_percentage_relative() {
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "%");
 }
 
-void parse_fraction_relative() {
+void parse_fraction_relative()
+{
 	test_lib::REGISTER;
 
 	epicr::recipe rcp = epicr::parse_string("ingredients: bacon [100g] instructions: with(bacon[1/10]): do stuff").recipe;
@@ -416,6 +428,7 @@ int main(void)
 	parse_ingredients_with_non_ascii_chars();
 	parse_percentage_relative();
 	parse_fraction_relative();
+	instruction_has_image();
 	test_lib::print_recap();
 	return test_lib::result();
 }
