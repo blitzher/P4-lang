@@ -1,46 +1,49 @@
 title: Spaghetti carbonara
+description: Carbonara is nice
 servings: 4 people
-prep-time: 2 min
-cook-time: 13 min
+cook-time: 15 min
 tags: pasta, easy to make, under 30 min, pork
 
-description: Pasta Carbonara is one of the dishes that we occasionally resort to on busy weekdays and some weekend evenings. The days when the need for an easy, lightning fast and super delicious dish is weighted higher than a long time in the kitchen and slow but cozy simmering dishes - which I also really like, but every thing in its time
-... and such a very simple Spaghetti Carbonara is eternally good.
-
 nutrients:
-    calories [860 kcal],
-    protein [38 g],
-    fat [75 g],
-    carbs [47 g]
+    calories [100 cal],
+    protein [10 g],
+    fat [10 g],
+    carbs [10 g]
     
 kitchenware:
+    airfryer,
     pan
 
 ingredients:
     bacon [100 g],
     butter [1 tsp],     
-    onion,
+    onion [1],
     cream [1 dl],      
-    egg [2],         
+    egg [2], 
     parmesan [5g],      
-    spaghetti* [4],
-    salt+,
+    spaghetti [30 g],
+    salt,
     pepper+,
     extra parmesan?+ 
 
+
 instructions:
-    using(pan):
-        Put your pan on the stove and set the stove to [200 C].
+    using(airfryer):
+        Preheat your airfryer to [200 C]
+            
     
-    with(bacon) using(pan):
-        Cook the bacon on the pan until it is crisp.
+    with(bacon) using(airfryer):
+        Fry the bacon using the airfryer
 
         yield:
-            bacon [80 g],
-            bacon fat 
+            bacon [100 g],
+            bacon fat
+
+    image(https://variety.com/wp-content/uploads/2021/07/Rick-Astley-Never-Gonna-Give-You-Up.png):
+        A cool image, very nice!
 
     with(butter, onion, bacon fat) using(pan):
-        Put butter on the pan with bacon fat and saute the onions until soft and clear.
+        Put butter on the pan with bacon fat and sauté the onions until soft and clear.
 
         yield:
             cooked onions
@@ -55,11 +58,15 @@ instructions:
         Remove the onion bacon mix from the heat and stir in the eggs and the cooked spaghetti, 
         and mix the dish well with the freshly grated parmesan.
         Season with salt and freshly ground pepper.
+
         yield:
             spaghetti carbonara
 
+    image(https://cdn.bloggersdelight.dk/wp-content/blogs.dir/533365/files/2021/02/astleyxix4kx1.jpg):
+        An even cooler image, very nicer!
+
     with(extra parmesan, spaghetti carbonara):
-        Sprinkle some more parmesan (e.g. [20 g]) on the spaghetti carbonara for that extra nice touch.
+        Sprinkle the extra parmesan (e.g. [20 g]) on the spaghetti carbonara.
     
         yield:
             spaghetti carbonara

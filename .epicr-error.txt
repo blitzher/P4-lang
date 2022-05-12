@@ -1,1 +1,1 @@
-Expected closing parenthesis after image header
+ ManFld: No title or recipe was found

@@ -1,4 +1,1 @@
-~stepText~
-~instructionIngredients~ ~instructionKitchenware~
-~instructionBody~
-~instructionYield~
+~stepText~~instructionIngredients~~instructionKitchenware~~instructionBody~~instructionYield~
