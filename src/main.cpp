@@ -21,6 +21,11 @@ int main(int argc, char **argv)
 {
 	epicr::parse_cmd_args(argc, argv);
 
+	if (epicr::clargs.is_cookbook)
+	{
+		epicr::generate_cookbook(epicr::clargs.input_filepath, epicr::clargs.output_filepath);
+	}
+
 	ifstream file = epicr::open_file(epicr::clargs.input_filepath);
 	cout << "Compiling " << epicr::clargs.input_filepath << endl;
 
@@ -32,7 +37,8 @@ int main(int argc, char **argv)
 	cout << my_parser.has_error << " Parser  : " << my_parser.error << endl;
 
 	// creates temp file for gui to read
-	if(my_parser.has_error) {
+	if (my_parser.has_error)
+	{
 		ofstream ParsererrorLog(".epicr-error.txt");
 		ParsererrorLog << my_parser.error << endl;
 	}
@@ -42,7 +48,8 @@ int main(int argc, char **argv)
 		epicr::rcp_ret vis_ret = epicr::visitor::visit_all(&my_recipe);
 
 		// creates temp file for gui to read
-		if(vis_ret.has_err) {
+		if (vis_ret.has_err)
+		{
 			ofstream visitorErrorlog(".epicr-error.txt");
 			visitorErrorlog << vis_ret.err << endl;
 		}
