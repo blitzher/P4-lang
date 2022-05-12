@@ -1,0 +1,13 @@
+title: cool recipe
+
+ingredients:
+    something good
+
+instructions:
+    image(https://variety.com/wp-content/uploads/2021/07/Rick-Astley-Never-Gonna-Give-You-Up.png):
+        A cool image, very nice!
+    
+    with(something good):
+        do cool stuff
+
+        yield: cool recipe
