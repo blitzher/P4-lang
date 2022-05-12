@@ -218,22 +218,24 @@ namespace epicr
 				body += std::string(inst.image_href.size() + 12, '-') + "\n";
 				body += basic_insert_instruction_body(inst.body);
 			}
-
-			if (inst.ingredients.size() > 0)
+            else 
+            {
+                if (inst.ingredients.size() > 0)
 				instructionIngredients = basic_insert_instruction_ingredients("Ingredients:", inst.ingredients);
 
-			if (inst.kitchenware.size() == 0)
-				instructionIngredients += "";
-			else
-				instructionKitchenware += basic_insert_instruction_kitchenware("Kitchenware:", inst.kitchenware);
+                if (inst.kitchenware.size() == 0)
+                    instructionIngredients += "";
+                else
+                    instructionKitchenware += basic_insert_instruction_kitchenware("Kitchenware:", inst.kitchenware);
 
-			if (inst.body.size() > 0)
-				body += basic_insert_instruction_body(inst.body);
+                if (inst.body.size() > 0)
+                    body += basic_insert_instruction_body(inst.body);
 
-			if (inst.yields.size() > 0)
-			{
-				yield += basic_insert_yield_ingredients("yield: ", inst.yields);
-			}
+                if (inst.yields.size() > 0)
+                {
+                    yield += basic_insert_yield_ingredients("yield: ", inst.yields);
+                }
+            }
 
 			/* replace step placeholders with final strings */
 			epicr::replace(instruction_string, "~stepText~", step_text);
