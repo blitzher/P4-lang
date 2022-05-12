@@ -368,8 +368,6 @@ namespace epicr
 						ADV(1);
 					} while (utoken.type != E_TT_EOF && utoken.type != E_TT_PARENS_CLOSE);
 					single_instruction.image_href += ctoken.word;
-
-					std::cout << single_instruction.image_href << std::endl;
 				}
 				ADV_NON_BLANK(1);
 				if (ctoken.type != E_TT_PARENS_CLOSE)

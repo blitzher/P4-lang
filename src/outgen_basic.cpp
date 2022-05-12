@@ -210,6 +210,15 @@ namespace epicr
 			string body = "";
 			string yield = "";
 
+			if (inst.is_image)
+			{
+				step_text = "#### Image\n";
+				index--;
+				body = "Image link: " + inst.image_href + "\n";
+				body += std::string(inst.image_href.size() + 12, '-') + "\n";
+				body += basic_insert_instruction_body(inst.body);
+			}
+
 			if (inst.ingredients.size() > 0)
 				instructionIngredients = basic_insert_instruction_ingredients("Ingredients:", inst.ingredients);
 
