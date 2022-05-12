@@ -56,7 +56,7 @@ class App(tk.Frame):
 
         tk.Radiobutton(
             self,
-            text="Imperial system",
+            text="Original",
             variable=self.unit_buttons,
             value=1,
             command=self.select_system,
@@ -70,7 +70,7 @@ class App(tk.Frame):
         ).pack(anchor=W)
         tk.Radiobutton(
             self,
-            text="No conversion of unit system",
+            text="Imperial system",
             variable=self.unit_buttons,
             value=3,
             command=self.select_system,
@@ -90,10 +90,17 @@ class App(tk.Frame):
         self.directory.set("")
         self.output_dir_clarg = tk.StringVar()
         self.output_dir_clarg.set("-o ")
+<<<<<<< HEAD
         self.input_fpath_label.place(x=215, y=3)
         self.output_fpath_label.place(x=215, y=33)
         self.html_buttons.set(2)
         self.unit_buttons.set(3)
+=======
+        self.input_fpath_label.place(x=175, y=3)
+        self.output_fpath_label.place(x=175, y=33)
+        self.html_buttons.set(1)
+        self.unit_buttons.set(1)
+>>>>>>> cf1f2d6f962a0e9f05108f2d79db732dd6f31a43
 
     def open_file(self, dest):
         file = fd.askopenfile(filetypes=[("epicR Files", "*.rcp")])
@@ -114,11 +121,12 @@ class App(tk.Frame):
         value = self.unit_buttons.get()
 
         if value == 1:
-            self.unit_system = "Imperial"
+            self.unit_system = "None"
         elif value == 2:
             self.unit_system = "Metric"
         elif value == 3:
-            self.unit_system = "None"
+            self.unit_system = "Imperial"
+            
 
     def open_dir(self, dest):
         _dir = fd.askdirectory()
