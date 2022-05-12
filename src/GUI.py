@@ -137,11 +137,8 @@ class App(tk.Frame):
         else:
             executable = os.path.join(".", "bin", "main")
 
-        if(os.path.exists("ParserErrorlog.txt")): 
-            os.remove("ParserErrorlog.txt")
-        
-        elif(os.path.exists("visitorErrorlog.txt")): 
-            os.remove("visitorErrorlog.txt")
+        if(os.path.exists(".epicr-error.txt")): 
+            os.remove(".epicr-error.txt")
 
         clargs = "%s %s --%s --%s" % (
             self.input_fpath.get(),
@@ -150,18 +147,14 @@ class App(tk.Frame):
             self.unit_system,
         )
         os.system("%s %s" % (executable, clargs))
-        if(os.path.exists("ParserErrorlog.txt")): 
-            parserLog = open("ParserErrorlog.txt")
-            messagebox.showerror(title="Paser Error", message=parserLog.readline())
-            parserLog.close()
-            os.remove("visitorErrorlog.txt")
-        elif(os.path.exists("visitorErrorlog.txt")): 
-            visitorLog = open("visitorErrorlog.txt")
-            messagebox.showerror(title="Visitor Error", message=visitorLog.readline())
-            visitorLog.close()
-            os.remove("visitorErrorlog.txt")
+
+        if(os.path.exists(".epicr-error.txt")): 
+            errorLog = open(".epicr-error.txt")
+            messagebox.showerror(title="Error", message=errorLog.readline())
+            errorLog.close()
+            os.remove(".epicr-error.txt")
         else:
-            messagebox.showinfo(title="No errors", message="Compilation suscceded! yay")
+            messagebox.showinfo(title="Success", message="Compilation suscceded! yay")
         
     
 
