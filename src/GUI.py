@@ -90,17 +90,10 @@ class App(tk.Frame):
         self.directory.set("")
         self.output_dir_clarg = tk.StringVar()
         self.output_dir_clarg.set("-o ")
-<<<<<<< HEAD
         self.input_fpath_label.place(x=215, y=3)
         self.output_fpath_label.place(x=215, y=33)
         self.html_buttons.set(2)
         self.unit_buttons.set(3)
-=======
-        self.input_fpath_label.place(x=175, y=3)
-        self.output_fpath_label.place(x=175, y=33)
-        self.html_buttons.set(1)
-        self.unit_buttons.set(1)
->>>>>>> cf1f2d6f962a0e9f05108f2d79db732dd6f31a43
 
     def open_file(self, dest):
         file = fd.askopenfile(filetypes=[("epicR Files", "*.rcp")])
@@ -126,7 +119,6 @@ class App(tk.Frame):
             self.unit_system = "Metric"
         elif value == 3:
             self.unit_system = "Imperial"
-            
 
     def open_dir(self, dest):
         _dir = fd.askdirectory()
