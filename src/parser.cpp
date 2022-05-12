@@ -21,21 +21,23 @@
 		return;                                                                    \
 	}
 
-#define ERR(msg, token)                                    \
-	{                                                      \
-		has_error = true;                                  \
-		error = msg;                                       \
-		error_token = token;                               \
-		if (!silent)                                       \
-		{                                                  \
-			std::cout << "ERROR ON LINE " << __LINE__      \
-					  << " (" << __FILE__ << ":"           \
-					  << __FUNCTION__ << ")" << std::endl; \
-			std::cout << msg << std::endl;                 \
-			print_token(token);                            \
-			std::cout << std::endl;                        \
-		}                                                  \
-		longjmp(exit_jmp, 1);                              \
+#define ERR(msg, token)                                     \
+	{                                                       \
+		has_error = true;                                   \
+		error = msg;                                        \
+		error_token = token;                                \
+		if (!silent)                                        \
+		{                                                   \
+			std::cout << "ERROR ON LINE " << __LINE__       \
+					  << " (" << __FILE__ << ":"            \
+					  << __FUNCTION__ << ")" << std::endl;  \
+			std::cout << msg << std::endl;                  \
+			std::ofstream voidErrorlog(".epicr-error.txt"); \
+			voidErrorlog << error;  						\
+			print_token(token);                             \
+			std::cout << std::endl;                         \
+		} 												    \
+		longjmp(exit_jmp, 1);                               \
 	}
 #define WARN(msg, token)                              \
 	{                                                 \
@@ -139,7 +141,7 @@ namespace epicr
 			then it must be an invalid field */
 			else if (utoken.type == E_TT_COLON)
 			{
-				ERR("invalid field: No field with this name: " + ctoken.word, ctoken);
+				ERR("Invalid field: No field with this name: " + ctoken.word, ctoken);
 			}
 			else
 			{
@@ -328,16 +330,34 @@ namespace epicr
 				ParseInstructionHeaderWith(&single_instruction);
 				if (has_error)
 					return;
+
+				if(to_lower(ctoken.word) == "using"){
+				ParseInstructionHeaderUsing(&single_instruction);
+				if (has_error)
+					return;
+				}
 			}
-			if (to_lower(ctoken.word) == "using")
+			else if (to_lower(ctoken.word) == "using")
 			{
 				ParseInstructionHeaderUsing(&single_instruction);
 				if (has_error)
 					return;
+				
+				if(to_lower(ctoken.word) == "with"){
+				ParseInstructionHeaderWith(&single_instruction);
+				if (has_error)
+					return;
+				}
 			}
+			
 			if (ctoken.type != E_TT_COLON)
 			{
-				ERR_VOID("missing ':' after instruction header", ctoken);
+				if(to_lower(ctoken.word) == "with" || to_lower(ctoken.word) == "using"){
+					ERR_VOID("Only one with and using allowed per instruction header", ctoken);
+				}	
+				else {
+					ERR_VOID("Missing ':' after instruction header", ctoken);
+				}
 			}
 			ADV_NON_BLANK(1);
 			ParseInstructionBody(&single_instruction);
@@ -354,7 +374,7 @@ namespace epicr
 		ADV_NON_BLANK(1);
 		if (ctoken.type != E_TT_PARENS_OPEN)
 		{
-			ERR_VOID("expected open bracket with 'with' ", ctoken);
+			ERR_VOID("Expected open bracket with 'with' ", ctoken);
 		}
 		while (ctoken.type != E_TT_PARENS_CLOSE) /*reads every ingredient in the "with"*/
 		{
@@ -379,7 +399,7 @@ namespace epicr
 	{
 		ADV_NON_BLANK(1);
 		if (ctoken.type != E_TT_PARENS_OPEN)
-			ERR_VOID("expected open bracket with 'using' ", ctoken);
+			ERR_VOID("Expected open bracket with 'using' ", ctoken);
 
 		while (ctoken.type != E_TT_PARENS_CLOSE) /*reads every kitchenware in the "using"*/
 		{
@@ -629,7 +649,7 @@ namespace epicr
 		utoken = lexer->peek_token();
 		final_word = strip_spaces_right(final_word);
 		if (final_word.empty() && !wordCanBeEmpty)
-			ERR("word cannot be empty", ctoken);
+			ERR("A tag cannot be empty", ctoken);
 		return final_word;
 	}
 
@@ -666,7 +686,7 @@ namespace epicr
 		}
 		if (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
-			std::string error_string = "expected a comma as a seperator between " + field_name;
+			std::string error_string = "Expected a comma as a seperator between " + field_name;
 			ERR_VOID(error_string, ctoken);
 		}
 		return;
