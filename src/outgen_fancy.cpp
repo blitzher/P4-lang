@@ -249,9 +249,11 @@ namespace epicr
 
 			if (inst.is_image)
 			{
-				step_text = "Image " + std::to_string(index);
+				step_text = "Image";
+				index--;
 				body = "<img src='" + inst.image_href + "' width='100%'></img>";
-				body += inst.image_alt;
+				body += "<hr class='body-rule'>";
+				body += insert_instruction_body(inst.body);
 			}
 
 			else
