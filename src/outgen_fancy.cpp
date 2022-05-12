@@ -228,16 +228,18 @@ namespace epicr
 		return result;
 	}
 
-    string insert_instructions(std::vector<instruction> instructions){
-        int index = 0;
+	string insert_instructions(std::vector<instruction> instructions)
+	{
+		int index = 0;
 		string instruction_strings;
 
-        string step_template_s = load_HTML_template("step");
+		string step_template_s = load_HTML_template("step");
 		const char *step_template = step_template_s.c_str();
 
 		/* format final HTML strings for instructions*/
 		for (auto inst : instructions)
 		{
+
 			index++;
 			string instruction_string = step_template;
 			string step_text = "Step " + std::to_string(index);
@@ -246,21 +248,33 @@ namespace epicr
 			string body = "";
 			string yield = "";
 
-			if (inst.ingredients.size() > 0)
-				instructionIngredients = insert_instruction_ingredients("Ingredients: ", inst.ingredients);
-
-			if (inst.kitchenware.size() == 0)
-				instructionIngredients += "<hr class='body-rule'>";
-			else
-				instructionKitchenware += insert_instruction_kitchenware("Kitchenware: ", inst.kitchenware);
-
-			if (inst.body.size() > 0)
-				body += insert_instruction_body(inst.body);
-
-			if (inst.yields.size() > 0)
+			if (inst.is_image)
 			{
-				yield += "<hr class='body-rule'>";
-				yield += insert_yield_ingredients("<text class='arrow'> &#10230 <text>", inst.yields);
+				step_text = "Image";
+				index--;
+				body = "<img src='" + inst.image_href + "' width='100%'></img>";
+				body += "<hr class='body-rule'>";
+				body += insert_instruction_body(inst.body);
+			}
+
+			else
+			{
+				if (inst.ingredients.size() > 0)
+					instructionIngredients = insert_instruction_ingredients("Ingredients: ", inst.ingredients);
+
+				if (inst.kitchenware.size() == 0)
+					instructionIngredients += "<hr class='body-rule'>";
+				else
+					instructionKitchenware += insert_instruction_kitchenware("Kitchenware: ", inst.kitchenware);
+
+				if (inst.body.size() > 0)
+					body += insert_instruction_body(inst.body);
+
+				if (inst.yields.size() > 0)
+				{
+					yield += "<hr class='body-rule'>";
+					yield += insert_yield_ingredients("<text class='arrow'> &#10230 <text>", inst.yields);
+				}
 			}
 
 			/* replace step placeholders with final HTML */
@@ -271,8 +285,8 @@ namespace epicr
 			epicr::replace(instruction_string, "~instructionYield~", yield);
 			instruction_strings += instruction_string;
 		}
-        return instruction_strings;
-    }
+		return instruction_strings;
+	}
 
 	/* generate HTML strings and replace placeholders */
 	bool generate_fancy(recipe rcp, string filename)
@@ -287,7 +301,7 @@ namespace epicr
 			return false;
 
 		/* format final HTML strings */
-        string instruction_strings = insert_instructions(rcp.instructions);
+		string instruction_strings = insert_instructions(rcp.instructions);
 		string servings = insert_servings(rcp.servings);
 		string tags = insert_text_in_list("Tags: ", rcp.tags);
 		string kitchenware = insert_text_in_list("Kitchenware", rcp.kitchenware);

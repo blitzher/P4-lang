@@ -78,6 +78,9 @@ namespace epicr
         std::vector<std::string> kitchenware;
         std::vector<ingredient> yields;
         std::vector<instruction_word> body;
+        bool is_image;
+        std::string image_href;
+        std::string image_alt;
     } instruction;
 
     typedef struct servings_s

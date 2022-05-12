@@ -33,10 +33,10 @@
 					  << __FUNCTION__ << ")" << std::endl;  \
 			std::cout << msg << std::endl;                  \
 			std::ofstream voidErrorlog(".epicr-error.txt"); \
-			voidErrorlog << error;  						\
+			voidErrorlog << error;                          \
 			print_token(token);                             \
 			std::cout << std::endl;                         \
-		} 												    \
+		}                                                   \
 		longjmp(exit_jmp, 1);                               \
 	}
 #define WARN(msg, token)                              \
@@ -331,10 +331,11 @@ namespace epicr
 				if (has_error)
 					return;
 
-				if(to_lower(ctoken.word) == "using"){
-				ParseInstructionHeaderUsing(&single_instruction);
-				if (has_error)
-					return;
+				if (to_lower(ctoken.word) == "using")
+				{
+					ParseInstructionHeaderUsing(&single_instruction);
+					if (has_error)
+						return;
 				}
 			}
 			else if (to_lower(ctoken.word) == "using")
@@ -342,20 +343,46 @@ namespace epicr
 				ParseInstructionHeaderUsing(&single_instruction);
 				if (has_error)
 					return;
-				
-				if(to_lower(ctoken.word) == "with"){
-				ParseInstructionHeaderWith(&single_instruction);
-				if (has_error)
-					return;
+
+				if (to_lower(ctoken.word) == "with")
+				{
+					ParseInstructionHeaderWith(&single_instruction);
+					if (has_error)
+						return;
 				}
 			}
-			
+
+			else if (to_lower(ctoken.word) == "image")
+			{
+				single_instruction.is_image = true;
+				ADV_NON_BLANK(1);
+				if (ctoken.type != E_TT_PARENS_OPEN)
+					ERR("Expected opening parenthesis after image declaration", ctoken);
+				ADV_NON_BLANK(1);
+
+				if (ctoken.type != E_TT_PARENS_CLOSE)
+				{
+					do
+					{
+						single_instruction.image_href += ctoken.word;
+						ADV(1);
+					} while (utoken.type != E_TT_EOF && utoken.type != E_TT_PARENS_CLOSE);
+					single_instruction.image_href += ctoken.word;
+				}
+				ADV_NON_BLANK(1);
+				if (ctoken.type != E_TT_PARENS_CLOSE)
+					ERR("Expected closing parenthesis after image header", ctoken);
+				ADV_NON_BLANK(1);
+			}
+
 			if (ctoken.type != E_TT_COLON)
 			{
-				if(to_lower(ctoken.word) == "with" || to_lower(ctoken.word) == "using"){
+				if (to_lower(ctoken.word) == "with" || to_lower(ctoken.word) == "using")
+				{
 					ERR_VOID("Only one with and using allowed per instruction header", ctoken);
-				}	
-				else {
+				}
+				else
+				{
 					ERR_VOID("Missing ':' after instruction header", ctoken);
 				}
 			}
