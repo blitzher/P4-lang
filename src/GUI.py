@@ -5,10 +5,10 @@ import tkinter.filedialog as fd
 
 
 class App(tk.Frame):
-    
+
     def __init__(self, master):
         super().__init__(master)
-        root.geometry("550x210")
+        root.geometry("600x210")
         root.title("epicR - A recipe specification language")
         self.html_buttons = IntVar()
         self.unit_buttons = IntVar()
@@ -18,21 +18,21 @@ class App(tk.Frame):
             command=lambda: self.open_file(self.input_fpath),
             text="Choose file/Recipe",
             height=1,
-            width=15,
+            width=20,
         )
         self.output_dir_button = tk.Button(
             self,
             command=lambda: self.open_dir(self.out_dir_label),
             text="Choose output directory",
             height=1,
-            width=15,
+            width=20,
         )
         self.compile_btn = tk.Button(
             self,
             command=lambda: self.compile(),
             text="Compile output",
             height=1,
-            width=15,
+            width=20,
         )
         self.input_file_button.pack(anchor=W)
         self.output_dir_button.pack(anchor=W)
@@ -90,8 +90,8 @@ class App(tk.Frame):
         self.directory.set("")
         self.output_dir_clarg = tk.StringVar()
         self.output_dir_clarg.set("-o ")
-        self.input_fpath_label.place(x=175, y=3)
-        self.output_fpath_label.place(x=175, y=33)
+        self.input_fpath_label.place(x=215, y=3)
+        self.output_fpath_label.place(x=215, y=33)
         self.html_buttons.set(2)
         self.unit_buttons.set(3)
 
@@ -128,7 +128,6 @@ class App(tk.Frame):
             dest.set(self.format_fpath(dirpath))
             self.directory.set(
                 self.output_dir_clarg.get() + self.out_dir_label.get())
-    
 
     def compile(self):
 
@@ -137,7 +136,7 @@ class App(tk.Frame):
         else:
             executable = os.path.join(".", "bin", "main")
 
-        if(os.path.exists(".epicr-error.txt")): 
+        if(os.path.exists(".epicr-error.txt")):
             os.remove(".epicr-error.txt")
 
         clargs = "%s %s --%s --%s" % (
@@ -148,15 +147,14 @@ class App(tk.Frame):
         )
         os.system("%s %s" % (executable, clargs))
 
-        if(os.path.exists(".epicr-error.txt")): 
+        if(os.path.exists(".epicr-error.txt")):
             errorLog = open(".epicr-error.txt")
             messagebox.showerror(title="Error", message=errorLog.readline())
             errorLog.close()
             os.remove(".epicr-error.txt")
         else:
-            messagebox.showinfo(title="Success", message="Compilation suscceded! yay")
-        
-    
+            messagebox.showinfo(
+                title="Success", message="Compilation suscceded! yay")
 
     def format_fpath(self, s):
         return s
