@@ -115,7 +115,6 @@ namespace epicr
 			return rcp;
 		/* Parse all fields */
 		while (ctoken.type != E_TT_EOF && !has_error)
-		/* TODO: refactor x */
 		{
 			if (to_lower(ctoken.word) == "title")
 				ParseTitle(&rcp);
@@ -232,7 +231,7 @@ namespace epicr
 
 	void Parser::ParseTime(recipe *rcp)
 	{
-		/*saves which kind of time it is: */
+		/*saves which type of time it is: */
 		std::string time_type = to_lower(ctoken.word);
 		ADV_NON_BLANK(2);
 		std::string time = "";
@@ -255,7 +254,6 @@ namespace epicr
 		ADV_NON_BLANK(2);
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
-			// ADV_NON_BLANK(1);
 			ingredient ingr = ReadIngredient(E_RI_HAS_PLUS | E_RI_HAS_ASTERIX | E_RI_HAS_QMARK | E_RI_ASSUME_1_NUM);
 			if (has_error)
 				return;

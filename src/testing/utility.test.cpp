@@ -37,12 +37,6 @@ void round_double_to_string()
 void amount_to_string()
 {
     test_lib::REGISTER;
-
-    /* double number;
-    bool is_relative_amount;
-    std::string relative_amount;
-    std::string unit;
-    bool is_uncountable; */
     epicr::amount amnt = {10.22, false, "", "grams", false};
     test_lib::expect_equal_s(epicr::amount_to_string(amnt), "(10.22 grams)");
 }

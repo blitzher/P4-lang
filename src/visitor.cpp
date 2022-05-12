@@ -137,10 +137,6 @@ namespace epicr::visitor
 
     void IngredientVerifier::visit(recipe *a_rcp)
     {
-
-        /* shallow copy of input recipe */
-        // recipe rcp = a_rcp;
-
         /* fill the symbol table and check for duplicate ingredients*/
         for (auto ingr : a_rcp->ingredients)
         {
@@ -156,10 +152,6 @@ namespace epicr::visitor
                 return;
             }
         }
-
-        /* check the flow of the instructions are reasonable
-        aka check if the recipe comply by all the rules */
-
         int instruction_count = 0;
 
         for (auto &inst : a_rcp->instructions)
@@ -199,11 +191,6 @@ namespace epicr::visitor
                     case 'a': /* all */
                         ingr.amount = original_symbols[to_lower(ingr.name)].amount;
                         break;
-                    default:
-                        std::string err_msg = "Received unexpected relative amount [" +
-                                              ingr.amount.relative_amount + "] for Ingredient '" + ingr.name + "'";
-                        ERR(err_msg);
-                        return;
                     }
                 }
                 else if (ingr.amount.unit == "%")
@@ -535,7 +522,7 @@ namespace epicr::visitor
         std::string standardized = standardize(to_lower(amnt->unit));
         amnt->unit = standardized;
 
-        /* If the target unit system is undefined, don't modify
+        /* If the target unit system is undefined, do not modify
          * any of the ingredients */
         if (tar_sys == E_US_NONE)
             return;
@@ -555,7 +542,7 @@ namespace epicr::visitor
             }
         }
 
-        /* if no system change is needed, short-circuit  */
+        /* if no system change is needed, return */
         if (cur_sys == tar_sys)
             return;
 

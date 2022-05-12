@@ -276,7 +276,6 @@ namespace epicr
         line_num -= line_offset;
         /* retract the header by the width of the read tokens */
 
-        // printf("can_return...:%i eof_flag:%i ready:%i\n", can_return_pre_eof_token, istream.eof(), ready);
         pre_eof_index = before_peek_eof_index;
         is_peaking = false;
         if (!istream.eof())

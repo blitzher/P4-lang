@@ -166,7 +166,7 @@ namespace epicr
 				result += body[i].value.unit;
 			}
 		}
-		return strip_spaces_right(result) + "\n"; // readability ig
+		return strip_spaces_right(result) + "\n";
 	}
 
 	/* constructs strings for yield field in instructions */

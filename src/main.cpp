@@ -61,7 +61,6 @@ int main(int argc, char **argv)
 			string filename = (std::filesystem::path(epicr::clargs.input_filepath).stem()).string();
 
 			epicr::epicr_html_style choosen_style = epicr::clargs.choosen_style;
-			// epicr::epicr_html_style choosen_style = epicr::E_STYLE_FANCY;  // switch with above for html output also in parser
 			if (choosen_style == epicr::E_STYLE_FANCY)
 			{
 				std::filesystem::path file = output_file / std::filesystem::path(filename);

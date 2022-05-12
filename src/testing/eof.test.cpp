@@ -59,7 +59,6 @@ void total_time_before_eof_matches()
 	{
 		example_string = "title: pasta    total-time: " + total_time;
 		rcp = epicr::parse_string_silent(example_string).recipe;
-		// test_lib::expect_equal_s(rcp.time.total_time, total_time);
 		test_lib::expect_equal_s(rcp.title, "pasta");
 	}
 }

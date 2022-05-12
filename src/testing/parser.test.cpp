@@ -161,7 +161,7 @@ void ingredient_in_instruction_has_correct_amount()
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
 
 	/* First ingredient */
-	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.is_relative_amount, false); // this one fails
+	test_lib::expect_equal_b(rcp.instructions[0].ingredients[0].amount.is_relative_amount, false);
 	test_lib::expect_equal_i(rcp.instructions[0].ingredients[0].amount.number, 300);
 	test_lib::expect_equal_s(rcp.instructions[0].ingredients[0].amount.unit, "g");
 
@@ -232,7 +232,6 @@ void parsed_instruction_body()
 {
 	test_lib::REGISTER;
 	auto rcp = epicr::parse_recipe("src/test-recipes/Pasta.rcp").recipe;
-	/* TODO: Take stance on how to deal with instructions words that are amounts */
 	auto body = rcp.instructions[0].body;
 	test_lib::expect_equal_s(body[0].spelling, "Put");
 	test_lib::expect_equal_s(body[1].spelling, " ");

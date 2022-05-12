@@ -5,7 +5,7 @@ using std::string;
 
 namespace epicr
 {
-	/* create html file */
+	/* creates html file */
 	string load_HTML_template(string template_name)
 	{
 		string file_content;
@@ -32,7 +32,7 @@ namespace epicr
 		return "<div class=time-header>" + header + "</div><div class=time-content>" + time + "</div>";
 	}
 
-	/* construct HTML string for servings field */
+	/* constructs HTML string for servings field */
 	string insert_servings(servings servings)
 	{
 		string number = std::to_string(servings.count);
@@ -88,7 +88,7 @@ namespace epicr
 		return result;
 	}
 
-	/* construct HTML string for optional ingredients listings */
+	/* constructs HTML string for optional ingredients listings */
 	string insert_optional_ingredients(std::vector<ingredient> ingredients)
 	{
 		bool thereIsAtLeastOneOptionalIngredient = false;
@@ -170,7 +170,7 @@ namespace epicr
 		return result;
 	}
 
-	/*return a new string with its newlines converted to <br>'s*/
+	/*returns a new string with its newlines converted to <br>'s*/
 	std::string newlines_in_html(string a_string)
 	{
 		for (size_t i = 0; i < a_string.size(); i++)
@@ -217,7 +217,7 @@ namespace epicr
 		return result;
 	}
 
-	/* insert description in HTML unless it is empty */
+	/* inserts description in HTML unless it is empty */
 	string insert_description(string description)
 	{
 		if (description == "")
