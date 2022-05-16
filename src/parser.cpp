@@ -387,7 +387,6 @@ namespace epicr
 				return;
 			}
 			ingredient current_ingredient = ReadIngredient(E_RI_ASSUME_REST);
-			current_ingredient.name = to_lower(current_ingredient.name);
 			if (has_error)
 				return;
 			if (ctoken.type != E_TT_COMMA && ctoken.type != E_TT_PARENS_CLOSE)
@@ -417,7 +416,7 @@ namespace epicr
 			{
 				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing parenthesis for the 'using'", ctoken);
 			}
-			current_instruction->kitchenware.push_back(to_lower(current_kitchenware));
+			current_instruction->kitchenware.push_back(current_kitchenware);
 		}
 		ADV_NON_BLANK(1); /*reads through the end parenthesis*/
 	}

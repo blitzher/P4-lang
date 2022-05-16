@@ -145,7 +145,7 @@ namespace epicr::visitor
 
             /*duplicate ingredients check*/
             size_t ingredients_count = uniqueIngredients.size();
-            uniqueIngredients.insert(ingr.name);
+            uniqueIngredients.insert(to_lower(ingr.name));
             if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */
             {
                 ERR("Duplicate ingredient '" + ingr.name + "' was found");
@@ -162,6 +162,7 @@ namespace epicr::visitor
             /* consume */
             for (auto &ingr : inst.ingredients)
             {
+                ingr.name = to_lower(ingr.name);
                 if (has_error)
                     break;
                 if (!ingredient_in_map(ingr.name, symbols))
@@ -196,7 +197,7 @@ namespace epicr::visitor
                 else if (ingr.amount.unit == "%")
                 {
                     double percent = ingr.amount.number;
-                    ingr.amount = original_symbols[ingr.name].amount;
+                    ingr.amount = original_symbols[to_lower(ingr.name)].amount;
                     ingr.amount.number *= percent;
                 }
 
@@ -742,7 +743,7 @@ namespace epicr::visitor
         /* get a collection of ingredients in the ingredients list */
         std::unordered_map<std::string, ingredient> existing_ingredients;
         for (const auto &ingr : rcp->ingredients)
-            existing_ingredients[to_lower(ingr.name)] = ingr;
+            existing_ingredients[ingr.name] = ingr;
 
         for (const auto &inst : rcp->instructions)
         {
@@ -763,7 +764,7 @@ namespace epicr::visitor
 
                 /* otherwise, add it */
                 if (!contained)
-                    ordered_ingredients.push_back(existing_ingredients[to_lower(ingr.name)]);
+                    ordered_ingredients.push_back(existing_ingredients[ingr.name]);
             }
         }
 
