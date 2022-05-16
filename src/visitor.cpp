@@ -39,9 +39,9 @@ bool map_contains(std::unordered_map<T, A> map, T key)
 template <typename K, typename VT>
 K key_of_value_in_map_vec(std::map<K, std::vector<VT>> map, VT val, K def)
 {
-    for (const auto &pair : map)
+    for (const auto& pair : map)
     {
-        for (const auto &vecv : pair.second)
+        for (const auto& vecv : pair.second)
         {
             if (vecv == val)
                 return pair.first;
@@ -53,7 +53,7 @@ K key_of_value_in_map_vec(std::map<K, std::vector<VT>> map, VT val, K def)
 template <typename T>
 bool vec_contains(std::vector<T> vector, T value)
 {
-    for (const T &t : vector)
+    for (const T& t : vector)
         if (value == t)
             return true;
     return false;
@@ -75,47 +75,47 @@ namespace epicr
 
         /* all units and their type */
         std::vector<std::string> weight_units = {
-            "g", "kg", "oz", "lbs"};
+            "g", "kg", "oz", "lbs" };
         units_in_type[E_UT_WEIGHT] = weight_units;
 
         std::vector<std::string> volume_units = {
-            "ml", "dl", "l", "fl-oz", "cup", "qt", "gal"};
+            "ml", "dl", "l", "fl-oz", "cup", "qt", "gal" };
         units_in_type[E_UT_VOLUME] = volume_units;
 
         std::vector<std::string> length_units = {
-            "mm", "cm", "in", "ft"};
+            "mm", "cm", "in", "ft" };
         units_in_type[E_UT_LENGTH] = length_units;
 
         std::vector<std::string> temperature_units = {
-            "C", "F"};
+            "C", "F" };
         units_in_type[E_UT_TEMPERATURE] = temperature_units;
 
         /* alias' of the different units */
-        unit_aliases["g"] = {"g", "gram", "grams"};
-        unit_aliases["kg"] = {"kg", "kilogram", "kgs", "kilograms"};
-        unit_aliases["oz"] = {"oz", "ounce", "ounces"};
-        unit_aliases["lbs"] = {"lbs", "pounds", "lb"};
+        unit_aliases["g"] = { "g", "gram", "grams" };
+        unit_aliases["kg"] = { "kg", "kilogram", "kgs", "kilograms" };
+        unit_aliases["oz"] = { "oz", "ounce", "ounces" };
+        unit_aliases["lbs"] = { "lbs", "pounds", "lb" };
 
-        unit_aliases["ml"] = {"ml", "milliliter"};
-        unit_aliases["dl"] = {"dl", "deciliter"};
-        unit_aliases["l"] = {"l", "liter"};
-        unit_aliases["fl-oz"] = {"fl-oz", "fluid ounce"};
-        unit_aliases["cup"] = {"cup", "cups"};
-        unit_aliases["qt"] = {"qt", "quarts"};
-        unit_aliases["gal"] = {"gal", "gallon", "gallons"};
+        unit_aliases["ml"] = { "ml", "milliliter" };
+        unit_aliases["dl"] = { "dl", "deciliter" };
+        unit_aliases["l"] = { "l", "liter" };
+        unit_aliases["fl-oz"] = { "fl-oz", "fluid ounce" };
+        unit_aliases["cup"] = { "cup", "cups" };
+        unit_aliases["qt"] = { "qt", "quarts" };
+        unit_aliases["gal"] = { "gal", "gallon", "gallons" };
 
-        unit_aliases["mm"] = {"mm", "millimeter", "millimeters"};
-        unit_aliases["cm"] = {"cm", "centimeter", "centimeters"};
-        unit_aliases["in"] = {"in", "inch", "inches"};
-        unit_aliases["ft"] = {"ft", "feet", "foot"};
+        unit_aliases["mm"] = { "mm", "millimeter", "millimeters" };
+        unit_aliases["cm"] = { "cm", "centimeter", "centimeters" };
+        unit_aliases["in"] = { "in", "inch", "inches" };
+        unit_aliases["ft"] = { "ft", "feet", "foot" };
 
-        unit_aliases["C"] = {"C", "celsius"};
-        unit_aliases["F"] = {"F", "fahrenheit"};
+        unit_aliases["C"] = { "C", "celsius" };
+        unit_aliases["F"] = { "F", "fahrenheit" };
 
         units_in_system[E_US_METRIC] = {
-            "g", "kg", "ml", "dl", "l", "mm", "cm", "C"};
+            "g", "kg", "ml", "dl", "l", "mm", "cm", "C" };
         units_in_system[E_US_IMPERIAL] = {
-            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "F"};
+            "oz", "lbs", "fl-oz", "cup", "qt", "gal", "in", "ft", "F" };
 
         map_is_initalized = true;
     }
@@ -135,7 +135,7 @@ namespace epicr::visitor
         error = "No error";
     };
 
-    void IngredientVerifier::visit(recipe *a_rcp)
+    void IngredientVerifier::visit(recipe* a_rcp)
     {
         /* fill the symbol table and check for duplicate ingredients*/
         for (auto ingr : a_rcp->ingredients)
@@ -154,13 +154,13 @@ namespace epicr::visitor
         }
         int instruction_count = 0;
 
-        for (auto &inst : a_rcp->instructions)
+        for (auto& inst : a_rcp->instructions)
         {
             if (has_error)
                 break;
             instruction_count++;
             /* consume */
-            for (auto &ingr : inst.ingredients)
+            for (auto& ingr : inst.ingredients)
             {
                 ingr.name = to_lower(ingr.name);
                 if (has_error)
@@ -210,8 +210,8 @@ namespace epicr::visitor
                 if (ingr.amount.number - symbols[to_lower(ingr.name)].amount.number > FLT_EPSILON)
                 {
                     std::string err_msg = "Used too much of Ingredient '" + ingr.name + "'. " +
-                                          epicr::round_double_to_string(symbols[to_lower(ingr.name)].amount.number) + " is available, and " +
-                                          epicr::round_double_to_string(ingr.amount.number) + " was used";
+                        epicr::round_double_to_string(symbols[to_lower(ingr.name)].amount.number) + " is available, and " +
+                        epicr::round_double_to_string(ingr.amount.number) + " was used";
                     ERR(err_msg);
                     return;
                 }
@@ -497,8 +497,8 @@ namespace epicr::visitor
 
     bool AmountConverter::is_convertable(std::string unit)
     {
-        for (const auto &pair : unit_aliases)
-            for (const auto &alias : pair.second)
+        for (const auto& pair : unit_aliases)
+            for (const auto& alias : pair.second)
                 if (to_lower(unit) == alias)
                     return true;
 
@@ -508,8 +508,8 @@ namespace epicr::visitor
     std::string AmountConverter::standardize(std::string unit)
     {
         std::string unit_lower = to_lower(unit);
-        for (const auto &pair : unit_aliases)
-            for (const auto &alias : pair.second)
+        for (const auto& pair : unit_aliases)
+            for (const auto& alias : pair.second)
                 if (unit_lower == alias)
                     return unit_aliases[pair.first][0];
 
@@ -517,7 +517,7 @@ namespace epicr::visitor
         return "";
     }
 
-    void AmountConverter::convert_amount(amount *amnt, epicr_unit_system tar_sys)
+    void AmountConverter::convert_amount(amount* amnt, epicr_unit_system tar_sys)
     {
         std::string standardized = standardize(to_lower(amnt->unit));
         amnt->unit = standardized;
@@ -530,9 +530,9 @@ namespace epicr::visitor
         epicr_unit_system cur_sys;
 
         /* find out what system the current unit is in*/
-        for (const auto &pair : epicr::units_in_system)
+        for (const auto& pair : epicr::units_in_system)
         {
-            for (const auto &unit_in_sys : pair.second)
+            for (const auto& unit_in_sys : pair.second)
             {
                 if (standardized == unit_in_sys)
                 {
@@ -645,34 +645,34 @@ namespace epicr::visitor
         }
     }
 
-    void AmountConverter::visit(recipe *rcp)
+    void AmountConverter::visit(recipe* rcp)
     {
-        std::vector<amount *> scaleables;
+        std::vector<amount*> scaleables;
 
         /* Get all amounts from ingredients */
-        for (auto &ingr : rcp->ingredients)
+        for (auto& ingr : rcp->ingredients)
         {
-            amount *amnt_ptr = &ingr.amount;
+            amount* amnt_ptr = &ingr.amount;
             scaleables.push_back(amnt_ptr);
         }
 
         /* Get all amounts from instructions */
-        for (auto &inst : rcp->instructions)
+        for (auto& inst : rcp->instructions)
         {
-            for (auto &ingr : inst.ingredients)
+            for (auto& ingr : inst.ingredients)
                 scaleables.push_back(&(ingr.amount));
 
-            for (auto &word : inst.body)
+            for (auto& word : inst.body)
             {
                 if (word.is_amount)
                     scaleables.push_back(&(word.value));
             }
 
-            for (auto &ingr : inst.yields)
+            for (auto& ingr : inst.yields)
                 scaleables.push_back(&(ingr.amount));
         }
 
-        for (auto &amnt : scaleables)
+        for (auto& amnt : scaleables)
         {
             if (!is_convertable(amnt->unit))
                 continue;
@@ -692,7 +692,7 @@ namespace epicr::visitor
         has_error = false;
     }
 
-    void FieldsVerifier::check_mandatory_fields(const recipe *rcp)
+    void FieldsVerifier::check_mandatory_fields(const recipe* rcp)
     {
         if (rcp->title.empty())
         {
@@ -714,7 +714,7 @@ namespace epicr::visitor
         }
     }
 
-    void FieldsVerifier::set_servings_default_value(recipe *rcp)
+    void FieldsVerifier::set_servings_default_value(recipe* rcp)
     {
         if (rcp->servings.count == 0 && rcp->servings.descriptor == "")
         {
@@ -723,7 +723,7 @@ namespace epicr::visitor
         }
     }
 
-    void FieldsVerifier::visit(recipe *rcp)
+    void FieldsVerifier::visit(recipe* rcp)
     {
         check_mandatory_fields(rcp);
         set_servings_default_value(rcp);
@@ -732,22 +732,27 @@ namespace epicr::visitor
 #pragma endregion
 
 #pragma region IngredientSorter implementation
-    IngredientSorter::IngredientSorter(){
+    IngredientSorter::IngredientSorter() {
 
     };
 
-    void IngredientSorter::visit(recipe *rcp)
+    void IngredientSorter::visit(recipe* rcp)
     {
         std::vector<ingredient> ordered_ingredients;
 
         /* get a collection of ingredients in the ingredients list */
         std::unordered_map<std::string, ingredient> existing_ingredients;
+<<<<<<< HEAD
         for (const auto &ingr : rcp->ingredients)
             existing_ingredients[ingr.name] = ingr;
+=======
+        for (const auto& ingr : rcp->ingredients)
+            existing_ingredients[to_lower(ingr.name)] = ingr;
+>>>>>>> 1a8bc3a47971d7d5c517ff8b3129459aa2cf1e46
 
-        for (const auto &inst : rcp->instructions)
+        for (const auto& inst : rcp->instructions)
         {
-            for (const auto &ingr : inst.ingredients)
+            for (const auto& ingr : inst.ingredients)
             {
 
                 /* determine if ingredient in instruction is in ingredient list */
@@ -756,7 +761,7 @@ namespace epicr::visitor
 
                 /* determine if ingredient in instruction is already indexed */
                 bool contained = false;
-                for (const auto &unique : ordered_ingredients)
+                for (const auto& unique : ordered_ingredients)
                 {
                     if (ingr.name == unique.name)
                         contained = true;
@@ -776,7 +781,7 @@ namespace epicr::visitor
     }
 #pragma endregion
 
-    rcp_ret visit_all(recipe *rcp)
+    rcp_ret visit_all(recipe* rcp)
     {
         auto ac_vis = AmountConverter();
         auto in_vis = IngredientVerifier();
@@ -785,19 +790,19 @@ namespace epicr::visitor
 
         mf_vis.visit(rcp);
         if (mf_vis.has_error)
-            return {{}, 1, " ManFld: " + mf_vis.error};
+            return { {}, 1, mf_vis.error, " ManFld: " };
 
         ac_vis.visit(rcp);
         if (ac_vis.has_error)
-            return {{}, 1, " AmtCon: " + ac_vis.error};
+            return { {}, 1, ac_vis.error, " AmtCon: " };
 
         in_vis.visit(rcp);
         if (in_vis.has_error)
-            return {{}, 1, " IngVer: " + in_vis.error};
+            return { {}, 1, in_vis.error, " IngVer: " };
 
         is_vis.visit(rcp);
 
-        return {rcp, 0, " Visitors: No error"};
+        return { rcp, 0, "No error", " Visitors: " };
     }
 
 }
