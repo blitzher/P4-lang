@@ -621,11 +621,6 @@ namespace epicr::visitor
                 amnt->number = amnt->number / ML_TO_FLOZ;
                 amnt->unit = "ml";
             }
-            else if (standardized == "fl-oz") /* This if is never entered */
-            {
-                amnt->number = amnt->number / DL_TO_FLOZ;
-                amnt->unit = "dl";
-            }
             else if (standardized == "qt")
             {
                 amnt->number = amnt->number / L_TO_QT;
@@ -640,11 +635,6 @@ namespace epicr::visitor
             {
                 amnt->number = amnt->number / CM_TO_INCH;
                 amnt->unit = "cm";
-            }
-            else if (standardized == "in") /* This if is never entered */
-            {
-                amnt->number = amnt->number / MM_TO_INCH;
-                amnt->unit = "mm";
             }
             else if (standardized == "F")
             {
@@ -752,7 +742,7 @@ namespace epicr::visitor
         /* get a collection of ingredients in the ingredients list */
         std::unordered_map<std::string, ingredient> existing_ingredients;
         for (const auto& ingr : rcp->ingredients)
-            existing_ingredients[ingr.name] = ingr;
+            existing_ingredients[to_lower(ingr.name)] = ingr;
 
         for (const auto& inst : rcp->instructions)
         {
@@ -773,7 +763,7 @@ namespace epicr::visitor
 
                 /* otherwise, add it */
                 if (!contained)
-                    ordered_ingredients.push_back(existing_ingredients[ingr.name]);
+                    ordered_ingredients.push_back(existing_ingredients[to_lower(ingr.name)]);
             }
         }
 
