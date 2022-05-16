@@ -186,7 +186,7 @@ void visit_mandatory_fields_title_exception()
 {
     test_lib::REGISTER;
     epicr::recipe rcp = epicr::parse_string("title: ingredients: instructions:").recipe;
-    epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
+    epicr::visitor::FieldsVerifier mand_fields = epicr::visitor::FieldsVerifier();
     mand_fields.visit(&rcp);
     epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
     test_lib::expect_exception(ret, "No title or recipe was found");
@@ -196,7 +196,7 @@ void visit_mandatory_fields_ingredients_exception()
 {
     test_lib::REGISTER;
     epicr::recipe rcp = epicr::parse_string("title: hello ingredients: instructions:").recipe;
-    epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
+    epicr::visitor::FieldsVerifier mand_fields = epicr::visitor::FieldsVerifier();
     mand_fields.visit(&rcp);
     epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
     test_lib::expect_exception(ret, "No ingredients was found");
@@ -206,7 +206,7 @@ void visit_mandatory_fields_instructions_exception()
 {
     test_lib::REGISTER;
     epicr::recipe rcp = epicr::parse_string("title: hello ingredients: carrot instructions:").recipe;
-    epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
+    epicr::visitor::FieldsVerifier mand_fields = epicr::visitor::FieldsVerifier();
     mand_fields.visit(&rcp);
     epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error};
     test_lib::expect_exception(ret, "No instructions was found");

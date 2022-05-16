@@ -527,7 +527,7 @@ namespace epicr
          * @brief visitor class that handles the verification of mandatory fields
          *
          */
-        class MandatoryFields : public Visitor
+        class FieldsVerifier : public Visitor
         {
         private:
             /**
@@ -547,12 +547,12 @@ namespace epicr
 
         public:
             /**
-             * @brief the visit method of the MandatoryFields
+             * @brief the visit method of the FieldsVerifier
              *
              * @param recipe the recipe that will be altered by the visitor
              */
             void visit(recipe *);
-            MandatoryFields();
+            FieldsVerifier();
         };
 
         /**

@@ -250,7 +250,6 @@ namespace epicr::visitor
                 title_ingredient_remaining = true;
             else if (ingr.amount.number > FLT_EPSILON && !ingr.amount.is_uncountable)
             {
-
                 std::string err_msg = "Unused Ingredient '" + ingr.name + amount_to_string(ingr.amount) + "'";
                 ERR(err_msg);
             }
@@ -694,15 +693,15 @@ namespace epicr::visitor
 
 #pragma endregion
 
-#pragma region MandatoryFields implementation
+#pragma region FieldsVerifier implementation
 
-    MandatoryFields::MandatoryFields()
+    FieldsVerifier::FieldsVerifier()
     {
         error = "No error";
         has_error = false;
     }
 
-    void MandatoryFields::check_mandatory_fields(const recipe *rcp)
+    void FieldsVerifier::check_mandatory_fields(const recipe *rcp)
     {
         if (rcp->title.empty())
         {
@@ -724,7 +723,7 @@ namespace epicr::visitor
         }
     }
 
-    void MandatoryFields::set_servings_default_value(recipe *rcp)
+    void FieldsVerifier::set_servings_default_value(recipe *rcp)
     {
         if (rcp->servings.count == 0 && rcp->servings.descriptor == "")
         {
@@ -733,7 +732,7 @@ namespace epicr::visitor
         }
     }
 
-    void MandatoryFields::visit(recipe *rcp)
+    void FieldsVerifier::visit(recipe *rcp)
     {
         check_mandatory_fields(rcp);
         set_servings_default_value(rcp);
@@ -790,7 +789,7 @@ namespace epicr::visitor
     {
         auto ac_vis = AmountConverter();
         auto in_vis = IngredientVerifier();
-        auto mf_vis = MandatoryFields();
+        auto mf_vis = FieldsVerifier();
         auto is_vis = IngredientSorter();
 
         mf_vis.visit(rcp);
