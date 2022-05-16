@@ -1,0 +1,24 @@
+title:Fajitas
+ingredients:
+kylling,fajitas pulver,peberfrugt,løg, smør, madpandekager, salsa, ost 
+servings: 2 personer
+cook-time: 4 timer
+kitchenware: pande, Mads,spækbræt, kniv,ske, mikrobølgeovn
+
+instructions:
+using(Mads, kniv, spækbræt) with(løg,peberfrugt, kylling):
+Mads skærer løg,peberfrugt og kylling 
+
+using(pande, Mads) with (smør, løg, peberfrugt):
+Mads steger løg og peberfrugt tern i smør 
+
+using(pande, Mads) with(kylling, smør, fajitas pulver):
+Mads steger kylling i smør og tilsætter fajitas pulver 
+
+using(pande, Mads)with (kylling, løg, peberfrugt, fajitas pulver):
+Mads tilsætter løg og peberfrugt til blandingen på panden 
+
+using(ske, mikrobølgeovn) with(madpandekager, fajitas,salsa og ost):
+Varm madpandekagen med ost og øs fajitas og salsa på i en tilfredsstillende mængde 
+
+yield: fajitas
