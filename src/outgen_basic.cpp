@@ -35,7 +35,7 @@ namespace epicr
 	/* constructs strings for servings field */
 	string basic_insert_servings(servings servings)
 	{
-		string number = std::to_string(servings.count);
+		string number = std::to_string((int)servings.count);
 		string descriptor = servings.descriptor;
 
 		if (servings.count == 0)

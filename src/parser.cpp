@@ -33,10 +33,10 @@
 					  << __FUNCTION__ << ")" << std::endl;  \
 			std::cout << msg << std::endl;                  \
 			std::ofstream voidErrorlog(".epicr-error.txt"); \
-			voidErrorlog << error;  						\
+			voidErrorlog << error;                          \
 			print_token(token);                             \
 			std::cout << std::endl;                         \
-		} 												    \
+		}                                                   \
 		longjmp(exit_jmp, 1);                               \
 	}
 #define WARN(msg, token)                              \
@@ -329,10 +329,11 @@ namespace epicr
 				if (has_error)
 					return;
 
-				if(to_lower(ctoken.word) == "using"){
-				ParseInstructionHeaderUsing(&single_instruction);
-				if (has_error)
-					return;
+				if (to_lower(ctoken.word) == "using")
+				{
+					ParseInstructionHeaderUsing(&single_instruction);
+					if (has_error)
+						return;
 				}
 			}
 			else if (to_lower(ctoken.word) == "using")
@@ -340,20 +341,23 @@ namespace epicr
 				ParseInstructionHeaderUsing(&single_instruction);
 				if (has_error)
 					return;
-				
-				if(to_lower(ctoken.word) == "with"){
-				ParseInstructionHeaderWith(&single_instruction);
-				if (has_error)
-					return;
+
+				if (to_lower(ctoken.word) == "with")
+				{
+					ParseInstructionHeaderWith(&single_instruction);
+					if (has_error)
+						return;
 				}
 			}
-			
+
 			if (ctoken.type != E_TT_COLON)
 			{
-				if(to_lower(ctoken.word) == "with" || to_lower(ctoken.word) == "using"){
+				if (to_lower(ctoken.word) == "with" || to_lower(ctoken.word) == "using")
+				{
 					ERR_VOID("Only one with and using allowed per instruction header", ctoken);
-				}	
-				else {
+				}
+				else
+				{
 					ERR_VOID("Missing ':' after instruction header", ctoken);
 				}
 			}
@@ -383,6 +387,7 @@ namespace epicr
 				return;
 			}
 			ingredient current_ingredient = ReadIngredient(E_RI_ASSUME_REST);
+			current_ingredient.name = to_lower(current_ingredient.name);
 			if (has_error)
 				return;
 			if (ctoken.type != E_TT_COMMA && ctoken.type != E_TT_PARENS_CLOSE)
@@ -412,7 +417,7 @@ namespace epicr
 			{
 				ERR_VOID("Expected a ',' as seperator between kitchenware or a closing parenthesis for the 'using'", ctoken);
 			}
-			current_instruction->kitchenware.push_back(current_kitchenware);
+			current_instruction->kitchenware.push_back(to_lower(current_kitchenware));
 		}
 		ADV_NON_BLANK(1); /*reads through the end parenthesis*/
 	}
