@@ -154,7 +154,7 @@ class App(tk.Frame):
             os.remove(".epicr-error.txt")
         else:
             messagebox.showinfo(
-                title="Success", message="Compilation suscceded! yay")
+                title="Success", message="Compilation succeeded")
 
     def format_fpath(self, s):
         return s
