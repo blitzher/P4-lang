@@ -254,7 +254,7 @@ namespace epicr
 		ADV_NON_BLANK(2);
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
-			ingredient ingr = ReadIngredient(E_RI_HAS_PLUS | E_RI_HAS_ASTERIX | E_RI_HAS_QMARK | E_RI_ASSUME_1_NUM);
+			ingredient ingr = ReadIngredient(E_RI_HAS_PLUS | E_RI_HAS_ASTERIX | E_RI_HAS_QMARK | E_RI_ASSUME_1_NUM | E_RI_NOT_RELATIVE);
 			if (has_error)
 				return;
 
@@ -539,6 +539,7 @@ namespace epicr
 	{
 		bool assume_1_num = (arg & E_RI_ASSUME_1_NUM) >> 3;
 		bool assume_rest = (arg & E_RI_ASSUME_REST) >> 4;
+        bool cannot_read_relative_amounts = (arg & E_RI_NOT_RELATIVE) >> 5;
 		amount amnt = amount();
 
 		if (ctoken.type == E_TT_PLUS)
@@ -572,6 +573,12 @@ namespace epicr
 			ADV_NON_BLANK(1);
 			amnt.unit = ReadWords(E_RW_NONE, true);
 
+            if(cannot_read_relative_amounts && (amnt.unit == "%" || amnt.unit == "/"))
+            {
+                ERR("Relative amounts cannot be used in ingredient declarations", ctoken);
+                return amnt;
+            }
+
 			if (amnt.unit == "%")
 			{
 				amnt.is_relative_amount = true;
@@ -597,6 +604,12 @@ namespace epicr
 		}
 		else if (ctoken.type == E_TT_WORD)
 		{
+            if (cannot_read_relative_amounts)
+            {
+                ERR("Relative amounts cannot be used in ingredient declarations", ctoken);
+                return amnt;
+            }
+
 			amnt.is_relative_amount = true;
 
 			amnt.relative_amount = ReadWords(E_RW_NONE, false);

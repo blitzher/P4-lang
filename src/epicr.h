@@ -25,6 +25,7 @@
 #define E_RI_HAS_QMARK 4    // 0b0000 0100
 #define E_RI_ASSUME_1_NUM 8 // 0b0000 1000
 #define E_RI_ASSUME_REST 16 // 0b0001 0000
+#define E_RI_NOT_RELATIVE 32    // 0b0010 0000
 
 /* Read word args */
 #define E_RW_NONE 0        // 0000
