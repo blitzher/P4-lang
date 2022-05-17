@@ -1,9 +1,8 @@
 #include "./epicr.h"
 #include <iterator>
 
-#ifndef FLT_EPSILON
-#define FLT_EPSILON __FLT_EPSILON__
-#endif
+#define EPSILON 0.01
+
 
 #define ERR(s)                \
     {                         \
@@ -207,7 +206,7 @@ namespace epicr::visitor
                     ingr = match_ingredients(ingr, symbols[to_lower(ingr.name)]);
                 }
 
-                if (ingr.amount.number - symbols[to_lower(ingr.name)].amount.number > FLT_EPSILON)
+                if (ingr.amount.number - symbols[to_lower(ingr.name)].amount.number > EPSILON)
                 {
                     std::string err_msg = "Used too much of Ingredient '" + ingr.name + "'. " +
                                           epicr::round_double_to_string(symbols[to_lower(ingr.name)].amount.number) + " is available, and " +
@@ -249,7 +248,7 @@ namespace epicr::visitor
 
             if (to_lower(ingr.name) == to_lower(a_rcp->title))
                 title_ingredient_remaining = true;
-            else if (ingr.amount.number > FLT_EPSILON && !ingr.amount.is_uncountable)
+            else if (ingr.amount.number > EPSILON && !ingr.amount.is_uncountable)
             {
                 std::string err_msg = "Unused Ingredient '" + ingr.name + amount_to_string(ingr.amount) + "'";
                 ERR(err_msg);
