@@ -1,5 +1,6 @@
 #include "epicr.h"
 #include <filesystem>
+#include <string>
 
 using std::string;
 
@@ -65,7 +66,7 @@ namespace epicr
 	{
 		string result = "<li>" + ingredients[i].name + " ";
 		if (!ingredients[i].amount.is_uncountable)
-			result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+			result += generate_ingredient_html(std::to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		return result;
 	}
 
@@ -78,7 +79,7 @@ namespace epicr
 			if (ingredients[i].is_ingredient_ref)
 			{
 				result += "<li><a class='is_ingredient_ref' target='_blank'>" + ingredients[i].name + " ";
-				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit) + "</a>";
+				result += generate_ingredient_html(std::to_string(ingredients[i].amount.number), ingredients[i].amount.unit) + "</a>";
 			}
 			else if (ingredients[i].is_optional)
 				continue;
@@ -147,7 +148,7 @@ namespace epicr
 				result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
-				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+				result += generate_ingredient_html(std::to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
 		result += "</h5>";
 		return result;
@@ -193,7 +194,7 @@ namespace epicr
 			result += newlines_in_html(body[i].spelling);
 			if (body[i].is_amount == true)
 			{
-				result += "<text class='number'>" + epicr::round_double_to_string(body[i].value.number) + "</text>";
+				result += "<text class='number'>" + std::to_string(body[i].value.number) + "</text>";
 				result += " <text class='unit'>" + body[i].value.unit + "</text>";
 			}
 		}
@@ -211,7 +212,7 @@ namespace epicr
 				result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
-				result += generate_ingredient_html(epicr::round_double_to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
+				result += generate_ingredient_html(std::to_string(ingredients[i].amount.number), ingredients[i].amount.unit);
 		}
 		result += "</h5>";
 		return result;
