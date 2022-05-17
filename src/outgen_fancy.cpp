@@ -36,7 +36,7 @@ namespace epicr
 	/* constructs HTML string for servings field */
 	string insert_servings(servings servings)
 	{
-		string number = std::to_string(servings.count);
+		string number = epicr::round_double_to_string(servings.count);
 		string descriptor = servings.descriptor;
 
 		if (servings.count == 0)
