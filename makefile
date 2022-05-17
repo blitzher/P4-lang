@@ -86,7 +86,7 @@ watch:
 	while true; do make run -q || make run; sleep 0.5; done
 
 gui: $(BINDIR)/$(TARGET)
-	py src/GUI.py
+	python3 src/GUI.py
 	
 
 ducks: doxyfile
