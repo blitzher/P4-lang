@@ -145,7 +145,7 @@ namespace epicr::visitor
 
             /*duplicate ingredients check*/
             size_t ingredients_count = uniqueIngredients.size();
-            uniqueIngredients.insert(ingr.name);
+            uniqueIngredients.insert(to_lower(ingr.name));
             if (ingredients_count == uniqueIngredients.size()) /*if it already exist in the set, it has been previously defined */
             {
                 ERR("Duplicate ingredient '" + ingr.name + "' was found");
@@ -162,6 +162,7 @@ namespace epicr::visitor
             /* consume */
             for (auto &ingr : inst.ingredients)
             {
+                ingr.name = to_lower(ingr.name);
                 if (has_error)
                     break;
                 if (!ingredient_in_map(ingr.name, symbols))
@@ -196,7 +197,7 @@ namespace epicr::visitor
                 else if (ingr.amount.unit == "%")
                 {
                     double percent = ingr.amount.number;
-                    ingr.amount = original_symbols[ingr.name].amount;
+                    ingr.amount = original_symbols[to_lower(ingr.name)].amount;
                     ingr.amount.number *= percent;
                 }
 
@@ -250,7 +251,6 @@ namespace epicr::visitor
                 title_ingredient_remaining = true;
             else if (ingr.amount.number > FLT_EPSILON && !ingr.amount.is_uncountable)
             {
-
                 std::string err_msg = "Unused Ingredient '" + ingr.name + amount_to_string(ingr.amount) + "'";
                 ERR(err_msg);
             }
@@ -622,11 +622,6 @@ namespace epicr::visitor
                 amnt->number = amnt->number / ML_TO_FLOZ;
                 amnt->unit = "ml";
             }
-            else if (standardized == "fl-oz") /* This if is never entered */
-            {
-                amnt->number = amnt->number / DL_TO_FLOZ;
-                amnt->unit = "dl";
-            }
             else if (standardized == "qt")
             {
                 amnt->number = amnt->number / L_TO_QT;
@@ -641,11 +636,6 @@ namespace epicr::visitor
             {
                 amnt->number = amnt->number / CM_TO_INCH;
                 amnt->unit = "cm";
-            }
-            else if (standardized == "in") /* This if is never entered */
-            {
-                amnt->number = amnt->number / MM_TO_INCH;
-                amnt->unit = "mm";
             }
             else if (standardized == "F")
             {
@@ -694,15 +684,15 @@ namespace epicr::visitor
 
 #pragma endregion
 
-#pragma region MandatoryFields implementation
+#pragma region FieldsVerifier implementation
 
-    MandatoryFields::MandatoryFields()
+    FieldsVerifier::FieldsVerifier()
     {
         error = "No error";
         has_error = false;
     }
 
-    void MandatoryFields::check_mandatory_fields(const recipe *rcp)
+    void FieldsVerifier::check_mandatory_fields(const recipe *rcp)
     {
         if (rcp->title.empty())
         {
@@ -724,7 +714,7 @@ namespace epicr::visitor
         }
     }
 
-    void MandatoryFields::set_servings_default_value(recipe *rcp)
+    void FieldsVerifier::set_servings_default_value(recipe *rcp)
     {
         if (rcp->servings.count == 0 && rcp->servings.descriptor == "")
         {
@@ -733,7 +723,7 @@ namespace epicr::visitor
         }
     }
 
-    void MandatoryFields::visit(recipe *rcp)
+    void FieldsVerifier::visit(recipe *rcp)
     {
         check_mandatory_fields(rcp);
         set_servings_default_value(rcp);
@@ -790,24 +780,24 @@ namespace epicr::visitor
     {
         auto ac_vis = AmountConverter();
         auto in_vis = IngredientVerifier();
-        auto mf_vis = MandatoryFields();
+        auto mf_vis = FieldsVerifier();
         auto is_vis = IngredientSorter();
 
         mf_vis.visit(rcp);
         if (mf_vis.has_error)
-            return {{}, 1, " ManFld: " + mf_vis.error};
+            return {{}, 1, mf_vis.error, " ManFld: "};
 
         ac_vis.visit(rcp);
         if (ac_vis.has_error)
-            return {{}, 1, " AmtCon: " + ac_vis.error};
+            return {{}, 1, ac_vis.error, " AmtCon: "};
 
         in_vis.visit(rcp);
         if (in_vis.has_error)
-            return {{}, 1, " IngVer: " + in_vis.error};
+            return {{}, 1, in_vis.error, " IngVer: "};
 
         is_vis.visit(rcp);
 
-        return {rcp, 0, " Visitors: No error"};
+        return {rcp, 0, "No error", " Visitors: "};
     }
 
 }

@@ -191,7 +191,7 @@ void mandatory_fields_check()
 
 	epicr::recipe rcp = epicr::parse_recipe("src/test-recipes/Carbonara.rcp").recipe;
 
-	epicr::visitor::MandatoryFields mand_fields = epicr::visitor::MandatoryFields();
+	epicr::visitor::FieldsVerifier mand_fields = epicr::visitor::FieldsVerifier();
 	mand_fields.visit(&rcp);
 	if (mand_fields.has_error)
 		test_lib::deny("An unexpected error has occured");

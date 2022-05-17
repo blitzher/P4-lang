@@ -17,7 +17,7 @@ using namespace std;
 /* Remove or outcomment when not debugging */
 void print_lexer_tokens(epicr::Lexer lexer);
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	epicr::parse_cmd_args(argc, argv);
 
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 			visitorErrorlog << vis_ret.err << endl;
 		}
 
-		cout << vis_ret.has_err << vis_ret.err << endl;
+		cout << vis_ret.has_err << vis_ret.err_source << vis_ret.err << endl;
 		if (!vis_ret.has_err)
 		{
 			string output_file = epicr::clargs.output_filepath;
