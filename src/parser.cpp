@@ -194,7 +194,7 @@ namespace epicr
 
 		while (utoken.type != E_TT_COLON)
 		{
-			ingredient nutrient = ReadIngredient(0);
+			ingredient nutrient = ReadIngredient(E_RI_NOT_RELATIVE);
 			if (has_error)
 				return;
 
