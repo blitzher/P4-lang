@@ -97,7 +97,7 @@ namespace epicr
 
         unit_aliases["ml"] = {"ml", "milliliter"};
         unit_aliases["dl"] = {"dl", "deciliter"};
-        unit_aliases["l"] = {"l", "liter"};
+        unit_aliases["l"] = {"l", "liter", "litre"};
         unit_aliases["fl-oz"] = {"fl-oz", "fluid ounce"};
         unit_aliases["cup"] = {"cup", "cups"};
         unit_aliases["qt"] = {"qt", "quarts"};
@@ -108,8 +108,8 @@ namespace epicr
         unit_aliases["in"] = {"in", "inch", "inches"};
         unit_aliases["ft"] = {"ft", "feet", "foot"};
 
-        unit_aliases["C"] = {"C", "celsius"};
-        unit_aliases["F"] = {"F", "fahrenheit"};
+        unit_aliases["C"] = {"C", "celsius", "c"};
+        unit_aliases["F"] = {"F", "fahrenheit", "f"};
 
         units_in_system[E_US_METRIC] = {
             "g", "kg", "ml", "dl", "l", "mm", "cm", "C"};
