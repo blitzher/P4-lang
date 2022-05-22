@@ -4,12 +4,12 @@ using std::string;
 
 namespace epicr
 {
-	/* create txt file */
+	/* create markdown template file */
 	string load_basic_template(string template_name)
 	{
 		string file_content;
 		string dir = "src";
-		string file_name = template_name + ".txt";
+		string file_name = template_name + ".md";
 		std::filesystem::path filePath = std::filesystem::path(dir) / "output-templates" / file_name;
 		string fpath = filePath.string();
 		std::ifstream fstream = epicr::open_file(fpath);
@@ -184,7 +184,7 @@ namespace epicr
 		return header + "\n" + result + "\n";
 	}
 
-	/* generate strings for txt and replace placeholders */
+	/* generate strings for output and replace placeholders */
 	bool generate_basic(recipe rcp, string filename)
 	{
 		string base_template_basic_s = load_basic_template("base");
@@ -235,7 +235,7 @@ namespace epicr
 			instruction_strings += instruction_string;
 		}
 
-		/* format final strings for .txt*/
+		/* format final strings for the .md template*/
 		string title = "### **Title:** ";
 		title += rcp.title.c_str();
 		string description = "**Description:** ";
