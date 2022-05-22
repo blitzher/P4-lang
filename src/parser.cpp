@@ -562,6 +562,8 @@ namespace epicr
         bool cannot_read_relative_amounts = (arg & E_RI_NOT_RELATIVE) >> 5;
 		amount amnt = amount();
 
+
+		/* BEMeark dette burde kunne fjernes men jeg syntes der var et use case hvor at det ikke virkede */
 		if (ctoken.type == E_TT_PLUS)
 		{
 			amnt.is_uncountable = true;
