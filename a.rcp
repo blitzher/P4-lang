@@ -1,0 +1,10 @@
+title: something
+
+ingredients:
+	MY INGR
+
+instructions:
+	with(My ingr) using(pan):
+		do stuff			
+	yield:
+		something

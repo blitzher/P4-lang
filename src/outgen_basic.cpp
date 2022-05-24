@@ -35,7 +35,7 @@ namespace epicr
 	/* constructs strings for servings field */
 	string basic_insert_servings(servings servings)
 	{
-		string number = epicr::round_double_to_string(servings.count);
+		string number = std::to_string(servings.count);
 		string descriptor = servings.descriptor;
 
 		if (servings.count == 0)
@@ -44,7 +44,7 @@ namespace epicr
 			descriptor = "servings";
 		}
 
-		return "**Servings:** " + number + " " + descriptor;
+		return "# Servings\n\t" + number + " " + descriptor;
 	}
 
 	/* constructs strings for ingredients listing */
@@ -54,7 +54,7 @@ namespace epicr
 
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
-			result += ingredients[i].name;
+			result += '\t' + ingredients[i].name;
 			if (!ingredients[i].amount.is_uncountable)
 			{
 				result += " (" + epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit + ")";
@@ -83,8 +83,9 @@ namespace epicr
 			return "";
 		string result;
 
-		if (header == "Tags: ")
+		if (header == "# Tags\n")
 		{
+			result += "\t";
 			for (size_t i = 0; i < listElements.size(); i++)
 			{
 				result += listElements[i] + ", ";
@@ -96,9 +97,9 @@ namespace epicr
 		{ // kitchenware
 			for (size_t i = 0; i < listElements.size(); i++)
 			{
-				result += listElements[i] + "\n";
+				result += "\t" + listElements[i] + "\n";
 			}
-			return header + "\n" + result;
+			return header + '\n' + result;
 		}
 	}
 
@@ -114,10 +115,10 @@ namespace epicr
 		{
 			std::string number = epicr::round_double_to_string(nutrients[i].amount.number);
 			std::string unit = nutrients[i].amount.unit;
-			result += nutrients[i].name + " (" + number + " " + unit + ")\n";
+			result += "\t" + nutrients[i].name + " (" + number + " " + unit + ")\n";
 		}
-		result += "*pr. 100 grams";
-		return "**Nutrients:**\n" + result;
+		result += "*pr. 100 grams*";
+		return "# Nutrients\n" + result;
 	}
 
 	/* constructs strings for ingredient field in instructions */
@@ -133,7 +134,7 @@ namespace epicr
 				result += epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit;
 		}
 
-		return header + result;
+		return header + " " + result + "\n";
 	}
 
 	/* constructs strings for kitchenware field in instructions */
@@ -150,13 +151,13 @@ namespace epicr
 				result += ", ";
 		}
 
-		return header + result;
+		return header + " " + result + "\n";
 	}
 
 	/* constructs strings for instructions body */
 	string basic_insert_instruction_body(std::vector<instruction_word> body)
 	{
-		string result;
+		string result = "\t";
 		for (size_t i = 0; i < body.size(); i++)
 		{
 			result += body[i].spelling;
@@ -165,8 +166,10 @@ namespace epicr
 				result += epicr::round_double_to_string(body[i].value.number);
 				result += body[i].value.unit;
 			}
+			else if (body[i].spelling[0] == '\n')
+				result += "\t";
 		}
-		return strip_spaces_right(result) + "\n";
+		return strip_spaces_right(result) + "\n"; // readability ig
 	}
 
 	/* constructs strings for yield field in instructions */
@@ -177,11 +180,11 @@ namespace epicr
 		{
 			if (i != 0)
 				result += ", ";
-			result += ingredients[i].name + " ";
+			result += "\t\t" + ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
 				result += epicr::round_double_to_string(ingredients[i].amount.number) + ingredients[i].amount.unit;
 		}
-		return header + "\n" + result + "\n";
+		return "\t" + header + "\n" + result + "\n";
 	}
 
 	/* generate strings for txt and replace placeholders */
@@ -198,28 +201,42 @@ namespace epicr
 		if (!file.is_open())
 			return false;
 		int index = 0;
-		string instruction_strings;
+		string instruction_strings = "\n# Instructions\n";
 
 		for (auto inst : rcp.instructions)
 		{
 			index++;
 			string instruction_string = step_template_basic;
-			string step_text = "\n#### **Step** " + std::to_string(index);
+			string step_text = "\n## Step " + std::to_string(index);
 			string instructionIngredients = "";
 			string instructionKitchenware = "";
 			string body = "";
 			string yield = "";
 
 			if (inst.ingredients.size() > 0)
-				instructionIngredients = basic_insert_instruction_ingredients("Ingredients:", inst.ingredients);
+				instructionIngredients = basic_insert_instruction_ingredients("\tIngredients:", inst.ingredients);
 
 			if (inst.kitchenware.size() == 0)
 				instructionIngredients += "";
 			else
-				instructionKitchenware += basic_insert_instruction_kitchenware("Kitchenware:", inst.kitchenware);
+				instructionKitchenware += basic_insert_instruction_kitchenware("\tKitchenware:", inst.kitchenware);
 
 			if (inst.body.size() > 0)
 				body += basic_insert_instruction_body(inst.body);
+
+			size_t length_of_longest = 0;
+			size_t line_length = 0;
+			for (const auto &word : inst.body)
+			{
+				if (word.spelling[0] == '\n')
+				{
+					if (line_length > length_of_longest)
+						length_of_longest = line_length;
+					line_length = 0;
+				}
+				else
+					line_length += word.spelling.size();
+			}
 
 			if (inst.yields.size() > 0)
 			{
@@ -236,18 +253,21 @@ namespace epicr
 		}
 
 		/* format final strings for .txt*/
-		string title = "### **Title:** ";
+		string title = "# Title\n\t";
 		title += rcp.title.c_str();
-		string description = "**Description:** ";
-		description += rcp.description.c_str();
+		string description = "# Description\n";
+		description += rcp.description;
+		for (size_t i = 0; i < description.size(); i++)
+			if (description[i] == '\n')
+				description.insert(++i, "\t");
 		string servings = basic_insert_servings(rcp.servings);
-		string tags = basic_insert_text_in_list("**Tags:** ", rcp.tags);
-		string kitchenware = basic_insert_text_in_list("**Kitchenware:** ", rcp.kitchenware);
-		string ingredients = basic_insert_declaration_ingredients("**Ingredients:** ", rcp.ingredients);
+		string tags = basic_insert_text_in_list("# Tags", rcp.tags);
+		string kitchenware = basic_insert_text_in_list("# Kitchenware", rcp.kitchenware);
+		string ingredients = basic_insert_declaration_ingredients("# Ingredients", rcp.ingredients);
 		string nutrients = basic_insert_nutrients(rcp.nutrients);
-		string total_time = basic_insert_time("**Total time:** ", rcp.time.total_time.c_str());
-		string prep_time = basic_insert_time("**Prep time:** ", rcp.time.prep_time.c_str());
-		string cook_time = basic_insert_time("**Cook time:** ", rcp.time.cook_time.c_str());
+		string total_time = basic_insert_time("# Total time\n\t", rcp.time.total_time.c_str());
+		string prep_time = basic_insert_time("# Prep time\n\t", rcp.time.prep_time.c_str());
+		string cook_time = basic_insert_time("# Cook time\n\t", rcp.time.cook_time.c_str());
 
 		string output_string = base_template_basic; // convert base template to string
 

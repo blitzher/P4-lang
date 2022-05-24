@@ -3,7 +3,6 @@
 
 #define EPSILON 0.01
 
-
 #define ERR(s)                \
     {                         \
         if (!has_error)       \
@@ -161,7 +160,7 @@ namespace epicr::visitor
             /* consume */
             for (auto &ingr : inst.ingredients)
             {
-                ingr.name = to_lower(ingr.name);
+
                 if (has_error)
                     break;
                 if (!ingredient_in_map(ingr.name, symbols))
