@@ -4,12 +4,12 @@ using std::string;
 
 namespace epicr
 {
-	/* create txt file */
+	/* create markdown template file */
 	string load_basic_template(string template_name)
 	{
 		string file_content;
 		string dir = "src";
-		string file_name = template_name + ".txt";
+		string file_name = template_name + ".md";
 		std::filesystem::path filePath = std::filesystem::path(dir) / "output-templates" / file_name;
 		string fpath = filePath.string();
 		std::ifstream fstream = epicr::open_file(fpath);
@@ -54,24 +54,44 @@ namespace epicr
 
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
-			result += '\t' + ingredients[i].name;
-			if (!ingredients[i].amount.is_uncountable)
+
+			if (!ingredients[i].is_optional)
 			{
-				result += " (" + epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit + ")";
+				result += "\t" + ingredients[i].name;
+				if (!ingredients[i].amount.is_uncountable)
+				{
+					result += " (" + epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit + ")";
+					if (ingredients[i].is_ingredient_ref)
+					{
+						result += " [Reference recipe: " + ingredients[i].name + ".md]";
+					}
+				}
+				result += "\n";
+			}
+		}
+		return header + "\n" + result;
+	}
+	/* constructs strings for optional ingredients listing */
+	string basic_insert_optional_ingredients(string header, std::vector<ingredient> ingredients)
+	{
+		string result;
+		for (size_t i = 0; i < ingredients.size(); i++)
+		{
+			if (ingredients[i].is_optional)
+			{
+				result += "\t" + ingredients[i].name;
+				if (!ingredients[i].amount.is_uncountable)
+				{
+					result += " (" + epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit + ")";
+				}
+
 				if (ingredients[i].is_ingredient_ref)
 				{
 					result += " [Reference recipe: " + ingredients[i].name + ".md]";
 				}
+
+				result += "\n";
 			}
-			else
-			{
-				result += " [Uncountable]";
-			}
-			if (ingredients[i].is_optional)
-			{
-				result += " [Optional]";
-			}
-			result += "\n";
 		}
 		return header + "\n" + result;
 	}
@@ -131,7 +151,7 @@ namespace epicr
 				result += ", ";
 			result += ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
-				result += epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit;
+				result += "(" + epicr::round_double_to_string(ingredients[i].amount.number) + " " + ingredients[i].amount.unit + ")";
 		}
 
 		return header + " " + result + "\n";
@@ -178,16 +198,17 @@ namespace epicr
 		string result;
 		for (size_t i = 0; i < ingredients.size(); i++)
 		{
-			if (i != 0)
-				result += ", ";
 			result += "\t\t" + ingredients[i].name + " ";
 			if (!ingredients[i].amount.is_uncountable)
 				result += epicr::round_double_to_string(ingredients[i].amount.number) + ingredients[i].amount.unit;
+			if (i + 1 != ingredients.size())
+				result += ", ";
+			result += "\n";
 		}
-		return "\t" + header + "\n" + result + "\n";
+		return "\t" + header + "\n" + result;
 	}
 
-	/* generate strings for txt and replace placeholders */
+	/* generate strings for output and replace placeholders */
 	bool generate_basic(recipe rcp, string filename)
 	{
 		string base_template_basic_s = load_basic_template("base");
@@ -264,6 +285,7 @@ namespace epicr
 		string tags = basic_insert_text_in_list("# Tags", rcp.tags);
 		string kitchenware = basic_insert_text_in_list("# Kitchenware", rcp.kitchenware);
 		string ingredients = basic_insert_declaration_ingredients("# Ingredients", rcp.ingredients);
+		string optional_ingredients = basic_insert_optional_ingredients("# Optional Ingredients ", rcp.ingredients);
 		string nutrients = basic_insert_nutrients(rcp.nutrients);
 		string total_time = basic_insert_time("# Total time\n\t", rcp.time.total_time.c_str());
 		string prep_time = basic_insert_time("# Prep time\n\t", rcp.time.prep_time.c_str());
@@ -280,6 +302,7 @@ namespace epicr
 		epicr::replace(output_string, "~cook-time~", cook_time);
 		epicr::replace(output_string, "~tags~", tags.c_str());
 		epicr::replace(output_string, "~ingredients~", ingredients.c_str());
+		epicr::replace(output_string, "~optionalIngredients~", optional_ingredients.c_str());
 		epicr::replace(output_string, "~kitchenware~", kitchenware.c_str());
 		epicr::replace(output_string, "~nutrients~", nutrients.c_str());
 		epicr::replace(output_string, "~instructions~", instruction_strings.c_str());

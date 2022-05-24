@@ -486,6 +486,7 @@ namespace epicr
 	}
 	ingredient Parser::ReadIngredient(ingredient_arg arg)
 	{
+		bool can_have_plus = (arg & E_RI_HAS_PLUS);
 		bool can_have_asterix = (arg & E_RI_HAS_ASTERIX) >> 1;
 		bool can_have_qmark = (arg & E_RI_HAS_QMARK) >> 2;
 
@@ -498,8 +499,7 @@ namespace epicr
 			return current_ingredient;
 		}
 		current_ingredient.name = ReadWords(E_RW_NUMBERS, false);
-
-		while (ctoken.type == E_TT_ASTERIX || ctoken.type == E_TT_QUESTION_MARK)
+		while (ctoken.type == E_TT_ASTERIX || ctoken.type == E_TT_QUESTION_MARK || ctoken.type == E_TT_PLUS)
 		{
 			if (ctoken.type == E_TT_ASTERIX)
 			{
@@ -528,10 +528,30 @@ namespace epicr
 				}
 				current_ingredient.is_optional = true;
 			}
+
+			if (ctoken.type == E_TT_PLUS)
+			{
+				if (!can_have_plus)
+				{
+					ERR("A + is not valid in the given context", ctoken);
+					return current_ingredient;
+				}
+				else if (ingredient_amount.is_uncountable)
+				{
+					WARN("Duplicate +", ctoken);
+				}
+				ingredient_amount.is_uncountable = true;
+				
+			}
 			ADV_NON_BLANK(1);
 		}
-
+		if(!ingredient_amount.is_uncountable){
 		current_ingredient.amount = ReadAmount(arg);
+		}
+		else{
+			ingredient_amount.number = std::numeric_limits<double>::infinity();
+			current_ingredient.amount = ingredient_amount;
+		}
 		return current_ingredient;
 	}
 
@@ -542,6 +562,8 @@ namespace epicr
         bool cannot_read_relative_amounts = (arg & E_RI_NOT_RELATIVE) >> 5;
 		amount amnt = amount();
 
+
+		/* BEMeark dette burde kunne fjernes men jeg syntes der var et use case hvor at det ikke virkede */
 		if (ctoken.type == E_TT_PLUS)
 		{
 			amnt.is_uncountable = true;

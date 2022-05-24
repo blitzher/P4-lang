@@ -8,10 +8,10 @@ description: Pasta Carbonara is one of the dishes that we occasionally resort to
 ... and such a very simple Spaghetti Carbonara is eternally good.
 
 nutrients:
-    calories [860 kcal],
-    protein [38 g],
-    fat [75 g],
-    carbs [47 g]
+    calories [128 kcal],
+    protein [6.4 g],
+    fat [15.4 g],
+    carbs [4.5 g]
     
 kitchenware:
     pan
@@ -24,8 +24,8 @@ ingredients:
     egg [2],         
     parmesan [5g],      
     spaghetti* [4],
-    salt+,
-    pepper+,
+    salt?+,
+    pepper?+,
     extra parmesan?+ 
 
 instructions:

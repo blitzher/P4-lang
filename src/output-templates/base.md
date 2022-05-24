@@ -6,6 +6,7 @@
 ~cook-time~
 ~tags~
 ~ingredients~
+~optionalIngredients~
 ~kitchenware~
 ~nutrients~
 ~instructions~
