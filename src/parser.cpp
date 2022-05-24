@@ -562,16 +562,6 @@ namespace epicr
         bool cannot_read_relative_amounts = (arg & E_RI_NOT_RELATIVE) >> 5;
 		amount amnt = amount();
 
-
-		/* BEMeark dette burde kunne fjernes men jeg syntes der var et use case hvor at det ikke virkede */
-		if (ctoken.type == E_TT_PLUS)
-		{
-			amnt.is_uncountable = true;
-			amnt.number = std::numeric_limits<double>::infinity();
-			ADV_NON_BLANK(1);
-			return amnt;
-		}
-
 		if (ctoken.type != E_TT_BRACKET_OPEN)
 		{
 			if (assume_1_num)
