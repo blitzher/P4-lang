@@ -504,6 +504,27 @@ namespace epicr
         };
 
         /**
+         * @brief visitor class that handles the verification of kitchenware
+         *
+         */
+        class KitchenwareVerifier : public Visitor
+        {
+        private:
+            std::unordered_set<std::string> symbols;
+            std::unordered_set<std::string> uniqueKitchenware;
+        public:
+            /**
+             * @brief the visit method of the KitchenwareVerifier
+             *
+             * @param recipe the recipe that will be altered by the visitor
+             */
+
+            void visit(recipe*);
+            KitchenwareVerifier();
+        };
+
+
+        /**
          * @brief visitor class that handles the amount conversion
          *
          */
