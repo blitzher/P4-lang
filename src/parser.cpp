@@ -150,8 +150,17 @@ namespace epicr
 		return rcp;
 	}
 
+	void Parser::CheckDuplicateField(std::string field, bool fieldParsedBoolean)
+	{
+		if (fieldParsedBoolean)
+		{
+			ERR("Duplicate field: " + field, ctoken);
+		}
+	}
+
 	void Parser::ParseTitle(recipe* rcp)
 	{
+		CheckDuplicateField("title", rcp->parsed_fields.TitleParsed); 
 		ADV_NON_BLANK(2);
 
 		/* Read all words and spaces in title */
@@ -161,10 +170,12 @@ namespace epicr
 			if (utoken.type != E_TT_COLON)
 				ADV_NON_BLANK(1);
 		}
+		rcp->parsed_fields.TitleParsed = true;
 		rcp->title = strip_spaces_right(rcp->title);
 	}
 	void Parser::ParseDescription(recipe* rcp)
 	{
+		CheckDuplicateField("description", rcp->parsed_fields.DescriptionParsed); 
 		ADV_NON_BLANK(2);
 		/* Read all words and spaces in description */
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
@@ -172,10 +183,12 @@ namespace epicr
 			rcp->description += ctoken.word;
 			ADV(1);
 		}
+		rcp->parsed_fields.DescriptionParsed = true;
 		rcp->description = strip_spaces_right(rcp->description);
 	}
 	void Parser::ParseServings(recipe* rcp)
 	{
+		CheckDuplicateField("servings", rcp->parsed_fields.ServingsParsed); 
 		ADV_NON_BLANK(2);
 		if (ctoken.type != E_TT_NUMBER)
 		{
@@ -183,11 +196,13 @@ namespace epicr
 		}
 		rcp->servings.count = stoi(ctoken.word);
 		ADV_NON_BLANK(1);
+		rcp->parsed_fields.ServingsParsed = true;
 		rcp->servings.descriptor = ReadWords(E_RW_NONE, true);
 	}
 
 	void Parser::ParseNutrients(recipe* rcp)
 	{
+		CheckDuplicateField("nutrients", rcp->parsed_fields.NutrientsParsed); 
 		ADV_NON_BLANK(2);
 
 		std::vector<ingredient> nutrients;
@@ -201,12 +216,13 @@ namespace epicr
 			nutrients.push_back(nutrient);
 			ReadSeperatorOrWaitAtNextField("nutrients");
 		}
-
+		rcp->parsed_fields.NutrientsParsed = true;
 		rcp->nutrients = nutrients;
 	}
 
 	void Parser::ParseKitchenware(recipe* rcp)
 	{
+		CheckDuplicateField("kitchenware", rcp->parsed_fields.KitchenwareParsed); 
 		ADV_NON_BLANK(2);
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
@@ -215,10 +231,12 @@ namespace epicr
 
 			ReadSeperatorOrWaitAtNextField("kitchenware");
 		}
+		rcp->parsed_fields.KitchenwareParsed = true;
 	}
 
 	void Parser::ParseTags(recipe* rcp)
 	{
+		CheckDuplicateField("tags", rcp->parsed_fields.TagsParsed); 
 		ADV_NON_BLANK(2);
 
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
@@ -227,6 +245,7 @@ namespace epicr
 			rcp->tags.push_back(tag);
 			ReadSeperatorOrWaitAtNextField("tags");
 		}
+		rcp->parsed_fields.TagsParsed = true;
 	}
 
 	void Parser::ParseTime(recipe* rcp)
@@ -242,15 +261,28 @@ namespace epicr
 		}
 		time = strip_spaces_right(time);
 		if (time_type == "prep-time")
+		{
+			CheckDuplicateField("prep-time", rcp->parsed_fields.PrepTimeParsed); 
 			rcp->time.prep_time = time;
+			rcp->parsed_fields.PrepTimeParsed = true;
+		}
 		else if (time_type == "cook-time")
+		{
+			CheckDuplicateField("cook-time", rcp->parsed_fields.CookTimeParsed);
 			rcp->time.cook_time = time;
+			rcp->parsed_fields.CookTimeParsed = true;
+		}
 		else /*total-time*/
+		{
+			CheckDuplicateField("total-time", rcp->parsed_fields.TotalTimeParsed);
 			rcp->time.total_time = time;
+			rcp->parsed_fields.TotalTimeParsed = true;
+		}
 	}
 
 	void Parser::ParseIngredients(recipe* rcp)
 	{
+		CheckDuplicateField("ingredients", rcp->parsed_fields.IngredientsParsed);
 		ADV_NON_BLANK(2);
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
@@ -313,11 +345,12 @@ namespace epicr
 			rcp->ingredients.push_back(ingr);
 			ReadSeperatorOrWaitAtNextField("ingredients");
 		}
+		rcp->parsed_fields.IngredientsParsed = true;
 	}
 
 	void Parser::ParseInstructions(recipe* rcp)
 	{
-
+		CheckDuplicateField("instructions", rcp->parsed_fields.InstructionsParsed);
 		ADV_NON_BLANK(2);
 
 		while (utoken.type != E_TT_COLON && utoken.type != E_TT_EOF)
@@ -372,6 +405,7 @@ namespace epicr
 
 			rcp->instructions.push_back(single_instruction);
 		}
+		rcp->parsed_fields.InstructionsParsed = true;
 	}
 	void Parser::ParseInstructionHeaderWith(instruction* current_instruction)
 	{

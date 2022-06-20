@@ -81,6 +81,22 @@ namespace epicr
         std::vector<instruction_word> body;
     } instruction;
 
+    typedef struct parsed_fields_s
+    {
+        bool TitleParsed  = false;
+        bool DescriptionParsed  = false;
+        bool ServingsParsed  = false;
+        bool NutrientsParsed  = false;
+        bool KitchenwareParsed  = false;
+        bool TagsParsed  = false;
+        bool PrepTimeParsed  = false;
+        bool CookTimeParsed  = false;
+        bool TotalTimeParsed  = false;
+        bool IngredientsParsed  = false;
+        bool InstructionsParsed  = false;
+    }
+    parsed_fields;
+
     typedef struct servings_s
     {
         double count;
@@ -105,6 +121,7 @@ namespace epicr
         std::vector<std::string> tags;
         std::vector<ingredient> ingredients;
         std::vector<instruction> instructions;
+        parsed_fields parsed_fields;
     } recipe;
 #pragma endregion
 
@@ -290,6 +307,7 @@ namespace epicr
     private:
         bool silent;
         Lexer* lexer;
+        void CheckDuplicateField(std::string,bool);
         /**
          * @brief Parses the title of the recipe. When this function is called, we are on the "title"-header token
          * @param recipe* a pointer to the recipe object to be updated in the function
