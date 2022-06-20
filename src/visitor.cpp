@@ -484,6 +484,75 @@ namespace epicr::visitor
     }
 #pragma endregion
 
+#pragma region KitchenwareVerifier implementation
+
+    KitchenwareVerifier::KitchenwareVerifier()
+    {
+        symbols = std::unordered_set<std::string>();
+        uniqueKitchenware = std::unordered_set<std::string>();
+        has_error = false;
+        error = "No error";
+    };
+
+    void KitchenwareVerifier::visit(recipe *a_rcp)
+    {
+        /* fill the symbol table and check for duplicate kitchenware*/
+        for (auto kitchenware : a_rcp->kitchenware)
+        {
+            symbols.insert(to_lower(kitchenware));       // used to check correspondance between kitchenware list and instructions
+            
+            /*duplicate ingredients check*/
+            size_t kitchenware_count = uniqueKitchenware.size();
+            uniqueKitchenware.insert(to_lower(kitchenware));
+            if (kitchenware_count == uniqueKitchenware.size()) /*if it already exist in the set, it has been previously defined */
+            {
+                ERR("Duplicate kitchenware '" + kitchenware + "' was found");
+                return;
+            }
+        }
+        int instruction_count = 0;
+
+        for (auto &inst : a_rcp->instructions)
+        {
+            if (has_error)
+                break;
+            instruction_count++;
+            /* consume */
+            for (auto &kitchenware : inst.kitchenware)
+            {
+                if (has_error)
+                    break;
+                bool foundInKitchenwareList = false;
+                for (auto &kitchenwareInList : a_rcp->kitchenware)
+                {
+                    if(kitchenwareInList == kitchenware)
+                    {
+                        foundInKitchenwareList = true;
+                    }
+                }
+
+                if (!foundInKitchenwareList)
+                {
+                    std::string err_msg = "Kitchenware '" + kitchenware + "' used in instruction not found in kitchenware list";
+                    ERR(err_msg);
+                    return;
+                }
+                else
+                    symbols.erase(kitchenware);
+            }
+        }
+        
+        if (symbols.size() > 0)
+        {
+            std::string err_msg = "Unused kitchenware: ";
+            for (auto &unusedKitchenware : symbols)
+            {
+                err_msg += unusedKitchenware + ", ";
+            }
+            ERR(err_msg);
+        }
+    }
+
 #pragma region AmountConverter implemention
 
     AmountConverter::AmountConverter()
@@ -778,6 +847,7 @@ namespace epicr::visitor
     {
         auto ac_vis = AmountConverter();
         auto in_vis = IngredientVerifier();
+        auto kw_vis = KitchenwareVerifier();
         auto mf_vis = FieldsVerifier();
         auto is_vis = IngredientSorter();
 
@@ -792,6 +862,11 @@ namespace epicr::visitor
         in_vis.visit(rcp);
         if (in_vis.has_error)
             return {{}, 1, in_vis.error, " IngVer: "};
+        
+        kw_vis.visit(rcp);
+        if (kw_vis.has_error)
+            return {{}, 1, kw_vis.error, " Kitchenware: "};
+        
 
         is_vis.visit(rcp);
 
