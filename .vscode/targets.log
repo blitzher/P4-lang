@@ -1,16 +1,14 @@
-make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --question
-# GNU Make 3.81
-# Copyright (C) 2006  Free Software Foundation, Inc.
-# This is free software; see the source for copying conditions.
-# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
-# PARTICULAR PURPOSE.
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
 
-# This program built for i686-pc-msys
- 
-make.exe: *** No rule to make target `all'.  Stop.
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
 
-
-# Make data base, printed on Thu May 12 15:06:06 2022
+# Make data base, printed on Mon Jun 20 09:39:47 2022
 
 # Variables
 
@@ -18,240 +16,190 @@ make.exe: *** No rule to make target `all'.  Stop.
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
- 
 # environment
-AV_APPDATA = C:\Users\madsl\AppData\Roaming
-# makefile
-MAKEFLAGS = Rrqp
+WSLENV = ELECTRON_RUN_AS_NODE/w:
+# default
+.SHELLFLAGS := -c
 # environment
 VSCODE_LOG_NATIVE = false
-# makefile (from `makefile', line 39)
+# makefile (from 'makefile', line 39)
 TARGET = main
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
-# makefile (from `makefile', line 26)
+# makefile (from 'makefile', line 26)
 INCLUDES := src/epicr.h
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
-# environment
-HOMEDRIVE = C:
 # automatic
 @F = $(notdir $@)
-# automatic
-^D = $(patsubst %/,%,$(dir $^))
 # makefile
-CURDIR := /c/Users/madsl/GitHub/P4-lang
-# default
-SHELL := /bin/sh
-# makefile (from `makefile', line 35)
+CURDIR := /home/kasper/P4-lang
+# makefile
+SHELL = /bin/sh
+# makefile (from 'makefile', line 35)
 RM = rm -rf
 # environment
-WINDIR = C:\WINDOWS
+VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{}}
 # environment
-VSCODE_NLS_CONFIG = {"locale":"da","availableLanguages":{},"_languagePackSupport":true}
-# environment
-ONEDRIVE = C:\Users\madsl\OneDrive - Aalborg Universitet
-# environment
-PATHEXT = .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
-# makefile (from `makefile', line 1)
+_ = /mnt/c/Users/Kaspe/AppData/Local/Programs/Microsoft VS Code/bin/code
+# makefile (from 'makefile', line 1)
 MAKEFILE_LIST :=  makefile
-# makefile (from `makefile', line 23)
+# makefile (from 'makefile', line 23)
 TESTDIR := src/testing
-# environment
-FPS_BROWSER_USER_PROFILE_STRING = Default
-# environment
-TMP = /tmp
-# makefile (from `makefile', line 25)
-SOURCES := src/cookbook.cpp src/epicr.cpp src/lexer.cpp src/main.cpp src/outgen_basic.cpp src/outgen_fancy.cpp src/parser.cpp src/visitor.cpp
-# makefile (from `makefile', line 9)
+# 'override' directive
+GNUMAKEFLAGS := 
+# makefile (from 'makefile', line 25)
+SOURCES := src/epicr.cpp src/visitor.cpp src/cookbook.cpp src/outgen_basic.cpp src/lexer.cpp src/outgen_fancy.cpp src/parser.cpp src/main.cpp
+# makefile (from 'makefile', line 9)
 CXXFLAGS = -std=c++17 -Wall -Wextra -Wpointer-arith -Wcast-qual -Wno-missing-braces -Wempty-body -Wno-error=uninitialized -Wno-error=deprecated-declarations -pedantic -fansi-escape-codes -Os -g
 # environment
+XDG_DATA_DIRS = /usr/local/share:/usr/share:/var/lib/snapd/desktop
+# environment
 VSCODE_VERBOSE_LOGGING = true
-# makefile (from `makefile', line 36)
+# makefile (from 'makefile', line 36)
 MKDIRS = mkdir -p $(BINDIR) $(OBJDIR)
+# makefile (from 'makefile', line 38)
+T_TARGETS := bin/visitor.test bin/exceptions.test bin/parser.test bin/utility.test bin/lexer.test bin/eof.test
 # environment
-PROGRAMW6432 = C:\Program Files
-# makefile (from `makefile', line 38)
-T_TARGETS := bin/eof.test bin/exceptions.test bin/lexer.test bin/parser.test bin/utility.test bin/visitor.test
+LESSOPEN = | /usr/bin/lesspipe %s
 # environment
-PROGRAMDATA = C:\ProgramData
-# environment
-VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-b62734f4-a75b-4cce-8af2-a063bc08a601-sock
-# environment
-VSCODE_CWD = C:\Users\madsl\AppData\Local\Programs\Microsoft VS Code
-# makefile (from `makefile', line 22)
+VSCODE_CWD = /mnt/c/Users/Kaspe/AppData/Local/Programs/Microsoft VS Code
+# makefile (from 'makefile', line 22)
 DISDIR = dist
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /c/Program Files (x86)/VMware/VMware Player/bin/:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/c/WINDOWS/System32/OpenSSH/:/mingw/bin:/mingw:/c/msys64/mingw64/bin:/c/Users/madsl/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Python 3.9:/c/Users/madsl/AppData/Local/Programs/Python/Python39:/c/Users/madsl:/c/Program Files/nodejs/:/c/Program Files/dotnet/:/c/Program Files/Microsoft SQL Server/130/Tools/Binn/:/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/c/Program Files (x86)/Microsoft SQL Server/150/DTS/Binn/:/c/Program Files/Azure Data Studio/bin:/c/Program Files/Git/cmd:C:/c/Users/madsl/AppData/Local/Programs/Python/Python39/Scripts/:/c/Users/madsl/AppData/Local/Programs/Python/Python39/:/c/Users/madsl/AppData/Local/Microsoft/WindowsApps:/c/Users/madsl/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/madsl/AppData/Roaming/npm:/c/Program Files/heroku/bin:/c/Program Files (x86)/Nmap:/c/Users/madsl/.dotnet/tools:/c/Program Files/Azure Data Studio/bin:/c/Users/madsl/AppData/Local/GitHubDesktop/bin:/c/Program Files/LLVM/bin:/usr/bin:/mingw/bin:.
-# makefile (from `makefile', line 33)
+PATH = /home/kasper/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Users/Kaspe/source/cmder/vendor/git-for-windows/cmd:/mnt/c/Users/Kaspe/source/cmder/vendor/conemu-maximus5/ConEmu/Scripts:/mnt/c/Users/Kaspe/source/cmder/vendor/conemu-maximus5:/mnt/c/Users/Kaspe/source/cmder/vendor/conemu-maximus5/ConEmu:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/iCLS/:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/iCLS/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Intel/WiFi/bin/:/mnt/c/Program Files/Common Files/Intel/WirelessCommon/:/mnt/c/Program Files/Git/cmd:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/nodejs:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/Microsoft SQL Server/130/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Graphviz/bin:/mnt/c/Users/Kaspe/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Kaspe/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Kaspe/AppData/Local/Programs/MiKTeX/miktex/bin/x64/:/mnt/c/Users/Kaspe/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Kaspe/AppData/Roaming/npm:/mnt/c/Program Files (x86)/Nmap:/mnt/c/Users/Kaspe/.dotnet/tools:/mnt/c/Users/Kaspe/AppData/Local/Programs/Azure Data Studio/bin:/mnt/c/Program Files/LLVM/bin:/mnt/c/MinGW/msys/1.0/bin:/mnt/c/Users/Kaspe/source/cmder/vendor/git-for-windows/mingw64/bin:/mnt/c/Users/Kaspe/source/cmder/vendor/git-for-windows/usr/bin:/mnt/c/Users/Kaspe/source/cmder/vendor/bin:/mnt/c/Users/Kaspe/source/cmder:/snap/bin
+# makefile (from 'makefile', line 33)
 T_LIBOBJS := obj/test_lib.o
-# makefile (from `makefile', line 16)
+# makefile (from 'makefile', line 16)
 LD = clang++ -o
 # environment
-COMMONPROGRAMW6432 = C:\Program Files\Common Files
-# environment
-ZES_ENABLE_SYSMAN = 1
-# environment
-PROCESSOR_ARCHITECTURE = x86
-# environment
-USERPROFILE = C:\Users\madsl
-# environment
-!C: = c:\Users\madsl\GitHub\P4-lang
-# environment
-ALLUSERSPROFILE = C:\ProgramData
+XDG_RUNTIME_DIR = /mnt/wslg/runtime-dir
 # environment
 VSCODE_LOG_STACK = false
 # environment
-NUMBER_OF_PROCESSORS = 8
-# environment
-ELECTRON_RUN_AS_NODE = 1
-# makefile (from `makefile', line 17)
+VSCODE_IPC_HOOK_CLI = /mnt/wslg/runtime-dir/vscode-ipc-8f456247-e64b-4b9f-be40-f95676fd74f1.sock
+# makefile (from 'makefile', line 17)
 LDFLAGS = -Wall -pedantic
 # default
-.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
-# makefile (from `makefile', line 19)
- 
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+# makefile (from 'makefile', line 19)
 SRCDIR = src
 # automatic
 %F = $(notdir $%)
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_28920_HTFRIJENWIQTGUUV
+DISPLAY = :0
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-COMPUTERNAME = LAPTOP-GCRD7FNP
+PWD = /home/kasper/P4-lang
+# default
+.LOADED := 
 # environment
-PROGRAMFILES = C:\Program Files (x86)
+WSL_INTEROP = /run/WSL/8_interop
 # environment
-DRIVERDATA = C:\Windows\System32\Drivers\DriverData
-# environment
-ORIGINAL_XDG_CURRENT_DESKTOP = undefined
-# environment
-USERNAME = madsl
-# environment
-PUBLIC = C:\Users\Public
+PULSE_SERVER = /mnt/wslg/PulseServer
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-VSCODE_CODE_CACHE_PATH = C:\Users\madsl\AppData\Roaming\Code\CachedData\da15b6fd3ef856477bf6f4fb29ba1b7af717770d
+HOME = /home/kasper
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+LOGNAME = kasper
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
-# environment
-COMMONPROGRAMFILES = C:\Program Files (x86)\Common Files
-# environment
-LOGONSERVER = \\LAPTOP-GCRD7FNP
-# makefile (from `makefile', line 32)
-T_OBJECTS := obj/eof.test.o obj/exceptions.test.o obj/lexer.test.o obj/parser.test.o obj/test_lib.o obj/utility.test.o obj/visitor.test.o
-# environment
-ONEDRIVECONSUMER = C:\Users\madsl\OneDrive
+# makefile (from 'makefile', line 32)
+T_OBJECTS := obj/visitor.test.o obj/exceptions.test.o obj/parser.test.o obj/utility.test.o obj/lexer.test.o obj/test_lib.o obj/eof.test.o
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
 # environment
-USERDOMAIN = LAPTOP-GCRD7FNP
-# makefile (from `makefile', line 31)
+MAKELEVEL := 0
+# makefile (from 'makefile', line 31)
 T_INCLUDES := src/testing/test_lib.h
 # default
 MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
-# makefile (from `makefile', line 21)
+# environment
+SHLVL = 1
+# makefile (from 'makefile', line 21)
 BINDIR = bin
-# environment
-ONEDRIVECOMMERCIAL = C:\Users\madsl\OneDrive - Aalborg Universitet
 # default
-MAKE_VERSION := 3.81
-# makefile
-.DEFAULT_GOAL := bin/eof.test
+MAKE_VERSION := 4.2.1
 # environment
-PROGRAMFILES(X86) = C:\Program Files (x86)
+USER = kasper
+# makefile
+.DEFAULT_GOAL := bin/visitor.test
+# environment
+NAME = Code
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # environment
-LOCALAPPDATA = C:\Users\madsl\AppData\Local
-# environment
-PSMODULEPATH = C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules;C:\Program Files (x86)\Microsoft SQL Server\150\Tools\PowerShell\Modules\
+VSCODE_WSL_EXT_LOCATION = /mnt/c/Users/Kaspe/.vscode/extensions/ms-vscode-remote.remote-wsl-0.66.3
 # default
-MAKE_COMMAND := make.exe
-# environment
-PROCESSOR_ARCHITEW6432 = AMD64
+MAKE_COMMAND := make
 # default
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
+# makefile
+MAKEFLAGS = pqrR
 # environment
-PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 142 Stepping 12, GenuineIntel
-# environment
-OS = Windows_NT
-# environment
-VSCODE_IPC_HOOK = \\.\pipe\6a7088a1a8d40b2e72dea21eb2d54f74-1.67.1-main-sock
-# environment
-HOMEPATH = \
-# environment
-COMMONPROGRAMFILES(X86) = C:\Program Files (x86)\Common Files
-# environment
-PROMPT = $P$G
-# environment
-MFLAGS = -Rrqp
+MFLAGS = -pqrR
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
-# environment
-SYSTEMROOT = C:\WINDOWS
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
 +F = $(notdir $+)
 # environment
-APPDATA = C:\Users\madsl\AppData\Roaming
-# environment
-__COMPAT_LAYER = DetectorsAppHealth
-# environment
-TEMP = /tmp
-# environment
-COMSPEC = C:\WINDOWS\system32\cmd.exe
-# makefile (from `makefile', line 29)
-T_TARGET_SOURCES := src/testing/eof.test.cpp src/testing/exceptions.test.cpp src/testing/lexer.test.cpp src/testing/parser.test.cpp src/testing/utility.test.cpp src/testing/visitor.test.cpp
+VSCODE_HANDLES_SIGPIPE = true
+# makefile (from 'makefile', line 29)
+T_TARGET_SOURCES := src/testing/visitor.test.cpp src/testing/exceptions.test.cpp src/testing/parser.test.cpp src/testing/utility.test.cpp src/testing/lexer.test.cpp src/testing/eof.test.cpp
 # default
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
-# makefile (from `makefile', line 20)
+# makefile (from 'makefile', line 20)
 OBJDIR = obj
-# makefile (from `makefile', line 8)
+# makefile (from 'makefile', line 8)
 CXX = clang++
 # environment
 LC_ALL = C
+# environment
+HOSTTYPE = x86_64
 # automatic
 ^F = $(notdir $^)
-# makefile (from `makefile', line 30)
-T_SOURCES := src/testing/eof.test.cpp src/testing/exceptions.test.cpp src/testing/lexer.test.cpp src/testing/parser.test.cpp src/testing/test_lib.cpp src/testing/utility.test.cpp src/testing/visitor.test.cpp
+# makefile (from 'makefile', line 30)
+T_SOURCES := src/testing/visitor.test.cpp src/testing/exceptions.test.cpp src/testing/parser.test.cpp src/testing/utility.test.cpp src/testing/lexer.test.cpp src/testing/test_lib.cpp src/testing/eof.test.cpp
 # default
 SUFFIXES := 
 # environment
-SYSTEMDRIVE = C:
-# environment
-SESSIONNAME = Console
-# environment
-PROCESSOR_REVISION = 8e0c
+WAYLAND_DISPLAY = wayland-0
 # default
-.INCLUDE_DIRS = /usr/include /usr/include
-# environment
-MAKELEVEL := 0
-# makefile (from `makefile', line 27)
-OBJECTS := obj/cookbook.o obj/epicr.o obj/lexer.o obj/main.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# default
+.RECIPEPREFIX := 
+# makefile (from 'makefile', line 27)
+OBJECTS := obj/epicr.o obj/visitor.o obj/cookbook.o obj/outgen_basic.o obj/lexer.o obj/outgen_fancy.o obj/parser.o obj/main.o
 # environment
 LANG = C
 # environment
-PROCESSOR_LEVEL = 6
+TERM = xterm-256color
 # environment
-TERM = cygwin
+VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 # environment
-FPS_BROWSER_APP_PROFILE_STRING = Internet Explorer
+WSL_DISTRO_NAME = Ubuntu
 # environment
-VSCODE_PID = 28920
-# environment
-USERDOMAIN_ROAMINGPROFILE = LAPTOP-GCRD7FNP
+MOTD_SHOWN = update-motd
 # variable set hash-table stats:
-# Load=117/1024=11%, Rehash=0, Collisions=17/180=9%
+# Load=93/1024=9%, Rehash=0, Collisions=12/154=8%
 
 # Pattern-specific Variable Values
 
@@ -259,11 +207,11 @@ USERDOMAIN_ROAMINGPROFILE = LAPTOP-GCRD7FNP
 
 # Directories
 
-# . (device -7240, inode 1755088): 14 files, no impossibilities.
-# src/testing (device -7240, inode 814781): 10 files, no impossibilities.
-# src (device -7240, inode 1690295): 15 files, no impossibilities.
+# . (device 2080, inode 53311): 13 files, no impossibilities.
+# src/testing (device 2080, inode 54915): 10 files, no impossibilities.
+# src (device 2080, inode 53402): 15 files, no impossibilities.
 
-# 39 files, no impossibilities in 3 directories.
+# 38 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
@@ -279,26 +227,23 @@ src/testing/eof.test.cpp:
 
 obj/outgen_fancy.o: src/outgen_fancy.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `outgen_fancy'
+#  Implicit/static pattern stem: 'outgen_fancy'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 55):
+#  recipe to execute (from 'makefile', line 55):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-	
 
 obj/parser.o: src/parser.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `parser'
+#  Implicit/static pattern stem: 'parser'
 #  Modification time never checked.
 #  File has not been updated.
- 
-#  commands to execute (from `makefile', line 55):
+#  recipe to execute (from 'makefile', line 55):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-	
 
 # Not a target:
 src/testing/test_lib.cpp:
@@ -314,12 +259,10 @@ src/testing/exceptions.test.cpp:
 
 # Not a target:
 all:
-#  Command-line target.
+#  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has not been updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 .PHONY: clean remove dirs test run gui
 #  Implicit rule search has not been done.
@@ -334,111 +277,95 @@ src/testing/parser.test.cpp:
 
 obj/outgen_basic.o: src/outgen_basic.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `outgen_basic'
+#  Implicit/static pattern stem: 'outgen_basic'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 55):
+ 
+#  recipe to execute (from 'makefile', line 55):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-	
 
 obj/lexer.test.o: src/testing/lexer.test.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `lexer.test'
+#  Implicit/static pattern stem: 'lexer.test'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 46):
+#  recipe to execute (from 'makefile', line 46):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	
 
 obj/main.o: src/main.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `main'
+#  Implicit/static pattern stem: 'main'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 55):
+#  recipe to execute (from 'makefile', line 55):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-	
-
-# Not a target:
-.SUFFIXES:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
 
 remove: clean
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 66):
+#  recipe to execute (from 'makefile', line 66):
 	@$(RM) $(BINDIR)
 	@echo "Executables removed!"
-	
 
 obj/lexer.o: src/lexer.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `lexer'
+#  Implicit/static pattern stem: 'lexer'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 55):
+#  recipe to execute (from 'makefile', line 55):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-	
 
 obj/epicr.o: src/epicr.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `epicr'
+#  Implicit/static pattern stem: 'epicr'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 55):
+#  recipe to execute (from 'makefile', line 55):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-	
 
 test::
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 84):
+#  recipe to execute (from 'makefile', line 81):
 	@rm -rf $(BINDIR)/.tests
-	
 
-test:: bin/eof.test bin/exceptions.test bin/lexer.test bin/parser.test bin/utility.test bin/visitor.test
+test:: bin/visitor.test bin/exceptions.test bin/parser.test bin/utility.test bin/lexer.test bin/eof.test
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 86):
+#  recipe to execute (from 'makefile', line 83):
 	@echo "Finished tests"
-	
 
 obj/cookbook.o: src/cookbook.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `cookbook'
+#  Implicit/static pattern stem: 'cookbook'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 55):
+#  recipe to execute (from 'makefile', line 55):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-	
 
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-11 11:57:30
+#  Last modified 2022-06-20 09:38:42.2119417
 #  File has been updated.
 #  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
 src/visitor.cpp:
@@ -446,40 +373,29 @@ src/visitor.cpp:
 #  Modification time never checked.
 #  File has not been updated.
 
-bin/visitor.test:: obj/eof.test.o obj/exceptions.test.o obj/lexer.test.o obj/parser.test.o obj/test_lib.o obj/utility.test.o obj/visitor.test.o obj/cookbook.o obj/epicr.o obj/lexer.o obj/main.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o
+bin/visitor.test:: obj/visitor.test.o obj/exceptions.test.o obj/parser.test.o obj/utility.test.o obj/lexer.test.o obj/test_lib.o obj/eof.test.o obj/epicr.o obj/visitor.o obj/cookbook.o obj/outgen_basic.o obj/lexer.o obj/outgen_fancy.o obj/parser.o obj/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 43):
+#  recipe to execute (from 'makefile', line 43):
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
-	
 
 bin/visitor.test::
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 70):
+#  recipe to execute (from 'makefile', line 70):
 	@echo "\033[kRunning \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
-	
-
-run-rel: bin/main
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  commands to execute (from `makefile', line 78):
-	./$< examples/burgers.rcp -o dist
-	
 
 obj/utility.test.o: src/testing/utility.test.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `utility.test'
+#  Implicit/static pattern stem: 'utility.test'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 46):
+#  recipe to execute (from 'makefile', line 46):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	
 
 dirs:
 #  Phony target (prerequisite of .PHONY).
@@ -487,47 +403,42 @@ dirs:
 #  File does not exist.
 #  File has not been updated.
 
-bin/eof.test:: obj/eof.test.o obj/exceptions.test.o obj/lexer.test.o obj/parser.test.o obj/test_lib.o obj/utility.test.o obj/visitor.test.o obj/cookbook.o obj/epicr.o obj/lexer.o obj/main.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o
+bin/eof.test:: obj/visitor.test.o obj/exceptions.test.o obj/parser.test.o obj/utility.test.o obj/lexer.test.o obj/test_lib.o obj/eof.test.o obj/epicr.o obj/visitor.o obj/cookbook.o obj/outgen_basic.o obj/lexer.o obj/outgen_fancy.o obj/parser.o obj/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 43):
+#  recipe to execute (from 'makefile', line 43):
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
-	
 
 bin/eof.test::
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 70):
+#  recipe to execute (from 'makefile', line 70):
 	@echo "\033[kRunning \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
-	
 
-bin/exceptions.test:: obj/eof.test.o obj/exceptions.test.o obj/lexer.test.o obj/parser.test.o obj/test_lib.o obj/utility.test.o obj/visitor.test.o obj/cookbook.o obj/epicr.o obj/lexer.o obj/main.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o
+bin/exceptions.test:: obj/visitor.test.o obj/exceptions.test.o obj/parser.test.o obj/utility.test.o obj/lexer.test.o obj/test_lib.o obj/eof.test.o obj/epicr.o obj/visitor.o obj/cookbook.o obj/outgen_basic.o obj/lexer.o obj/outgen_fancy.o obj/parser.o obj/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 43):
+#  recipe to execute (from 'makefile', line 43):
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
-	
 
 bin/exceptions.test::
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 70):
+#  recipe to execute (from 'makefile', line 70):
 	@echo "\033[kRunning \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
-	
 
 watch:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 89):
+#  recipe to execute (from 'makefile', line 86):
 	while true; do make run -q || make run; sleep 0.5; done
-	
 
 # Not a target:
 src/outgen_fancy.cpp:
@@ -537,27 +448,24 @@ src/outgen_fancy.cpp:
 
 # Not a target:
 src/parser.cpp:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
-bin/parser.test:: obj/eof.test.o obj/exceptions.test.o obj/lexer.test.o obj/parser.test.o obj/test_lib.o obj/utility.test.o obj/visitor.test.o obj/cookbook.o obj/epicr.o obj/lexer.o obj/main.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o
+bin/parser.test:: obj/visitor.test.o obj/exceptions.test.o obj/parser.test.o obj/utility.test.o obj/lexer.test.o obj/test_lib.o obj/eof.test.o obj/epicr.o obj/visitor.o obj/cookbook.o obj/outgen_basic.o obj/lexer.o obj/outgen_fancy.o obj/parser.o obj/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 43):
+#  recipe to execute (from 'makefile', line 43):
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
-	
 
 bin/parser.test::
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 70):
+#  recipe to execute (from 'makefile', line 70):
 	@echo "\033[kRunning \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
-	
 
 # Not a target:
 src/testing/utility.test.cpp:
@@ -576,9 +484,8 @@ run: bin/main
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 75):
+#  recipe to execute (from 'makefile', line 75):
 	./$< examples/Carbonara.rcp
-	
 
 # Not a target:
 src/outgen_basic.cpp:
@@ -591,10 +498,9 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 62):
+#  recipe to execute (from 'makefile', line 62):
 	@$(RM) $(OBJDIR) $(DISDIR)
 	@echo "Cleanup complete!"
-	
 
 # Not a target:
 src/main.cpp:
@@ -606,9 +512,8 @@ run-infinite-recursion: bin/main
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 81):
+#  recipe to execute (from 'makefile', line 78):
 	./$< src/test-recipes/recursion0.rcp -o dist
-	
 
 # Not a target:
 src/lexer.cpp:
@@ -636,31 +541,27 @@ src/cookbook.cpp:
 
 obj/visitor.test.o: src/testing/visitor.test.cpp
 #  Implicit rule search has not been done.
- 
-#  Implicit/static pattern stem: `visitor.test'
+#  Implicit/static pattern stem: 'visitor.test'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 46):
+#  recipe to execute (from 'makefile', line 46):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	
 
-bin/lexer.test:: obj/eof.test.o obj/exceptions.test.o obj/lexer.test.o obj/parser.test.o obj/test_lib.o obj/utility.test.o obj/visitor.test.o obj/cookbook.o obj/epicr.o obj/lexer.o obj/main.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o
+bin/lexer.test:: obj/visitor.test.o obj/exceptions.test.o obj/parser.test.o obj/utility.test.o obj/lexer.test.o obj/test_lib.o obj/eof.test.o obj/epicr.o obj/visitor.o obj/cookbook.o obj/outgen_basic.o obj/lexer.o obj/outgen_fancy.o obj/parser.o obj/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 43):
+#  recipe to execute (from 'makefile', line 43):
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
-	
 
 bin/lexer.test::
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 70):
+#  recipe to execute (from 'makefile', line 70):
 	@echo "\033[kRunning \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
-	
 
 # Not a target:
 src/testing/lexer.test.cpp:
@@ -668,65 +569,61 @@ src/testing/lexer.test.cpp:
 #  Modification time never checked.
 #  File has not been updated.
 
-bin/main: obj/cookbook.o obj/epicr.o obj/lexer.o obj/main.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o
+bin/main: obj/epicr.o obj/visitor.o obj/cookbook.o obj/outgen_basic.o obj/lexer.o obj/outgen_fancy.o obj/parser.o obj/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 50):
+#  recipe to execute (from 'makefile', line 50):
 	@$(LD) $@$(BIN_EXT) $(LDFLAGS) $(OBJECTS)
 	@cp $@ $@.exe
 	@echo "Linking complete!"
-	
 
 gui: bin/main
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 92):
+#  recipe to execute (from 'makefile', line 89):
 	python3 src/GUI.py
 	
 
+ 
 obj/visitor.o: src/visitor.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `visitor'
+#  Implicit/static pattern stem: 'visitor'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 55):
+#  recipe to execute (from 'makefile', line 55):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
-	
 
 obj/eof.test.o: src/testing/eof.test.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `eof.test'
+#  Implicit/static pattern stem: 'eof.test'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 46):
+#  recipe to execute (from 'makefile', line 46):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	
 
 obj/test_lib.o: src/testing/test_lib.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `test_lib'
+#  Implicit/static pattern stem: 'test_lib'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 46):
+#  recipe to execute (from 'makefile', line 46):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	
 
 obj/exceptions.test.o: src/testing/exceptions.test.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `exceptions.test'
+#  Implicit/static pattern stem: 'exceptions.test'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 46):
+#  recipe to execute (from 'makefile', line 46):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	
 
 # Not a target:
 src/testing/visitor.test.cpp:
@@ -734,55 +631,51 @@ src/testing/visitor.test.cpp:
 #  Modification time never checked.
 #  File has not been updated.
 
-bin/utility.test:: obj/eof.test.o obj/exceptions.test.o obj/lexer.test.o obj/parser.test.o obj/test_lib.o obj/utility.test.o obj/visitor.test.o obj/cookbook.o obj/epicr.o obj/lexer.o obj/main.o obj/outgen_basic.o obj/outgen_fancy.o obj/parser.o obj/visitor.o
+bin/utility.test:: obj/visitor.test.o obj/exceptions.test.o obj/parser.test.o obj/utility.test.o obj/lexer.test.o obj/test_lib.o obj/eof.test.o obj/epicr.o obj/visitor.o obj/cookbook.o obj/outgen_basic.o obj/lexer.o obj/outgen_fancy.o obj/parser.o obj/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 43):
+#  recipe to execute (from 'makefile', line 43):
 	@$(LD) $@ $(LDFLAGS) $(T_LIBOBJS) $(filter-out obj/main.o, $(OBJECTS)) $(subst $(BINDIR),$(OBJDIR),$@).o
-	
 
 bin/utility.test::
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 70):
+#  recipe to execute (from 'makefile', line 70):
 	@echo "\033[kRunning \033[4m$(subst $(BINDIR)/,,$@)\033[0m"
 	@./$@
-	
 
 ducks: doxyfile
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 96):
+#  recipe to execute (from 'makefile', line 93):
 	doxygen doxyfile
-	
 
 obj/parser.test.o: src/testing/parser.test.cpp
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `parser.test'
+#  Implicit/static pattern stem: 'parser.test'
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 46):
+#  recipe to execute (from 'makefile', line 46):
 	@$(MKDIRS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	
 
 # files hash-table stats:
- 
-# Load=53/1024=5%, Rehash=0, Collisions=2/216=1%
+# Load=52/1024=5%, Rehash=0, Collisions=2/158=1%
 # VPATH Search Paths
 
-# No `vpath' search paths.
+# No 'vpath' search paths.
 
-# No general (`VPATH' variable) search path.
+# No general ('VPATH' variable) search path.
 
-# # of strings in strcache: 1
-# # of strcache buffers: 1
-# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
-# strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
+# strcache buffers: 1 (0) / strings = 105 / storage = 1374 B / avg = 13 B
+# current buf: size = 8162 B / used = 1374 B / count = 105 / avg = 13 B
 
-# Finished Make data base on Thu May 12 15:06:06 2022
+# strcache performance: lookups = 199 / hit rate = 47%
+# hash-table stats:
+# Load=105/8192=1%, Rehash=0, Collisions=4/199=2%
+# Finished Make data base on Mon Jun 20 09:39:47 2022
 
  
