@@ -240,6 +240,7 @@ namespace epicr
 
 		parse_ret ret = {rcp, parser.has_error, parser.error};
 		return ret;
+		
 	}
 
 	parse_ret parse_string_silent(std::string recipeExcerpt, Parser *o_parser)

@@ -53,6 +53,16 @@ void parse_expected_end_parenthesis_after_with_exception()
     auto rcp = epicr::parse_string_silent(incorrect_field_string);
     test_lib::expect_exception(rcp, "Expected a ',' as seperator between ingredient or a closing parenthesis for the 'with'");
 }
+
+void parse_exception_with_fraction_percent()
+{
+    test_lib::REGISTER;
+
+    std::string incorrect_field_string = "instructions: with(ingr [1/2%]): neat";
+    auto rcp = epicr::parse_string_silent(incorrect_field_string);
+    test_lib::expect_exception(rcp, "Amount cannot be both a fraction and percentage");
+}
+
 void parse_missing_open_bracket_after_using_exception()
 {
     test_lib::REGISTER;
@@ -99,7 +109,7 @@ void parse_double_asterix_exception()
 {
     test_lib::REGISTER;
     std::string incorrect_ingredient_string = "ingredients: salt**";
-    epicr::Parser* parser = new epicr::Parser;
+    epicr::Parser *parser = new epicr::Parser;
     auto rcp = epicr::parse_string_silent(incorrect_ingredient_string, parser);
     test_lib::expect_warning(*parser, "Duplicate asterix");
 }
@@ -116,7 +126,7 @@ void parse_double_question_mark_exception()
 {
     test_lib::REGISTER;
     std::string incorrect_ingredient_string = "ingredients: parmesan?*?";
-    epicr::Parser* parser = new epicr::Parser;
+    epicr::Parser *parser = new epicr::Parser;
     auto rcp = epicr::parse_string_silent(incorrect_ingredient_string, parser);
     test_lib::expect_warning(*parser, "Duplicate question mark");
 }
@@ -188,7 +198,7 @@ void visit_mandatory_fields_title_exception()
     epicr::recipe rcp = epicr::parse_string("title: ingredients: instructions:").recipe;
     epicr::visitor::FieldsVerifier mand_fields = epicr::visitor::FieldsVerifier();
     mand_fields.visit(&rcp);
-    epicr::rcp_ret ret = { &rcp, mand_fields.has_error, mand_fields.error, " Man Fld: " };
+    epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error, " Man Fld: "};
     test_lib::expect_exception(ret, "No title or recipe was found");
 }
 
@@ -198,7 +208,7 @@ void visit_mandatory_fields_ingredients_exception()
     epicr::recipe rcp = epicr::parse_string("title: hello ingredients: instructions:").recipe;
     epicr::visitor::FieldsVerifier mand_fields = epicr::visitor::FieldsVerifier();
     mand_fields.visit(&rcp);
-    epicr::rcp_ret ret = { &rcp, mand_fields.has_error, mand_fields.error, " ManFld: " };
+    epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error, " ManFld: "};
     test_lib::expect_exception(ret, "No ingredients was found");
 }
 
@@ -208,7 +218,7 @@ void visit_mandatory_fields_instructions_exception()
     epicr::recipe rcp = epicr::parse_string("title: hello ingredients: carrot instructions:").recipe;
     epicr::visitor::FieldsVerifier mand_fields = epicr::visitor::FieldsVerifier();
     mand_fields.visit(&rcp);
-    epicr::rcp_ret ret = { &rcp, mand_fields.has_error, mand_fields.error, " ManFld: " };
+    epicr::rcp_ret ret = {&rcp, mand_fields.has_error, mand_fields.error, " ManFld: "};
     test_lib::expect_exception(ret, "No instructions was found");
 }
 
@@ -229,6 +239,7 @@ int main()
     parse_missing_open_bracket_after_with_exception();
     parse_expected_seperator_in_with_exception();
     parse_expected_end_parenthesis_after_with_exception();
+    parse_exception_with_fraction_percent();
     parse_missing_open_bracket_after_using_exception();
     parse_expected_seperator_in_using_exception();
     parse_expected_end_parenthesis_after_using_exception();

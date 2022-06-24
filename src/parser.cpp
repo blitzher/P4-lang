@@ -95,7 +95,7 @@ namespace epicr
 		warnings = std::vector<std::string>();
 		silent = false;
 	}
-	Parser::Parser(Lexer* lexer_r)
+	Parser::Parser(Lexer *lexer_r)
 	{
 		warnings = std::vector<std::string>();
 		lexer = lexer_r;
@@ -129,8 +129,8 @@ namespace epicr
 			else if (to_lower(ctoken.word) == "tags")
 				ParseTags(&rcp);
 			else if (to_lower(ctoken.word) == "prep-time" ||
-				to_lower(ctoken.word) == "cook-time" ||
-				to_lower(ctoken.word) == "total-time")
+					 to_lower(ctoken.word) == "cook-time" ||
+					 to_lower(ctoken.word) == "total-time")
 				ParseTime(&rcp);
 			else if (to_lower(ctoken.word) == "ingredients")
 				ParseIngredients(&rcp);
@@ -158,9 +158,9 @@ namespace epicr
 		}
 	}
 
-	void Parser::ParseTitle(recipe* rcp)
+	void Parser::ParseTitle(recipe *rcp)
 	{
-		CheckDuplicateField("title", rcp->parsed_fields.TitleParsed); 
+		CheckDuplicateField("title", rcp->parsed_fields.TitleParsed);
 		ADV_NON_BLANK(2);
 
 		/* Read all words and spaces in title */
@@ -173,9 +173,9 @@ namespace epicr
 		rcp->parsed_fields.TitleParsed = true;
 		rcp->title = strip_spaces_right(rcp->title);
 	}
-	void Parser::ParseDescription(recipe* rcp)
+	void Parser::ParseDescription(recipe *rcp)
 	{
-		CheckDuplicateField("description", rcp->parsed_fields.DescriptionParsed); 
+		CheckDuplicateField("description", rcp->parsed_fields.DescriptionParsed);
 		ADV_NON_BLANK(2);
 		/* Read all words and spaces in description */
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
@@ -186,9 +186,9 @@ namespace epicr
 		rcp->parsed_fields.DescriptionParsed = true;
 		rcp->description = strip_spaces_right(rcp->description);
 	}
-	void Parser::ParseServings(recipe* rcp)
+	void Parser::ParseServings(recipe *rcp)
 	{
-		CheckDuplicateField("servings", rcp->parsed_fields.ServingsParsed); 
+		CheckDuplicateField("servings", rcp->parsed_fields.ServingsParsed);
 		ADV_NON_BLANK(2);
 		if (ctoken.type != E_TT_NUMBER)
 		{
@@ -200,9 +200,9 @@ namespace epicr
 		rcp->servings.descriptor = ReadWords(E_RW_NONE, true);
 	}
 
-	void Parser::ParseNutrients(recipe* rcp)
+	void Parser::ParseNutrients(recipe *rcp)
 	{
-		CheckDuplicateField("nutrients", rcp->parsed_fields.NutrientsParsed); 
+		CheckDuplicateField("nutrients", rcp->parsed_fields.NutrientsParsed);
 		ADV_NON_BLANK(2);
 
 		std::vector<ingredient> nutrients;
@@ -220,9 +220,9 @@ namespace epicr
 		rcp->nutrients = nutrients;
 	}
 
-	void Parser::ParseKitchenware(recipe* rcp)
+	void Parser::ParseKitchenware(recipe *rcp)
 	{
-		CheckDuplicateField("kitchenware", rcp->parsed_fields.KitchenwareParsed); 
+		CheckDuplicateField("kitchenware", rcp->parsed_fields.KitchenwareParsed);
 		ADV_NON_BLANK(2);
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
 		{
@@ -234,9 +234,9 @@ namespace epicr
 		rcp->parsed_fields.KitchenwareParsed = true;
 	}
 
-	void Parser::ParseTags(recipe* rcp)
+	void Parser::ParseTags(recipe *rcp)
 	{
-		CheckDuplicateField("tags", rcp->parsed_fields.TagsParsed); 
+		CheckDuplicateField("tags", rcp->parsed_fields.TagsParsed);
 		ADV_NON_BLANK(2);
 
 		while (utoken.type != E_TT_COLON && ctoken.type != E_TT_EOF)
@@ -248,7 +248,7 @@ namespace epicr
 		rcp->parsed_fields.TagsParsed = true;
 	}
 
-	void Parser::ParseTime(recipe* rcp)
+	void Parser::ParseTime(recipe *rcp)
 	{
 		/*saves which type of time it is: */
 		std::string time_type = to_lower(ctoken.word);
@@ -262,7 +262,7 @@ namespace epicr
 		time = strip_spaces_right(time);
 		if (time_type == "prep-time")
 		{
-			CheckDuplicateField("prep-time", rcp->parsed_fields.PrepTimeParsed); 
+			CheckDuplicateField("prep-time", rcp->parsed_fields.PrepTimeParsed);
 			rcp->time.prep_time = time;
 			rcp->parsed_fields.PrepTimeParsed = true;
 		}
@@ -280,7 +280,7 @@ namespace epicr
 		}
 	}
 
-	void Parser::ParseIngredients(recipe* rcp)
+	void Parser::ParseIngredients(recipe *rcp)
 	{
 		CheckDuplicateField("ingredients", rcp->parsed_fields.IngredientsParsed);
 		ADV_NON_BLANK(2);
@@ -319,14 +319,14 @@ namespace epicr
 					WARN("Unit should not be provided on ingredient reference to another recipe", ctoken);
 				}
 				ingr.amount.unit = rcp.servings.descriptor == ""
-					? "servings"
-					: rcp.servings.descriptor;
+									   ? "servings"
+									   : rcp.servings.descriptor;
 
 				ingr.amount.number = ingr.amount.number == 0
-					? (rcp.servings.count == 0
-						? 1
-						: rcp.servings.count)
-					: ingr.amount.number;
+										 ? (rcp.servings.count == 0
+												? 1
+												: rcp.servings.count)
+										 : ingr.amount.number;
 
 				std::string filename = ((std::filesystem::path)clargs.output_filepath / ingr.name).string();
 				switch (clargs.choosen_style)
@@ -348,7 +348,7 @@ namespace epicr
 		rcp->parsed_fields.IngredientsParsed = true;
 	}
 
-	void Parser::ParseInstructions(recipe* rcp)
+	void Parser::ParseInstructions(recipe *rcp)
 	{
 		CheckDuplicateField("instructions", rcp->parsed_fields.InstructionsParsed);
 		ADV_NON_BLANK(2);
@@ -407,7 +407,7 @@ namespace epicr
 		}
 		rcp->parsed_fields.InstructionsParsed = true;
 	}
-	void Parser::ParseInstructionHeaderWith(instruction* current_instruction)
+	void Parser::ParseInstructionHeaderWith(instruction *current_instruction)
 	{
 		ADV_NON_BLANK(1);
 		if (ctoken.type != E_TT_PARENS_OPEN)
@@ -433,7 +433,7 @@ namespace epicr
 		}
 		ADV_NON_BLANK(1) /*reads through the end parenthesis*/
 	}
-	void Parser::ParseInstructionHeaderUsing(instruction* current_instruction)
+	void Parser::ParseInstructionHeaderUsing(instruction *current_instruction)
 	{
 		ADV_NON_BLANK(1);
 		if (ctoken.type != E_TT_PARENS_OPEN)
@@ -456,7 +456,7 @@ namespace epicr
 		}
 		ADV_NON_BLANK(1); /*reads through the end parenthesis*/
 	}
-	void Parser::ParseInstructionBody(instruction* current_instruction)
+	void Parser::ParseInstructionBody(instruction *current_instruction)
 	{
 		std::vector<instruction_word> Body;
 
@@ -503,7 +503,7 @@ namespace epicr
 		current_instruction->body = Body;
 	}
 
-	void Parser::ParseInstructionYield(instruction* current_instruction)
+	void Parser::ParseInstructionYield(instruction *current_instruction)
 	{
 		ADV_NON_BLANK(2);
 		do
@@ -575,14 +575,15 @@ namespace epicr
 					WARN("Duplicate +", ctoken);
 				}
 				ingredient_amount.is_uncountable = true;
-				
 			}
 			ADV_NON_BLANK(1);
 		}
-		if(!ingredient_amount.is_uncountable){
-		current_ingredient.amount = ReadAmount(arg);
+		if (!ingredient_amount.is_uncountable)
+		{
+			current_ingredient.amount = ReadAmount(arg);
 		}
-		else{
+		else
+		{
 			ingredient_amount.number = std::numeric_limits<double>::infinity();
 			current_ingredient.amount = ingredient_amount;
 		}
@@ -593,7 +594,7 @@ namespace epicr
 	{
 		bool assume_1_num = (arg & E_RI_ASSUME_1_NUM) >> 3;
 		bool assume_rest = (arg & E_RI_ASSUME_REST) >> 4;
-        bool cannot_read_relative_amounts = (arg & E_RI_NOT_RELATIVE) >> 5;
+		bool cannot_read_relative_amounts = (arg & E_RI_NOT_RELATIVE) >> 5;
 		amount amnt = amount();
 
 		if (ctoken.type != E_TT_BRACKET_OPEN)
@@ -619,11 +620,11 @@ namespace epicr
 			ADV_NON_BLANK(1);
 			amnt.unit = ReadWords(E_RW_NONE, true);
 
-            if(cannot_read_relative_amounts && (amnt.unit == "%" || amnt.unit == "/"))
-            {
-                ERR("Relative amounts cannot be used in ingredient declarations", ctoken);
-                return amnt;
-            }
+			if (cannot_read_relative_amounts && (amnt.unit == "%" || amnt.unit == "/"))
+			{
+				ERR("Relative amounts cannot be used in ingredient declarations", ctoken);
+				return amnt;
+			}
 
 			if (amnt.unit == "%")
 			{
@@ -646,21 +647,24 @@ namespace epicr
 				amnt.unit = "%";
 				amnt.is_relative_amount = true;
 				ADV_NON_BLANK(1);
+
+				if (ctoken.type == E_TT_WORD && ctoken.word == "%")
+					ERR(("Amount cannot be both a fraction and percentage"), ctoken);
 			}
 		}
 		else if (ctoken.type == E_TT_WORD)
 		{
-            if (cannot_read_relative_amounts)
-            {
-                ERR("Relative amounts cannot be used in ingredient declarations", ctoken);
-                return amnt;
-            }
+			if (cannot_read_relative_amounts)
+			{
+				ERR("Relative amounts cannot be used in ingredient declarations", ctoken);
+				return amnt;
+			}
 
 			amnt.is_relative_amount = true;
 
 			amnt.relative_amount = ReadWords(E_RW_NONE, false);
 
-			std::string valid_relatives[]{ "rest", "quarter", "half", "all" };
+			std::string valid_relatives[]{"rest", "quarter", "half", "all"};
 
 			bool is_valid = false;
 			size_t i;
