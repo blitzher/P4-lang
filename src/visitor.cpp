@@ -148,6 +148,18 @@ namespace epicr::visitor
                 return;
             }
         }
+        for (auto nutrient : a_rcp->nutrients)
+        {
+
+            /*duplicate nutrients check*/
+            size_t nutrients_count = uniqueNutrients.size();
+            uniqueNutrients.insert(to_lower(nutrient.name));
+            if (nutrients_count == uniqueNutrients.size()) /*if it already exist in the set, it has been previously defined */
+            {
+                ERR("Duplicate Nutrient '" + nutrient.name + "' was found");
+                return;
+            }
+        }
         int instruction_count = 0;
         double epsilon = 0;
         for (auto &inst : a_rcp->instructions)
@@ -205,7 +217,7 @@ namespace epicr::visitor
 
                 // set epsilon value to 1% of the original amount of the ingredient
                 epsilon = original_symbols[to_lower(ingr.name)].amount.number / 100;
- 
+
                 if (ingr.amount.number - symbols[to_lower(ingr.name)].amount.number > epsilon)
                 {
                     std::string err_msg = "Used too much of Ingredient '" + ingr.name + "'. " +
@@ -504,8 +516,8 @@ namespace epicr::visitor
         /* fill the symbol table and check for duplicate kitchenware*/
         for (auto kitchenware : a_rcp->kitchenware)
         {
-            symbols.insert(to_lower(kitchenware));       // used to check correspondance between kitchenware list and instructions
-            
+            symbols.insert(to_lower(kitchenware)); // used to check correspondance between kitchenware list and instructions
+
             /*duplicate ingredients check*/
             size_t kitchenware_count = uniqueKitchenware.size();
             uniqueKitchenware.insert(to_lower(kitchenware));
@@ -530,7 +542,7 @@ namespace epicr::visitor
                 bool foundInKitchenwareList = false;
                 for (auto &kitchenwareInList : a_rcp->kitchenware)
                 {
-                    if(kitchenwareInList == kitchenware)
+                    if (kitchenwareInList == kitchenware)
                     {
                         foundInKitchenwareList = true;
                     }
@@ -546,7 +558,7 @@ namespace epicr::visitor
                     symbols.erase(kitchenware);
             }
         }
-        
+
         if (symbols.size() > 0)
         {
             std::string err_msg = "Unused kitchenware: ";
@@ -867,11 +879,10 @@ namespace epicr::visitor
         in_vis.visit(rcp);
         if (in_vis.has_error)
             return {{}, 1, in_vis.error, " IngVer: "};
-        
+
         kw_vis.visit(rcp);
         if (kw_vis.has_error)
             return {{}, 1, kw_vis.error, " Kitchenware: "};
-        
 
         is_vis.visit(rcp);
 

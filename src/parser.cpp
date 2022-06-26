@@ -215,6 +215,10 @@ namespace epicr
 
 			nutrients.push_back(nutrient);
 			ReadSeperatorOrWaitAtNextField("nutrients");
+			if (nutrient.amount.unit.empty())
+			{
+				ERR_VOID("No correct description for amount has been found", ctoken);
+			}
 		}
 		rcp->parsed_fields.NutrientsParsed = true;
 		rcp->nutrients = nutrients;
