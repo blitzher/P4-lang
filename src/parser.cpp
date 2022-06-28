@@ -150,11 +150,11 @@ namespace epicr
 		return rcp;
 	}
 
-	void Parser::CheckDuplicateField(std::string field, bool fieldParsedBoolean)
+	void Parser::CheckDuplicateField(std::string fieldName, bool fieldParsedBoolean)
 	{
 		if (fieldParsedBoolean)
 		{
-			ERR("Duplicate field: " + field, ctoken);
+			ERR("Duplicate field: " + fieldName, ctoken);
 		}
 	}
 
